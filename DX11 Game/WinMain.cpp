@@ -5,34 +5,19 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 {
     UNREFERENCED_PARAMETER( hPrevInstance );
     UNREFERENCED_PARAMETER( lpCmdLine );
+    UNREFERENCED_PARAMETER( nCmdShow );
 
-    std::unique_ptr<Application> app = std::make_unique<Application>();
-    if ( !( app->Initialise() ) ) return -1;
+    HRESULT hr = CoInitialize(NULL);
 
-    MSG msg = { 0 };
-    while ( WM_QUIT != msg.message )
+    Application game;
+    if ( game.Initialize( hInstance, "DirectX 11 Game", "WindowClass", 1280, 720 ) )
     {
-        if ( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+        while ( game.ProcessMessages() == true )
         {
-            bool handled = false;
-
-			if ( msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST )
-				handled = app->HandleKeyboard( msg );
-			else if ( WM_QUIT == msg.message )
-				break;
-
-			if ( !handled )
-			{
-				TranslateMessage( &msg );
-				DispatchMessage( &msg );
-			}
-        }
-        else
-        {
-            app->Update();
-            app->Draw();
+            game.Update();
+            game.Render();
         }
     }
 
-    return static_cast<int>( msg.wParam );
+    return 0;
 }
