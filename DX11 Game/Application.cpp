@@ -29,6 +29,27 @@ void Application::Update()
 	float dt = timer.GetMilliSecondsElapsed();
 	timer.Restart();
 
+	// Read Input
+    while ( !keyboard.CharBufferIsEmpty() )
+	{
+		unsigned char ch = keyboard.ReadChar();
+	}
+	while ( !keyboard.KeyBufferIsEmpty() )
+	{
+		Keyboard::KeyboardEvent kbe = keyboard.ReadKey();
+		unsigned char keycode = kbe.GetKeyCode();
+	}
+	while ( !mouse.EventBufferIsEmpty() )
+	{
+		Mouse::MouseEvent me = mouse.ReadEvent();
+		std::string outMsg = "X: ";
+		outMsg += std::to_string( me.GetPosX() );
+		outMsg += ", Y: ";
+		outMsg += std::to_string( me.GetPosY() );
+		outMsg += "\n";
+		OutputDebugStringA( outMsg.c_str() );
+	}
+
 	// Update Game Input Here...
 
 	gfx.Update( dt );

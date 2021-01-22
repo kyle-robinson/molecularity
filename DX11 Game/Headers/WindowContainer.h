@@ -4,6 +4,8 @@
 
 #include "Graphics.h"
 #include "RenderWindow.h"
+#include "Keyboard.h"
+#include "Mouse.h"
 
 class WindowContainer
 {
@@ -12,7 +14,9 @@ public:
 	LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 protected:
 	RenderWindow renderWindow;
+	Keyboard keyboard;
 	Graphics gfx;
+	Mouse mouse;
 };
 
 #endif
