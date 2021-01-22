@@ -169,6 +169,8 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Source\ErrorLogger.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
+    <ClCompile Include="Source\Keyboard.cpp" />
+    <ClCompile Include="Source\Mouse.cpp" />
     <ClCompile Include="Source\RenderWindow.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -186,6 +188,8 @@
     <ClInclude Include="Headers\COMException.h" />
     <ClInclude Include="Headers\ErrorLogger.h" />
     <ClInclude Include="Headers\Graphics.h" />
+    <ClInclude Include="Headers\Keyboard.h" />
+    <ClInclude Include="Headers\Mouse.h" />
     <ClInclude Include="Headers\RenderWindow.h" />
     <ClInclude Include="Headers\stdafx.h" />
     <ClInclude Include="Headers\StringConverter.h" />
