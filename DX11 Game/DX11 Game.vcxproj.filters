@@ -145,7 +145,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shaders\Primitive.fx">
+    <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_Tex.fx">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

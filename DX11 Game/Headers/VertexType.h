@@ -10,4 +10,10 @@ struct Vertex_Pos_Col
 	DirectX::XMFLOAT4 color;
 };
 
+struct Vertex_Pos_Tex
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT2 texcoord;
+};
+
 #endif

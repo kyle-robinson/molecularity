@@ -25,7 +25,7 @@ void Graphics::BeginFrame()
 	// Set Render State
 	context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	context->OMSetDepthStencilState( depthStencilState.Get(), 0 );
-	Shaders::BindShaders( context.Get(), vertexShader, pixelShader );
+	Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
 }
 
 void Graphics::RenderFrame()
@@ -34,6 +34,7 @@ void Graphics::RenderFrame()
 	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
 	if ( !cb_vs_matrix.ApplyChanges() ) return;
 	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
+	context->PSSetShaderResources( 0, 1, boxTexture.GetAddressOf() );
 	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
 	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
 	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );
@@ -167,13 +168,24 @@ bool Graphics::InitializeShaders()
 {
 	try
 	{
+		// Texture Layout
+		D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		HRESULT hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create vertex shader!" );
+        hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create pixel shader!" );
+
+		// Colour Layout
 		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		HRESULT hr = vertexShader.Initialize( device, L"Resources\\Shaders\\Primitive.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
+		hr = vertexShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create vertex shader!" );
-        hr = pixelShader.Initialize( device, L"Resources\\Shaders\\Primitive.fx" );
+        hr = pixelShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create pixel shader!" );
 	}
 	catch ( COMException& exception )
@@ -189,10 +201,14 @@ bool Graphics::InitializeScene()
 	try
 	{
 		// Initialize Games Objects
-		HRESULT hr = vertexBuffer.Initialize( device.Get(), verticesQuad, ARRAYSIZE( verticesQuad ) );
+		HRESULT hr = vertexBuffer.Initialize( device.Get(), verticesQuad_Tex, ARRAYSIZE( verticesQuad_Tex ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle vertex buffer!" );
 		hr = indexBuffer.Initialize( device.Get(), indicesQuad, ARRAYSIZE( indicesQuad ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );
+
+		// Initialize Texture
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
+        COM_ERROR_IF_FAILED( hr, "Failed to create box texture from file!" );
 
 		// Initialize Constant Buffers
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );

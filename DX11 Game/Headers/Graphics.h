@@ -2,6 +2,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include <dxtk/WICTextureLoader.h>
 #include "ConstantBuffer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -34,12 +35,16 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
 
-	VertexBuffer<Vertex_Pos_Col> vertexBuffer;
+	VertexBuffer<Vertex_Pos_Tex> vertexBuffer;
 	IndexBuffer indexBuffer;
 
-	VertexShader vertexShader;
-	PixelShader pixelShader;
+	VertexShader vertexShader_Tex;
+	VertexShader vertexShader_Col;
+	PixelShader pixelShader_Tex;
+	PixelShader pixelShader_Col;
+
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 
 	UINT windowWidth;
