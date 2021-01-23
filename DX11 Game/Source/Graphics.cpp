@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Graphics.h"
+#include "Vertices.h"
+#include "Indices.h"
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
@@ -16,19 +18,25 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 void Graphics::BeginFrame()
 {
 	// Clear Render Target
-	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	static float clearColor[4] = { 0.5f, 1.0f, 0.5f, 1.0f };
 	context->ClearRenderTargetView( backBuffer.Get(), clearColor );
     context->ClearDepthStencilView( depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 	// Set Render State
 	context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
-	// Set Initial State...
+	context->OMSetDepthStencilState( depthStencilState.Get(), 0 );
+	Shaders::BindShaders( context.Get(), vertexShader, pixelShader );
 }
 
 void Graphics::RenderFrame()
 {
-	// Render Game Components...
+	UINT offset = 0;
+	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
+	if ( !cb_vs_matrix.ApplyChanges() ) return;
+	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
+	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
+	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
+	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );
 }
 
 void Graphics::EndFrame()
@@ -115,6 +123,14 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		hr = device->CreateDepthStencilView( depthStencilBuffer.Get(), NULL, depthStencilView.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil view!" );
 
+		CD3D11_DEPTH_STENCIL_DESC depthStencilStateDesc = CD3D11_DEPTH_STENCIL_DESC( CD3D11_DEFAULT{} );
+		depthStencilStateDesc.DepthEnable = TRUE;
+		depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+		depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+
+		hr = device->CreateDepthStencilState( &depthStencilStateDesc, depthStencilState.GetAddressOf() );
+		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil state!" );
+
 		// Create Viewport
 		CD3D11_VIEWPORT viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, windowWidth, windowHeight );
 		context->RSSetViewports( 1u, &viewportDesc );
@@ -172,7 +188,15 @@ bool Graphics::InitializeScene()
 {
 	try
 	{
-		// Initialize Game Objects...
+		// Initialize Games Objects
+		HRESULT hr = vertexBuffer.Initialize( device.Get(), verticesQuad, ARRAYSIZE( verticesQuad ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle vertex buffer!" );
+		hr = indexBuffer.Initialize( device.Get(), indicesQuad, ARRAYSIZE( indicesQuad ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );
+
+		// Initialize Constant Buffers
+		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
 	}
 	catch ( COMException& exception )
 	{

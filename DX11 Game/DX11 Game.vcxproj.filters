@@ -43,6 +43,9 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{4589da5a-8dd4-4e23-bd76-434989ba4a5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics\Data">
+      <UniqueIdentifier>{9af4e363-3a65-49d5-af92-e10e5d70a317}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -79,9 +82,6 @@
       <Filter>Source Files\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\Shaders.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ConstantBuffer.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -127,6 +127,21 @@
     </ClInclude>
     <ClInclude Include="Headers\ConstantBufferTypes.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\VertexBuffer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\IndexBuffer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\VertexType.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Vertices.h">
+      <Filter>Header Files\Graphics\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Indices.h">
+      <Filter>Header Files\Graphics\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,8 +4,6 @@
 cbuffer ConstantBuffer : register( b0 )
 {
 	float4x4 worldMatrix;
-    float4x4 viewMatrix;
-    float4x4 projectionMatrix;
 }
 
 struct VS_INPUT
@@ -24,8 +22,6 @@ VS_OUTPUT VS( VS_INPUT input )
 {    
     VS_OUTPUT output;
     output.outPos = mul( float4( input.inPos, 1.0f ), worldMatrix );
-    output.outPos = mul( output.outPos, viewMatrix );
-    output.outPos = mul( output.outPos, projectionMatrix );
     output.outCol = input.inCol;
     return output;
 }

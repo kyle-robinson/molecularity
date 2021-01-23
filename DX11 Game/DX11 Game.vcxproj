@@ -167,7 +167,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Source\ConstantBuffer.cpp" />
     <ClCompile Include="Source\ErrorLogger.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
@@ -192,6 +191,8 @@
     <ClInclude Include="Headers\ConstantBufferTypes.h" />
     <ClInclude Include="Headers\ErrorLogger.h" />
     <ClInclude Include="Headers\Graphics.h" />
+    <ClInclude Include="Headers\IndexBuffer.h" />
+    <ClInclude Include="Headers\Indices.h" />
     <ClInclude Include="Headers\Keyboard.h" />
     <ClInclude Include="Headers\Mouse.h" />
     <ClInclude Include="Headers\RenderWindow.h" />
@@ -199,6 +200,9 @@
     <ClInclude Include="Headers\stdafx.h" />
     <ClInclude Include="Headers\StringConverter.h" />
     <ClInclude Include="Headers\Timer.h" />
+    <ClInclude Include="Headers\VertexType.h" />
+    <ClInclude Include="Headers\VertexBuffer.h" />
+    <ClInclude Include="Headers\Vertices.h" />
     <ClInclude Include="Headers\WindowContainer.h" />
   </ItemGroup>
   <ItemGroup>

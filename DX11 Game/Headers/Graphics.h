@@ -2,9 +2,11 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include "Shaders.h"
 #include "ConstantBuffer.h"
-#include "ConstantBufferTypes.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexType.h"
+#include "Shaders.h"
 
 class Graphics
 {
@@ -30,7 +32,11 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
+
+	VertexBuffer<Vertex_Pos_Col> vertexBuffer;
+	IndexBuffer indexBuffer;
 
 	VertexShader vertexShader;
 	PixelShader pixelShader;
