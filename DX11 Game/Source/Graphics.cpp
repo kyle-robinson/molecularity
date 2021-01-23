@@ -22,6 +22,8 @@ void Graphics::BeginFrame()
 
 	// Set Render State
 	context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+
+	// Set Initial State...
 }
 
 void Graphics::RenderFrame()
@@ -31,6 +33,8 @@ void Graphics::RenderFrame()
 
 void Graphics::EndFrame()
 {
+	// Render UI/ImGui...
+
 	// Display Current Frame
 	HRESULT hr = swapChain->Present( 1, NULL );
 	if ( FAILED( hr ) )
@@ -45,16 +49,6 @@ void Graphics::EndFrame()
 void Graphics::Update( float dt )
 {
 	// Update Game Components...
-}
-
-UINT Graphics::GetWidth() const noexcept
-{
-	return windowWidth;
-}
-
-UINT Graphics::GetHeight() const noexcept
-{
-	return windowHeight;
 }
 
 bool Graphics::InitializeDirectX( HWND hWnd )
@@ -157,7 +151,14 @@ bool Graphics::InitializeShaders()
 {
 	try
 	{
-		// Initialize Shaders...
+		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		HRESULT hr = vertexShader.Initialize( device, L"Resources\\Shaders\\Primitive.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create vertex shader!" );
+        hr = pixelShader.Initialize( device, L"Resources\\Shaders\\Primitive.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create pixel shader!" );
 	}
 	catch ( COMException& exception )
 	{

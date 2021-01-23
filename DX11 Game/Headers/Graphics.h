@@ -2,6 +2,10 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include "Shaders.h"
+#include "ConstantBuffer.h"
+#include "ConstantBufferTypes.h"
+
 class Graphics
 {
 public:
@@ -11,8 +15,8 @@ public:
 	void RenderFrame();
 	void EndFrame();
 	void Update( float dt );
-	UINT GetWidth() const noexcept;
-	UINT GetHeight() const noexcept;
+	UINT GetWidth() const noexcept { return windowWidth; }
+	UINT GetHeight() const noexcept { return windowHeight; }
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
@@ -27,6 +31,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
+
+	VertexShader vertexShader;
+	PixelShader pixelShader;
+	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 
 	UINT windowWidth;
 	UINT windowHeight;
