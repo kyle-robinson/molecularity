@@ -6,6 +6,7 @@
 #include "VertexType.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "ImGuiManager.h"
 #include "ConstantBuffer.h"
 #include <dxtk/SpriteFont.h>
 #include <dxtk/SpriteBatch.h>
@@ -57,6 +58,8 @@ private:
 	// Local Variables
 	UINT windowWidth;
 	UINT windowHeight;
+	ImGuiManager imgui;
+
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 };

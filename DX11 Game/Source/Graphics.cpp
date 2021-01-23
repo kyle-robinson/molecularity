@@ -11,6 +11,7 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 	if ( !InitializeDirectX( hWnd ) ) return false;
 	if ( !InitializeShaders() ) return false;
 	if ( !InitializeScene() ) return false;
+	imgui.Initialize( hWnd, device.Get(), context.Get() );
 
 	return true;
 }
@@ -30,6 +31,7 @@ void Graphics::BeginFrame()
 
 void Graphics::RenderFrame()
 {
+	// Render Games Objects
 	UINT offset = 0;
 	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
 	if ( !cb_vs_matrix.ApplyChanges() ) return;
@@ -42,12 +44,17 @@ void Graphics::RenderFrame()
 
 void Graphics::EndFrame()
 {
-	// Render UI/ImGui
+	// Font Rendering
 	spriteBatch->Begin();
 	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
 	spriteFont->DrawString( spriteBatch.get(), L"Font Rendering Demo", fontPosition,
         DirectX::Colors::Black, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
+
+	// Spawn ImGui Windows
+	imgui.BeginRender();
+	imgui.SpawnDemoWindow();
+	imgui.EndRender();
 
 	// Display Current Frame
 	HRESULT hr = swapChain->Present( 1, NULL );
@@ -215,7 +222,7 @@ bool Graphics::InitializeScene()
 		hr = indexBuffer.Initialize( device.Get(), indicesQuad, ARRAYSIZE( indicesQuad ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );
 
-		// Initialize Texture
+		// Initialize Textures
 		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create box texture from file!" );
 
