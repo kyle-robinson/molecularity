@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Graphics.h"
+#include "Vertices.h"
+#include "Indices.h"
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
@@ -9,6 +11,7 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 	if ( !InitializeDirectX( hWnd ) ) return false;
 	if ( !InitializeShaders() ) return false;
 	if ( !InitializeScene() ) return false;
+	imgui.Initialize( hWnd, device.Get(), context.Get() );
 
 	return true;
 }
@@ -16,21 +19,43 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 void Graphics::BeginFrame()
 {
 	// Clear Render Target
-	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	static float clearColor[4] = { 0.5f, 1.0f, 0.5f, 1.0f };
 	context->ClearRenderTargetView( backBuffer.Get(), clearColor );
     context->ClearDepthStencilView( depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 	// Set Render State
 	context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+	context->OMSetDepthStencilState( depthStencilState.Get(), 0 );
+	Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
 }
 
 void Graphics::RenderFrame()
 {
-	// Render Game Components...
+	// Render Games Objects
+	UINT offset = 0;
+	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
+	if ( !cb_vs_matrix.ApplyChanges() ) return;
+	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
+	context->PSSetShaderResources( 0, 1, boxTexture.GetAddressOf() );
+	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
+	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
+	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );
 }
 
 void Graphics::EndFrame()
 {
+	// Font Rendering
+	spriteBatch->Begin();
+	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
+	spriteFont->DrawString( spriteBatch.get(), L"Font Rendering Demo", fontPosition,
+        DirectX::Colors::Black, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	spriteBatch->End();
+
+	// Spawn ImGui Windows
+	imgui.BeginRender();
+	imgui.SpawnDemoWindow();
+	imgui.EndRender();
+
 	// Display Current Frame
 	HRESULT hr = swapChain->Present( 1, NULL );
 	if ( FAILED( hr ) )
@@ -45,16 +70,6 @@ void Graphics::EndFrame()
 void Graphics::Update( float dt )
 {
 	// Update Game Components...
-}
-
-UINT Graphics::GetWidth() const noexcept
-{
-	return windowWidth;
-}
-
-UINT Graphics::GetHeight() const noexcept
-{
-	return windowHeight;
 }
 
 bool Graphics::InitializeDirectX( HWND hWnd )
@@ -121,6 +136,14 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		hr = device->CreateDepthStencilView( depthStencilBuffer.Get(), NULL, depthStencilView.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil view!" );
 
+		CD3D11_DEPTH_STENCIL_DESC depthStencilStateDesc = CD3D11_DEPTH_STENCIL_DESC( CD3D11_DEFAULT{} );
+		depthStencilStateDesc.DepthEnable = TRUE;
+		depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+		depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+
+		hr = device->CreateDepthStencilState( &depthStencilStateDesc, depthStencilState.GetAddressOf() );
+		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil state!" );
+
 		// Create Viewport
 		CD3D11_VIEWPORT viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, windowWidth, windowHeight );
 		context->RSSetViewports( 1u, &viewportDesc );
@@ -144,6 +167,10 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		hr = device->CreateSamplerState( &samplerDesc, pSampler.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create sampler state!" );
 		context->PSSetSamplers( 0u, 1u, pSampler.GetAddressOf() );
+
+		// Setup Font Rendering
+		spriteBatch = std::make_unique<DirectX::SpriteBatch>( context.Get() );
+        spriteFont = std::make_unique<DirectX::SpriteFont>( device.Get(), L"Resources\\Fonts\\open_sans_ms_16.spritefont" );
 	}
 	catch ( COMException& exception )
 	{
@@ -157,7 +184,25 @@ bool Graphics::InitializeShaders()
 {
 	try
 	{
-		// Initialize Shaders...
+		// Texture Layout
+		D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		HRESULT hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create vertex shader!" );
+        hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create pixel shader!" );
+
+		// Colour Layout
+		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		hr = vertexShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create vertex shader!" );
+        hr = pixelShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create pixel shader!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -171,7 +216,19 @@ bool Graphics::InitializeScene()
 {
 	try
 	{
-		// Initialize Game Objects...
+		// Initialize Games Objects
+		HRESULT hr = vertexBuffer.Initialize( device.Get(), verticesQuad_Tex, ARRAYSIZE( verticesQuad_Tex ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle vertex buffer!" );
+		hr = indexBuffer.Initialize( device.Get(), indicesQuad, ARRAYSIZE( indicesQuad ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );
+
+		// Initialize Textures
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
+        COM_ERROR_IF_FAILED( hr, "Failed to create box texture from file!" );
+
+		// Initialize Constant Buffers
+		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
 	}
 	catch ( COMException& exception )
 	{

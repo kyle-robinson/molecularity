@@ -18,9 +18,6 @@ public:
 	bool ProcessMessages() noexcept;
 	HWND GetHWND() const noexcept;
 	~RenderWindow() noexcept;
-public:
-	HCURSOR hHandNormal = NULL;
-	HCURSOR hHandSelect = NULL;
 private:
 	void RegisterWindowClass() noexcept;
 	HWND hWnd = NULL;
@@ -30,6 +27,7 @@ private:
 	std::string windowClass = "";
 	std::wstring windowClass_Wide = L"";
 	int width, height;
+	HCURSOR hCursorNormal = NULL;
 };
 
 #endif

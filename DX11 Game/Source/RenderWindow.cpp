@@ -12,6 +12,8 @@ bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hIns
 	this->windowClass = windowClass;
 	windowClass_Wide = StringConverter::StringToWide( windowClass );
 
+	hCursorNormal = LoadCursor( hInstance, IDC_ARROW );
+
 	RegisterWindowClass();
 
 	int centerScreenX = GetSystemMetrics( SM_CXSCREEN ) / 2 - width / 2;
@@ -134,7 +136,7 @@ void RenderWindow::RegisterWindowClass() noexcept
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
 	wc.hIcon = NULL;
-    wc.hCursor = hHandNormal;
+    wc.hCursor = hCursorNormal;
     wc.hbrBackground = (HBRUSH)( COLOR_WINDOW + 1 );
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = windowClass_Wide.c_str();
