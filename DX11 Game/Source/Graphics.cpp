@@ -42,7 +42,12 @@ void Graphics::RenderFrame()
 
 void Graphics::EndFrame()
 {
-	// Render UI/ImGui...
+	// Render UI/ImGui
+	spriteBatch->Begin();
+	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
+	spriteFont->DrawString( spriteBatch.get(), L"Font Rendering Demo", fontPosition,
+        DirectX::Colors::Black, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	spriteBatch->End();
 
 	// Display Current Frame
 	HRESULT hr = swapChain->Present( 1, NULL );
@@ -155,6 +160,10 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		hr = device->CreateSamplerState( &samplerDesc, pSampler.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create sampler state!" );
 		context->PSSetSamplers( 0u, 1u, pSampler.GetAddressOf() );
+
+		// Setup Font Rendering
+		spriteBatch = std::make_unique<DirectX::SpriteBatch>( context.Get() );
+        spriteFont = std::make_unique<DirectX::SpriteFont>( device.Get(), L"Resources\\Fonts\\open_sans_ms_16.spritefont" );
 	}
 	catch ( COMException& exception )
 	{
