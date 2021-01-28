@@ -2,8 +2,9 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
-class WindowContainer;
+#include "ErrorLogger.h"
 
+class WindowContainer;
 class RenderWindow
 {
 public:

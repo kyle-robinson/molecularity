@@ -55,6 +55,12 @@
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{aa003111-c366-4ad4-9c4c-3df949b16c0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Objects">
+      <UniqueIdentifier>{d4deacd9-f14c-4182-886e-b7e8b5daf9cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{d9a5d807-2da0-449f-9a58-fc918f421be1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -122,6 +128,21 @@
     </ClCompile>
     <ClCompile Include="Source\Texture.cpp">
       <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderableGameObject.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera3D.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject3D.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Light.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,12 +242,33 @@
     <ClInclude Include="Headers\Model.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\Camera3D.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\GameObject.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\GameObject3D.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\RenderableGameObject.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Light.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Primitive_Tex.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_Nrm.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_NoNrm.fx">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -26,12 +26,27 @@ void Graphics::BeginFrame()
 	// Set Render State
 	context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	context->OMSetDepthStencilState( depthStencilState.Get(), 0 );
-	Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
+
+	// Setup Constant Buffers
+	cb_ps_light.data.dynamicLightColor = light.lightColor;
+	cb_ps_light.data.dynamicLightStrength = light.lightStrength;
+	cb_ps_light.data.specularLightColor = light.specularColor;
+	cb_ps_light.data.specularLightIntensity = light.specularIntensity;
+	cb_ps_light.data.specularLightPower = light.specularPower;
+	cb_ps_light.data.dynamicLightPosition = light.GetPositionFloat3();
+	cb_ps_light.data.lightConstant = light.constant;
+	cb_ps_light.data.lightLinear = light.linear;
+	cb_ps_light.data.lightQuadratic = light.quadratic;
+	cb_ps_light.data.useTexture = useTexture;
+	cb_ps_light.data.alphaFactor = alphaFactor;
+	if ( !cb_ps_light.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1, 1, cb_ps_light.GetAddressOf() );
 }
 
 void Graphics::RenderFrame()
 {
 	// Render Games Objects
+	Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
 	UINT offset = 0;
 	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
 	if ( !cb_vs_matrix.ApplyChanges() ) return;
@@ -40,6 +55,12 @@ void Graphics::RenderFrame()
 	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
 	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
 	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );
+
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	nanosuit.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
+
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	light.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
 }
 
 void Graphics::EndFrame()
@@ -69,7 +90,8 @@ void Graphics::EndFrame()
 
 void Graphics::Update( float dt )
 {
-	// Update Game Components...
+	// Update Game Components
+	nanosuit.AdjustRotation( XMFLOAT3( 0.0f, 0.001f * dt, 0.0f ) );
 }
 
 bool Graphics::InitializeDirectX( HWND hWnd )
@@ -121,7 +143,6 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		COM_ERROR_IF_FAILED( hr, "Failed to create Back Buffer!" );
 		hr = device->CreateRenderTargetView( pBackBuffer.Get(), nullptr, backBuffer.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create Render Target View with Back Buffer!" );
-		context->OMSetRenderTargets( 1, backBuffer.GetAddressOf(), nullptr );
 
 		// Create Depth Stencil State
 		CD3D11_TEXTURE2D_DESC depthStencilDesc( DXGI_FORMAT_D24_UNORM_S8_UINT, windowWidth, windowHeight );
@@ -135,24 +156,26 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil texture!" );
 		hr = device->CreateDepthStencilView( depthStencilBuffer.Get(), NULL, depthStencilView.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil view!" );
+		
+		context->OMSetRenderTargets( 1, backBuffer.GetAddressOf(), depthStencilView.Get() );
 
 		CD3D11_DEPTH_STENCIL_DESC depthStencilStateDesc = CD3D11_DEPTH_STENCIL_DESC( CD3D11_DEFAULT{} );
 		depthStencilStateDesc.DepthEnable = TRUE;
 		depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-		depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-
 		hr = device->CreateDepthStencilState( &depthStencilStateDesc, depthStencilState.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil state!" );
 
 		// Create Viewport
 		CD3D11_VIEWPORT viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, windowWidth, windowHeight );
+		viewportDesc.MinDepth = 0.0f;
+		viewportDesc.MaxDepth = 1.0f;
 		context->RSSetViewports( 1u, &viewportDesc );
 
 		// Create Rasterizer State
 		CD3D11_RASTERIZER_DESC rasterizerDesc = CD3D11_RASTERIZER_DESC( CD3D11_DEFAULT{} );
 		rasterizerDesc.MultisampleEnable = TRUE;
-		rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-		rasterizerDesc.CullMode = D3D11_CULL_BACK;
+		//rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+		//rasterizerDesc.CullMode = D3D11_CULL_BACK;
 		hr = device->CreateRasterizerState( &rasterizerDesc, &pRasterizer );
 		COM_ERROR_IF_FAILED( hr, "Failed to create static rasterizer state!" );
 		context->RSSetState( pRasterizer.Get() );
@@ -162,6 +185,7 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		samplerDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
 
 		hr = device->CreateSamplerState( &samplerDesc, pSampler.GetAddressOf() );
@@ -184,15 +208,28 @@ bool Graphics::InitializeShaders()
 {
 	try
 	{
+		// Normal Layout
+		D3D11_INPUT_ELEMENT_DESC layoutPosTexNrm[] = {
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		};
+		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Primitive_Nrm.fx", layoutPosTexNrm, ARRAYSIZE( layoutPosTexNrm ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to create light vertex shader!" );
+	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Primitive_Nrm.fx" );
+		COM_ERROR_IF_FAILED( hr, "Failed to create light pixel shader!" );
+		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Primitive_NoNrm.fx" );
+		COM_ERROR_IF_FAILED( hr, "Failed to create no light pixel shader!" );
+
 		// Texture Layout
 		D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		HRESULT hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
-        COM_ERROR_IF_FAILED( hr, "Failed to create vertex shader!" );
+		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create texture vertex shader!" );
         hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create pixel shader!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );
 
 		// Colour Layout
 		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
@@ -200,9 +237,9 @@ bool Graphics::InitializeShaders()
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		hr = vertexShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
-        COM_ERROR_IF_FAILED( hr, "Failed to create vertex shader!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create colour vertex shader!" );
         hr = pixelShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create pixel shader!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create colour pixel shader!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -222,6 +259,23 @@ bool Graphics::InitializeScene()
 		hr = indexBuffer.Initialize( device.Get(), indicesQuad, ARRAYSIZE( indicesQuad ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );
 
+		nanosuit.SetScale( 1.0f, 1.0f, 1.0f );
+		if ( !nanosuit.Initialize( "Resources\\Models\\Nanosuit\\nanosuit.obj", device.Get(), context.Get(), cb_vs_matrix ) )
+			return false;
+
+		light.SetScale( 1.0f, 1.0f, 1.0f );
+		if ( !light.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
+			return false;
+
+		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
+		camera.SetPosition( 0.0f, 9.0f, -15.0f );
+		camera.SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
+
+		XMVECTOR lightPosition = camera.GetPositionVector();
+		lightPosition += camera.GetForwardVector() + XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		light.SetPosition( lightPosition );
+		light.SetRotation( camera.GetRotationFloat3() );
+
 		// Initialize Textures
 		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create box texture from file!" );
@@ -229,6 +283,11 @@ bool Graphics::InitializeScene()
 		// Initialize Constant Buffers
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
+
+		hr = cb_ps_light.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_pixelshader' Constant Buffer!" );
+		cb_ps_light.data.ambientLightColor = XMFLOAT3( 1.0f, 1.0f, 1.0f );
+		cb_ps_light.data.ambientLightStrength = 0.1f;
 	}
 	catch ( COMException& exception )
 	{

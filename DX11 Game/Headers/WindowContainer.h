@@ -2,8 +2,8 @@
 #ifndef WINDOWCONTAINER_H
 #define WINDOWCONTAINER_H
 
-#include "Graphics.h"
 #include "RenderWindow.h"
+#include "Graphics.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 

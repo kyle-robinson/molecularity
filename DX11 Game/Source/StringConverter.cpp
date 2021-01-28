@@ -25,7 +25,7 @@ std::string StringConverter::GetDirectoryFromPath( const std::string& filePath )
 		return filePath.substr( 0, offset2 );
 	if ( offset2 == std::string::npos )
 		return filePath.substr( 0, offset1 );
-	return filePath.substr( 0, max( offset1, offset2 ) );
+	return filePath.substr( 0, std::max( offset1, offset2 ) );
 }
 
 std::string StringConverter::GetFileExtension( const std::string& fileName )

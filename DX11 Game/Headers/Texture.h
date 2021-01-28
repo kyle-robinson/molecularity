@@ -3,6 +3,8 @@
 #define TEXTURE_H
 
 #include "Colour.h"
+#include <d3d11.h>
+#include <wrl/client.h>
 #include <assimp/material.h>
 
 enum class TextureStorageType

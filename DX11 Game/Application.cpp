@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Application.h"
 
 bool Application::Initialize(
@@ -48,9 +47,53 @@ void Application::Update()
 		outMsg += std::to_string( me.GetPosY() );
 		outMsg += "\n";
 		OutputDebugStringA( outMsg.c_str() );
+		if ( mouse.IsRightDown() )
+		{
+			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
+			{
+				gfx.camera.AdjustRotation(
+					XMFLOAT3(
+						static_cast<float>( me.GetPosY() ) * 0.005f,
+						static_cast<float>( me.GetPosX() ) * 0.005f,
+						0.0f
+					)
+				);
+				OutputDebugStringA( "Right Button Clicked!" );
+			}
+		}
 	}
 
-	// Update Game Input Here...
+	// Update Game Input Here
+	float camera3DSpeed = 0.002f;
+
+	if ( keyboard.KeyIsPressed( VK_SHIFT ) )
+		camera3DSpeed = 0.01f;
+
+	if ( keyboard.KeyIsPressed( 'W' ) )
+		gfx.camera.AdjustPosition( gfx.camera.GetForwardVector() * camera3DSpeed * dt );
+
+	if ( keyboard.KeyIsPressed( 'A' ) )
+		gfx.camera.AdjustPosition( gfx.camera.GetLeftVector() * camera3DSpeed * dt );
+
+	if ( keyboard.KeyIsPressed( 'S' ) )
+		gfx.camera.AdjustPosition( gfx.camera.GetBackwardVector() * camera3DSpeed * dt );
+
+	if ( keyboard.KeyIsPressed( 'D' ) )
+		gfx.camera.AdjustPosition( gfx.camera.GetRightVector() * camera3DSpeed * dt );
+
+	if ( keyboard.KeyIsPressed( VK_SPACE ) )
+		gfx.camera.AdjustPosition( XMFLOAT3( 0.0f, camera3DSpeed * dt, 0.0f ) );
+
+	if ( keyboard.KeyIsPressed( 'E' ) )
+		gfx.camera.AdjustPosition( XMFLOAT3( 0.0f, -camera3DSpeed * dt, 0.0f ) );
+
+	if ( keyboard.KeyIsPressed( 'C' ) )
+	{
+		XMVECTOR lightPosition = gfx.camera.GetPositionVector();
+		lightPosition += gfx.camera.GetForwardVector();
+		gfx.light.SetPosition( lightPosition );
+		gfx.light.SetRotation( gfx.camera.GetRotationFloat3() );
+	}
 
 	gfx.Update( dt );
 }
