@@ -21,4 +21,8 @@
 #include <directxmath.h>
 #include <directxcolors.h>
 
+// Classes
+#include "Timer.h"
+#include "ErrorLogger.h"
+
 #endif

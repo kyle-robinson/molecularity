@@ -2,15 +2,23 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-class Application
+#include "WindowContainer.h"
+
+class Application : public WindowContainer
 {
 public:
-	bool Initialise();
-	bool HandleKeyboard( MSG msg );
+	bool Initialize(
+		HINSTANCE hInstance,
+		const std::string& windowTitle,
+		const std::string& windowClass,
+		int width,
+		int height
+	);
+	bool ProcessMessages() noexcept;
 	void Update();
-	void Draw();
+	void Render();
 private:
-
+	Timer timer;
 };
 
 #endif
