@@ -26,11 +26,6 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-!External/*
-!External/lib/Debug/x86/*.lib
-!External/lib/Debug/x64/*.lib
-!External/lib/Release/x86/*.lib
-!External/lib/Release/x64/*.lib
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
