@@ -7,8 +7,8 @@
 struct CB_VS_matrix
 {
 	DirectX::XMMATRIX worldMatrix;
-	//DirectX::XMMATRIX viewMatrix;
-	//DirectX::XMMATRIX projectionMatrix;
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX projectionMatrix;
 };
 
 #endif

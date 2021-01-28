@@ -49,6 +49,12 @@
     <Filter Include="Resource Files\ImGui">
       <UniqueIdentifier>{2def405a-a3e7-4da8-b1a5-4cf1cafa165e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Model">
+      <UniqueIdentifier>{0bd471e8-aaff-4024-9197-ce66bed7c34b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{aa003111-c366-4ad4-9c4c-3df949b16c0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -104,6 +110,18 @@
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Colour.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mesh.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Model.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture.cpp">
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +208,18 @@
     </ClInclude>
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
       <Filter>Resource Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Texture.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Colour.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Mesh.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Model.h">
+      <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

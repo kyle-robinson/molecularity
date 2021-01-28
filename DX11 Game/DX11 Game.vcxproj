@@ -201,10 +201,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Source\Colour.cpp" />
     <ClCompile Include="Source\ErrorLogger.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\ImGuiManager.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
+    <ClCompile Include="Source\Mesh.cpp" />
+    <ClCompile Include="Source\Model.cpp" />
     <ClCompile Include="Source\Mouse.cpp" />
     <ClCompile Include="Source\RenderWindow.cpp" />
     <ClCompile Include="Source\Shaders.cpp" />
@@ -215,6 +218,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\StringConverter.cpp" />
+    <ClCompile Include="Source\Texture.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\WindowContainer.cpp" />
     <ClCompile Include="WinMain.cpp" />
@@ -229,6 +238,7 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Headers\Colour.h" />
     <ClInclude Include="Headers\COMException.h" />
     <ClInclude Include="Headers\ConstantBuffer.h" />
     <ClInclude Include="Headers\ConstantBufferTypes.h" />
@@ -238,11 +248,14 @@
     <ClInclude Include="Headers\IndexBuffer.h" />
     <ClInclude Include="Headers\Indices.h" />
     <ClInclude Include="Headers\Keyboard.h" />
+    <ClInclude Include="Headers\Mesh.h" />
+    <ClInclude Include="Headers\Model.h" />
     <ClInclude Include="Headers\Mouse.h" />
     <ClInclude Include="Headers\RenderWindow.h" />
     <ClInclude Include="Headers\Shaders.h" />
     <ClInclude Include="Headers\stdafx.h" />
     <ClInclude Include="Headers\StringConverter.h" />
+    <ClInclude Include="Headers\Texture.h" />
     <ClInclude Include="Headers\Timer.h" />
     <ClInclude Include="Headers\VertexType.h" />
     <ClInclude Include="Headers\VertexBuffer.h" />

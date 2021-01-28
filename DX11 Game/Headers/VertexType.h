@@ -4,6 +4,13 @@
 
 #include <DirectXMath.h>
 
+struct Vertex3D
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT2 texcoord;
+	DirectX::XMFLOAT3 normals;
+};
+
 struct Vertex_Pos_Col
 {
 	DirectX::XMFLOAT3 position;
