@@ -38,9 +38,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 
 	// States
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> pSampler;
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;

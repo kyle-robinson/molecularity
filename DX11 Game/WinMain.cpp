@@ -7,6 +7,11 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     UNREFERENCED_PARAMETER( nCmdShow );
 
     HRESULT hr = CoInitialize( NULL );
+    if ( FAILED( hr ) )
+    {
+        ErrorLogger::Log( hr, "Failed to call CoInitialize!" );
+        return -1;
+    }
 
     Application game;
     if ( game.Initialize( hInstance, "DirectX 11 Application", "WindowClass", 1280, 720 ) )

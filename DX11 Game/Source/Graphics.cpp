@@ -40,13 +40,13 @@ void Graphics::BeginFrame()
 	cb_ps_light.data.useTexture = useTexture;
 	cb_ps_light.data.alphaFactor = alphaFactor;
 	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_light.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
 }
 
 void Graphics::RenderFrame()
 {
 	// Render Games Objects
-	Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
+	/*Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
 	UINT offset = 0;
 	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
 	if ( !cb_vs_matrix.ApplyChanges() ) return;
@@ -54,12 +54,12 @@ void Graphics::RenderFrame()
 	context->PSSetShaderResources( 0, 1, boxTexture.GetAddressOf() );
 	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
 	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
-	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );
+	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );*/
 
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	nanosuit.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
 
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
 	light.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
 }
 
@@ -91,7 +91,7 @@ void Graphics::EndFrame()
 void Graphics::Update( float dt )
 {
 	// Update Game Components
-	nanosuit.AdjustRotation( XMFLOAT3( 0.0f, 0.001f * dt, 0.0f ) );
+	//nanosuit.AdjustRotation( XMFLOAT3( 0.0f, 0.001f * dt, 0.0f ) );
 }
 
 bool Graphics::InitializeDirectX( HWND hWnd )
@@ -174,11 +174,9 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		// Create Rasterizer State
 		CD3D11_RASTERIZER_DESC rasterizerDesc = CD3D11_RASTERIZER_DESC( CD3D11_DEFAULT{} );
 		rasterizerDesc.MultisampleEnable = TRUE;
-		//rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-		//rasterizerDesc.CullMode = D3D11_CULL_BACK;
-		hr = device->CreateRasterizerState( &rasterizerDesc, &pRasterizer );
+		hr = device->CreateRasterizerState( &rasterizerDesc, &rasterizerState );
 		COM_ERROR_IF_FAILED( hr, "Failed to create static rasterizer state!" );
-		context->RSSetState( pRasterizer.Get() );
+		context->RSSetState( rasterizerState.Get() );
 
 		// Create Sampler State
 		CD3D11_SAMPLER_DESC samplerDesc( CD3D11_DEFAULT{} );
@@ -188,9 +186,9 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		samplerDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
 
-		hr = device->CreateSamplerState( &samplerDesc, pSampler.GetAddressOf() );
+		hr = device->CreateSamplerState( &samplerDesc, samplerState.GetAddressOf() );
 		COM_ERROR_IF_FAILED( hr, "Failed to create sampler state!" );
-		context->PSSetSamplers( 0u, 1u, pSampler.GetAddressOf() );
+		context->PSSetSamplers( 0u, 1u, samplerState.GetAddressOf() );
 
 		// Setup Font Rendering
 		spriteBatch = std::make_unique<DirectX::SpriteBatch>( context.Get() );
@@ -222,7 +220,7 @@ bool Graphics::InitializeShaders()
 		COM_ERROR_IF_FAILED( hr, "Failed to create no light pixel shader!" );
 
 		// Texture Layout
-		D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
+		/*D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
@@ -239,7 +237,7 @@ bool Graphics::InitializeShaders()
 		hr = vertexShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create colour vertex shader!" );
         hr = pixelShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create colour pixel shader!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create colour pixel shader!" );*/
 	}
 	catch ( COMException& exception )
 	{
@@ -254,10 +252,10 @@ bool Graphics::InitializeScene()
 	try
 	{
 		// Initialize Games Objects
-		HRESULT hr = vertexBuffer.Initialize( device.Get(), verticesQuad_Tex, ARRAYSIZE( verticesQuad_Tex ) );
+		/*HRESULT hr = vertexBuffer.Initialize( device.Get(), verticesQuad_Tex, ARRAYSIZE( verticesQuad_Tex ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle vertex buffer!" );
 		hr = indexBuffer.Initialize( device.Get(), indicesQuad, ARRAYSIZE( indicesQuad ) );
-		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );*/
 
 		nanosuit.SetScale( 1.0f, 1.0f, 1.0f );
 		if ( !nanosuit.Initialize( "Resources\\Models\\Nanosuit\\nanosuit.obj", device.Get(), context.Get(), cb_vs_matrix ) )
@@ -277,7 +275,7 @@ bool Graphics::InitializeScene()
 		light.SetRotation( camera.GetRotationFloat3() );
 
 		// Initialize Textures
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
+		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create box texture from file!" );
 
 		// Initialize Constant Buffers
@@ -285,7 +283,7 @@ bool Graphics::InitializeScene()
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
 
 		hr = cb_ps_light.Initialize( device.Get(), context.Get() );
-		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_pixelshader' Constant Buffer!" );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_light' Constant Buffer!" );
 		cb_ps_light.data.ambientLightColor = XMFLOAT3( 1.0f, 1.0f, 1.0f );
 		cb_ps_light.data.ambientLightStrength = 0.1f;
 	}

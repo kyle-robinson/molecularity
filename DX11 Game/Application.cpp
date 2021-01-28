@@ -41,12 +41,6 @@ void Application::Update()
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		std::string outMsg = "X: ";
-		outMsg += std::to_string( me.GetPosX() );
-		outMsg += ", Y: ";
-		outMsg += std::to_string( me.GetPosY() );
-		outMsg += "\n";
-		OutputDebugStringA( outMsg.c_str() );
 		if ( mouse.IsRightDown() )
 		{
 			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
@@ -58,7 +52,6 @@ void Application::Update()
 						0.0f
 					)
 				);
-				OutputDebugStringA( "Right Button Clicked!" );
 			}
 		}
 	}
