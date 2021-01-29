@@ -88,6 +88,13 @@ void Application::Update()
 		gfx.light.SetRotation( gfx.camera.GetRotationFloat3() );
 	}
 
+	// Set Light Position
+	XMVECTOR lightPosition = gfx.camera.GetPositionVector();
+	lightPosition += gfx.camera.GetForwardVector() / 4;
+	lightPosition += gfx.camera.GetRightVector() / 2;
+	gfx.light.SetPosition( lightPosition );
+	gfx.light.SetRotation( gfx.camera.GetRotationFloat3().x + XM_PI, gfx.camera.GetRotationFloat3().y, gfx.camera.GetRotationFloat3().z );
+
 	gfx.Update( dt );
 }
 

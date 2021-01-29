@@ -33,7 +33,13 @@ void Graphics::BeginFrame()
 	cb_ps_light.data.specularLightColor = light.specularColor;
 	cb_ps_light.data.specularLightIntensity = light.specularIntensity;
 	cb_ps_light.data.specularLightPower = light.specularPower;
-	cb_ps_light.data.dynamicLightPosition = light.GetPositionFloat3();
+
+	XMVECTOR lightPosition = camera.GetPositionVector();
+	lightPosition += camera.GetForwardVector();
+	lightPosition += camera.GetRightVector() / 4;
+	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
+	cb_ps_light.data.dynamicLightPosition = lightPositionF;
+
 	cb_ps_light.data.lightConstant = light.constant;
 	cb_ps_light.data.lightLinear = light.linear;
 	cb_ps_light.data.lightQuadratic = light.quadratic;
@@ -59,7 +65,7 @@ void Graphics::RenderFrame()
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	nanosuit.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
 
-	context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
+	//context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
 	light.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
 }
 
@@ -261,7 +267,7 @@ bool Graphics::InitializeScene()
 		if ( !nanosuit.Initialize( "Resources\\Models\\Nanosuit\\nanosuit.obj", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 
-		light.SetScale( 1.0f, 1.0f, 1.0f );
+		light.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !light.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 
@@ -269,10 +275,10 @@ bool Graphics::InitializeScene()
 		camera.SetPosition( 0.0f, 9.0f, -15.0f );
 		camera.SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 
-		XMVECTOR lightPosition = camera.GetPositionVector();
-		lightPosition += camera.GetForwardVector() + XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-		light.SetPosition( lightPosition );
-		light.SetRotation( camera.GetRotationFloat3() );
+		//XMVECTOR lightPosition = camera.GetPositionVector();
+		//lightPosition += camera.GetForwardVector() + XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		//light.SetPosition( lightPosition );
+		//light.SetRotation( camera.GetRotationFloat3() );
 
 		// Initialize Textures
 		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
