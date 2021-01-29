@@ -80,14 +80,6 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( 'E' ) )
 		gfx.camera.AdjustPosition( XMFLOAT3( 0.0f, -camera3DSpeed * dt, 0.0f ) );
 
-	if ( keyboard.KeyIsPressed( 'C' ) )
-	{
-		XMVECTOR lightPosition = gfx.camera.GetPositionVector();
-		lightPosition += gfx.camera.GetForwardVector();
-		gfx.light.SetPosition( lightPosition );
-		gfx.light.SetRotation( gfx.camera.GetRotationFloat3() );
-	}
-
 	// Set Light Position
 	XMVECTOR lightPosition = gfx.camera.GetPositionVector();
 	lightPosition += gfx.camera.GetForwardVector() / 4;
