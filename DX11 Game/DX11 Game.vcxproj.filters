@@ -49,6 +49,9 @@
     <Filter Include="Resource Files\ImGui">
       <UniqueIdentifier>{2def405a-a3e7-4da8-b1a5-4cf1cafa165e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JSON FIles">
+      <UniqueIdentifier>{d6926623-dcb4-46c6-a77f-0da1ca17e448}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -104,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>Resource Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON_Manger.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +197,9 @@
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
       <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="JSON_Manger.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
@@ -204,5 +213,16 @@
     <Image Include="Resources\Textures\CrashBox.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GameObjects.json">
+      <Filter>JSON FIles</Filter>
+    </None>
+    <None Include="Settings.json">
+      <Filter>JSON FIles</Filter>
+    </None>
+    <None Include="Text_Eng.json">
+      <Filter>JSON FIles</Filter>
+    </None>
   </ItemGroup>
 </Project>

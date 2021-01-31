@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Application.h"
-
+#include "JSON_Manger.h"
 bool Application::Initialize(
 	HINSTANCE hInstance,
 	const std::string& windowTitle,
@@ -16,6 +16,9 @@ bool Application::Initialize(
 	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
 
+
+	JSON_LOADER::LoadGameObjects("GameObjects.json");
+	JSON_LOADER::LoadJSONNode("Text_Eng.json", "TOOL_TIPS", "Text");
 	return true;
 }
 

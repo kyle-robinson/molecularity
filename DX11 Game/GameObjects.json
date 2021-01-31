@@ -1,0 +1,22 @@
+{
+  
+  "GameObjects": [
+    {
+      "Name": "1",
+      "FileName": "things/things.flx",
+      "Texture": "Resources/textures.DDS",
+      "Positon": [ 33, 5, 5 ],
+      "Scale": [ 0, 0, 0 ],
+      "Rotation": [ 0, 0, 0 ]
+    },
+    {
+      "Name": "1",
+      "FileName": "things/things.flx",
+      "Texture": "Resources/textures.DDS",
+      "Positon": [ 33, 5, 5 ],
+      "Scale": [ 0, 0, 0 ],
+      "Rotation": [ 0, 0, 0 ]
+    }
+  ]
+}
+
