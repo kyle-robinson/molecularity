@@ -46,7 +46,7 @@ void Application::Update()
 		{
 			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
 			{
-				gfx.camera.AdjustRotation(
+				gfx.camera->AdjustRotation(
 					XMFLOAT3(
 						static_cast<float>( me.GetPosY() ) * 0.005f,
 						static_cast<float>( me.GetPosX() ) * 0.005f,
@@ -58,8 +58,8 @@ void Application::Update()
 	}
 
 	// Update Game Input Here
-	gfx.camera.SetCameraSpeed( 0.002f );
-	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera.SetCameraSpeed( 0.01f );
+	gfx.camera->SetCameraSpeed( 0.002f );
+	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera->SetCameraSpeed( 0.01f );
 	if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.camera, dt );
@@ -68,11 +68,11 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
 
 	// Set Light Position
-	XMVECTOR lightPosition = gfx.camera.GetPositionVector();
-	lightPosition += gfx.camera.GetForwardVector() / 4;
-	lightPosition += gfx.camera.GetRightVector() / 2;
+	XMVECTOR lightPosition = gfx.camera->GetPositionVector();
+	lightPosition += gfx.camera->GetForwardVector() / 4;
+	lightPosition += gfx.camera->GetRightVector() / 2;
 	gfx.light.SetPosition( lightPosition );
-	gfx.light.SetRotation( gfx.camera.GetRotationFloat3().x + XM_PI, gfx.camera.GetRotationFloat3().y, gfx.camera.GetRotationFloat3().z );
+	gfx.light.SetRotation( gfx.camera->GetRotationFloat3().x + XM_PI, gfx.camera->GetRotationFloat3().y, gfx.camera->GetRotationFloat3().z );
 
 	gfx.Update( dt );
 }

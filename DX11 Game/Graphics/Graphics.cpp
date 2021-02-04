@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "Graphics.h"
-#include "Vertices.h"
-#include "Indices.h"
 #include "Sampler.h"
 #include "Viewport.h"
 #include "SwapChain.h"
@@ -20,87 +18,6 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 	imgui.Initialize( hWnd, device.Get(), context.Get() );
 
 	return true;
-}
-
-void Graphics::BeginFrame()
-{
-	// Clear Render Target
-	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
-    depthStencil->ClearDepthStencil( *this );
-	rasterizers["Solid"]->Bind( *this );
-	samplers["Anisotropic"]->Bind( *this );
-
-	// Setup Constant Buffers
-	cb_ps_light.data.dynamicLightColor = light.lightColor;
-	cb_ps_light.data.dynamicLightStrength = light.lightStrength;
-	cb_ps_light.data.specularLightColor = light.specularColor;
-	cb_ps_light.data.specularLightIntensity = light.specularIntensity;
-	cb_ps_light.data.specularLightPower = light.specularPower;
-
-	XMVECTOR lightPosition = camera.GetPositionVector();
-	lightPosition += camera.GetForwardVector();
-	lightPosition += camera.GetRightVector() / 4;
-	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
-	cb_ps_light.data.dynamicLightPosition = lightPositionF;
-
-	cb_ps_light.data.lightConstant = light.constant;
-	cb_ps_light.data.lightLinear = light.linear;
-	cb_ps_light.data.lightQuadratic = light.quadratic;
-	cb_ps_light.data.useTexture = useTexture;
-	cb_ps_light.data.alphaFactor = alphaFactor;
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
-}
-
-void Graphics::RenderFrame()
-{
-	// Render Games Objects
-	/*Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
-	UINT offset = 0;
-	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
-	if ( !cb_vs_matrix.ApplyChanges() ) return;
-	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
-	context->PSSetShaderResources( 0, 1, boxTexture.GetAddressOf() );
-	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
-	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
-	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );*/
-
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	nanosuit.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
-
-	//context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
-	light.Draw( camera.GetViewMatrix(), camera.GetProjectionMatrix() );
-}
-
-void Graphics::EndFrame()
-{
-	// Font Rendering
-	spriteBatch->Begin();
-	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
-	spriteFont->DrawString( spriteBatch.get(), L"Font Rendering Demo", fontPosition,
-        DirectX::Colors::Black, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
-	spriteBatch->End();
-
-	// Spawn ImGui Windows
-	imgui.BeginRender();
-	imgui.SpawnDemoWindow();
-	imgui.EndRender();
-
-	// Display Current Frame
-	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
-	if ( FAILED( hr ) )
-	{
-		hr == DXGI_ERROR_DEVICE_REMOVED ?
-            ErrorLogger::Log( device->GetDeviceRemovedReason(), "Swap Chain. Graphics device removed!" ) :
-            ErrorLogger::Log( hr, "Swap Chain failed to render frame!" );
-		exit( -1 );
-	}
-}
-
-void Graphics::Update( float dt )
-{
-	// Update Game Components
-	//nanosuit.AdjustRotation( XMFLOAT3( 0.0f, 0.001f * dt, 0.0f ) );
 }
 
 bool Graphics::InitializeDirectX( HWND hWnd )
@@ -197,9 +114,14 @@ bool Graphics::InitializeScene()
 		if ( !light.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 
+		cube = std::make_unique<Cube>();
+		if ( !cube->Initialize( context.Get(), device.Get() ) )
+			return false;
+		cube->SetInitialPosition( 0.0f, 5.0f, 5.0f );
+
 		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
-		camera.SetPosition( 0.0f, 9.0f, -15.0f );
-		camera.SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
+		camera = std::make_unique<Camera>( 0.0f, 9.0f, -15.0f );
+		camera->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 
 		//XMVECTOR lightPosition = camera.GetPositionVector();
 		//lightPosition += camera.GetForwardVector() + XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
@@ -225,4 +147,86 @@ bool Graphics::InitializeScene()
 		return false;
 	}
 	return true;
+}
+
+void Graphics::BeginFrame()
+{
+	// Clear Render Target
+	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
+    depthStencil->ClearDepthStencil( *this );
+	rasterizers["Solid"]->Bind( *this );
+	samplers["Anisotropic"]->Bind( *this );
+
+	// Setup Constant Buffers
+	cb_ps_light.data.dynamicLightColor = light.lightColor;
+	cb_ps_light.data.dynamicLightStrength = light.lightStrength;
+	cb_ps_light.data.specularLightColor = light.specularColor;
+	cb_ps_light.data.specularLightIntensity = light.specularIntensity;
+	cb_ps_light.data.specularLightPower = light.specularPower;
+
+	XMVECTOR lightPosition = camera->GetPositionVector();
+	lightPosition += camera->GetForwardVector();
+	lightPosition += camera->GetRightVector() / 4;
+	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
+	cb_ps_light.data.dynamicLightPosition = lightPositionF;
+
+	cb_ps_light.data.lightConstant = light.constant;
+	cb_ps_light.data.lightLinear = light.linear;
+	cb_ps_light.data.lightQuadratic = light.quadratic;
+	cb_ps_light.data.useTexture = useTexture;
+	cb_ps_light.data.alphaFactor = alphaFactor;
+	if ( !cb_ps_light.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+}
+
+void Graphics::RenderFrame()
+{
+	// Render Games Objects
+	/*Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
+	UINT offset = 0;
+	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
+	if ( !cb_vs_matrix.ApplyChanges() ) return;
+	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
+	context->PSSetShaderResources( 0, 1, boxTexture.GetAddressOf() );
+	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
+	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
+	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );*/
+
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	cube->Draw( cb_vs_matrix, boxTexture.Get() );
+
+	//context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
+	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+}
+
+void Graphics::EndFrame()
+{
+	// Font Rendering
+	spriteBatch->Begin();
+	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
+	spriteFont->DrawString( spriteBatch.get(), L"Font Rendering Demo", fontPosition,
+        DirectX::Colors::Black, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	spriteBatch->End();
+
+	// Spawn ImGui Windows
+	imgui.BeginRender();
+	imgui.SpawnDemoWindow();
+	imgui.EndRender();
+
+	// Display Current Frame
+	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
+	if ( FAILED( hr ) )
+	{
+		hr == DXGI_ERROR_DEVICE_REMOVED ?
+            ErrorLogger::Log( device->GetDeviceRemovedReason(), "Swap Chain. Graphics device removed!" ) :
+            ErrorLogger::Log( hr, "Swap Chain failed to render frame!" );
+		exit( -1 );
+	}
+}
+
+void Graphics::Update( float dt )
+{
+	// Update Game Components
+	//nanosuit.AdjustRotation( XMFLOAT3( 0.0f, 0.001f * dt, 0.0f ) );
 }

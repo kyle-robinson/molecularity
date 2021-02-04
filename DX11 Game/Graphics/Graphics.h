@@ -3,9 +3,10 @@
 #define GRAPHICS_H
 
 #include <map>
+#include "Cube.h"
 #include "Light.h"
-#include "Shaders.h"
 #include "Camera.h"
+#include "Shaders.h"
 #include "ImGuiManager.h"
 #include "RenderableGameObject.h"
 #include <dxtk/SpriteFont.h>
@@ -35,9 +36,10 @@ public:
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
 
+	// Global Objects
 	Light light;
-	Camera camera;
 	RenderableGameObject nanosuit;
+	std::unique_ptr<Camera> camera;
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
@@ -80,6 +82,9 @@ private:
 	bool useTexture = true;
 	float alphaFactor = 1.0f;
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+
+	// Local Objects
+	std::unique_ptr<Cube> cube;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 };

@@ -150,6 +150,9 @@
     <ClCompile Include="Objects\GameObject.cpp">
       <Filter>Source Files\Objects\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Cube.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -286,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="Input\CameraMovement.h">
       <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Cube.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

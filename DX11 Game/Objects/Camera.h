@@ -9,7 +9,6 @@ using namespace DirectX;
 class Camera : public GameObject3D
 {
 public:
-	Camera() {}
 	Camera( const XMFLOAT3& initialPosition );
 	Camera( float xPos, float yPos, float zPos );
 	Camera& operator=( Camera );
