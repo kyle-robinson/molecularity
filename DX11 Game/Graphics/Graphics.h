@@ -2,6 +2,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include <map>
 #include "Light.h"
 #include "Shaders.h"
 #include "Camera3D.h"
@@ -11,10 +12,20 @@
 #include <dxtk/SpriteBatch.h>
 #include <dxtk/WICTextureLoader.h>
 
+namespace Bind
+{
+	class DepthStencil;
+	class Rasterizer;
+	class RenderTarget;
+	class Sampler;
+	class SwapChain;
+	class Viewport;
+}
+
 class Graphics
 {
+	friend class GraphicsResource;
 public:
-	Graphics() {}
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 	void BeginFrame();
@@ -34,16 +45,23 @@ private:
 
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
+	//Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 
-	// States
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
+	std::shared_ptr<Bind::Viewport> viewport;
+	std::shared_ptr<Bind::SwapChain> swapChain;
+	std::shared_ptr<Bind::RenderTarget> renderTarget;
+	std::shared_ptr<Bind::DepthStencil> depthStencil;
+	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
+	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
+
+	// Pipeline States
+	//Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
+	//Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
+	//Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
+	//Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+	//Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
 
 	// Buffers
@@ -71,6 +89,7 @@ private:
 
 	bool useTexture = true;
 	float alphaFactor = 1.0f;
+	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 };

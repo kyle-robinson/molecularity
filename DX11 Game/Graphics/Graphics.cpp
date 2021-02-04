@@ -2,6 +2,12 @@
 #include "Graphics.h"
 #include "Vertices.h"
 #include "Indices.h"
+#include "Sampler.h"
+#include "Viewport.h"
+#include "SwapChain.h"
+#include "Rasterizer.h"
+#include "DepthStencil.h"
+#include "RenderTarget.h"
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
@@ -19,13 +25,17 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 void Graphics::BeginFrame()
 {
 	// Clear Render Target
-	static float clearColor[4] = { 0.5f, 1.0f, 0.5f, 1.0f };
-	context->ClearRenderTargetView( backBuffer.Get(), clearColor );
-    context->ClearDepthStencilView( depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
+	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
+    depthStencil->ClearDepthStencil( *this );
+	rasterizers["Solid"]->Bind( *this );
+	samplers["Anisotropic"]->Bind( *this );
+	//static float clearColor[4] = { 0.5f, 1.0f, 0.5f, 1.0f };
+	//context->ClearRenderTargetView( backBuffer.Get(), clearColor );
+    //context->ClearDepthStencilView( depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 	// Set Render State
 	context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-	context->OMSetDepthStencilState( depthStencilState.Get(), 0 );
+	//context->OMSetDepthStencilState( depthStencilState.Get(), 0 );
 
 	// Setup Constant Buffers
 	cb_ps_light.data.dynamicLightColor = light.lightColor;
@@ -84,7 +94,7 @@ void Graphics::EndFrame()
 	imgui.EndRender();
 
 	// Display Current Frame
-	HRESULT hr = swapChain->Present( 1, NULL );
+	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
 	if ( FAILED( hr ) )
 	{
 		hr == DXGI_ERROR_DEVICE_REMOVED ?
@@ -104,7 +114,7 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 {
 	try
 	{
-		UINT createDeviceFlags = 0;
+		/*UINT createDeviceFlags = 0;
     #ifdef _DEBUG
         createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
     #endif
@@ -141,60 +151,20 @@ bool Graphics::InitializeDirectX( HWND hWnd )
             nullptr,                    // Ptr to Feature Level
             context.GetAddressOf()      // Context Address
         );
-        COM_ERROR_IF_FAILED( hr, "Failed to create Device and Swap Chain!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create Device and Swap Chain!" );*/
 
-		// Create Back Buffer
-        Microsoft::WRL::ComPtr<ID3D11Texture2D> pBackBuffer;
-		hr = swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )pBackBuffer.GetAddressOf() );
-		COM_ERROR_IF_FAILED( hr, "Failed to create Back Buffer!" );
-		hr = device->CreateRenderTargetView( pBackBuffer.Get(), nullptr, backBuffer.GetAddressOf() );
-		COM_ERROR_IF_FAILED( hr, "Failed to create Render Target View with Back Buffer!" );
+		swapChain = std::make_shared<Bind::SwapChain>( *this, context.GetAddressOf(), device.GetAddressOf(), hWnd );
+		renderTarget = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
+		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
+		viewport = std::make_shared<Bind::Viewport>( *this );
 
-		// Create Depth Stencil State
-		CD3D11_TEXTURE2D_DESC depthStencilDesc( DXGI_FORMAT_D24_UNORM_S8_UINT, windowWidth, windowHeight );
-		depthStencilDesc.MipLevels = 1;
-		depthStencilDesc.SampleDesc.Count = 1;
-		depthStencilDesc.SampleDesc.Quality = 0;
-		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
+        rasterizers.emplace( "Cubemap", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
+        rasterizers.emplace( "Wireframe", std::make_shared<Bind::Rasterizer>( *this, false, true ) );
 
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
-		hr = device->CreateTexture2D( &depthStencilDesc, NULL, depthStencilBuffer.GetAddressOf() );
-		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil texture!" );
-		hr = device->CreateDepthStencilView( depthStencilBuffer.Get(), NULL, depthStencilView.GetAddressOf() );
-		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil view!" );
-		
-		context->OMSetRenderTargets( 1, backBuffer.GetAddressOf(), depthStencilView.Get() );
-
-		CD3D11_DEPTH_STENCIL_DESC depthStencilStateDesc = CD3D11_DEPTH_STENCIL_DESC( CD3D11_DEFAULT{} );
-		depthStencilStateDesc.DepthEnable = TRUE;
-		depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-		hr = device->CreateDepthStencilState( &depthStencilStateDesc, depthStencilState.GetAddressOf() );
-		COM_ERROR_IF_FAILED( hr, "Failed to create depth stencil state!" );
-
-		// Create Viewport
-		CD3D11_VIEWPORT viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, windowWidth, windowHeight );
-		viewportDesc.MinDepth = 0.0f;
-		viewportDesc.MaxDepth = 1.0f;
-		context->RSSetViewports( 1u, &viewportDesc );
-
-		// Create Rasterizer State
-		CD3D11_RASTERIZER_DESC rasterizerDesc = CD3D11_RASTERIZER_DESC( CD3D11_DEFAULT{} );
-		rasterizerDesc.MultisampleEnable = TRUE;
-		hr = device->CreateRasterizerState( &rasterizerDesc, &rasterizerState );
-		COM_ERROR_IF_FAILED( hr, "Failed to create static rasterizer state!" );
-		context->RSSetState( rasterizerState.Get() );
-
-		// Create Sampler State
-		CD3D11_SAMPLER_DESC samplerDesc( CD3D11_DEFAULT{} );
-		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
-		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
-
-		hr = device->CreateSamplerState( &samplerDesc, samplerState.GetAddressOf() );
-		COM_ERROR_IF_FAILED( hr, "Failed to create sampler state!" );
-		context->PSSetSamplers( 0u, 1u, samplerState.GetAddressOf() );
+        samplers.emplace( "Anisotropic", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Anisotropic ) );
+        samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
+        samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
 
 		// Setup Font Rendering
 		spriteBatch = std::make_unique<DirectX::SpriteBatch>( context.Get() );
