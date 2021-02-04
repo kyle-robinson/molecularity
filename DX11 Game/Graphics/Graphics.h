@@ -38,6 +38,7 @@ public:
 
 	// Global Objects
 	Light light;
+	int boxToUse = 0;
 	RenderableGameObject nanosuit;
 	std::unique_ptr<Camera> camera;
 private:
@@ -48,8 +49,14 @@ private:
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
+	
+	// Textures
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> spaceTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tntTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> jumpBoxTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> bounceBoxTexture;
+	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
 	// Pipeline State
 	std::shared_ptr<Bind::Viewport> viewport;

@@ -55,6 +55,14 @@ void Application::Update()
 				);
 			}
 		}
+		if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
+		{
+			gfx.boxToUse++;
+		}
+		else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
+		{
+			gfx.boxToUse--;
+		}
 	}
 
 	// Update Game Input Here

@@ -127,10 +127,23 @@ bool Graphics::InitializeScene()
 
 		// Initialize Textures
 		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
-        COM_ERROR_IF_FAILED( hr, "Failed to create box texture from file!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create BOX texture from file!" );
+		boxTextures.push_back( std::move( boxTexture ) );
+
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\BounceBox.png", nullptr, bounceBoxTexture.GetAddressOf() );
+        COM_ERROR_IF_FAILED( hr, "Failed to create BOUNCE BOX texture from file!" );
+		boxTextures.push_back( std::move( bounceBoxTexture ) );
+
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\JumpBox.png", nullptr, jumpBoxTexture.GetAddressOf() );
+        COM_ERROR_IF_FAILED( hr, "Failed to create JUMP CRATE texture from file!" );
+		boxTextures.push_back( std::move( jumpBoxTexture ) );
+
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\TNT.png", nullptr, tntTexture.GetAddressOf() );
+        COM_ERROR_IF_FAILED( hr, "Failed to create TNT CRATE texture from file!" );
+		boxTextures.push_back( std::move( tntTexture ) );
 		
 		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\Space.png", nullptr, spaceTexture.GetAddressOf() );
-        COM_ERROR_IF_FAILED( hr, "Failed to create space texture from file!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create SPACE texture from file!" );
 
 		// Initialize Constant Buffers
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
@@ -185,7 +198,7 @@ void Graphics::RenderFrame()
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	cube->Draw( cb_vs_matrix, boxTexture.Get() );
+	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
 
 	// Render Skybox
 	context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
