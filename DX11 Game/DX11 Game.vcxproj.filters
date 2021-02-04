@@ -67,6 +67,12 @@
     <Filter Include="Source Files\Objects\Managers">
       <UniqueIdentifier>{1f59e1ea-23b1-4e50-bfdf-4a33c3389c86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utility\Logging">
+      <UniqueIdentifier>{4c10ba4b-0c25-4945-98de-5ef3f5a97bd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility\Logging">
+      <UniqueIdentifier>{5cf93832-8a78-42f5-87f4-8eea8392169a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -120,16 +126,7 @@
     <ClCompile Include="Objects\Light.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\ErrorLogger.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\stdafx.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\StringConverter.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Timer.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Window\RenderWindow.cpp">
@@ -152,6 +149,15 @@
     </ClCompile>
     <ClCompile Include="Objects\Cube.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\ErrorLogger.cpp">
+      <Filter>Source Files\Utility\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\StringConverter.cpp">
+      <Filter>Source Files\Utility\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Timer.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,16 +239,7 @@
     <ClInclude Include="Objects\Light.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\COMException.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\ErrorLogger.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\stdafx.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\StringConverter.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Timer.h">
@@ -292,6 +289,18 @@
     </ClInclude>
     <ClInclude Include="Objects\Cube.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ErrorLogger.h">
+      <Filter>Header Files\Utility\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\COMException.h">
+      <Filter>Header Files\Utility\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\StringConverter.h">
+      <Filter>Header Files\Utility\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Billboard.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Graphics.h"
+#include "Billboard.h"
 #include "Sampler.h"
 #include "Viewport.h"
 #include "SwapChain.h"
@@ -221,4 +222,8 @@ void Graphics::Update( float dt )
 {
 	// Update Game Components
 	skybox->SetPosition( camera->GetPositionFloat3() );
+
+	// Billboard Model
+	float rotation = Billboard::BillboardModel( camera, nanosuit );
+	nanosuit.SetRotation( 0.0f, rotation, 0.0f );
 }
