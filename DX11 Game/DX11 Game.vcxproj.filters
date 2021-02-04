@@ -69,39 +69,6 @@
     <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ErrorLogger.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\StringConverter.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Timer.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\stdafx.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\WindowContainer.cpp">
-      <Filter>Source Files\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\RenderWindow.cpp">
-      <Filter>Source Files\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Mouse.cpp">
-      <Filter>Source Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Keyboard.cpp">
-      <Filter>Source Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shaders.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImGuiManager.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\External\imgui\imgui.cpp">
       <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
@@ -117,94 +84,70 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Colour.cpp">
+    <ClCompile Include="Graphics\ImGuiManager.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Shaders.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Graphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Mouse.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Keyboard.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Colour.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Mesh.cpp">
+    <ClCompile Include="Model\Mesh.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Model.cpp">
+    <ClCompile Include="Model\Model.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Texture.cpp">
+    <ClCompile Include="Model\Texture.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderableGameObject.cpp">
+    <ClCompile Include="Objects\RenderableGameObject.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Camera3D.cpp">
+    <ClCompile Include="Objects\Light.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObject.cpp">
+    <ClCompile Include="Objects\GameObject3D.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObject3D.cpp">
+    <ClCompile Include="Objects\GameObject.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Light.cpp">
+    <ClCompile Include="Objects\Camera3D.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\ErrorLogger.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\stdafx.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\StringConverter.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Timer.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\RenderWindow.cpp">
+      <Filter>Source Files\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Window\WindowContainer.cpp">
+      <Filter>Source Files\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\COMException.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\StringConverter.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ErrorLogger.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Timer.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\stdafx.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\WindowContainer.h">
-      <Filter>Header Files\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\RenderWindow.h">
-      <Filter>Header Files\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Graphics.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Keyboard.h">
-      <Filter>Header Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Mouse.h">
-      <Filter>Header Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Shaders.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ConstantBuffer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ConstantBufferTypes.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\VertexBuffer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\IndexBuffer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\VertexType.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Vertices.h">
-      <Filter>Header Files\Graphics\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\Indices.h">
-      <Filter>Header Files\Graphics\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ImGuiManager.h">
-      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imconfig.h">
       <Filter>Resource Files\ImGui</Filter>
@@ -230,32 +173,89 @@
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
       <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Texture.h">
+    <ClInclude Include="Graphics\Vertices.h">
+      <Filter>Header Files\Graphics\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Indices.h">
+      <Filter>Header Files\Graphics\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ConstantBuffer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ConstantBufferTypes.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Graphics.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ImGuiManager.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IndexBuffer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Shaders.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexBuffer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexType.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Keyboard.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Mouse.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Mesh.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Colour.h">
+    <ClInclude Include="Model\Model.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Mesh.h">
+    <ClInclude Include="Model\Texture.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Model.h">
+    <ClInclude Include="Model\Colour.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Camera3D.h">
+    <ClInclude Include="Objects\GameObject3D.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\GameObject.h">
+    <ClInclude Include="Objects\Light.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\GameObject3D.h">
+    <ClInclude Include="Objects\RenderableGameObject.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\RenderableGameObject.h">
+    <ClInclude Include="Objects\Camera3D.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\Light.h">
+    <ClInclude Include="Objects\GameObject.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\COMException.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\ErrorLogger.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\stdafx.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\StringConverter.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Timer.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\RenderWindow.h">
+      <Filter>Header Files\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Window\WindowContainer.h">
+      <Filter>Header Files\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
