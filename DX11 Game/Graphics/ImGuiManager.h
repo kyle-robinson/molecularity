@@ -11,6 +11,8 @@ public:
 	void BeginRender() const noexcept;
 	void EndRender() const noexcept;
 	void SpawnDemoWindow();
+private:
+	void SetBlackGoldStyle();
 };
 
 #endif

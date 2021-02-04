@@ -45,24 +45,16 @@ private:
 
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	//Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
 
+	// Pipeline State
 	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
-
-	// Pipeline States
-	//Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
-	//Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
-	//Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
-	//Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-	//Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
-	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
 
 	// Buffers
 	VertexBuffer<Vertex_Pos_Tex> vertexBuffer;
@@ -72,7 +64,6 @@ private:
 	VertexShader vertexShader_Tex;
 	VertexShader vertexShader_Col;
 	VertexShader vertexShader_light;
-
 	PixelShader pixelShader_Tex;
 	PixelShader pixelShader_Col;
 	PixelShader pixelShader_light;
@@ -86,7 +77,6 @@ private:
 	UINT windowWidth;
 	UINT windowHeight;
 	ImGuiManager imgui;
-
 	bool useTexture = true;
 	float alphaFactor = 1.0f;
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
