@@ -61,6 +61,12 @@
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{d9a5d807-2da0-449f-9a58-fc918f421be1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Objects\Managers">
+      <UniqueIdentifier>{dd3ac13b-664e-44c7-8503-2a680cba499d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Managers">
+      <UniqueIdentifier>{1f59e1ea-23b1-4e50-bfdf-4a33c3389c86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -111,19 +117,7 @@
     <ClCompile Include="Model\Texture.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\RenderableGameObject.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\Light.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\GameObject3D.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\GameObject.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Camera3D.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Utility\ErrorLogger.cpp">
@@ -143,6 +137,18 @@
     </ClCompile>
     <ClCompile Include="Window\WindowContainer.cpp">
       <Filter>Source Files\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Camera.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\RenderableGameObject.cpp">
+      <Filter>Source Files\Objects\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameObject3D.cpp">
+      <Filter>Source Files\Objects\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameObject.cpp">
+      <Filter>Source Files\Objects\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,19 +227,7 @@
     <ClInclude Include="Model\Colour.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\GameObject3D.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Light.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\RenderableGameObject.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Camera3D.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\GameObject.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Utility\COMException.h">
@@ -277,6 +271,21 @@
     </ClInclude>
     <ClInclude Include="Graphics\Sampler.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\RenderableGameObject.h">
+      <Filter>Header Files\Objects\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameObject3D.h">
+      <Filter>Header Files\Objects\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameObject.h">
+      <Filter>Header Files\Objects\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Camera.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\CameraMovement.h">
+      <Filter>Header Files\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

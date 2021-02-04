@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Input\\CameraMovement.h"
 
 bool Application::Initialize(
 	HINSTANCE hInstance,
@@ -57,28 +58,14 @@ void Application::Update()
 	}
 
 	// Update Game Input Here
-	float camera3DSpeed = 0.002f;
-
-	if ( keyboard.KeyIsPressed( VK_SHIFT ) )
-		camera3DSpeed = 0.01f;
-
-	if ( keyboard.KeyIsPressed( 'W' ) )
-		gfx.camera.AdjustPosition( gfx.camera.GetForwardVector() * camera3DSpeed * dt );
-
-	if ( keyboard.KeyIsPressed( 'A' ) )
-		gfx.camera.AdjustPosition( gfx.camera.GetLeftVector() * camera3DSpeed * dt );
-
-	if ( keyboard.KeyIsPressed( 'S' ) )
-		gfx.camera.AdjustPosition( gfx.camera.GetBackwardVector() * camera3DSpeed * dt );
-
-	if ( keyboard.KeyIsPressed( 'D' ) )
-		gfx.camera.AdjustPosition( gfx.camera.GetRightVector() * camera3DSpeed * dt );
-
-	if ( keyboard.KeyIsPressed( VK_SPACE ) )
-		gfx.camera.AdjustPosition( XMFLOAT3( 0.0f, camera3DSpeed * dt, 0.0f ) );
-
-	if ( keyboard.KeyIsPressed( 'E' ) )
-		gfx.camera.AdjustPosition( XMFLOAT3( 0.0f, -camera3DSpeed * dt, 0.0f ) );
+	gfx.camera.SetCameraSpeed( 0.002f );
+	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera.SetCameraSpeed( 0.01f );
+	if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
 
 	// Set Light Position
 	XMVECTOR lightPosition = gfx.camera.GetPositionVector();

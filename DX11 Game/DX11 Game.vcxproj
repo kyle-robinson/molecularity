@@ -230,7 +230,7 @@
     <ClCompile Include="Model\Texture.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Objects\Camera3D.cpp">
+    <ClCompile Include="Objects\Camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Objects\GameObject.cpp">
@@ -289,13 +289,14 @@
     <ClInclude Include="Graphics\VertexType.h" />
     <ClInclude Include="Graphics\Vertices.h" />
     <ClInclude Include="Graphics\Viewport.h" />
+    <ClInclude Include="Input\CameraMovement.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Model\Colour.h" />
     <ClInclude Include="Model\Mesh.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\Texture.h" />
-    <ClInclude Include="Objects\Camera3D.h" />
+    <ClInclude Include="Objects\Camera.h" />
     <ClInclude Include="Objects\GameObject.h" />
     <ClInclude Include="Objects\GameObject3D.h" />
     <ClInclude Include="Objects\Light.h" />

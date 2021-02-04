@@ -6,13 +6,13 @@
 #include "RenderableGameObject.h"
 using namespace DirectX;
 
-class Camera3D : public GameObject3D
+class Camera : public GameObject3D
 {
 public:
-	Camera3D() {}
-	Camera3D( const XMFLOAT3& initialPosition );
-	Camera3D( float xPos, float yPos, float zPos );
-	Camera3D& operator=( Camera3D );
+	Camera() {}
+	Camera( const XMFLOAT3& initialPosition );
+	Camera( float xPos, float yPos, float zPos );
+	Camera& operator=( Camera );
 	void SetProjectionValues( float fovDegrees, float aspectRatio, float nearZ, float farZ );
 
 	const XMMATRIX& GetViewMatrix() const noexcept;
@@ -25,11 +25,6 @@ public:
 	const float& GetFoVDegrees() const noexcept;
 	const float& GetNearZ() const noexcept;
 	const float& GetFarZ() const noexcept;
-
-	void ResetOrientation() noexcept;
-	void ResetProjection( float aspectRatio ) noexcept;
-
-	static void UpdateThirdPerson( std::shared_ptr<Camera3D>& camera, GameObject3D& model ) noexcept;
 private:
 	void UpdateMatrix() override;
 	XMMATRIX view, projection;

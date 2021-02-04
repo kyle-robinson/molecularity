@@ -5,7 +5,7 @@
 #include <map>
 #include "Light.h"
 #include "Shaders.h"
-#include "Camera3D.h"
+#include "Camera.h"
 #include "ImGuiManager.h"
 #include "RenderableGameObject.h"
 #include <dxtk/SpriteFont.h>
@@ -36,7 +36,7 @@ public:
 	UINT GetHeight() const noexcept { return windowHeight; }
 
 	Light light;
-	Camera3D camera;
+	Camera camera;
 	RenderableGameObject nanosuit;
 private:
 	bool InitializeDirectX( HWND hWnd );
