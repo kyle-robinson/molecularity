@@ -2,6 +2,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "Timer.h"
 #include "WindowContainer.h"
 
 class Application : public WindowContainer

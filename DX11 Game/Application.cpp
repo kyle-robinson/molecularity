@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #include "Application.h"
+#include "Input\\CameraMovement.h"
 
 bool Application::Initialize(
 	HINSTANCE hInstance,
@@ -42,15 +42,45 @@ void Application::Update()
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		std::string outMsg = "X: ";
-		outMsg += std::to_string( me.GetPosX() );
-		outMsg += ", Y: ";
-		outMsg += std::to_string( me.GetPosY() );
-		outMsg += "\n";
-		OutputDebugStringA( outMsg.c_str() );
+		if ( mouse.IsRightDown() )
+		{
+			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
+			{
+				gfx.camera->AdjustRotation(
+					XMFLOAT3(
+						static_cast<float>( me.GetPosY() ) * 0.005f,
+						static_cast<float>( me.GetPosX() ) * 0.005f,
+						0.0f
+					)
+				);
+			}
+		}
+		if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
+		{
+			gfx.boxToUse++;
+		}
+		else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
+		{
+			gfx.boxToUse--;
+		}
 	}
 
-	// Update Game Input Here...
+	// Update Game Input Here
+	gfx.camera->SetCameraSpeed( 0.002f );
+	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera->SetCameraSpeed( 0.01f );
+	if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.camera, dt );
+	if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
+
+	// Set Light Position
+	XMVECTOR lightPosition = gfx.camera->GetPositionVector();
+	lightPosition += gfx.camera->GetForwardVector() / 4;
+	lightPosition += gfx.camera->GetRightVector() / 2;
+	gfx.light.SetPosition( lightPosition );
+	gfx.light.SetRotation( gfx.camera->GetRotationFloat3().x + XM_PI, gfx.camera->GetRotationFloat3().y, gfx.camera->GetRotationFloat3().z );
 
 	gfx.Update( dt );
 }
