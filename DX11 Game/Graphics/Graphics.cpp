@@ -101,11 +101,6 @@ bool Graphics::InitializeScene()
 	try
 	{
 		// Initialize Games Objects
-		/*HRESULT hr = vertexBuffer.Initialize( device.Get(), verticesQuad_Tex, ARRAYSIZE( verticesQuad_Tex ) );
-		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle vertex buffer!" );
-		hr = indexBuffer.Initialize( device.Get(), indicesQuad, ARRAYSIZE( indicesQuad ) );
-		COM_ERROR_IF_FAILED( hr, "Failed to initialize triangle index buffer!" );*/
-
 		nanosuit.SetScale( 1.0f, 1.0f, 1.0f );
 		if ( !nanosuit.Initialize( "Resources\\Models\\Nanosuit\\nanosuit.obj", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
@@ -119,18 +114,22 @@ bool Graphics::InitializeScene()
 			return false;
 		cube->SetInitialPosition( 0.0f, 5.0f, 5.0f );
 
+		skybox = std::make_unique<Cube>();
+		if ( !skybox->Initialize( context.Get(), device.Get() ) )
+			return false;
+		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
+		skybox->SetScale( 250.0f, 250.0f, 250.0f );
+
 		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
 		camera = std::make_unique<Camera>( 0.0f, 9.0f, -15.0f );
 		camera->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 
-		//XMVECTOR lightPosition = camera.GetPositionVector();
-		//lightPosition += camera.GetForwardVector() + XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-		//light.SetPosition( lightPosition );
-		//light.SetRotation( camera.GetRotationFloat3() );
-
 		// Initialize Textures
 		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create box texture from file!" );
+		
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\Space.png", nullptr, spaceTexture.GetAddressOf() );
+        COM_ERROR_IF_FAILED( hr, "Failed to create space texture from file!" );
 
 		// Initialize Constant Buffers
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
@@ -182,22 +181,15 @@ void Graphics::BeginFrame()
 void Graphics::RenderFrame()
 {
 	// Render Games Objects
-	/*Shaders::BindShaders( context.Get(), vertexShader_Tex, pixelShader_Tex );
-	UINT offset = 0;
-	cb_vs_matrix.data.worldMatrix = DirectX::XMMatrixIdentity();
-	if ( !cb_vs_matrix.ApplyChanges() ) return;
-	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
-	context->PSSetShaderResources( 0, 1, boxTexture.GetAddressOf() );
-	context->IASetVertexBuffers( 0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset );
-	context->IASetIndexBuffer( indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
-	context->DrawIndexed( indexBuffer.IndexCount(), 0, 0 );*/
-
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	cube->Draw( cb_vs_matrix, boxTexture.Get() );
 
-	//context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
-	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	// Render Skybox
+	rasterizers["Cubemap"]->Bind( *this );
+	context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
+	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
 }
 
 void Graphics::EndFrame()
@@ -228,5 +220,5 @@ void Graphics::EndFrame()
 void Graphics::Update( float dt )
 {
 	// Update Game Components
-	//nanosuit.AdjustRotation( XMFLOAT3( 0.0f, 0.001f * dt, 0.0f ) );
+	skybox->SetPosition( camera->GetPositionFloat3() );
 }

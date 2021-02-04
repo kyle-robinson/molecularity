@@ -49,6 +49,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> spaceTexture;
 
 	// Pipeline State
 	std::shared_ptr<Bind::Viewport> viewport;
@@ -57,10 +58,6 @@ private:
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
-
-	// Buffers
-	VertexBuffer<Vertex_Pos_Tex> vertexBuffer;
-	IndexBuffer indexBuffer;
 
 	// Shaders
 	VertexShader vertexShader_Tex;
@@ -85,6 +82,7 @@ private:
 
 	// Local Objects
 	std::unique_ptr<Cube> cube;
+	std::unique_ptr<Cube> skybox;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 };
