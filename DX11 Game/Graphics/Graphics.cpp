@@ -137,8 +137,6 @@ bool Graphics::InitializeScene()
 
 		hr = cb_ps_light.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_light' Constant Buffer!" );
-		cb_ps_light.data.ambientLightColor = XMFLOAT3( 1.0f, 1.0f, 1.0f );
-		cb_ps_light.data.ambientLightStrength = 0.1f;
 	}
 	catch ( COMException& exception )
 	{
@@ -157,10 +155,12 @@ void Graphics::BeginFrame()
 	samplers["Anisotropic"]->Bind( *this );
 
 	// Setup Constant Buffers
+	cb_ps_light.data.ambientLightColor = light.ambientColor;
+	cb_ps_light.data.ambientLightStrength = light.ambientStrength;
 	cb_ps_light.data.dynamicLightColor = light.lightColor;
 	cb_ps_light.data.dynamicLightStrength = light.lightStrength;
 	cb_ps_light.data.specularLightColor = light.specularColor;
-	cb_ps_light.data.specularLightIntensity = light.specularIntensity;
+	cb_ps_light.data.specularLightStrength = light.specularStrength;
 	cb_ps_light.data.specularLightPower = light.specularPower;
 
 	XMVECTOR lightPosition = camera->GetPositionVector();
@@ -187,8 +187,8 @@ void Graphics::RenderFrame()
 	cube->Draw( cb_vs_matrix, boxTexture.Get() );
 
 	// Render Skybox
-	rasterizers["Cubemap"]->Bind( *this );
 	context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
+	rasterizers["Cubemap"]->Bind( *this );
 	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
 }
 
@@ -197,13 +197,13 @@ void Graphics::EndFrame()
 	// Font Rendering
 	spriteBatch->Begin();
 	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
-	spriteFont->DrawString( spriteBatch.get(), L"Font Rendering Demo", fontPosition,
-        DirectX::Colors::Black, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application", fontPosition,
+        DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
 	imgui.BeginRender();
-	imgui.SpawnDemoWindow();
+	light.SpawnControlWindow();
 	imgui.EndRender();
 
 	// Display Current Frame

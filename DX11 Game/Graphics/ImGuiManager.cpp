@@ -35,15 +35,6 @@ void ImGuiManager::EndRender() const noexcept
     ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
 }
 
-void ImGuiManager::SpawnDemoWindow()
-{
-    if ( ImGui::Begin( "Test Window", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
-    {
-        static float demo = 1.0f;
-        ImGui::SliderFloat( "Test Slider", &demo, 0.0f, 1.0f );
-    } ImGui::End();
-}
-
 void ImGuiManager::SetBlackGoldStyle()
 {
     ImGuiStyle* style = &ImGui::GetStyle();
