@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Graphics.h"
 #include "Billboard.h"
+#include "Stencil.h"
 #include "Sampler.h"
 #include "Viewport.h"
 #include "SwapChain.h"
@@ -29,6 +30,10 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		renderTarget = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
 		viewport = std::make_shared<Bind::Viewport>( *this );
+
+		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
+        stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
+        stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
 
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
         rasterizers.emplace( "Cubemap", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
@@ -77,17 +82,17 @@ bool Graphics::InitializeShaders()
 		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture vertex shader!" );
         hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );*/
 
 		// Colour Layout
 		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		hr = vertexShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
+		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create colour vertex shader!" );
-        hr = pixelShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create colour pixel shader!" );*/
+        hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create colour pixel shader!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -151,6 +156,9 @@ bool Graphics::InitializeScene()
 
 		hr = cb_ps_light.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_light' Constant Buffer!" );
+
+		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_outline' Constant Buffer!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -165,8 +173,16 @@ void Graphics::BeginFrame()
 	// Clear Render Target
 	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
-	rasterizers["Solid"]->Bind( *this );
 	samplers["Anisotropic"]->Bind( *this );
+
+	// Render Cubemap First
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	stencils["Off"]->Bind( *this );
+	rasterizers["Cubemap"]->Bind( *this );
+	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
+
+	// Reset Rasterizer
+	rasterizers["Solid"]->Bind( *this );
 
 	// Setup Constant Buffers
 	cb_ps_light.data.ambientLightColor = light.ambientColor;
@@ -194,16 +210,29 @@ void Graphics::BeginFrame()
 
 void Graphics::RenderFrame()
 {
-	// Render Games Objects
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	// Render Game Objects
+	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+
+	// Render Objects w/ Stencils
+	stencils["Write"]->Bind( *this );
 	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
 
-	// Render Skybox
-	context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
-	rasterizers["Cubemap"]->Bind( *this );
-	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
+	cb_ps_outline.data.outlineColor = { 1.0f, 0.0f, 0.0f };
+    if ( !cb_ps_outline.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
+	stencils["Mask"]->Bind( *this );
+	cube->SetScale( 1.1f, 1.1f, 1.1f );
+	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+
+	if ( !cb_ps_light.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	cube->SetScale( 1.0f, 1.0f, 1.0f );
+	stencils["Off"]->Bind( *this );
+	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
 }
 
 void Graphics::EndFrame()
@@ -219,6 +248,8 @@ void Graphics::EndFrame()
 	imgui.BeginRender();
 	light.SpawnControlWindow();
 	imgui.EndRender();
+
+	renderTarget->BindAsNull( *this );
 
 	// Display Current Frame
 	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );

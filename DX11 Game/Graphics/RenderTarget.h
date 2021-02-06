@@ -32,6 +32,13 @@ namespace Bind
 			GetContext( gfx )->OMSetRenderTargets( 1, backBuffer.GetAddressOf(), depthStencil->GetDepthStencilView() );
 			GetContext( gfx )->ClearRenderTargetView( backBuffer.Get(), clearColor );
 		}
+		void BindAsNull( Graphics& gfx ) noexcept
+		{
+			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> nullRenderTarget = nullptr;
+			GetContext( gfx )->OMSetRenderTargets( 1, nullRenderTarget.GetAddressOf(), nullptr );
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> nullShaderResourceView = nullptr;
+			GetContext( gfx )->PSSetShaderResources( 0, 1, nullShaderResourceView.GetAddressOf() );
+		}
 	private:
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> backBuffer;
 	};

@@ -19,6 +19,7 @@ namespace Bind
 	class Rasterizer;
 	class RenderTarget;
 	class Sampler;
+	class Stencil;
 	class SwapChain;
 	class Viewport;
 }
@@ -64,19 +65,23 @@ private:
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
+	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 
 	// Shaders
 	VertexShader vertexShader_Tex;
 	VertexShader vertexShader_Col;
 	VertexShader vertexShader_light;
+	VertexShader vertexShader_outline;
 	PixelShader pixelShader_Tex;
 	PixelShader pixelShader_Col;
 	PixelShader pixelShader_light;
 	PixelShader pixelShader_noLight;
+	PixelShader pixelShader_outline;
 
 	// Constant Buffers
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
+	ConstantBuffer<CB_PS_outline> cb_ps_outline;
 	ConstantBuffer<CB_PS_light> cb_ps_light;
 
 	// Local Variables

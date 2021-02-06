@@ -302,6 +302,9 @@
     <ClInclude Include="Utility\Billboard.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Stencil.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
@@ -314,6 +317,9 @@
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\Primitive_NoNrm.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_Outline.fx">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

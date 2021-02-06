@@ -28,4 +28,9 @@ struct CB_PS_light
 	float alphaFactor;
 };
 
+struct CB_PS_outline
+{
+	alignas(16) DirectX::XMFLOAT3 outlineColor;
+};
+
 #endif
