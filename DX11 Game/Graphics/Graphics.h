@@ -40,6 +40,8 @@ public:
 	// Global Objects
 	Light light;
 	int boxToUse = 0;
+	bool cubeHover = false;
+	std::unique_ptr<Cube> cube;
 	RenderableGameObject nanosuit;
 	std::unique_ptr<Camera> camera;
 private:
@@ -48,7 +50,7 @@ private:
 	bool InitializeScene();
 
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& colour );
-	void DrawWithOutline( std::unique_ptr<Cube>& object, const XMFLOAT3& colour );
+	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& colour );
 
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
@@ -96,7 +98,6 @@ private:
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// Local Objects
-	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Cube> skybox;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;

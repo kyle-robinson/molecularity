@@ -16,6 +16,8 @@ bool Application::Initialize(
 	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
 
+	mousePick.Initialize( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix(), width, height );
+
 	return true;
 }
 
@@ -62,6 +64,18 @@ void Application::Update()
 		else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
 		{
 			gfx.boxToUse--;
+		}
+		if ( me.GetType() == Mouse::MouseEvent::EventType::Move )
+		{
+			mousePick.UpdateMatrices( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix() );
+			if ( mousePick.TestIntersection( me.GetPosX(), me.GetPosY(), *gfx.cube.get() ) )
+			{
+				gfx.cubeHover = true;
+			}
+		}
+		else
+		{
+			gfx.cubeHover = false;
 		}
 	}
 

@@ -216,7 +216,10 @@ void Graphics::RenderFrame()
 	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
-	DrawWithOutline( cube, XMFLOAT3( 1.0f, 0.6f, 0.1f ) );
+	if ( cubeHover )
+		DrawWithOutline( cube, XMFLOAT3( 1.0f, 0.6f, 0.1f ) );
+	else
+		cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
 }
 
 void Graphics::EndFrame()
