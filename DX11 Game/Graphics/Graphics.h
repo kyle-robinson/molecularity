@@ -27,6 +27,12 @@ namespace Bind
 class Graphics
 {
 	friend class GraphicsResource;
+	enum SamplerType
+	{
+		ANISOTROPIC,
+		BILINEAR,
+		POINT_SAMPLING
+	} samplerType;
 public:
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
@@ -48,9 +54,10 @@ private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
+	void SpawnControlWindow();
 
-	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& colour );
-	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& colour );
+	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
+	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
 
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
@@ -94,7 +101,9 @@ private:
 	UINT windowHeight;
 	ImGuiManager imgui;
 	bool useTexture = true;
+	bool rasterizerSolid = true;
 	float alphaFactor = 1.0f;
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// Local Objects

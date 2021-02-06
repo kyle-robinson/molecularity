@@ -8,6 +8,7 @@
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
+#include <imgui/imgui.h>
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
@@ -173,7 +174,13 @@ void Graphics::BeginFrame()
 	// Clear Render Target
 	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
-	samplers["Anisotropic"]->Bind( *this );
+	switch ( samplerType )
+	{
+	case ANISOTROPIC: samplers["Anisotropic"]->Bind( *this ); break;
+	case BILINEAR: samplers["Bilinear"]->Bind( *this ); break;
+	case POINT_SAMPLING: samplers["Point"]->Bind( *this ); break;
+	}
+	
 
 	// Render Cubemap First
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
@@ -182,7 +189,7 @@ void Graphics::BeginFrame()
 	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
 
 	// Reset Rasterizer
-	rasterizers["Solid"]->Bind( *this );
+	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
 	// Setup Constant Buffers
 	cb_ps_light.data.ambientLightColor = light.ambientColor;
@@ -217,7 +224,7 @@ void Graphics::RenderFrame()
 
 	// Render Objects w/ Stencils
 	if ( cubeHover )
-		DrawWithOutline( cube, XMFLOAT3( 1.0f, 0.6f, 0.1f ) );
+		DrawWithOutline( cube, outlineColor );
 	else
 		cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
 }
@@ -233,6 +240,7 @@ void Graphics::EndFrame()
 
 	// Spawn ImGui Windows
 	imgui.BeginRender();
+	SpawnControlWindow();
 	light.SpawnControlWindow();
 	imgui.EndRender();
 
@@ -262,12 +270,12 @@ void Graphics::Update( float dt )
 //------------------//
 // STENCIL OUTLINES //
 //------------------//
-void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& colour )
+void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color )
 {
 	stencils["Write"]->Bind( *this );
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
-	cb_ps_outline.data.outlineColor = colour;
+	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
@@ -283,12 +291,12 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 }
 
-void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& colour )
+void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color )
 {
 	stencils["Write"]->Bind( *this );
 	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
 
-	cb_ps_outline.data.outlineColor = colour;
+	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
@@ -302,4 +310,48 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 	cube->SetScale( 1.0f, 1.0f, 1.0f );
 	stencils["Off"]->Bind( *this );
 	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+}
+
+//--------------//
+// IMGUI WINDOW //
+//--------------//
+void Graphics::SpawnControlWindow()
+{
+	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	{
+		static int fillGroup = 0;
+	    if ( ImGui::RadioButton( "Solid", &fillGroup, 0 ) )
+            rasterizerSolid = true;
+	    ImGui::SameLine();
+	    if ( ImGui::RadioButton( "Wireframe", &fillGroup, 1 ) )
+            rasterizerSolid = false;
+
+		static int activeSampler = 0;
+        static bool selectedSampler[3];
+        static std::string previewValueSampler = "Anisotropic";
+        static const char* samplerList[]{ "Anisotropic", "Bilinear", "Point Sampling" };
+        if ( ImGui::BeginCombo( "Sampler Type", previewValueSampler.c_str() ) )
+        {
+            for ( unsigned int i = 0; i < IM_ARRAYSIZE( samplerList ); i++ )
+            {
+                const bool isSelected = i == activeSampler;
+                if ( ImGui::Selectable( samplerList[i], isSelected ) )
+                {
+                    activeSampler = i;
+                    previewValueSampler = samplerList[i];
+                }
+            }
+
+            switch ( activeSampler )
+            {
+            case 0: samplerType = SamplerType::ANISOTROPIC; break;
+            case 1: samplerType = SamplerType::BILINEAR; break;
+            case 2: samplerType = SamplerType::POINT_SAMPLING; break;
+            }
+
+            ImGui::EndCombo();
+        }
+
+		ImGui::ColorEdit3( "Outline", &outlineColor.x );
+	} ImGui::End();
 }
