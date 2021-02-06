@@ -47,6 +47,9 @@ private:
 	bool InitializeShaders();
 	bool InitializeScene();
 
+	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& colour );
+	void DrawWithOutline( std::unique_ptr<Cube>& object, const XMFLOAT3& colour );
+
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;

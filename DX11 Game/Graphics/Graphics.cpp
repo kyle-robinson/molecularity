@@ -216,23 +216,7 @@ void Graphics::RenderFrame()
 	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
-	stencils["Write"]->Bind( *this );
-	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
-
-	cb_ps_outline.data.outlineColor = { 1.0f, 0.0f, 0.0f };
-    if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
-	stencils["Mask"]->Bind( *this );
-	cube->SetScale( 1.1f, 1.1f, 1.1f );
-	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
-
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	cube->SetScale( 1.0f, 1.0f, 1.0f );
-	stencils["Off"]->Bind( *this );
-	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+	DrawWithOutline( cube, XMFLOAT3( 1.0f, 0.6f, 0.1f ) );
 }
 
 void Graphics::EndFrame()
@@ -270,4 +254,49 @@ void Graphics::Update( float dt )
 	// Billboard Model
 	float rotation = Billboard::BillboardModel( camera, nanosuit );
 	nanosuit.SetRotation( 0.0f, rotation, 0.0f );
+}
+
+//------------------//
+// STENCIL OUTLINES //
+//------------------//
+void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& colour )
+{
+	stencils["Write"]->Bind( *this );
+	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+
+	cb_ps_outline.data.outlineColor = colour;
+    if ( !cb_ps_outline.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
+	stencils["Mask"]->Bind( *this );
+	object.SetScale( 1.1f, 1.f, 1.1f );
+	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+
+	if ( !cb_ps_light.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	object.SetScale( 1.0f, 1.0f, 1.0f );
+	stencils["Off"]->Bind( *this );
+	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+}
+
+void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& colour )
+{
+	stencils["Write"]->Bind( *this );
+	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+
+	cb_ps_outline.data.outlineColor = colour;
+    if ( !cb_ps_outline.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
+	stencils["Mask"]->Bind( *this );
+	cube->SetScale( 1.1f, 1.1f, 1.1f );
+	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+
+	if ( !cb_ps_light.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	cube->SetScale( 1.0f, 1.0f, 1.0f );
+	stencils["Off"]->Bind( *this );
+	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
 }
