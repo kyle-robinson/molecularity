@@ -192,23 +192,7 @@ void Graphics::BeginFrame()
 	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
 	// Setup Constant Buffers
-	cb_ps_light.data.ambientLightColor = light.ambientColor;
-	cb_ps_light.data.ambientLightStrength = light.ambientStrength;
-	cb_ps_light.data.dynamicLightColor = light.lightColor;
-	cb_ps_light.data.dynamicLightStrength = light.lightStrength;
-	cb_ps_light.data.specularLightColor = light.specularColor;
-	cb_ps_light.data.specularLightStrength = light.specularStrength;
-	cb_ps_light.data.specularLightPower = light.specularPower;
-
-	XMVECTOR lightPosition = camera->GetPositionVector();
-	lightPosition += camera->GetForwardVector();
-	lightPosition += camera->GetRightVector() / 4;
-	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
-	cb_ps_light.data.dynamicLightPosition = lightPositionF;
-
-	cb_ps_light.data.lightConstant = light.constant;
-	cb_ps_light.data.lightLinear = light.linear;
-	cb_ps_light.data.lightQuadratic = light.quadratic;
+	light.UpdateConstantBuffer( cb_ps_light, camera );
 	cb_ps_light.data.useTexture = useTexture;
 	cb_ps_light.data.alphaFactor = alphaFactor;
 	if ( !cb_ps_light.ApplyChanges() ) return;

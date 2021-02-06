@@ -1,4 +1,5 @@
 #include "Light.h"
+#include "Camera.h"
 #include <imgui/imgui.h>
 
 //"Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
@@ -41,4 +42,25 @@ void Light::SpawnControlWindow()
 			ImGui::SliderFloat( "Quadratic", &quadratic, 0.0000001f, 1.0f, "%.7f", 10 );
 		}
 	} ImGui::End();
+}
+
+void Light::UpdateConstantBuffer( ConstantBuffer<CB_PS_light>& cb_ps_light, std::unique_ptr<Camera>& camera )
+{
+	cb_ps_light.data.ambientLightColor = ambientColor;
+	cb_ps_light.data.ambientLightStrength = ambientStrength;
+	cb_ps_light.data.dynamicLightColor = lightColor;
+	cb_ps_light.data.dynamicLightStrength = lightStrength;
+	cb_ps_light.data.specularLightColor = specularColor;
+	cb_ps_light.data.specularLightStrength = specularStrength;
+	cb_ps_light.data.specularLightPower = specularPower;
+
+	XMVECTOR lightPosition = camera->GetPositionVector();
+	lightPosition += camera->GetForwardVector();
+	lightPosition += camera->GetRightVector() / 4;
+	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
+	cb_ps_light.data.dynamicLightPosition = lightPositionF;
+	
+	cb_ps_light.data.lightConstant = constant;
+	cb_ps_light.data.lightLinear = linear;
+	cb_ps_light.data.lightQuadratic = quadratic;
 }

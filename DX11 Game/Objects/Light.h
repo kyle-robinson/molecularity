@@ -4,12 +4,14 @@
 
 #include "RenderableGameObject.h"
 
+class Camera;
 class Light : public RenderableGameObject
 {
 public:
 	bool Initialize( ID3D11Device* device, ID3D11DeviceContext* context,
 		ConstantBuffer<CB_VS_matrix>& cb_vs_vertexshader );
 	void SpawnControlWindow();
+	void UpdateConstantBuffer( ConstantBuffer<CB_PS_light>& cb_ps_light, std::unique_ptr<Camera>& camera );
 
 	// Ambient
 	DirectX::XMFLOAT3 ambientColor = { 1.0f, 1.0f, 1.0f };
