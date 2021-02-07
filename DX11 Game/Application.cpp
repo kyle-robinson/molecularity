@@ -44,6 +44,8 @@ void Application::Update()
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
+		
+		// Camera Movement
 		if ( mouse.IsRightDown() )
 		{
 			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
@@ -57,26 +59,23 @@ void Application::Update()
 				);
 			}
 		}
+		
+		// Change Selected Texture to Use on Box
 		if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
-		{
 			gfx.boxToUse++;
-		}
 		else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
-		{
 			gfx.boxToUse--;
-		}
-		if ( me.GetType() == Mouse::MouseEvent::EventType::Move )
-		{
-			mousePick.UpdateMatrices( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix() );
-			if ( mousePick.TestIntersection( me.GetPosX(), me.GetPosY(), *gfx.cube.get() ) )
-			{
-				gfx.cubeHover = true;
-			}
-		}
+		
+		// Mouse Picking
+		mousePick.UpdateMatrices( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix() );
+		if ( mousePick.TestIntersection( me.GetPosX(), me.GetPosY(), *gfx.cube.get() ) )
+			gfx.cubeHover = true;
 		else
-		{
 			gfx.cubeHover = false;
-		}
+
+		// Update Box Texture on Click while Hovering
+		if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
+			gfx.selectedBox = gfx.boxToUse;
 	}
 
 	// Update Game Input Here

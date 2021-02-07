@@ -180,7 +180,6 @@ void Graphics::BeginFrame()
 	case BILINEAR: samplers["Bilinear"]->Bind( *this ); break;
 	case POINT_SAMPLING: samplers["Point"]->Bind( *this ); break;
 	}
-	
 
 	// Render Cubemap First
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
@@ -210,16 +209,27 @@ void Graphics::RenderFrame()
 	if ( cubeHover )
 		DrawWithOutline( cube, outlineColor );
 	else
-		cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+		cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }
 
 void Graphics::EndFrame()
 {
 	// Font Rendering
 	spriteBatch->Begin();
-	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
-	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application", fontPosition,
-        DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application",
+		DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
+		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	static std::wstring boxType;
+	switch ( boxToUse )
+	{
+	case 0: boxType = L"Box Texture"; break;
+	case 1: boxType = L"Bounce Box Texture"; break;
+	case 2: boxType = L"Jump Box Texture"; break;
+	case 3: boxType = L"TNT Box Texture"; break;
+	}
+	spriteFont->DrawString( spriteBatch.get(), boxType.c_str(),
+		DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
+		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
@@ -278,7 +288,7 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color )
 {
 	stencils["Write"]->Bind( *this );
-	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
@@ -286,14 +296,14 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	cube->SetScale( 1.1f, 1.1f, 1.1f );
-	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
 	if ( !cb_ps_light.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	cube->SetScale( 1.0f, 1.0f, 1.0f );
 	stencils["Off"]->Bind( *this );
-	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }
 
 //--------------//
@@ -328,9 +338,9 @@ void Graphics::SpawnControlWindow()
 
             switch ( activeSampler )
             {
-            case 0: samplerType = SamplerType::ANISOTROPIC; break;
-            case 1: samplerType = SamplerType::BILINEAR; break;
-            case 2: samplerType = SamplerType::POINT_SAMPLING; break;
+            case 0: samplerType = ANISOTROPIC; break;
+            case 1: samplerType = BILINEAR; break;
+            case 2: samplerType = POINT_SAMPLING; break;
             }
 
             ImGui::EndCombo();

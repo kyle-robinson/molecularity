@@ -46,6 +46,7 @@ public:
 	// Global Objects
 	Light light;
 	int boxToUse = 0;
+	int selectedBox = 0;
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;
 	RenderableGameObject nanosuit;
