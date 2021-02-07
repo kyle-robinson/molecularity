@@ -9,12 +9,15 @@ bool Application::Initialize(
 	int height )
 {
 	timer.Start();
+	EnableCursor();
 
 	if ( !renderWindow.Initialize( this, hInstance, windowTitle, windowClass, width, height ) )
 		return false;
 
 	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
+
+	mousePick.Initialize( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix(), width, height );
 
 	return true;
 }
@@ -42,6 +45,8 @@ void Application::Update()
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
+
+		// Camera Movement
 		if ( mouse.IsRightDown() )
 		{
 			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
@@ -55,15 +60,42 @@ void Application::Update()
 				);
 			}
 		}
+		
+		// Change Selected Texture to Use on Box
 		if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
-		{
 			gfx.boxToUse++;
-		}
 		else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
-		{
 			gfx.boxToUse--;
-		}
+		
+		// Mouse Picking
+		mousePick.UpdateMatrices( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix() );
+		if ( mousePick.TestIntersection( me.GetPosX(), me.GetPosY(), *gfx.cube.get() ) )
+			gfx.cubeHover = true;
+		else
+			gfx.cubeHover = false;
+
+		// Update Box Texture on Click while Hovering
+		if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
+			gfx.selectedBox = gfx.boxToUse;
 	}
+
+	// World Collisions
+	static float worldBoundary = 20.0f;
+
+	if ( gfx.camera->GetPositionFloat3().x < -worldBoundary )
+		gfx.camera->SetPosition( -worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
+	else if ( gfx.camera->GetPositionFloat3().x > worldBoundary )
+		gfx.camera->SetPosition( worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
+
+	if ( gfx.camera->GetPositionFloat3().y < 0.0f )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 0.0f, gfx.camera->GetPositionFloat3().z );
+	else if ( gfx.camera->GetPositionFloat3().y > worldBoundary )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, worldBoundary, gfx.camera->GetPositionFloat3().z );
+
+	if ( gfx.camera->GetPositionFloat3().z < -worldBoundary )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, -worldBoundary );
+	else if ( gfx.camera->GetPositionFloat3().z > worldBoundary )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, worldBoundary );
 
 	// Update Game Input Here
 	gfx.camera->SetCameraSpeed( 0.002f );
