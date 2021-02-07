@@ -19,27 +19,36 @@ void Light::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Light Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
 	{
-		if ( ImGui::CollapsingHeader( "Ambient Components" ) )
+		if ( ImGui::CollapsingHeader( "Directional Light" ) )
 		{
-			ImGui::ColorEdit3( "Colour##1", &ambientColor.x );
-			ImGui::SliderFloat( "Intensity##1", &ambientStrength, 0.1f, 1.0f, "%.1f" );
+			ImGui::SliderFloat3( "Position", &directionalLightPosition.x, -20.0f, 20.0f, "%.1f" );
+			ImGui::ColorEdit3( "Colour", &directionalLightColor.x );
+			ImGui::SliderFloat( "Intensity##0", &directionalLightStrength, 0.1f, 1.0f, "%.1f" );
 		}
-		if ( ImGui::CollapsingHeader( "Diffuse Components" ) )
+		if ( ImGui::CollapsingHeader( "Point Light" ) )
 		{
-			ImGui::ColorEdit3( "Colour##2", &lightColor.x );
-			ImGui::SliderFloat( "Intensity##2", &lightStrength, 0.1f, 1.0f, "%.1f" );
-		}
-		if ( ImGui::CollapsingHeader( "Specular Components" ) )
-		{
-			ImGui::ColorEdit3( "Colour##3", &specularColor.x );
-			ImGui::SliderFloat( "Intensity##3", &specularStrength, 0.1f, 1.0f, "%.1f" );
-			ImGui::SliderFloat( "Power", &specularPower, 1.0f, 20.0f, "%1.f" );
-		}
-		if ( ImGui::CollapsingHeader( "Attenuation" ) )
-		{
-			ImGui::SliderFloat( "Constant", &constant, 0.05f, 10.0f, "%.2f", 4 );
-			ImGui::SliderFloat( "Linear", &linear, 0.0001f, 4.0f, "%.4f", 8 );
-			ImGui::SliderFloat( "Quadratic", &quadratic, 0.0000001f, 1.0f, "%.7f", 10 );
+			if ( ImGui::CollapsingHeader( "Ambient Components" ) )
+			{
+				ImGui::ColorEdit3( "Colour##1", &ambientColor.x );
+				ImGui::SliderFloat( "Intensity##1", &ambientStrength, 0.1f, 1.0f, "%.1f" );
+			}
+			if ( ImGui::CollapsingHeader( "Diffuse Components" ) )
+			{
+				ImGui::ColorEdit3( "Colour##2", &lightColor.x );
+				ImGui::SliderFloat( "Intensity##2", &lightStrength, 0.1f, 1.0f, "%.1f" );
+			}
+			if ( ImGui::CollapsingHeader( "Specular Components" ) )
+			{
+				ImGui::ColorEdit3( "Colour##3", &specularColor.x );
+				ImGui::SliderFloat( "Intensity##3", &specularStrength, 0.1f, 1.0f, "%.1f" );
+				ImGui::SliderFloat( "Power", &specularPower, 1.0f, 20.0f, "%1.f" );
+			}
+			if ( ImGui::CollapsingHeader( "Attenuation" ) )
+			{
+				ImGui::SliderFloat( "Constant", &constant, 0.05f, 10.0f, "%.2f", 4 );
+				ImGui::SliderFloat( "Linear", &linear, 0.0001f, 4.0f, "%.4f", 8 );
+				ImGui::SliderFloat( "Quadratic", &quadratic, 0.0000001f, 1.0f, "%.7f", 10 );
+			}
 		}
 	} ImGui::End();
 }
