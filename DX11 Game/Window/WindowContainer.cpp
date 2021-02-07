@@ -93,6 +93,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnLeftPressed( x, y );
+		SetCursor( renderWindow.hCursorNightSelect );
 		return 0;
 	}
 	case WM_LBUTTONUP:
@@ -100,6 +101,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnLeftReleased( x, y );
+		SetCursor( renderWindow.hCursorNightNormal );
 		return 0;
 	}
 	case WM_RBUTTONDOWN:

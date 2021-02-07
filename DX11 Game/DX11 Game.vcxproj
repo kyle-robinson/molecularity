@@ -310,6 +310,7 @@
     <ClInclude Include="Objects\GameObject3D.h" />
     <ClInclude Include="Objects\Light.h" />
     <ClInclude Include="Objects\RenderableGameObject.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Utility\Billboard.h" />
     <ClInclude Include="Utility\COMException.h" />
     <ClInclude Include="Utility\ErrorLogger.h" />
@@ -361,6 +362,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\CrashBox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DX11 Game.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cursors\NightDiamond\Move.ani" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

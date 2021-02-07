@@ -1,4 +1,5 @@
 #include "WindowContainer.h"
+#include "resource.h"
 
 bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hInstance, const std::string& windowName, const std::string& windowClass, int width, int height )
 {
@@ -12,6 +13,8 @@ bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hIns
 	windowClass_Wide = StringConverter::StringToWide( windowClass );
 
 	hCursorNormal = LoadCursor( hInstance, IDC_ARROW );
+	hCursorNightNormal = LoadCursor( hInstance, (LPCWSTR)IDR_ANICURSOR1 );
+	hCursorNightSelect = LoadCursor( hInstance, (LPCWSTR)IDR_ANICURSOR2 );
 
 	RegisterWindowClass();
 
@@ -135,7 +138,7 @@ void RenderWindow::RegisterWindowClass() noexcept
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
 	wc.hIcon = NULL;
-    wc.hCursor = hCursorNormal;
+    wc.hCursor = hCursorNightNormal;
     wc.hbrBackground = (HBRUSH)( COLOR_WINDOW + 1 );
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = windowClass_Wide.c_str();
