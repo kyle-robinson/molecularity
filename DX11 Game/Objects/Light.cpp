@@ -63,4 +63,8 @@ void Light::UpdateConstantBuffer( ConstantBuffer<CB_PS_light>& cb_ps_light, std:
 	cb_ps_light.data.lightConstant = constant;
 	cb_ps_light.data.lightLinear = linear;
 	cb_ps_light.data.lightQuadratic = quadratic;
+
+	cb_ps_light.data.directionalLightPosition = directionalLightPosition;
+	cb_ps_light.data.directionalLightColor = directionalLightColor;
+	cb_ps_light.data.directionalLightStrength = directionalLightStrength;
 }

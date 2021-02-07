@@ -46,6 +46,11 @@ cbuffer LightBuffer : register( b1 )
     float specularLightIntensity;
     float specularLightPower;
     float3 dynamicLightPosition;
+
+    float directionalLightStrength;
+    float3 directionalLightPosition;
+    float3 directionalLightColor;
+
     float lightConstant;
     float lightLinear;
     float lightQuadratic;
@@ -65,24 +70,38 @@ Texture2D objTexture : TEXTURE : register( t0 );
 SamplerState samplerState : SAMPLER : register( s0 );
 
 float4 PS( PS_INPUT input ) : SV_TARGET
-{   
+{
+    // ambient calculations
     float3 ambient = ambientLightColor * ambientLightStrength;
+
+    // texture sampling
     float3 sampleColor = objTexture.Sample( samplerState, input.inTexCoord );
-    
+
+    // vector calculations
     float3 vToL = normalize( dynamicLightPosition - input.inWorldPos );
     float attenuation = 1 / ( lightConstant + lightLinear * vToL + lightQuadratic * pow( vToL, 2 ) );
-    
+
     // diffuse calculations
     float3 diffuseIntensity = max( dot( vToL, input.inNormal ), 0 );
     diffuseIntensity *= attenuation;
     float3 diffuse = diffuseIntensity * dynamicLightStrength * dynamicLightColor;
-    
+
     // specular calculations
     float3 incidence = input.inNormal * dot( vToL, input.inNormal );
     float3 reflection = incidence * 2.0f - vToL;
     float3 specular = specularLightColor * specularLightIntensity * attenuation *
         pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
-    
-    float3 finalColor = saturate( ambient + diffuse + specular ) * ( sampleColor = ( useTexture == true ) ? sampleColor : 1 );
+
+    // directional lighting
+    const float3 toLight = directionalLightPosition - normalize( input.inWorldPos );
+    const float distanceToLight = length( toLight );
+    const float3 directionToLight = toLight / distanceToLight;
+    float NDotL = dot( directionToLight, input.inNormal );
+    float3 directionalLight = directionalLightColor * saturate( NDotL );
+
+    // output colour
+    float3 finalColor = saturate( ambient + diffuse + specular );
+    finalColor += directionalLight * directionalLightStrength;
+    finalColor *= ( sampleColor = ( useTexture == true ) ? sampleColor : 1 );
     return float4( finalColor, alphaFactor );
 }
