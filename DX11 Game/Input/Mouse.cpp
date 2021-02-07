@@ -92,6 +92,18 @@ void Mouse::OnMouseMoveRaw( int x, int y ) noexcept
 	eventBuffer.push( MouseEvent( MouseEvent::EventType::RawMove, x, y ) );
 }
 
+void Mouse::OnMouseEnter( int x, int y ) noexcept
+{
+	isInWindow = true;
+	eventBuffer.push( MouseEvent( MouseEvent::EventType::Enter, x, y ) );
+}
+
+void Mouse::OnMouseLeave( int x, int y ) noexcept
+{
+	isInWindow = false;
+	eventBuffer.push( MouseEvent( MouseEvent::EventType::Leave, x, y ) );
+}
+
 bool Mouse::IsLeftDown() const noexcept
 {
 	return isLeftDown;
@@ -105,6 +117,11 @@ bool Mouse::IsRightDown() const noexcept
 bool Mouse::IsMiddleDown() const noexcept
 {
 	return isMiddleDown;
+}
+
+bool Mouse::IsInWindow() const noexcept
+{
+	return isInWindow;
 }
 
 int Mouse::GetPosX() const noexcept

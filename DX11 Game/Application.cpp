@@ -9,6 +9,7 @@ bool Application::Initialize(
 	int height )
 {
 	timer.Start();
+	EnableCursor();
 
 	if ( !renderWindow.Initialize( this, hInstance, windowTitle, windowClass, width, height ) )
 		return false;
@@ -44,7 +45,7 @@ void Application::Update()
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		
+
 		// Camera Movement
 		if ( mouse.IsRightDown() )
 		{

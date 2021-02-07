@@ -16,6 +16,8 @@ public:
 		int width,
 		int height
 	);
+	UINT GetWidth() const noexcept { return static_cast<UINT>( width ); };
+	UINT GetHeight() const noexcept { return static_cast<UINT>( height ); };
 	bool ProcessMessages() noexcept;
 	HWND GetHWND() const noexcept;
 	~RenderWindow() noexcept;
