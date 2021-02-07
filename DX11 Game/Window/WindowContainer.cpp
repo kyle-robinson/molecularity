@@ -149,13 +149,13 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	case WM_LBUTTONDOWN:
 	{
 		SetForegroundWindow( renderWindow.GetHWND() );
+		SetCursor( renderWindow.hCursorNightSelect );
 		if ( imio.WantCaptureMouse )
 			return 0;
 		
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnLeftPressed( x, y );
-		SetCursor( renderWindow.hCursorNightSelect );
 
 		if ( !cursorEnabled )
 		{
@@ -166,13 +166,13 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	}
 	case WM_LBUTTONUP:
 	{
+		SetCursor( renderWindow.hCursorNightNormal );
 		if ( imio.WantCaptureMouse )
 			return 0;
 		
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnLeftReleased( x, y );
-		SetCursor( renderWindow.hCursorNightNormal );
 
 		const POINTS pt = MAKEPOINTS( lParam );
 		if ( pt.x < 0 || pt.x >= renderWindow.GetWidth() || pt.y < 0 || pt.y >= renderWindow.GetHeight() )
