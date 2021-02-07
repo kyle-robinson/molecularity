@@ -27,6 +27,8 @@ public:
 			WheelDown,
 			Move,
 			RawMove,
+			Enter,
+			Leave,
 			Invalid
 		};
 	public:
@@ -52,10 +54,13 @@ public:
 	void OnWheelDown( int x, int y ) noexcept;
 	void OnMouseMove( int x, int y ) noexcept;
 	void OnMouseMoveRaw( int x, int y ) noexcept;
+	void OnMouseEnter( int x, int y ) noexcept;
+	void OnMouseLeave( int x, int y ) noexcept;
 public:
 	bool IsLeftDown() const noexcept;
 	bool IsRightDown() const noexcept;
 	bool IsMiddleDown() const noexcept;
+	bool IsInWindow() const noexcept;
 	int GetPosX() const noexcept;
 	int GetPosY() const noexcept;
 	MousePoint GetPos() const noexcept;
@@ -66,6 +71,7 @@ private:
 	bool isLeftDown = false;
 	bool isRightDown = false;
 	bool isMiddleDown = false;
+	bool isInWindow = false;
 	int x = 0, y = 0;
 };
 

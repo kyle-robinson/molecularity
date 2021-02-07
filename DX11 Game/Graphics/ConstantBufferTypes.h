@@ -21,11 +21,21 @@ struct CB_PS_light
 	float specularLightStrength;
 	float specularLightPower;
 	DirectX::XMFLOAT3 dynamicLightPosition;
+	
+	float directionalLightStrength;
+	DirectX::XMFLOAT3 directionalLightPosition;
+	DirectX::XMFLOAT3 directionalLightColor;
+
 	float lightConstant;
 	float lightLinear;
 	float lightQuadratic;
 	bool useTexture;
 	float alphaFactor;
+};
+
+struct CB_PS_outline
+{
+	alignas(16) DirectX::XMFLOAT3 outlineColor;
 };
 
 #endif

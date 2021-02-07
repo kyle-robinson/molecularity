@@ -19,6 +19,7 @@ namespace Bind
 	class Rasterizer;
 	class RenderTarget;
 	class Sampler;
+	class Stencil;
 	class SwapChain;
 	class Viewport;
 }
@@ -26,6 +27,12 @@ namespace Bind
 class Graphics
 {
 	friend class GraphicsResource;
+	enum SamplerType
+	{
+		ANISOTROPIC,
+		BILINEAR,
+		POINT_SAMPLING
+	} samplerType;
 public:
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
@@ -39,12 +46,19 @@ public:
 	// Global Objects
 	Light light;
 	int boxToUse = 0;
+	int selectedBox = 0;
+	bool cubeHover = false;
+	std::unique_ptr<Cube> cube;
 	RenderableGameObject nanosuit;
 	std::unique_ptr<Camera> camera;
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
+	void SpawnControlWindow();
+
+	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
+	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
 
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
@@ -64,19 +78,23 @@ private:
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
+	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 
 	// Shaders
 	VertexShader vertexShader_Tex;
 	VertexShader vertexShader_Col;
 	VertexShader vertexShader_light;
+	VertexShader vertexShader_outline;
 	PixelShader pixelShader_Tex;
 	PixelShader pixelShader_Col;
 	PixelShader pixelShader_light;
 	PixelShader pixelShader_noLight;
+	PixelShader pixelShader_outline;
 
 	// Constant Buffers
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
+	ConstantBuffer<CB_PS_outline> cb_ps_outline;
 	ConstantBuffer<CB_PS_light> cb_ps_light;
 
 	// Local Variables
@@ -84,11 +102,12 @@ private:
 	UINT windowHeight;
 	ImGuiManager imgui;
 	bool useTexture = true;
+	bool rasterizerSolid = true;
 	float alphaFactor = 1.0f;
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// Local Objects
-	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Cube> skybox;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;

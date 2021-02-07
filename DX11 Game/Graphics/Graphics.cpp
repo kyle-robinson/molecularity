@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "Graphics.h"
 #include "Billboard.h"
+#include "Stencil.h"
 #include "Sampler.h"
 #include "Viewport.h"
 #include "SwapChain.h"
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
+#include <imgui/imgui.h>
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
@@ -29,6 +31,10 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		renderTarget = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
 		viewport = std::make_shared<Bind::Viewport>( *this );
+
+		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
+        stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
+        stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
 
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
         rasterizers.emplace( "Cubemap", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
@@ -77,17 +83,17 @@ bool Graphics::InitializeShaders()
 		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture vertex shader!" );
         hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );*/
 
 		// Colour Layout
 		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		hr = vertexShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
+		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx", layoutPosCol, ARRAYSIZE( layoutPosCol ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create colour vertex shader!" );
-        hr = pixelShader_Col.Initialize( device, L"Resources\\Shaders\\Primitive_Col.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create colour pixel shader!" );*/
+        hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create colour pixel shader!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -151,6 +157,9 @@ bool Graphics::InitializeScene()
 
 		hr = cb_ps_light.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_light' Constant Buffer!" );
+
+		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_outline' Constant Buffer!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -165,27 +174,24 @@ void Graphics::BeginFrame()
 	// Clear Render Target
 	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
-	rasterizers["Solid"]->Bind( *this );
-	samplers["Anisotropic"]->Bind( *this );
+	switch ( samplerType )
+	{
+	case ANISOTROPIC: samplers["Anisotropic"]->Bind( *this ); break;
+	case BILINEAR: samplers["Bilinear"]->Bind( *this ); break;
+	case POINT_SAMPLING: samplers["Point"]->Bind( *this ); break;
+	}
+
+	// Render Cubemap First
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	stencils["Off"]->Bind( *this );
+	rasterizers["Cubemap"]->Bind( *this );
+	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
+
+	// Reset Rasterizer
+	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
 	// Setup Constant Buffers
-	cb_ps_light.data.ambientLightColor = light.ambientColor;
-	cb_ps_light.data.ambientLightStrength = light.ambientStrength;
-	cb_ps_light.data.dynamicLightColor = light.lightColor;
-	cb_ps_light.data.dynamicLightStrength = light.lightStrength;
-	cb_ps_light.data.specularLightColor = light.specularColor;
-	cb_ps_light.data.specularLightStrength = light.specularStrength;
-	cb_ps_light.data.specularLightPower = light.specularPower;
-
-	XMVECTOR lightPosition = camera->GetPositionVector();
-	lightPosition += camera->GetForwardVector();
-	lightPosition += camera->GetRightVector() / 4;
-	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
-	cb_ps_light.data.dynamicLightPosition = lightPositionF;
-
-	cb_ps_light.data.lightConstant = light.constant;
-	cb_ps_light.data.lightLinear = light.linear;
-	cb_ps_light.data.lightQuadratic = light.quadratic;
+	light.UpdateConstantBuffer( cb_ps_light, camera );
 	cb_ps_light.data.useTexture = useTexture;
 	cb_ps_light.data.alphaFactor = alphaFactor;
 	if ( !cb_ps_light.ApplyChanges() ) return;
@@ -194,31 +200,45 @@ void Graphics::BeginFrame()
 
 void Graphics::RenderFrame()
 {
-	// Render Games Objects
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	// Render Game Objects
+	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	cube->Draw( cb_vs_matrix, boxTextures[boxToUse].Get() );
+	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
-	// Render Skybox
-	context->PSSetShader( pixelShader_noLight.GetShader(), NULL, 0 );
-	rasterizers["Cubemap"]->Bind( *this );
-	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
+	// Render Objects w/ Stencils
+	if ( cubeHover )
+		DrawWithOutline( cube, outlineColor );
+	else
+		cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }
 
 void Graphics::EndFrame()
 {
 	// Font Rendering
 	spriteBatch->Begin();
-	static DirectX::XMFLOAT2 fontPosition = { windowWidth - 760.0f, 0.0f };
-	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application", fontPosition,
-        DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application",
+		DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
+		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	static std::wstring boxType;
+	switch ( boxToUse )
+	{
+	case 0: boxType = L"Box Texture"; break;
+	case 1: boxType = L"Bounce Box Texture"; break;
+	case 2: boxType = L"Jump Box Texture"; break;
+	case 3: boxType = L"TNT Box Texture"; break;
+	}
+	spriteFont->DrawString( spriteBatch.get(), boxType.c_str(),
+		DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
+		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
 	imgui.BeginRender();
+	SpawnControlWindow();
 	light.SpawnControlWindow();
 	imgui.EndRender();
+
+	renderTarget->BindAsNull( *this );
 
 	// Display Current Frame
 	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
@@ -239,4 +259,93 @@ void Graphics::Update( float dt )
 	// Billboard Model
 	float rotation = Billboard::BillboardModel( camera, nanosuit );
 	nanosuit.SetRotation( 0.0f, rotation, 0.0f );
+}
+
+//------------------//
+// STENCIL OUTLINES //
+//------------------//
+void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color )
+{
+	stencils["Write"]->Bind( *this );
+	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+
+	cb_ps_outline.data.outlineColor = color;
+    if ( !cb_ps_outline.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
+	stencils["Mask"]->Bind( *this );
+	object.SetScale( 1.1f, 1.f, 1.1f );
+	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+
+	if ( !cb_ps_light.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	object.SetScale( 1.0f, 1.0f, 1.0f );
+	stencils["Off"]->Bind( *this );
+	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+}
+
+void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color )
+{
+	stencils["Write"]->Bind( *this );
+	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+
+	cb_ps_outline.data.outlineColor = color;
+    if ( !cb_ps_outline.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
+	stencils["Mask"]->Bind( *this );
+	cube->SetScale( 1.1f, 1.1f, 1.1f );
+	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+
+	if ( !cb_ps_light.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	cube->SetScale( 1.0f, 1.0f, 1.0f );
+	stencils["Off"]->Bind( *this );
+	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+}
+
+//--------------//
+// IMGUI WINDOW //
+//--------------//
+void Graphics::SpawnControlWindow()
+{
+	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	{
+		static int fillGroup = 0;
+	    if ( ImGui::RadioButton( "Solid", &fillGroup, 0 ) )
+            rasterizerSolid = true;
+	    ImGui::SameLine();
+	    if ( ImGui::RadioButton( "Wireframe", &fillGroup, 1 ) )
+            rasterizerSolid = false;
+
+		static int activeSampler = 0;
+        static bool selectedSampler[3];
+        static std::string previewValueSampler = "Anisotropic";
+        static const char* samplerList[]{ "Anisotropic", "Bilinear", "Point Sampling" };
+        if ( ImGui::BeginCombo( "Sampler Type", previewValueSampler.c_str() ) )
+        {
+            for ( unsigned int i = 0; i < IM_ARRAYSIZE( samplerList ); i++ )
+            {
+                const bool isSelected = i == activeSampler;
+                if ( ImGui::Selectable( samplerList[i], isSelected ) )
+                {
+                    activeSampler = i;
+                    previewValueSampler = samplerList[i];
+                }
+            }
+
+            switch ( activeSampler )
+            {
+            case 0: samplerType = ANISOTROPIC; break;
+            case 1: samplerType = BILINEAR; break;
+            case 2: samplerType = POINT_SAMPLING; break;
+            }
+
+            ImGui::EndCombo();
+        }
+
+		ImGui::ColorEdit3( "Outline", &outlineColor.x );
+	} ImGui::End();
 }
