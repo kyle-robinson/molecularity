@@ -78,6 +78,24 @@ void Application::Update()
 			gfx.selectedBox = gfx.boxToUse;
 	}
 
+	// World Collisions
+	static float worldBoundary = 20.0f;
+
+	if ( gfx.camera->GetPositionFloat3().x < -worldBoundary )
+		gfx.camera->SetPosition( -worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
+	else if ( gfx.camera->GetPositionFloat3().x > worldBoundary )
+		gfx.camera->SetPosition( worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
+
+	if ( gfx.camera->GetPositionFloat3().y < 0.0f )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 0.0f, gfx.camera->GetPositionFloat3().z );
+	else if ( gfx.camera->GetPositionFloat3().y > worldBoundary )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, worldBoundary, gfx.camera->GetPositionFloat3().z );
+
+	if ( gfx.camera->GetPositionFloat3().z < -worldBoundary )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, -worldBoundary );
+	else if ( gfx.camera->GetPositionFloat3().z > worldBoundary )
+		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, worldBoundary );
+
 	// Update Game Input Here
 	gfx.camera->SetCameraSpeed( 0.002f );
 	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera->SetCameraSpeed( 0.01f );
