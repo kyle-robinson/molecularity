@@ -30,7 +30,7 @@ class Graphics
 	enum SamplerType { ANISOTROPIC, BILINEAR, POINT_SAMPLING } samplerType;
 public:
 	enum ToolType { CONVERT, RESIZE } toolType = CONVERT;
-	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = NORMAL;
+	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 	void BeginFrame();
@@ -44,7 +44,7 @@ public:
 	Light light;
 	int boxToUse = 0;
 	int sizeToUse = 1;
-	int sizeAmount = 1;
+	int sizeAmount = 2;
 	int selectedBox = 0;
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;

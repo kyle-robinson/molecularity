@@ -221,25 +221,30 @@ void Graphics::EndFrame()
 {
 	// Font Rendering
 	spriteBatch->Begin();
-	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application",
-		DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
-		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	if ( toolType == CONVERT )
 	{
+		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: CONVERT",
+			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+
 		static std::wstring boxType;
 		switch ( boxToUse )
 		{
-		case 0: boxType = L"Box Texture"; break;
-		case 1: boxType = L"Bounce Box Texture"; break;
-		case 2: boxType = L"Jump Box Texture"; break;
-		case 3: boxType = L"TNT Box Texture"; break;
+		case 0: boxType = L"Default Box"; break;
+		case 1: boxType = L"Bounce Box"; break;
+		case 2: boxType = L"Jump Box"; break;
+		case 3: boxType = L"TNT Box"; break;
 		}
-		spriteFont->DrawString( spriteBatch.get(), boxType.c_str(),
+		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Texture: " ).append( boxType ).c_str(),
 			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
 			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
 	else if ( toolType == RESIZE )
 	{
+		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: RESIZE",
+			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+
 		static std::wstring sizeType;
 		switch ( sizeAmount )
 		{
@@ -247,8 +252,8 @@ void Graphics::EndFrame()
 		case 1: sizeType = L"Reset Ray"; break;
 		case 2: sizeType = L"Growth Ray"; break;
 		}
-		spriteFont->DrawString( spriteBatch.get(), sizeType.c_str(),
-			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Green, 0.0f,
+		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Size: " ).append( sizeType ).c_str(),
+			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
 			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
 	spriteBatch->End();
