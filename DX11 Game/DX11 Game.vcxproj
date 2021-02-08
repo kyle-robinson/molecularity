@@ -303,6 +303,7 @@
     <ClInclude Include="Model\Colour.h" />
     <ClInclude Include="Model\Mesh.h" />
     <ClInclude Include="Model\Model.h" />
+    <ClInclude Include="Model\ModelData.h" />
     <ClInclude Include="Model\Texture.h" />
     <ClInclude Include="Objects\Camera.h" />
     <ClInclude Include="Objects\Cube.h" />
@@ -361,13 +362,34 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resources\Controller.ico" />
     <Image Include="Resources\Textures\CrashBox.png" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Game.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Cursors\NightDiamond\Alternate Select.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Busy (Bonus).ani" />
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Link Select (Bonus).ani" />
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Text Select (Bonus).ani" />
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Unavailable (Bonus).ani" />
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Working In Background (Bonus).ani" />
+    <None Include="Resources\Cursors\NightDiamond\Busy.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Diagonal Resize 1.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Diagonal Resize 2.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Handwriting.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Help Select.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Horizontal Resize.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Link Select.ani" />
     <None Include="Resources\Cursors\NightDiamond\Move.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Normal Select.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Precision Select.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Text Select.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Unavailable.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Vertical Resize.ani" />
+    <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
+    <None Include="Resources\Objects.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

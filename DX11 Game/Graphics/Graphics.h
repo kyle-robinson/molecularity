@@ -27,13 +27,10 @@ namespace Bind
 class Graphics
 {
 	friend class GraphicsResource;
-	enum SamplerType
-	{
-		ANISOTROPIC,
-		BILINEAR,
-		POINT_SAMPLING
-	} samplerType;
+	enum SamplerType { ANISOTROPIC, BILINEAR, POINT_SAMPLING } samplerType;
 public:
+	enum ToolType { CONVERT, RESIZE } toolType = CONVERT;
+	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 	void BeginFrame();
@@ -46,16 +43,18 @@ public:
 	// Global Objects
 	Light light;
 	int boxToUse = 0;
+	int sizeToUse = 1;
+	int sizeAmount = 2;
 	int selectedBox = 0;
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;
-	RenderableGameObject nanosuit;
 	std::unique_ptr<Camera> camera;
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
 	void SpawnControlWindow();
+	void SpawnInstructionWindow();
 
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
 	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
@@ -111,6 +110,7 @@ private:
 	std::unique_ptr<Cube> skybox;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	std::map<std::string, RenderableGameObject> renderables;
 };
 
 #endif
