@@ -5,6 +5,7 @@
 #include "Sampler.h"
 #include "Viewport.h"
 #include "SwapChain.h"
+#include "ModelData.h"
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
@@ -76,14 +77,14 @@ bool Graphics::InitializeShaders()
 		COM_ERROR_IF_FAILED( hr, "Failed to create no light pixel shader!" );
 
 		// Texture Layout
-		/*D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
+		D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture vertex shader!" );
         hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );*/
+        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );
 
 		// Colour Layout
 		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
@@ -108,9 +109,10 @@ bool Graphics::InitializeScene()
 	try
 	{
 		// Initialize Games Objects
-		nanosuit.SetScale( 1.0f, 1.0f, 1.0f );
-		if ( !nanosuit.Initialize( "Resources\\Models\\Nanosuit\\nanosuit.obj", device.Get(), context.Get(), cb_vs_matrix ) )
-			return false;
+		if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
+            return false;
+        if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
+            return false;
 
 		light.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !light.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
@@ -203,7 +205,10 @@ void Graphics::RenderFrame()
 	// Render Game Objects
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	
+	// Render List of Models
+	for ( auto const& object : renderables )
+		renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
 	if ( cubeHover )
@@ -216,24 +221,46 @@ void Graphics::EndFrame()
 {
 	// Font Rendering
 	spriteBatch->Begin();
-	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application",
-		DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
-		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
-	static std::wstring boxType;
-	switch ( boxToUse )
+	if ( toolType == CONVERT )
 	{
-	case 0: boxType = L"Box Texture"; break;
-	case 1: boxType = L"Bounce Box Texture"; break;
-	case 2: boxType = L"Jump Box Texture"; break;
-	case 3: boxType = L"TNT Box Texture"; break;
+		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: CONVERT",
+			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+
+		static std::wstring boxType;
+		switch ( boxToUse )
+		{
+		case 0: boxType = L"Default Box"; break;
+		case 1: boxType = L"Bounce Box"; break;
+		case 2: boxType = L"Jump Box"; break;
+		case 3: boxType = L"TNT Box"; break;
+		}
+		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Texture: " ).append( boxType ).c_str(),
+			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
-	spriteFont->DrawString( spriteBatch.get(), boxType.c_str(),
-		DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
-		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	else if ( toolType == RESIZE )
+	{
+		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: RESIZE",
+			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+
+		static std::wstring sizeType;
+		switch ( sizeAmount )
+		{
+		case 0: sizeType = L"Shrink Ray"; break;
+		case 1: sizeType = L"Reset Ray"; break;
+		case 2: sizeType = L"Growth Ray"; break;
+		}
+		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Size: " ).append( sizeType ).c_str(),
+			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	}
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
 	imgui.BeginRender();
+	imgui.SpawnInstructionWindow();
 	SpawnControlWindow();
 	light.SpawnControlWindow();
 	imgui.EndRender();
@@ -256,9 +283,19 @@ void Graphics::Update( float dt )
 	// Update Game Components
 	skybox->SetPosition( camera->GetPositionFloat3() );
 
+	if ( toolType == RESIZE )
+	{
+		switch ( sizeToUse )
+		{
+		case 0: cube->SetScale( 0.25f, 0.25f, 0.25f ); break;
+		case 1: cube->SetScale( 1.0f, 1.0f, 1.0f ); break;
+		case 2: cube->SetScale( 2.5f, 2.5f, 2.5f ); break;
+		}
+	}
+
 	// Billboard Model
-	float rotation = Billboard::BillboardModel( camera, nanosuit );
-	nanosuit.SetRotation( 0.0f, rotation, 0.0f );
+	float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );
+	renderables["Nanosuit"].SetRotation( 0.0f, rotation, 0.0f );
 }
 
 //------------------//
@@ -295,13 +332,13 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
-	cube->SetScale( 1.1f, 1.1f, 1.1f );
+	cube->SetScale( cube->GetScaleFloat3().x + 0.1f, cube->GetScaleFloat3().y + 0.1f, cube->GetScaleFloat3().z + 0.1f );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
 	if ( !cb_ps_light.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	cube->SetScale( 1.0f, 1.0f, 1.0f );
+	cube->SetScale( cube->GetScaleFloat3().x - 0.1f, cube->GetScaleFloat3().y - 0.1f, cube->GetScaleFloat3().z - 0.1f );
 	stencils["Off"]->Bind( *this );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }

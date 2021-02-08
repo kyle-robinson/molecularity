@@ -106,3 +106,35 @@ void ImGuiManager::SetBlackGoldStyle()
 
     style->DisplaySafeAreaPadding = ImVec2(4, 4);
 }
+
+void ImGuiManager::SpawnInstructionWindow() const noexcept
+{
+	if ( ImGui::Begin( "Scene Instructions", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	{
+		if ( ImGui::CollapsingHeader( "Camera Controls" ) )
+		{
+			ImGui::Text( "Hold RMB          Rotate Camera" );
+			ImGui::Text( "W                 Forward" );
+			ImGui::Text( "A                 Left" );
+			ImGui::Text( "S                 Backward" );
+			ImGui::Text( "D                 Right" );
+			ImGui::Text( "CTRL              Down" );
+			ImGui::Text( "SPACE             Up" );
+			ImGui::Text( "LSHIFT            Move Faster" );
+		}
+		if ( ImGui::CollapsingHeader( "Multi-Tool Controls" ) )
+		{
+			ImGui::Text( "1                 CONVERT Mode" );
+			ImGui::Text( "Scroll Up/Down    Change Texture To Set" );
+			ImGui::Text( "LMB On Cube       Set Selected Texture" );
+			ImGui::Separator();
+			ImGui::Text( "2                 RESIZE Mode" );
+			ImGui::Text( "Scroll Up/Down    Change Size To Set" );
+			ImGui::Text( "LMB On Cube       Set Selected Size" );
+		}
+		if ( ImGui::CollapsingHeader( "Miscellaneous Controls" ) )
+		{
+			ImGui::Text( "ESCAPE            Close Game" );
+		}
+	} ImGui::End();
+}

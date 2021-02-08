@@ -25,16 +25,6 @@ const XMFLOAT3& GameObject::GetScaleFloat3() const noexcept
 	return { scale.x, scale.y, scale.z };
 }
 
-const std::string& GameObject::GetModelName() const noexcept
-{
-	return modelName;
-}
-
-void GameObject::SetModelName( const std::string& name ) noexcept
-{
-	modelName = name;
-}
-
 /// POSITIONS
 void GameObject::SetInitialPosition( const XMFLOAT3& pos ) noexcept
 {

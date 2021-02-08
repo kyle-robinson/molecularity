@@ -1,6 +1,8 @@
 #include "WindowContainer.h"
 #include "resource.h"
 
+// Window icon made by https://www.freepik.com Freepik from https://www.flaticon.com/
+
 bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hInstance, const std::string& windowName, const std::string& windowClass, int width, int height )
 {
 	// register window class
@@ -137,12 +139,12 @@ void RenderWindow::RegisterWindowClass() noexcept
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
-	wc.hIcon = NULL;
+	wc.hIcon = LoadIcon( hInstance, (LPCTSTR)IDR_ICON1 );
     wc.hCursor = hCursorNightNormal;
     wc.hbrBackground = (HBRUSH)( COLOR_WINDOW + 1 );
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = windowClass_Wide.c_str();
-	wc.hIconSm = NULL;
+	wc.hIconSm = LoadIcon( wc.hInstance, (LPCTSTR)IDR_ICON1 );
 	RegisterClassEx( &wc );
 }
 
