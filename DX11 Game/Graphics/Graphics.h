@@ -55,6 +55,7 @@ private:
 	bool InitializeShaders();
 	bool InitializeScene();
 	void SpawnControlWindow();
+	void SpawnInstructionWindow();
 
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
 	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );

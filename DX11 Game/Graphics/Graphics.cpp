@@ -205,7 +205,8 @@ void Graphics::RenderFrame()
 	// Render Game Objects
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	//nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	
+	// Render List of Models
 	for ( unsigned int i = 0; i < renderables.size(); i++ )
         renderables[i].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
@@ -254,6 +255,7 @@ void Graphics::EndFrame()
 
 	// Spawn ImGui Windows
 	imgui.BeginRender();
+	imgui.SpawnInstructionWindow();
 	SpawnControlWindow();
 	light.SpawnControlWindow();
 	imgui.EndRender();
