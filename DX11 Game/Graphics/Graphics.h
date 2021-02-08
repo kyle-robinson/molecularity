@@ -48,8 +48,8 @@ public:
 	int selectedBox = 0;
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;
-	RenderableGameObject nanosuit;
 	std::unique_ptr<Camera> camera;
+	std::vector<RenderableGameObject> renderables;
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();

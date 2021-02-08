@@ -73,6 +73,9 @@
     <Filter Include="Source Files\Utility\Logging">
       <UniqueIdentifier>{5cf93832-8a78-42f5-87f4-8eea8392169a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Miscellaneous">
+      <UniqueIdentifier>{28442943-1f12-49d9-8126-f9b300331c05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -311,8 +314,11 @@
     <ClInclude Include="Input\MousePicking.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Model\ModelData.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Miscellaneous</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -339,12 +345,15 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Game.rc">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Miscellaneous</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Cursors\NightDiamond\Move.ani">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\Miscellaneous</Filter>
+    </None>
+    <None Include="Resources\Objects.json">
+      <Filter>Resource Files\Miscellaneous</Filter>
     </None>
   </ItemGroup>
 </Project>

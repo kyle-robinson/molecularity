@@ -303,6 +303,7 @@
     <ClInclude Include="Model\Colour.h" />
     <ClInclude Include="Model\Mesh.h" />
     <ClInclude Include="Model\Model.h" />
+    <ClInclude Include="Model\ModelData.h" />
     <ClInclude Include="Model\Texture.h" />
     <ClInclude Include="Objects\Camera.h" />
     <ClInclude Include="Objects\Cube.h" />
@@ -368,6 +369,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Cursors\NightDiamond\Move.ani" />
+    <None Include="Resources\Objects.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,6 +5,7 @@
 #include "Sampler.h"
 #include "Viewport.h"
 #include "SwapChain.h"
+#include "ModelData.h"
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
@@ -108,9 +109,10 @@ bool Graphics::InitializeScene()
 	try
 	{
 		// Initialize Games Objects
-		nanosuit.SetScale( 1.0f, 1.0f, 1.0f );
-		if ( !nanosuit.Initialize( "Resources\\Models\\Nanosuit\\nanosuit.obj", device.Get(), context.Get(), cb_vs_matrix ) )
-			return false;
+		if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
+            return false;
+        if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
+            return false;
 
 		light.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !light.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
@@ -203,7 +205,9 @@ void Graphics::RenderFrame()
 	// Render Game Objects
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	//nanosuit.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	for ( unsigned int i = 0; i < renderables.size(); i++ )
+        renderables[i].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
 	if ( cubeHover )
@@ -283,8 +287,8 @@ void Graphics::Update( float dt )
 	}
 
 	// Billboard Model
-	float rotation = Billboard::BillboardModel( camera, nanosuit );
-	nanosuit.SetRotation( 0.0f, rotation, 0.0f );
+	//float rotation = Billboard::BillboardModel( camera, nanosuit );
+	//nanosuit.SetRotation( 0.0f, rotation, 0.0f );
 }
 
 //------------------//
