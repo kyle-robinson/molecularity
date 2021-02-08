@@ -219,17 +219,33 @@ void Graphics::EndFrame()
 	spriteFont->DrawString( spriteBatch.get(), L"DirectX 11 Application",
 		DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
 		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
-	static std::wstring boxType;
-	switch ( boxToUse )
+	if ( toolType == CONVERT )
 	{
-	case 0: boxType = L"Box Texture"; break;
-	case 1: boxType = L"Bounce Box Texture"; break;
-	case 2: boxType = L"Jump Box Texture"; break;
-	case 3: boxType = L"TNT Box Texture"; break;
+		static std::wstring boxType;
+		switch ( boxToUse )
+		{
+		case 0: boxType = L"Box Texture"; break;
+		case 1: boxType = L"Bounce Box Texture"; break;
+		case 2: boxType = L"Jump Box Texture"; break;
+		case 3: boxType = L"TNT Box Texture"; break;
+		}
+		spriteFont->DrawString( spriteBatch.get(), boxType.c_str(),
+			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
-	spriteFont->DrawString( spriteBatch.get(), boxType.c_str(),
-		DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
-		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	else if ( toolType == RESIZE )
+	{
+		static std::wstring sizeType;
+		switch ( sizeAmount )
+		{
+		case 0: sizeType = L"Shrink Ray"; break;
+		case 1: sizeType = L"Reset Ray"; break;
+		case 2: sizeType = L"Growth Ray"; break;
+		}
+		spriteFont->DrawString( spriteBatch.get(), sizeType.c_str(),
+			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Green, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	}
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
@@ -255,6 +271,16 @@ void Graphics::Update( float dt )
 {
 	// Update Game Components
 	skybox->SetPosition( camera->GetPositionFloat3() );
+
+	if ( toolType == RESIZE )
+	{
+		switch ( sizeToUse )
+		{
+		case 0: cube->SetScale( 0.25f, 0.25f, 0.25f ); break;
+		case 1: cube->SetScale( 1.0f, 1.0f, 1.0f ); break;
+		case 2: cube->SetScale( 2.5f, 2.5f, 2.5f ); break;
+		}
+	}
 
 	// Billboard Model
 	float rotation = Billboard::BillboardModel( camera, nanosuit );
@@ -295,13 +321,13 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
-	cube->SetScale( 1.1f, 1.1f, 1.1f );
+	cube->SetScale( cube->GetScaleFloat3().x + 0.1f, cube->GetScaleFloat3().y + 0.1f, cube->GetScaleFloat3().z + 0.1f );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
 	if ( !cb_ps_light.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	cube->SetScale( 1.0f, 1.0f, 1.0f );
+	cube->SetScale( cube->GetScaleFloat3().x - 0.1f, cube->GetScaleFloat3().y - 0.1f, cube->GetScaleFloat3().z - 0.1f );
 	stencils["Off"]->Bind( *this );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }

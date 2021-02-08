@@ -27,13 +27,10 @@ namespace Bind
 class Graphics
 {
 	friend class GraphicsResource;
-	enum SamplerType
-	{
-		ANISOTROPIC,
-		BILINEAR,
-		POINT_SAMPLING
-	} samplerType;
+	enum SamplerType { ANISOTROPIC, BILINEAR, POINT_SAMPLING } samplerType;
 public:
+	enum ToolType { CONVERT, RESIZE } toolType = CONVERT;
+	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = NORMAL;
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 	void BeginFrame();
@@ -46,6 +43,8 @@ public:
 	// Global Objects
 	Light light;
 	int boxToUse = 0;
+	int sizeToUse = 1;
+	int sizeAmount = 1;
 	int selectedBox = 0;
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;

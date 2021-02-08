@@ -46,7 +46,7 @@ void Application::Update()
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
 
-		// Camera Movement
+		// Camera Orientation
 		if ( mouse.IsRightDown() )
 		{
 			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
@@ -61,22 +61,38 @@ void Application::Update()
 			}
 		}
 		
-		// Change Selected Texture to Use on Box
-		if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
-			gfx.boxToUse++;
-		else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
-			gfx.boxToUse--;
-		
 		// Mouse Picking
 		mousePick.UpdateMatrices( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix() );
 		if ( mousePick.TestIntersection( me.GetPosX(), me.GetPosY(), *gfx.cube.get() ) )
 			gfx.cubeHover = true;
 		else
 			gfx.cubeHover = false;
+		
+		// Manage Multi-Tool Options
+		if ( gfx.toolType == gfx.CONVERT )
+		{
+			// Change selected texture to use on box
+			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
+				gfx.boxToUse++;
+			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
+				gfx.boxToUse--;
 
-		// Update Box Texture on Click while Hovering
-		if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
-			gfx.selectedBox = gfx.boxToUse;
+			// Update box texture on click while hovering
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
+				gfx.selectedBox = gfx.boxToUse;
+		}
+		else if ( gfx.toolType == gfx.RESIZE )
+		{
+			// Change size amount to change box to
+			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.sizeAmount < 2 )
+				gfx.sizeAmount++;
+			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.sizeAmount > 0 )
+				gfx.sizeAmount--;
+
+			// Set the box size to the previously selected
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
+				gfx.sizeToUse = gfx.sizeAmount;
+		}
 	}
 
 	// World Collisions
@@ -97,7 +113,7 @@ void Application::Update()
 	else if ( gfx.camera->GetPositionFloat3().z > worldBoundary )
 		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, worldBoundary );
 
-	// Update Game Input Here
+	// Camera Movement
 	gfx.camera->SetCameraSpeed( 0.002f );
 	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera->SetCameraSpeed( 0.01f );
 	if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.camera, dt );
@@ -106,6 +122,10 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
+
+	// Multi-Tool Type
+	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;
+	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
 	// Set Light Position
 	XMVECTOR lightPosition = gfx.camera->GetPositionVector();
