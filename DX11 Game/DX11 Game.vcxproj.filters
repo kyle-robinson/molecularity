@@ -76,6 +76,12 @@
     <Filter Include="Resource Files\Miscellaneous">
       <UniqueIdentifier>{28442943-1f12-49d9-8126-f9b300331c05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Cursors">
+      <UniqueIdentifier>{e3b086e0-1683-4f99-90cc-95986a6c332a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Cursors\Bonus">
+      <UniqueIdentifier>{e2b37bbe-b64a-4efc-873b-64a7d4fafa65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -342,6 +348,9 @@
     <Image Include="Resources\Textures\CrashBox.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="Resources\Controller.ico">
+      <Filter>Resource Files\Miscellaneous</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Game.rc">
@@ -349,11 +358,68 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Cursors\NightDiamond\Move.ani">
-      <Filter>Resource Files\Miscellaneous</Filter>
-    </None>
     <None Include="Resources\Objects.json">
       <Filter>Resource Files\Miscellaneous</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Busy.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Move.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Handwriting.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Help Select.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Horizontal Resize.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Link Select.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Normal Select.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Precision Select.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Text Select.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Unavailable.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Vertical Resize.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Working In Background.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Alternate Select.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Diagonal Resize 1.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Diagonal Resize 2.ani">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Working In Background (Bonus).ani">
+      <Filter>Resource Files\Cursors\Bonus</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Busy (Bonus).ani">
+      <Filter>Resource Files\Cursors\Bonus</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Link Select (Bonus).ani">
+      <Filter>Resource Files\Cursors\Bonus</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Text Select (Bonus).ani">
+      <Filter>Resource Files\Cursors\Bonus</Filter>
+    </None>
+    <None Include="Resources\Cursors\NightDiamond\Bonus\Unavailable (Bonus).ani">
+      <Filter>Resource Files\Cursors\Bonus</Filter>
     </None>
   </ItemGroup>
 </Project>
