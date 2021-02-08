@@ -43,12 +43,12 @@ public:
             drawable.position = { objectDesc["PosX"], objectDesc["PosY"], objectDesc["PosZ"] };
             drawable.rotation = { objectDesc["RotX"], objectDesc["RotY"], objectDesc["RotZ"] };
             drawable.scale = { objectDesc["ScaleX"], objectDesc["ScaleY"], objectDesc["ScaleZ"] };
-            drawables.push_back( drawable );
+            drawables.push_back( std::move( drawable ) );
         }
         return true;
     }
     static bool InitializeModelData( ID3D11DeviceContext* context, ID3D11Device* device,
-        ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::vector<RenderableGameObject>& renderables )
+        ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::map<std::string, RenderableGameObject>& renderables )
     {
         for ( unsigned int i = 0; i < drawables.size(); i++ )
         {
@@ -58,8 +58,7 @@ public:
                 return false;
             model.SetInitialPosition( drawables[i].position );
             model.SetInitialRotation( drawables[i].rotation );
-            model.SetModelName( drawables[i].modelName );
-            renderables.push_back( model );
+            renderables.emplace( std::move( drawables[i].modelName ), std::move( model ) );
         }
         return true;
     }

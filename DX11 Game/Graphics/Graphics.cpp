@@ -77,14 +77,14 @@ bool Graphics::InitializeShaders()
 		COM_ERROR_IF_FAILED( hr, "Failed to create no light pixel shader!" );
 
 		// Texture Layout
-		/*D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
+		D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture vertex shader!" );
         hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );*/
+        COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );
 
 		// Colour Layout
 		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
@@ -207,8 +207,8 @@ void Graphics::RenderFrame()
 	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	
 	// Render List of Models
-	for ( unsigned int i = 0; i < renderables.size(); i++ )
-        renderables[i].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	for ( auto const& object : renderables )
+		renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
 	if ( cubeHover )
@@ -294,8 +294,8 @@ void Graphics::Update( float dt )
 	}
 
 	// Billboard Model
-	//float rotation = Billboard::BillboardModel( camera, nanosuit );
-	//nanosuit.SetRotation( 0.0f, rotation, 0.0f );
+	float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );
+	renderables["Nanosuit"].SetRotation( 0.0f, rotation, 0.0f );
 }
 
 //------------------//

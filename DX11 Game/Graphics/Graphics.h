@@ -49,7 +49,6 @@ public:
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Camera> camera;
-	std::vector<RenderableGameObject> renderables;
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
@@ -111,6 +110,7 @@ private:
 	std::unique_ptr<Cube> skybox;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	std::map<std::string, RenderableGameObject> renderables;
 };
 
 #endif
