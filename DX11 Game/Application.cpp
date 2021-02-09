@@ -79,7 +79,15 @@ void Application::Update()
 
 			// Update box texture on click while hovering
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
-				gfx.selectedBox = gfx.boxToUse;
+			{
+				switch ( gfx.boxToUse )
+				{
+				case 0: gfx.selectedBox = "Default"; break;
+				case 1: gfx.selectedBox = "Bounce"; break;
+				case 2: gfx.selectedBox = "Jump"; break;
+				case 3: gfx.selectedBox = "TNT"; break;
+				}
+			}
 		}
 		else if ( gfx.toolType == gfx.RESIZE )
 		{

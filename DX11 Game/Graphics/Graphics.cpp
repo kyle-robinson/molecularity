@@ -134,21 +134,17 @@ bool Graphics::InitializeScene()
 		camera->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 
 		// Initialize Textures
-		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTexture.GetAddressOf() );
+		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTextures["Default"].GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create BOX texture from file!" );
-		boxTextures.push_back( std::move( boxTexture ) );
 
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\BounceBox.png", nullptr, bounceBoxTexture.GetAddressOf() );
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\BounceBox.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create BOUNCE BOX texture from file!" );
-		boxTextures.push_back( std::move( bounceBoxTexture ) );
 
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\JumpBox.png", nullptr, jumpBoxTexture.GetAddressOf() );
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\JumpBox.png", nullptr, boxTextures["Jump"].GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create JUMP CRATE texture from file!" );
-		boxTextures.push_back( std::move( jumpBoxTexture ) );
 
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\TNT.png", nullptr, tntTexture.GetAddressOf() );
+		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\TNT.png", nullptr, boxTextures["TNT"].GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create TNT CRATE texture from file!" );
-		boxTextures.push_back( std::move( tntTexture ) );
 		
 		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\Space.png", nullptr, spaceTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create SPACE texture from file!" );
