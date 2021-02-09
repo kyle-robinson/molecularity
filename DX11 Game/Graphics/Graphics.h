@@ -45,7 +45,7 @@ public:
 	int boxToUse = 0;
 	int sizeToUse = 1;
 	int sizeAmount = 2;
-	int selectedBox = 0;
+	std::string selectedBox = "Default";
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Camera> camera;
@@ -65,11 +65,7 @@ private:
 	
 	// Textures
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> spaceTexture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tntTexture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> boxTexture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> jumpBoxTexture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> bounceBoxTexture;
-	std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
 	// Pipeline State
 	std::shared_ptr<Bind::Viewport> viewport;
