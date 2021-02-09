@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Application.h"
 
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -7,10 +6,15 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     UNREFERENCED_PARAMETER( lpCmdLine );
     UNREFERENCED_PARAMETER( nCmdShow );
 
-    HRESULT hr = CoInitialize(NULL);
+    HRESULT hr = CoInitialize( NULL );
+    if ( FAILED( hr ) )
+    {
+        ErrorLogger::Log( hr, "Failed to call CoInitialize!" );
+        return -1;
+    }
 
     Application game;
-    if ( game.Initialize( hInstance, "DirectX 11 Game", "WindowClass", 1280, 720 ) )
+    if ( game.Initialize( hInstance, "DirectX 11 Group Project - Molecularity", "WindowClass", 1280, 720 ) )
     {
         while ( game.ProcessMessages() == true )
         {

@@ -2,6 +2,8 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "Timer.h"
+#include "MousePicking.h"
 #include "WindowContainer.h"
 
 class Application : public WindowContainer
@@ -19,6 +21,7 @@ public:
 	void Render();
 private:
 	Timer timer;
+	MousePicking mousePick;
 };
 
 #endif
