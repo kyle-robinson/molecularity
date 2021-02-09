@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Application.h"
-#include "JSON_Manger.h"
+#include "JSON_Helper.h"
 bool Application::Initialize(
 	HINSTANCE hInstance,
 	const std::string& windowTitle,
@@ -17,8 +17,8 @@ bool Application::Initialize(
 		return false;
 
 
-	JSON_LOADER::LoadGameObjects("GameObjects.json");
-	JSON_LOADER::LoadJSONNode("Text_Eng.json", "TOOL_TIPS", "Text");
+	
+	JSON_LOADER::LoadSettings();
 	return true;
 }
 

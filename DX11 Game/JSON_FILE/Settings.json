@@ -1,0 +1,32 @@
+{
+  "Genral": [
+    {
+      "Vsync": false,
+      "MouceSpeed": 50,
+      "FullScreen": true,
+      "WindowSize": [ 101, 101 ],
+      "FPS": 60
+    }
+  ],
+  "Controlls": [
+    {
+      "Left": "a",
+      "Right": "d",
+      "Forward": "w",
+      "Back": "s",
+      "Jump": "Space",
+      "Action": "Left_Click",
+      "Pick_Up": "q",
+      "Change_Gun_State": "Scroll"
+    }
+  ],
+  "Sound": [
+    {
+      "MusicOn": true,
+      "MusicVolume": 10,
+      "BackgroundSoundsOn": true,
+      "BackgroundSoundsVolume": 10
+    }
+  ]
+}
+ 

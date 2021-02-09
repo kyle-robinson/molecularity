@@ -201,10 +201,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="JSON_Manger.cpp" />
     <ClCompile Include="Source\ErrorLogger.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\ImGuiManager.cpp" />
+    <ClCompile Include="Source\JSON_Helper.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
     <ClCompile Include="Source\Mouse.cpp" />
     <ClCompile Include="Source\RenderWindow.cpp" />
@@ -238,6 +238,7 @@
     <ClInclude Include="Headers\ImGuiManager.h" />
     <ClInclude Include="Headers\IndexBuffer.h" />
     <ClInclude Include="Headers\Indices.h" />
+    <ClInclude Include="Headers\JSON_Helper.h" />
     <ClInclude Include="Headers\Keyboard.h" />
     <ClInclude Include="Headers\Mouse.h" />
     <ClInclude Include="Headers\RenderWindow.h" />
@@ -249,7 +250,6 @@
     <ClInclude Include="Headers\VertexBuffer.h" />
     <ClInclude Include="Headers\Vertices.h" />
     <ClInclude Include="Headers\WindowContainer.h" />
-    <ClInclude Include="JSON_Manger.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
@@ -277,9 +277,9 @@
     <Image Include="Resources\Textures\CrashBox.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GameObjects.json" />
-    <None Include="Settings.json" />
-    <None Include="Text_Eng.json" />
+    <None Include="JSON_FILE\GameObjects.json" />
+    <None Include="JSON_FILE\Settings.json" />
+    <None Include="JSON_FILE\Text_Eng.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

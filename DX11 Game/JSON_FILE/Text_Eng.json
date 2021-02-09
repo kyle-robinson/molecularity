@@ -1,59 +1,32 @@
 {
-  
   "TOOL_TIPS": [
     {
-
-      "Text": "a",
+      "Name": "Gravity_Tool",
+      "Text": "This Chnages the gravity of the object",
       "Loation": "b",
       "Dyscription": "c"
-
-
-
-
-
     },
     {
-
-      "Text": "b",
+      "Name": "Size_Tool",
+      "Text": "This Changes the size of the object",
       "Loation": "b",
       "Dyscription": "c"
-
-
-
-
-
     }
-
   ],
-
   "Title": [
     {
-
-      "Text": "",
+      "Name": "2",
+      "Text": "aa",
       "Loation": "",
       "Dyscription": ""
-
-
-
-
-
     }
   ],
-
-
   "Paragraph": [
     {
-
+      "Name": "2",
       "Text": "",
       "Loation": "",
       "Dyscription": ""
-
-
-
-
-
     }
   ]
-
-
 }

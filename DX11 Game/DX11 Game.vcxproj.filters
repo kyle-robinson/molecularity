@@ -108,7 +108,7 @@
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <Filter>Resource Files\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="JSON_Manger.cpp">
+    <ClCompile Include="Source\JSON_Helper.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,7 +197,7 @@
     <ClInclude Include="..\External\imgui\imstb_truetype.h">
       <Filter>Resource Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="JSON_Manger.h">
+    <ClInclude Include="Headers\JSON_Helper.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
@@ -215,13 +215,13 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GameObjects.json">
+    <None Include="JSON_FILE\GameObjects.json">
       <Filter>JSON FIles</Filter>
     </None>
-    <None Include="Settings.json">
+    <None Include="JSON_FILE\Settings.json">
       <Filter>JSON FIles</Filter>
     </None>
-    <None Include="Text_Eng.json">
+    <None Include="JSON_FILE\Text_Eng.json">
       <Filter>JSON FIles</Filter>
     </None>
   </ItemGroup>
