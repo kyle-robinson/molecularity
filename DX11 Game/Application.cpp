@@ -142,12 +142,12 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
-	// Set Point Light Model Position
-	//XMVECTOR spotLightPosition = gfx.camera->GetPositionVector();
-	//spotLightPosition += gfx.camera->GetForwardVector() / 4;
-	//spotLightPosition += gfx.camera->GetRightVector() / 2;
-	//gfx.spotLight.SetPosition( spotLightPosition );
-	//gfx.spotLight.SetRotation( gfx.camera->GetRotationFloat3().x + XM_PI, gfx.camera->GetRotationFloat3().y, gfx.camera->GetRotationFloat3().z );
+	// Set position of spot light model
+	XMVECTOR spotLightPosition = gfx.camera->GetPositionVector();
+	spotLightPosition += gfx.camera->GetForwardVector() / 4;
+	spotLightPosition += gfx.camera->GetRightVector() / 2;
+	gfx.spotLight.SetPosition( spotLightPosition );
+	gfx.spotLight.SetRotation( gfx.camera->GetRotationFloat3().x + XM_PI, gfx.camera->GetRotationFloat3().y, gfx.camera->GetRotationFloat3().z );
 
 	gfx.Update( dt );
 }

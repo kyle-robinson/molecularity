@@ -38,21 +38,21 @@ VS_OUTPUT VS( VS_INPUT input )
 // PIXEL SHADER
 cbuffer PointLightBuffer : register( b1 )
 {
-    float3 ambientLightColor; // point light
-    float ambientLightStrength;
+    float3 pointAmbientColor; // point light
+    float pointAmbientStrength;
     
-    float3 dynamicLightColor;
-    float dynamicLightStrength;
+    float3 pointDiffuseColor;
+    float pointDiffuseStrength;
     
-    float3 specularLightColor;
-    float specularLightIntensity;
+    float3 pointSpecularColor;
+    float pointSpecularStrength;
     
-    float specularLightPower;
-    float3 dynamicLightPosition;
+    float pointSpecularPower;
+    float3 pointPosition;
     
-    float lightConstant; // attenuation
-    float lightLinear;
-    float lightQuadratic;
+    float pointConstant; // attenuation
+    float pointLinear;
+    float pointQuadratic;
     float useTexture; // miscellaneous
     
     float alphaFactor;
@@ -60,27 +60,22 @@ cbuffer PointLightBuffer : register( b1 )
 
 cbuffer DirectionalLightBuffer : register( b2 )
 {
-    float directionalLightStrength;
-    float3 directionalLightPosition;
+    float directionalStrength;
+    float3 directionalPosition;
     
-    float3 directionalLightColor;
+    float3 directionalColor;
 }
 
 cbuffer SpotLightBuffer : register( b3 )
 {
-    //float innerCutoff;
-    float range;
-    float3 spotLightPosition;
+    float spotRange;
+    float3 spotPosition;
     
-    //float outerCutoff;
-    float cone;
-    float3 spotLightDirection;
+    float spotCone;
+    float3 spotDirection;
     
-    float padding;
-    //float3 spotLightColor;
-    float3 spotLightAmbient;
-    
-    float3 spotLightDiffuse;
+    float spotDiffuseStrength;
+    float3 spotDiffuseColor;
 }
 
 struct PS_INPUT
@@ -100,18 +95,26 @@ float4 PS( PS_INPUT input ) : SV_TARGET
     
     // DIRECTIONAL LIGHT
     {
-        // diffuse calculations
-        const float3 toLight = normalize( directionalLightPosition - input.inWorldPos );
+        // Create vector between light and pixel positions and get length
+        const float3 toLight = normalize( directionalPosition - input.inWorldPos );
         const float distanceToLight = length( toLight );
+        
+        // Create a vector for the direction to the light from the camera
         const float3 directionToLight = toLight / distanceToLight;
         const float NDotL = dot( directionToLight, input.inNormal );
-        const float3 diffuse = directionalLightColor * saturate( NDotL ) * directionalLightStrength;
         
-        // specular calculations
+        // Diffuse component
+        const float3 diffuse = directionalColor * saturate( NDotL ) * directionalStrength;
+        
+        // Get the angle bewteen object normals and the light position
         const float3 incidence = input.inNormal * dot( toLight, input.inNormal );
+        
+        // Calculate angle between incidence and camera's vector to the light
         const float3 reflection = incidence * 2.0f - toLight;
-        const float3 specular = specularLightColor * specularLightIntensity *
-            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
+        
+        // Specular component
+        const float3 specular = pointSpecularColor * pointSpecularStrength *
+            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), pointSpecularPower );
         
         //cumulativeColor += diffuse + specular;
     }
@@ -119,35 +122,41 @@ float4 PS( PS_INPUT input ) : SV_TARGET
     // POINT LIGHT
     {
         // Create vector between light and pixel positions
-        const float3 vToL = normalize( dynamicLightPosition - input.inWorldPos );
-        const float attenuation = 1 / ( lightConstant + lightLinear * vToL + lightQuadratic * pow( vToL, 2 ) );
+        const float3 vToL = normalize( pointPosition - input.inWorldPos );
         
-        // ambient calculations
-        const float3 ambient = ambientLightColor * ambientLightStrength;
+        // Attenuation factor according to point light position
+        const float attenuation = 1 / ( pointConstant + pointLinear * vToL + pointQuadratic * pow( vToL, 2 ) );
+        
+        // Ambient component
+        const float3 ambient = pointAmbientColor * pointAmbientStrength;
 
-        // diffuse calculations
+        // Diffuse component
         const float3 diffuseIntensity = max( dot( vToL, input.inNormal ), 0 ) * attenuation;
-        const float3 diffuse = diffuseIntensity * dynamicLightStrength * dynamicLightColor;
+        const float3 diffuse = diffuseIntensity * pointDiffuseStrength * pointDiffuseColor;
 
-        // specular calculations
+        // Get the angle bewteen object normals and the light position
         const float3 incidence = input.inNormal * dot( vToL, input.inNormal );
-        const float3 reflection = incidence * 2.0f - vToL;
-        const float3 specular = specularLightColor * specularLightIntensity * attenuation *
-            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
         
-        //cumulativeColor += ambient + diffuse + specular;
+        // Calculate angle between incidence and camera's vector to the light
+        const float3 reflection = incidence * 2.0f - vToL;
+        
+        // Specular component
+        const float3 specular = pointSpecularColor * pointSpecularStrength * attenuation *
+            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), pointSpecularPower );
+        
+        cumulativeColor += ambient + diffuse + specular;
     }
     
     // SPOT LIGHT
     {
         // Create vector between light and pixel positions
-        float3 lightToPixelVec = normalize( spotLightPosition - input.inWorldPos );
+        float3 lightToPixelVec = normalize( spotPosition - input.inWorldPos );
         
         // Get the distance between the light and pixel positions
         const float lightDistance = length( lightToPixelVec );
         
         // If the pixel is too far, don't run any lighting calculations
-        if ( lightDistance < range )
+        if ( lightDistance < spotRange )
         {
             float3 finalSpotLightColor = { 0.0f, 0.0f, 0.0f };
             
@@ -160,10 +169,10 @@ float4 PS( PS_INPUT input ) : SV_TARGET
             // Check if light is striking the front side of the pixel
             if ( howMuchLight > 0.0f )
             {
-                finalSpotLightColor += spotLightDiffuse * dynamicLightStrength;
+                finalSpotLightColor += spotDiffuseColor * pointDiffuseStrength;
                 
-                // Calculate falloff from center to edge of pointlight cone
-                finalSpotLightColor *= pow( max( dot( -lightToPixelVec, spotLightDirection ), 0.0f ), cone );
+                // Calculate falloff from center to edge of point light cone
+                finalSpotLightColor *= pow( max( dot( -lightToPixelVec, spotDirection ), 0.0f ), spotCone );
             }
             
             cumulativeColor += finalSpotLightColor;       

@@ -25,9 +25,9 @@ struct CB_PS_point
 	float pointSpecularPower;
 	DirectX::XMFLOAT3 pointPosition;
 
-	float lightConstant; // attenuation
-	float lightLinear;
-	float lightQuadratic;
+	float pointConstant; // attenuation
+	float pointLinear;
+	float pointQuadratic;
 	float useTexture; // miscellaneous
 
 	float alphaFactor;
@@ -43,19 +43,14 @@ struct CB_PS_directional
 
 struct CB_PS_spot
 {
-	//float innerCutoff;
-	float range;
+	float spotRange;
 	DirectX::XMFLOAT3 spotPosition;
 
-	//float outerCutoff;
-	float cone;
+	float spotCone;
 	DirectX::XMFLOAT3 spotDirection;
 
-	//DirectX::XMFLOAT3 spotColor;
-	float padding;
-	DirectX::XMFLOAT3 spotAmbient;
-
-	DirectX::XMFLOAT3 spotDiffuse;
+	float spotDiffuseStrength;
+	DirectX::XMFLOAT3 spotDiffuseColor;
 };
 
 struct CB_PS_outline

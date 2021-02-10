@@ -127,10 +127,9 @@ bool Graphics::InitializeScene()
 			return false;
 		directionalLight.SetInitialPosition( directionalLight.GetLightPosition() );
 
-		//spotLight.SetScale( 0.01f, 0.01f, 0.01f );
+		spotLight.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
-		//spotLight.SetInitialPosition( spotLight.GetLightPosition() );
 
 		// Initialize Scene Primitives
 		cube = std::make_unique<Cube>();
@@ -227,10 +226,11 @@ void Graphics::BeginFrame()
 void Graphics::RenderFrame()
 {
 	// Render Game Objects
-	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	pointLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	directionalLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	//spotLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	
+	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
+	spotLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render List of Models
 	for ( auto const& object : renderables )
@@ -313,14 +313,6 @@ void Graphics::Update( float dt )
 {
 	// Update Game Components
 	skybox->SetPosition( camera->GetPositionFloat3() );
-
-	// Update Light Positions
-	//spotLight.SetLightPosition( camera->GetPositionFloat3() );
-	/*spotLight.SetLightDirection( XMFLOAT3(
-		camera->GetCameraTarget().x - spotLight.GetLightPosition().x,
-		camera->GetCameraTarget().y - spotLight.GetLightPosition().y,
-		camera->GetCameraTarget().z - spotLight.GetLightPosition().z
-	) );*/
 
 	// Set Updated Cube Size
 	if ( toolType == RESIZE )
