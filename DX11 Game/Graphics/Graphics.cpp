@@ -114,8 +114,8 @@ bool Graphics::InitializeScene()
         if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
             return false;
 
-		light.SetScale( 0.01f, 0.01f, 0.01f );
-		if ( !light.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
+		pointLight.SetScale( 0.01f, 0.01f, 0.01f );
+		if ( !pointLight.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 
 		cube = std::make_unique<Cube>();
@@ -153,7 +153,7 @@ bool Graphics::InitializeScene()
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
 
-		hr = cb_ps_light.Initialize( device.Get(), context.Get() );
+		hr = cb_ps_point.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_light' Constant Buffer!" );
 
 		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
@@ -184,18 +184,18 @@ void Graphics::BeginFrame()
 	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
 	// Setup Constant Buffers
-	light.UpdateConstantBuffer( cb_ps_light, camera );
-	cb_ps_light.data.useTexture = useTexture;
-	cb_ps_light.data.alphaFactor = alphaFactor;
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	pointLight.UpdateConstantBuffer( cb_ps_point, camera );
+	cb_ps_point.data.useTexture = useTexture;
+	cb_ps_point.data.alphaFactor = alphaFactor;
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
 }
 
 void Graphics::RenderFrame()
 {
 	// Render Game Objects
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	pointLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	
 	// Render List of Models
 	for ( auto const& object : renderables )
@@ -253,7 +253,7 @@ void Graphics::EndFrame()
 	imgui.BeginRender();
 	imgui.SpawnInstructionWindow();
 	SpawnControlWindow();
-	light.SpawnControlWindow();
+	pointLight.SpawnControlWindow();
 	imgui.EndRender();
 
 	renderTarget->BindAsNull( *this );
@@ -305,8 +305,8 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	object.SetScale( 1.1f, 1.f, 1.1f );
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	object.SetScale( 1.0f, 1.0f, 1.0f );
 	stencils["Off"]->Bind( *this );
@@ -326,8 +326,8 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 	cube->SetScale( cube->GetScaleFloat3().x + 0.1f, cube->GetScaleFloat3().y + 0.1f, cube->GetScaleFloat3().z + 0.1f );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	cube->SetScale( cube->GetScaleFloat3().x - 0.1f, cube->GetScaleFloat3().y - 0.1f, cube->GetScaleFloat3().z - 0.1f );
 	stencils["Off"]->Bind( *this );
@@ -341,18 +341,32 @@ void Graphics::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
 	{
-		static int fillGroup = 0;
-	    if ( ImGui::RadioButton( "Solid", &fillGroup, 0 ) )
+		// Update Texture Usage
+		ImGui::Text( "Texture Usage: " );
+		ImGui::SameLine();
+		static int textureGroup = 0;
+		if ( ImGui::RadioButton( "Apply", &textureGroup, 0 ) )
+			useTexture = 1.0f;
+		ImGui::SameLine();
+		if ( ImGui::RadioButton( "Discard", &textureGroup, 1 ) )
+			useTexture = 0.0f;
+		
+		// Update Rasterizer State
+		ImGui::Text( "Rasterizer: " );
+		ImGui::SameLine();
+		static int rasterizerGroup = 0;
+	    if ( ImGui::RadioButton( "Solid", &rasterizerGroup, 0 ) )
             rasterizerSolid = true;
 	    ImGui::SameLine();
-	    if ( ImGui::RadioButton( "Wireframe", &fillGroup, 1 ) )
+	    if ( ImGui::RadioButton( "Wireframe", &rasterizerGroup, 1 ) )
             rasterizerSolid = false;
 
+		// Update Sampler State
 		static int activeSampler = 0;
         static bool selectedSampler[3];
         static std::string previewValueSampler = "Anisotropic";
         static const char* samplerList[]{ "Anisotropic", "Bilinear", "Point Sampling" };
-        if ( ImGui::BeginCombo( "Sampler Type", previewValueSampler.c_str() ) )
+        if ( ImGui::BeginCombo( "Sampler", previewValueSampler.c_str() ) )
         {
             for ( unsigned int i = 0; i < IM_ARRAYSIZE( samplerList ); i++ )
             {
@@ -374,6 +388,7 @@ void Graphics::SpawnControlWindow()
             ImGui::EndCombo();
         }
 
+		// Update Stencil Outline Colour
 		ImGui::ColorEdit3( "Outline", &outlineColor.x );
 	} ImGui::End();
 }

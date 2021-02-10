@@ -82,6 +82,12 @@
     <Filter Include="Resource Files\Cursors\Bonus">
       <UniqueIdentifier>{e2b37bbe-b64a-4efc-873b-64a7d4fafa65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\Lights">
+      <UniqueIdentifier>{1675194d-c52e-4038-8f1e-f1a9926b7829}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objects\Lights">
+      <UniqueIdentifier>{f31af59b-81e3-44f0-bed1-bfd6829e742e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -170,6 +176,12 @@
     </ClCompile>
     <ClCompile Include="Input\MousePicking.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\DirectionalLight.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\PointLight.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +337,12 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource Files\Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\PointLight.h">
+      <Filter>Header Files\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\DirectionalLight.h">
+      <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

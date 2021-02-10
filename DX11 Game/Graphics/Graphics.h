@@ -4,7 +4,8 @@
 
 #include <map>
 #include "Cube.h"
-#include "Light.h"
+//#include "Light.h"
+#include "PointLight.h"
 #include "Camera.h"
 #include "Shaders.h"
 #include "ImGuiManager.h"
@@ -41,7 +42,8 @@ public:
 	UINT GetHeight() const noexcept { return windowHeight; }
 
 	// Global Objects
-	Light light;
+	//Light light;
+	PointLight pointLight;
 	int boxToUse = 0;
 	int sizeToUse = 1;
 	int sizeAmount = 2;
@@ -88,14 +90,14 @@ private:
 
 	// Constant Buffers
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
+	ConstantBuffer<CB_PS_point> cb_ps_point;
 	ConstantBuffer<CB_PS_outline> cb_ps_outline;
-	ConstantBuffer<CB_PS_light> cb_ps_light;
 
 	// Local Variables
 	UINT windowWidth;
 	UINT windowHeight;
 	ImGuiManager imgui;
-	bool useTexture = true;
+	float useTexture = 1.0f;
 	float alphaFactor = 1.0f;
 	bool rasterizerSolid = true;
 	std::string samplerToUse = "Anisotropic";

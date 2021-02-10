@@ -1,6 +1,8 @@
 #include "Light.h"
-#include "Camera.h"
-#include <imgui/imgui.h>
+//#include "Camera.h"
+//#include "PointLight.h"
+//#include "DirectionalLight.h"
+//#include <imgui/imgui.h>
 
 //"Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
@@ -15,10 +17,16 @@ bool Light::Initialize( ID3D11Device* device, ID3D11DeviceContext* context,
 	return true;
 }
 
-void Light::SpawnControlWindow()
+/*void Light::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Light Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
 	{
+		DirectionalLight directionalLight;
+		directionalLight.SpawnControlWindow();
+
+		PointLight pointLight;
+		pointLight.SpawnControlWindow();
+
 		if ( ImGui::CollapsingHeader( "Directional Light" ) )
 		{
 			ImGui::SliderFloat3( "Position", &directionalLightPosition.x, -20.0f, 20.0f, "%.1f" );
@@ -52,8 +60,8 @@ void Light::SpawnControlWindow()
 		}
 	} ImGui::End();
 }
-
-void Light::UpdateConstantBuffer( ConstantBuffer<CB_PS_light>& cb_ps_light, std::unique_ptr<Camera>& camera )
+*/
+/*void Light::UpdateConstantBuffer( ConstantBuffer<CB_PS_light>& cb_ps_light, std::unique_ptr<Camera>& camera )
 {
 	cb_ps_light.data.ambientLightColor = ambientColor;
 	cb_ps_light.data.ambientLightStrength = ambientStrength;
@@ -76,4 +84,4 @@ void Light::UpdateConstantBuffer( ConstantBuffer<CB_PS_light>& cb_ps_light, std:
 	cb_ps_light.data.directionalLightPosition = directionalLightPosition;
 	cb_ps_light.data.directionalLightColor = directionalLightColor;
 	cb_ps_light.data.directionalLightStrength = directionalLightStrength;
-}
+}*/

@@ -239,6 +239,9 @@
     <ClCompile Include="Objects\Cube.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Objects\DirectionalLight.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Objects\GameObject.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -246,6 +249,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Objects\Light.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Objects\PointLight.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Objects\RenderableGameObject.cpp">
@@ -307,9 +313,11 @@
     <ClInclude Include="Model\Texture.h" />
     <ClInclude Include="Objects\Camera.h" />
     <ClInclude Include="Objects\Cube.h" />
+    <ClInclude Include="Objects\DirectionalLight.h" />
     <ClInclude Include="Objects\GameObject.h" />
     <ClInclude Include="Objects\GameObject3D.h" />
     <ClInclude Include="Objects\Light.h" />
+    <ClInclude Include="Objects\PointLight.h" />
     <ClInclude Include="Objects\RenderableGameObject.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utility\Billboard.h" />

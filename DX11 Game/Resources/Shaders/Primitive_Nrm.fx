@@ -38,23 +38,27 @@ VS_OUTPUT VS( VS_INPUT input )
 // pixel shader
 cbuffer LightBuffer : register( b1 )
 {
-    float3 ambientLightColor;
+    float3 ambientLightColor; // dynamic point light
     float ambientLightStrength;
+    
     float3 dynamicLightColor;
     float dynamicLightStrength;
+    
     float3 specularLightColor;
     float specularLightIntensity;
+    
     float specularLightPower;
     float3 dynamicLightPosition;
-
-    float directionalLightStrength;
+    
+    /*float directionalLightStrength; // directional light
     float3 directionalLightPosition;
-    float3 directionalLightColor;
-
-    float lightConstant;
+    
+    float3 directionalLightColor;*/
+    float lightConstant; // attenuation
+    
     float lightLinear;
     float lightQuadratic;
-    bool useTexture;
+    float useTexture; // miscellaneous
     float alphaFactor;
 };
 
@@ -73,18 +77,23 @@ float4 PS( PS_INPUT input ) : SV_TARGET
 {
     float3 cumulativeColor = { 0.0f, 0.0f, 0.0f };
     
-    // texture sampling
-    float3 sampleColor = objTexture.Sample( samplerState, input.inTexCoord );
-    
     // DIRECTIONAL LIGHT
-    {
+    /*{
+        // diffuse calculations
         const float3 toLight = normalize( directionalLightPosition - input.inWorldPos );
         const float distanceToLight = length( toLight );
         const float3 directionToLight = toLight / distanceToLight;
         const float NDotL = dot( directionToLight, input.inNormal );
-        const float3 directionalLight = directionalLightColor * saturate( NDotL ) * directionalLightStrength;
-        cumulativeColor += directionalLight;
-    }
+        const float3 diffuse = directionalLightColor * saturate( NDotL ) * directionalLightStrength;
+        
+        // specular calculations
+        const float3 incidence = input.inNormal * dot( toLight, input.inNormal );
+        const float3 reflection = incidence * 2.0f - toLight;
+        const float3 specular = specularLightColor * specularLightIntensity *
+            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
+        
+        cumulativeColor += diffuse + specular;
+    }*/
     
     // POINT LIGHT
     {
@@ -97,7 +106,6 @@ float4 PS( PS_INPUT input ) : SV_TARGET
 
         // diffuse calculations
         const float3 diffuseIntensity = max( dot( vToL, input.inNormal ), 0 ) * attenuation;
-        //diffuseIntensity *= attenuation;
         const float3 diffuse = diffuseIntensity * dynamicLightStrength * dynamicLightColor;
 
         // specular calculations
@@ -116,6 +124,6 @@ float4 PS( PS_INPUT input ) : SV_TARGET
 
     // output colour
     float3 finalColor = saturate( cumulativeColor );
-    finalColor *= ( sampleColor = ( useTexture == true ) ? sampleColor : 1 );
+    finalColor *= ( useTexture == 1.0f ? objTexture.Sample( samplerState, input.inTexCoord ) : 1.0f );
     return float4( finalColor, alphaFactor );
 }
