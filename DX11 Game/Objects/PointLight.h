@@ -11,6 +11,8 @@ public:
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera );
 	void SpawnControlWindow();
 private:
+	DirectX::XMFLOAT3 lightPosition = { -5.0f, 9.0f, -10.0f };
+
 	// Ambient
 	DirectX::XMFLOAT3 ambientColor = { 1.0f, 1.0f, 1.0f };
 	float ambientStrength = 0.1f;

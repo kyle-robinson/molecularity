@@ -48,8 +48,8 @@ public:
 	int sizeAmount = 2;
 	float sizeToUse = 1.0f;
 	bool cubeHover = false;
-
-	PointLight pointLight;
+	
+	SpotLight spotLight;
 	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Camera> camera;
 	std::string selectedBox = "Default";
@@ -113,7 +113,7 @@ private:
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// Local Objects
-	SpotLight spotLight;
+	PointLight pointLight;
 	DirectionalLight directionalLight;
 
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;

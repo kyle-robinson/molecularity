@@ -35,6 +35,11 @@ const XMMATRIX& Camera::GetProjectionMatrix() const noexcept
 	return projection;
 }
 
+const XMFLOAT3& Camera::GetCameraTarget() const noexcept
+{
+	return cameraTarget;
+}
+
 const float& Camera::GetCameraSpeed() const noexcept
 {
 	return cameraSpeed;
@@ -71,6 +76,8 @@ void Camera::UpdateMatrix()
 	XMMATRIX cameraRotation = XMMatrixRotationRollPitchYaw( rotation.x, rotation.y, rotation.z );
 	XMVECTOR camTarget = XMVector3TransformCoord( DEFAULT_FORWARD_VECTOR, cameraRotation );
 	camTarget += posVector;
+
+	cameraTarget = { XMVectorGetX( camTarget ), XMVectorGetY( camTarget ), XMVectorGetZ( camTarget ) };
 
 	// calculate up direction vector based on current rotation
 	XMVECTOR upDir = XMVector3TransformCoord( DEFAULT_UP_VECTOR, cameraRotation );

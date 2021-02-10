@@ -43,13 +43,19 @@ struct CB_PS_directional
 
 struct CB_PS_spot
 {
-	float innerCutoff;
+	//float innerCutoff;
+	float range;
 	DirectX::XMFLOAT3 spotPosition;
 
-	float outerCutoff;
-	DirectX::XMFLOAT3 spotColor;
-
+	//float outerCutoff;
+	float cone;
 	DirectX::XMFLOAT3 spotDirection;
+
+	//DirectX::XMFLOAT3 spotColor;
+	float padding;
+	DirectX::XMFLOAT3 spotAmbient;
+
+	DirectX::XMFLOAT3 spotDiffuse;
 };
 
 struct CB_PS_outline

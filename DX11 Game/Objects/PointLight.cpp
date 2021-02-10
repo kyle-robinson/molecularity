@@ -42,11 +42,11 @@ void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point,
 	cb_ps_point.data.pointSpecularStrength = specularStrength;
 	cb_ps_point.data.pointSpecularPower = specularPower;
 
-	XMVECTOR lightPosition = camera->GetPositionVector();
-	lightPosition += camera->GetForwardVector();
-	lightPosition += camera->GetRightVector() / 4;
-	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
-	cb_ps_point.data.pointPosition = lightPositionF;
+	//XMVECTOR lightPosition = camera->GetPositionVector();
+	//lightPosition += camera->GetForwardVector();
+	//lightPosition += camera->GetRightVector() / 4;
+	//XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
+	cb_ps_point.data.pointPosition = lightPosition;
 	
 	cb_ps_point.data.lightConstant = constant;
 	cb_ps_point.data.lightLinear = linear;

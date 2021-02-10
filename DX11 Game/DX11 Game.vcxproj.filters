@@ -82,11 +82,11 @@
     <Filter Include="Resource Files\Cursors\Bonus">
       <UniqueIdentifier>{e2b37bbe-b64a-4efc-873b-64a7d4fafa65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Objects\Lights">
-      <UniqueIdentifier>{1675194d-c52e-4038-8f1e-f1a9926b7829}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Objects\Lights">
       <UniqueIdentifier>{f31af59b-81e3-44f0-bed1-bfd6829e742e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Lights">
+      <UniqueIdentifier>{1675194d-c52e-4038-8f1e-f1a9926b7829}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 #pragma pack_matrix( row_major )
 
-// vertex shader
+// VERTEX SHADER
 cbuffer ObjectBuffer : register( b0 )
 {
     float4x4 worldMatrix;
@@ -35,7 +35,7 @@ VS_OUTPUT VS( VS_INPUT input )
     return output;
 }
 
-// pixel shader
+// PIXEL SHADER
 cbuffer PointLightBuffer : register( b1 )
 {
     float3 ambientLightColor; // point light
@@ -68,13 +68,19 @@ cbuffer DirectionalLightBuffer : register( b2 )
 
 cbuffer SpotLightBuffer : register( b3 )
 {
-    float innerCutoff;
+    //float innerCutoff;
+    float range;
     float3 spotLightPosition;
     
-    float outerCutoff;
-    float3 spotLightColor;
-    
+    //float outerCutoff;
+    float cone;
     float3 spotLightDirection;
+    
+    float padding;
+    //float3 spotLightColor;
+    float3 spotLightAmbient;
+    
+    float3 spotLightDiffuse;
 }
 
 struct PS_INPUT
@@ -107,12 +113,12 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         const float3 specular = specularLightColor * specularLightIntensity *
             pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
         
-        cumulativeColor += diffuse + specular;
+        //cumulativeColor += diffuse + specular;
     }
     
     // POINT LIGHT
     {
-        // vector calculations
+        // Create vector between light and pixel positions
         const float3 vToL = normalize( dynamicLightPosition - input.inWorldPos );
         const float attenuation = 1 / ( lightConstant + lightLinear * vToL + lightQuadratic * pow( vToL, 2 ) );
         
@@ -129,31 +135,42 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         const float3 specular = specularLightColor * specularLightIntensity * attenuation *
             pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
         
-        cumulativeColor += ambient + diffuse + specular;
+        //cumulativeColor += ambient + diffuse + specular;
     }
     
     // SPOT LIGHT
     {
-        // diffuse calculations
-        float vToL = normalize( spotLightPosition - input.inWorldPos );
-        float3 diffuse = max( dot( vToL, input.inNormal ), 0.0f ) * spotLightColor;
-
-        // specular calculations
-        float3 reflectDirection = reflect( -vToL, input.inNormal );
-        const float3 specular = pow( max( 0.0f, dot( spotLightDirection, reflectDirection ) ), specularLightPower );
-
-        // attenuation calculations
-        const float spotLightDistance = distance( spotLightPosition, input.inWorldPos );
-        const float attenuation = 1 / ( lightConstant + lightLinear * vToL + lightQuadratic * pow( spotLightDistance, 2 ) );
+        // Create vector between light and pixel positions
+        float3 lightToPixelVec = normalize( spotLightPosition - input.inWorldPos );
         
-        // cutoff calculations
-        const float lightAngle = ( acos( dot( -vToL, spotLightDirection ) ) * 180.0f ) / 3.141592f;
-        const float lightCutoffAmount = 1.0f - smoothstep( innerCutoff, outerCutoff, lightAngle );
+        // Get the distance between the light and pixel positions
+        const float lightDistance = length( lightToPixelVec );
         
-        cumulativeColor += ( diffuse + specular ) * attenuation * lightCutoffAmount;
+        // If the pixel is too far, don't run any lighting calculations
+        if ( lightDistance < range )
+        {
+            float3 finalSpotLightColor = { 0.0f, 0.0f, 0.0f };
+            
+            // Convert to unit length
+            lightToPixelVec /= lightDistance;
+            
+            // Calculate how much light the pixel gets by the angle in which the light strikes the pixel surface
+            const float howMuchLight = dot( lightToPixelVec, normalize( input.inNormal ) );
+            
+            // Check if light is striking the front side of the pixel
+            if ( howMuchLight > 0.0f )
+            {
+                finalSpotLightColor += spotLightDiffuse * dynamicLightStrength;
+                
+                // Calculate falloff from center to edge of pointlight cone
+                finalSpotLightColor *= pow( max( dot( -lightToPixelVec, spotLightDirection ), 0.0f ), cone );
+            }
+            
+            cumulativeColor += finalSpotLightColor;       
+        }
     }
 
-    // output colour
+    // Output colour
     float3 finalColor = saturate( cumulativeColor );
     finalColor *= ( useTexture == 1.0f ? objTexture.Sample( samplerState, input.inTexCoord ) : 1.0f );
     return float4( finalColor, alphaFactor );
