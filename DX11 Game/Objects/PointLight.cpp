@@ -34,19 +34,19 @@ void PointLight::SpawnControlWindow()
 
 void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera )
 {
-	cb_ps_point.data.ambientLightColor = ambientColor;
-	cb_ps_point.data.ambientLightStrength = ambientStrength;
-	cb_ps_point.data.dynamicLightColor = lightColor;
-	cb_ps_point.data.dynamicLightStrength = lightStrength;
-	cb_ps_point.data.specularLightColor = specularColor;
-	cb_ps_point.data.specularLightStrength = specularStrength;
-	cb_ps_point.data.specularLightPower = specularPower;
+	cb_ps_point.data.pointAmbientColor = ambientColor;
+	cb_ps_point.data.pointAmbientStrength = ambientStrength;
+	cb_ps_point.data.pointDiffuseColor = lightColor;
+	cb_ps_point.data.pointDiffuseStrength = lightStrength;
+	cb_ps_point.data.pointSpecularColor = specularColor;
+	cb_ps_point.data.pointSpecularStrength = specularStrength;
+	cb_ps_point.data.pointSpecularPower = specularPower;
 
 	XMVECTOR lightPosition = camera->GetPositionVector();
 	lightPosition += camera->GetForwardVector();
 	lightPosition += camera->GetRightVector() / 4;
 	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
-	cb_ps_point.data.dynamicLightPosition = lightPositionF;
+	cb_ps_point.data.pointPosition = lightPositionF;
 	
 	cb_ps_point.data.lightConstant = constant;
 	cb_ps_point.data.lightLinear = linear;

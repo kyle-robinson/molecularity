@@ -108,12 +108,13 @@ bool Graphics::InitializeScene()
 {
 	try
 	{
-		// Initialize Games Objects
+		// Initialize Scene Models
 		if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
             return false;
         if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
             return false;
 
+		// Initialize Scene Lights
 		pointLight.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !pointLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
@@ -123,6 +124,12 @@ bool Graphics::InitializeScene()
 			return false;
 		directionalLight.SetInitialPosition( directionalLight.GetLightPosition() );
 
+		spotLight.SetScale( 0.01f, 0.01f, 0.01f );
+		if ( !spotLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
+			return false;
+		spotLight.SetInitialPosition( spotLight.GetLightPosition() );
+
+		// Initialize Scene Primitives
 		cube = std::make_unique<Cube>();
 		if ( !cube->Initialize( context.Get(), device.Get() ) )
 			return false;
@@ -134,6 +141,7 @@ bool Graphics::InitializeScene()
 		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		skybox->SetScale( 250.0f, 250.0f, 250.0f );
 
+		// Initialize Camera
 		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
 		camera = std::make_unique<Camera>( 0.0f, 9.0f, -15.0f );
 		camera->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
@@ -164,6 +172,9 @@ bool Graphics::InitializeScene()
 		hr = cb_ps_directional.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_directional' Constant Buffer!" );
 
+		hr = cb_ps_spot.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_spot' Constant Buffer!" );
+
 		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_outline' Constant Buffer!" );
 	}
@@ -191,24 +202,31 @@ void Graphics::BeginFrame()
 	// Reset Rasterizer
 	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
-	// Setup Constant Buffers
+	// Setup Point Light Constant Buffer
 	pointLight.UpdateConstantBuffer( cb_ps_point, camera );
 	cb_ps_point.data.useTexture = useTexture;
 	cb_ps_point.data.alphaFactor = alphaFactor;
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
 
+	// Setup Directional Light Constant Buffer
 	directionalLight.UpdateConstantBuffer( cb_ps_directional );
 	if ( !cb_ps_directional.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_directional.GetAddressOf() );
+
+	// Update Spot Light Constant Buffer
+	spotLight.UpdateConstantBuffer( cb_ps_spot );
+	if ( !cb_ps_spot.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_spot.GetAddressOf() );
 }
 
 void Graphics::RenderFrame()
 {
 	// Render Game Objects
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	directionalLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	pointLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	directionalLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	spotLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	
 	// Render List of Models
 	for ( auto const& object : renderables )
@@ -268,6 +286,7 @@ void Graphics::EndFrame()
 	SpawnControlWindow();
 	pointLight.SpawnControlWindow();
 	directionalLight.SpawnControlWindow();
+	spotLight.SpawnControlWindow();
 	imgui.EndRender();
 
 	// Unbind Render Target
@@ -399,5 +418,6 @@ void Graphics::SpawnControlWindow()
 
 		// Update Stencil Outline Colour
 		ImGui::ColorEdit3( "Outline", &outlineColor.x );
-	} ImGui::End();
+	}
+	ImGui::End();
 }

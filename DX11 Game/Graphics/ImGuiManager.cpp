@@ -64,7 +64,8 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 		{
 			ImGui::Text( "ESCAPE            Close Game" );
 		}
-	} ImGui::End();
+	}
+    ImGui::End();
 }
 
 void ImGuiManager::SetBlackGoldStyle()

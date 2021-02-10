@@ -6,6 +6,7 @@
 #include "Cube.h"
 #include "Camera.h"
 #include "Shaders.h"
+#include "SpotLight.h"
 #include "PointLight.h"
 #include "ImGuiManager.h"
 #include "DirectionalLight.h"
@@ -91,6 +92,7 @@ private:
 	// Constant Buffers
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_PS_outline> cb_ps_outline;
+	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 	ConstantBuffer<CB_PS_point> cb_ps_point;
 	ConstantBuffer<CB_PS_directional> cb_ps_directional;
 
@@ -108,10 +110,13 @@ private:
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// Local Objects
-	std::unique_ptr<Cube> skybox;
+	SpotLight spotLight;
 	DirectionalLight directionalLight;
+
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+
+	std::unique_ptr<Cube> skybox;
 	std::map<std::string, RenderableGameObject> renderables;
 };
 

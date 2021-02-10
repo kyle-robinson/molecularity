@@ -183,6 +183,9 @@
     <ClCompile Include="Objects\Light.cpp">
       <Filter>Source Files\Objects\Lights</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\SpotLight.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -342,6 +345,9 @@
       <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Light.h">
+      <Filter>Header Files\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SpotLight.h">
       <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
   </ItemGroup>

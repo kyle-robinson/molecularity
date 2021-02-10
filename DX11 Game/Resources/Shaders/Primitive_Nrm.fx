@@ -60,10 +60,21 @@ cbuffer PointLightBuffer : register( b1 )
 
 cbuffer DirectionalLightBuffer : register( b2 )
 {
-    float directionalLightStrength; // directional light
+    float directionalLightStrength;
     float3 directionalLightPosition;
     
     float3 directionalLightColor;
+}
+
+cbuffer SpotLightBuffer : register( b3 )
+{
+    float innerCutoff;
+    float3 spotLightPosition;
+    
+    float outerCutoff;
+    float3 spotLightColor;
+    
+    float3 spotLightDirection;
 }
 
 struct PS_INPUT
@@ -123,7 +134,23 @@ float4 PS( PS_INPUT input ) : SV_TARGET
     
     // SPOT LIGHT
     {
+        // diffuse calculations
+        float vToL = normalize( spotLightPosition - input.inWorldPos );
+        float3 diffuse = max( dot( vToL, input.inNormal ), 0.0f ) * spotLightColor;
+
+        // specular calculations
+        float3 reflectDirection = reflect( -vToL, input.inNormal );
+        const float3 specular = pow( max( 0.0f, dot( spotLightDirection, reflectDirection ) ), specularLightPower );
+
+        // attenuation calculations
+        const float spotLightDistance = distance( spotLightPosition, input.inWorldPos );
+        const float attenuation = 1 / ( lightConstant + lightLinear * vToL + lightQuadratic * pow( spotLightDistance, 2 ) );
         
+        // cutoff calculations
+        const float lightAngle = ( acos( dot( -vToL, spotLightDirection ) ) * 180.0f ) / 3.141592f;
+        const float lightCutoffAmount = 1.0f - smoothstep( innerCutoff, outerCutoff, lightAngle );
+        
+        cumulativeColor += ( diffuse + specular ) * attenuation * lightCutoffAmount;
     }
 
     // output colour
