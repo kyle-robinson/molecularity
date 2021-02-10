@@ -8,16 +8,16 @@ void DirectionalLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Directional Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
 	{
-		ImGui::SliderFloat3( "Position", &directionalLightPosition.x, -20.0f, 20.0f, "%.1f" );
-		ImGui::ColorEdit3( "Colour", &directionalLightColor.x );
-		ImGui::SliderFloat( "Intensity", &directionalLightStrength, 0.1f, 1.0f, "%.1f" );
+		ImGui::SliderFloat3( "Position", &position.x, -20.0f, 20.0f, "%.1f" );
+		ImGui::ColorEdit3( "Colour", &color.x );
+		ImGui::SliderFloat( "Intensity", &strength, 0.1f, 1.0f, "%.1f" );
 	}
 	ImGui::End();
 }
 
 void DirectionalLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional )
 {
-	cb_ps_directional.data.directionalPosition = directionalLightPosition;
-	cb_ps_directional.data.directionalColor = directionalLightColor;
-	cb_ps_directional.data.directionalStrength = directionalLightStrength;
+	cb_ps_directional.data.directionalPosition = position;
+	cb_ps_directional.data.directionalColor = color;
+	cb_ps_directional.data.directionalStrength = strength;
 }

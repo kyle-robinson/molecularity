@@ -2,6 +2,8 @@
 #include "Camera.h"
 #include <imgui/imgui.h>
 
+// "Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
 void SpotLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )

@@ -125,7 +125,7 @@ bool Graphics::InitializeScene()
 		directionalLight.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !directionalLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
-		directionalLight.SetInitialPosition( directionalLight.GetLightPosition() );
+		directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
 
 		spotLight.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) )

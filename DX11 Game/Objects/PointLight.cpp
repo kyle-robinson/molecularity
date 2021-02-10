@@ -2,6 +2,8 @@
 #include "Camera.h"
 #include <imgui/imgui.h>
 
+// "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
 void PointLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Point Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
@@ -41,14 +43,8 @@ void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point,
 	cb_ps_point.data.pointSpecularColor = specularColor;
 	cb_ps_point.data.pointSpecularStrength = specularStrength;
 	cb_ps_point.data.pointSpecularPower = specularPower;
-
-	//XMVECTOR lightPosition = camera->GetPositionVector();
-	//lightPosition += camera->GetForwardVector();
-	//lightPosition += camera->GetRightVector() / 4;
-	//XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
 	cb_ps_point.data.pointPosition = lightPosition;
-	
-	cb_ps_point.data.lightConstant = constant;
-	cb_ps_point.data.lightLinear = linear;
-	cb_ps_point.data.lightQuadratic = quadratic;
+	cb_ps_point.data.pointConstant = constant;
+	cb_ps_point.data.pointLinear = linear;
+	cb_ps_point.data.pointQuadratic = quadratic;
 }

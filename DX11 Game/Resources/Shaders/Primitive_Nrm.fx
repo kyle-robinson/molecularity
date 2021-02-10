@@ -169,7 +169,7 @@ float4 PS( PS_INPUT input ) : SV_TARGET
             // Check if light is striking the front side of the pixel
             if ( howMuchLight > 0.0f )
             {
-                finalSpotLightColor += spotDiffuseColor * pointDiffuseStrength;
+                finalSpotLightColor += spotDiffuseColor * spotDiffuseStrength;
                 
                 // Calculate falloff from center to edge of point light cone
                 finalSpotLightColor *= pow( max( dot( -lightToPixelVec, spotDirection ), 0.0f ), spotCone );
