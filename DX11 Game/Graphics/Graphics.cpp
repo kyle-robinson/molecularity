@@ -256,6 +256,7 @@ void Graphics::EndFrame()
 	pointLight.SpawnControlWindow();
 	imgui.EndRender();
 
+	// Unbind Render Target
 	renderTarget->BindAsNull( *this );
 
 	// Display Current Frame
@@ -274,15 +275,9 @@ void Graphics::Update( float dt )
 	// Update Game Components
 	skybox->SetPosition( camera->GetPositionFloat3() );
 
+	// Set Updated Cube Size
 	if ( toolType == RESIZE )
-	{
-		switch ( sizeToUse )
-		{
-		case 0: cube->SetScale( 0.25f, 0.25f, 0.25f ); break;
-		case 1: cube->SetScale( 1.0f, 1.0f, 1.0f ); break;
-		case 2: cube->SetScale( 2.5f, 2.5f, 2.5f ); break;
-		}
-	}
+		cube->SetScale( sizeToUse, sizeToUse, sizeToUse );
 
 	// Billboard Model
 	float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );

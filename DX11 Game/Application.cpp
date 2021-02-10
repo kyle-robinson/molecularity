@@ -97,9 +97,16 @@ void Application::Update()
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.sizeAmount > 0 )
 				gfx.sizeAmount--;
 
-			// Set the box size to the previously selected
+			// Set the box scale to use based on the option previously selected
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
-				gfx.sizeToUse = gfx.sizeAmount;
+			{
+				switch ( gfx.sizeAmount )
+				{
+				case 0: gfx.sizeToUse = 0.25f; break;
+				case 1: gfx.sizeToUse = 1.0f; break;
+				case 2: gfx.sizeToUse = 2.0f; break;
+				}
+			}
 		}
 	}
 

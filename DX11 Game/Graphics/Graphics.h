@@ -45,7 +45,7 @@ public:
 	//Light light;
 	PointLight pointLight;
 	int boxToUse = 0;
-	int sizeToUse = 1;
+	float sizeToUse = 1.0f;
 	int sizeAmount = 2;
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;
