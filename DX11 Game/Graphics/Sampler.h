@@ -10,7 +10,7 @@ namespace Bind
 	class Sampler : public GraphicsResource
 	{
 	public:
-		enum class Type
+		static enum class Type
 		{
 			Anisotropic,
 			Bilinear,
@@ -58,8 +58,8 @@ namespace Bind
 		}
 	private:
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> pSampler;
-		Type type;
 		bool reflect;
+		Type type;
 		UINT slot;
 	};
 }

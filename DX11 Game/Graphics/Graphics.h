@@ -27,10 +27,10 @@ namespace Bind
 class Graphics
 {
 	friend class GraphicsResource;
-	enum SamplerType { ANISOTROPIC, BILINEAR, POINT_SAMPLING } samplerType;
 public:
 	enum ToolType { CONVERT, RESIZE } toolType = CONVERT;
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
+
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 	void BeginFrame();
@@ -45,16 +45,15 @@ public:
 	int boxToUse = 0;
 	int sizeToUse = 1;
 	int sizeAmount = 2;
-	std::string selectedBox = "Default";
 	bool cubeHover = false;
 	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Camera> camera;
+	std::string selectedBox = "Default";
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
 	void SpawnControlWindow();
-	void SpawnInstructionWindow();
 
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
 	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
@@ -97,8 +96,9 @@ private:
 	UINT windowHeight;
 	ImGuiManager imgui;
 	bool useTexture = true;
-	bool rasterizerSolid = true;
 	float alphaFactor = 1.0f;
+	bool rasterizerSolid = true;
+	std::string samplerToUse = "Anisotropic";
 	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 

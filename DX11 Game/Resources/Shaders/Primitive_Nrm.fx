@@ -71,37 +71,51 @@ SamplerState samplerState : SAMPLER : register( s0 );
 
 float4 PS( PS_INPUT input ) : SV_TARGET
 {
-    // ambient calculations
-    float3 ambient = ambientLightColor * ambientLightStrength;
-
+    float3 cumulativeColor = { 0.0f, 0.0f, 0.0f };
+    
     // texture sampling
     float3 sampleColor = objTexture.Sample( samplerState, input.inTexCoord );
+    
+    // DIRECTIONAL LIGHT
+    {
+        const float3 toLight = normalize( directionalLightPosition - input.inWorldPos );
+        const float distanceToLight = length( toLight );
+        const float3 directionToLight = toLight / distanceToLight;
+        const float NDotL = dot( directionToLight, input.inNormal );
+        const float3 directionalLight = directionalLightColor * saturate( NDotL ) * directionalLightStrength;
+        cumulativeColor += directionalLight;
+    }
+    
+    // POINT LIGHT
+    {
+        // vector calculations
+        const float3 vToL = normalize( dynamicLightPosition - input.inWorldPos );
+        const float attenuation = 1 / ( lightConstant + lightLinear * vToL + lightQuadratic * pow( vToL, 2 ) );
+        
+        // ambient calculations
+        const float3 ambient = ambientLightColor * ambientLightStrength;
 
-    // vector calculations
-    float3 vToL = normalize( dynamicLightPosition - input.inWorldPos );
-    float attenuation = 1 / ( lightConstant + lightLinear * vToL + lightQuadratic * pow( vToL, 2 ) );
+        // diffuse calculations
+        const float3 diffuseIntensity = max( dot( vToL, input.inNormal ), 0 ) * attenuation;
+        //diffuseIntensity *= attenuation;
+        const float3 diffuse = diffuseIntensity * dynamicLightStrength * dynamicLightColor;
 
-    // diffuse calculations
-    float3 diffuseIntensity = max( dot( vToL, input.inNormal ), 0 );
-    diffuseIntensity *= attenuation;
-    float3 diffuse = diffuseIntensity * dynamicLightStrength * dynamicLightColor;
-
-    // specular calculations
-    float3 incidence = input.inNormal * dot( vToL, input.inNormal );
-    float3 reflection = incidence * 2.0f - vToL;
-    float3 specular = specularLightColor * specularLightIntensity * attenuation *
-        pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
-
-    // directional lighting
-    const float3 toLight = directionalLightPosition - normalize( input.inWorldPos );
-    const float distanceToLight = length( toLight );
-    const float3 directionToLight = toLight / distanceToLight;
-    float NDotL = dot( directionToLight, input.inNormal );
-    float3 directionalLight = directionalLightColor * saturate( NDotL );
+        // specular calculations
+        const float3 incidence = input.inNormal * dot( vToL, input.inNormal );
+        const float3 reflection = incidence * 2.0f - vToL;
+        const float3 specular = specularLightColor * specularLightIntensity * attenuation *
+            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
+        
+        cumulativeColor += ambient + diffuse + specular;
+    }
+    
+    // SPOT LIGHT
+    {
+        
+    }
 
     // output colour
-    float3 finalColor = saturate( ambient + diffuse + specular );
-    finalColor += directionalLight * directionalLightStrength;
+    float3 finalColor = saturate( cumulativeColor );
     finalColor *= ( sampleColor = ( useTexture == true ) ? sampleColor : 1 );
     return float4( finalColor, alphaFactor );
 }

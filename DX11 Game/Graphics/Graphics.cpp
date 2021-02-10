@@ -172,12 +172,7 @@ void Graphics::BeginFrame()
 	// Clear Render Target
 	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
-	switch ( samplerType )
-	{
-	case ANISOTROPIC: samplers["Anisotropic"]->Bind( *this ); break;
-	case BILINEAR: samplers["Bilinear"]->Bind( *this ); break;
-	case POINT_SAMPLING: samplers["Point"]->Bind( *this ); break;
-	}
+	samplers[samplerToUse]->Bind( *this );
 
 	// Render Cubemap First
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
@@ -371,9 +366,9 @@ void Graphics::SpawnControlWindow()
 
             switch ( activeSampler )
             {
-            case 0: samplerType = ANISOTROPIC; break;
-            case 1: samplerType = BILINEAR; break;
-            case 2: samplerType = POINT_SAMPLING; break;
+			case 0: samplerToUse = "Anisotropic"; break;
+            case 1: samplerToUse = "Bilinear"; break;
+            case 2: samplerToUse = "Point"; break;
             }
 
             ImGui::EndCombo();

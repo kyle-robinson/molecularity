@@ -20,8 +20,8 @@ namespace Bind
 
                 DXGI_SWAP_CHAIN_DESC sd = { 0 };
                 sd.BufferCount = 1;
-                sd.BufferDesc.Width = static_cast<FLOAT>( gfx.GetWidth() );
-                sd.BufferDesc.Height = static_cast<FLOAT>( gfx.GetHeight() );
+                sd.BufferDesc.Width = gfx.GetWidth();
+                sd.BufferDesc.Height = gfx.GetHeight();
                 sd.BufferDesc.RefreshRate.Numerator = 60;
                 sd.BufferDesc.RefreshRate.Denominator = 1;
                 sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
