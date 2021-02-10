@@ -115,8 +115,13 @@ bool Graphics::InitializeScene()
             return false;
 
 		pointLight.SetScale( 0.01f, 0.01f, 0.01f );
-		if ( !pointLight.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
+		if ( !pointLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
+
+		directionalLight.SetScale( 0.01f, 0.01f, 0.01f );
+		if ( !directionalLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
+			return false;
+		directionalLight.SetInitialPosition( directionalLight.GetLightPosition() );
 
 		cube = std::make_unique<Cube>();
 		if ( !cube->Initialize( context.Get(), device.Get() ) )
@@ -154,7 +159,10 @@ bool Graphics::InitializeScene()
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
 
 		hr = cb_ps_point.Initialize( device.Get(), context.Get() );
-		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_light' Constant Buffer!" );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_point' Constant Buffer!" );
+
+		hr = cb_ps_directional.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_directional' Constant Buffer!" );
 
 		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_outline' Constant Buffer!" );
@@ -189,12 +197,17 @@ void Graphics::BeginFrame()
 	cb_ps_point.data.alphaFactor = alphaFactor;
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
+
+	directionalLight.UpdateConstantBuffer( cb_ps_directional );
+	if ( !cb_ps_directional.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_directional.GetAddressOf() );
 }
 
 void Graphics::RenderFrame()
 {
 	// Render Game Objects
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
+	directionalLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	pointLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	
 	// Render List of Models
@@ -254,6 +267,7 @@ void Graphics::EndFrame()
 	imgui.SpawnInstructionWindow();
 	SpawnControlWindow();
 	pointLight.SpawnControlWindow();
+	directionalLight.SpawnControlWindow();
 	imgui.EndRender();
 
 	// Unbind Render Target

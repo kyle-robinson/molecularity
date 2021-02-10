@@ -138,9 +138,6 @@
     <ClCompile Include="Model\Texture.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Light.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\stdafx.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -181,6 +178,9 @@
       <Filter>Source Files\Objects\Lights</Filter>
     </ClCompile>
     <ClCompile Include="Objects\PointLight.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Light.cpp">
       <Filter>Source Files\Objects\Lights</Filter>
     </ClCompile>
   </ItemGroup>
@@ -259,9 +259,6 @@
     </ClInclude>
     <ClInclude Include="Model\Colour.h">
       <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Light.h">
-      <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Utility\stdafx.h">
       <Filter>Header Files\Utility</Filter>
@@ -342,6 +339,9 @@
       <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
     <ClInclude Include="Objects\DirectionalLight.h">
+      <Filter>Header Files\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Light.h">
       <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
   </ItemGroup>

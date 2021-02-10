@@ -4,11 +4,11 @@
 
 #include <map>
 #include "Cube.h"
-//#include "Light.h"
-#include "PointLight.h"
 #include "Camera.h"
 #include "Shaders.h"
+#include "PointLight.h"
 #include "ImGuiManager.h"
+#include "DirectionalLight.h"
 #include "RenderableGameObject.h"
 #include <dxtk/SpriteFont.h>
 #include <dxtk/SpriteBatch.h>
@@ -42,12 +42,12 @@ public:
 	UINT GetHeight() const noexcept { return windowHeight; }
 
 	// Global Objects
-	//Light light;
-	PointLight pointLight;
 	int boxToUse = 0;
-	float sizeToUse = 1.0f;
 	int sizeAmount = 2;
+	float sizeToUse = 1.0f;
 	bool cubeHover = false;
+
+	PointLight pointLight;
 	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Camera> camera;
 	std::string selectedBox = "Default";
@@ -90,22 +90,26 @@ private:
 
 	// Constant Buffers
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
-	ConstantBuffer<CB_PS_point> cb_ps_point;
 	ConstantBuffer<CB_PS_outline> cb_ps_outline;
+	ConstantBuffer<CB_PS_point> cb_ps_point;
+	ConstantBuffer<CB_PS_directional> cb_ps_directional;
 
 	// Local Variables
 	UINT windowWidth;
 	UINT windowHeight;
 	ImGuiManager imgui;
-	float useTexture = 1.0f;
-	float alphaFactor = 1.0f;
+
 	bool rasterizerSolid = true;
 	std::string samplerToUse = "Anisotropic";
+
+	float useTexture = 1.0f;
+	float alphaFactor = 1.0f;
 	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// Local Objects
 	std::unique_ptr<Cube> skybox;
+	DirectionalLight directionalLight;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 	std::map<std::string, RenderableGameObject> renderables;

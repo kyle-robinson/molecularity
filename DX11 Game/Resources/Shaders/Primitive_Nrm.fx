@@ -36,9 +36,9 @@ VS_OUTPUT VS( VS_INPUT input )
 }
 
 // pixel shader
-cbuffer LightBuffer : register( b1 )
+cbuffer PointLightBuffer : register( b1 )
 {
-    float3 ambientLightColor; // dynamic point light
+    float3 ambientLightColor; // point light
     float ambientLightStrength;
     
     float3 dynamicLightColor;
@@ -50,17 +50,21 @@ cbuffer LightBuffer : register( b1 )
     float specularLightPower;
     float3 dynamicLightPosition;
     
-    /*float directionalLightStrength; // directional light
-    float3 directionalLightPosition;
-    
-    float3 directionalLightColor;*/
     float lightConstant; // attenuation
-    
     float lightLinear;
     float lightQuadratic;
     float useTexture; // miscellaneous
+    
     float alphaFactor;
 };
+
+cbuffer DirectionalLightBuffer : register( b2 )
+{
+    float directionalLightStrength; // directional light
+    float3 directionalLightPosition;
+    
+    float3 directionalLightColor;
+}
 
 struct PS_INPUT
 {
@@ -78,7 +82,7 @@ float4 PS( PS_INPUT input ) : SV_TARGET
     float3 cumulativeColor = { 0.0f, 0.0f, 0.0f };
     
     // DIRECTIONAL LIGHT
-    /*{
+    {
         // diffuse calculations
         const float3 toLight = normalize( directionalLightPosition - input.inWorldPos );
         const float distanceToLight = length( toLight );
@@ -93,7 +97,7 @@ float4 PS( PS_INPUT input ) : SV_TARGET
             pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), specularLightPower );
         
         cumulativeColor += diffuse + specular;
-    }*/
+    }
     
     // POINT LIGHT
     {

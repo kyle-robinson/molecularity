@@ -8,7 +8,8 @@ class Camera;
 class DirectionalLight : public Light
 {
 public:
-	void UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional, std::unique_ptr<Camera>& camera );
+	inline const DirectX::XMFLOAT3& const GetLightPosition() const noexcept { return directionalLightPosition; };
+	void UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional );
 	void SpawnControlWindow();
 private:
 	DirectX::XMFLOAT3 directionalLightPosition = { 10.0f, 20.0f, 10.0f };
