@@ -17,6 +17,7 @@
 
 namespace Bind
 {
+	class Blender;
 	class DepthStencil;
 	class Rasterizer;
 	class RenderTarget;
@@ -70,6 +71,7 @@ private:
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
 	// Pipeline State
+	std::shared_ptr<Bind::Blender> blender;
 	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
@@ -106,6 +108,7 @@ private:
 
 	float useTexture = 1.0f;
 	float alphaFactor = 1.0f;
+	float outlineScale = 0.1f;
 	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 

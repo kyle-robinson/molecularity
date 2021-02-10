@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Graphics.h"
 #include "Billboard.h"
+#include "Blender.h"
 #include "Stencil.h"
 #include "Sampler.h"
 #include "Viewport.h"
@@ -32,6 +33,7 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		renderTarget = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
 		viewport = std::make_shared<Bind::Viewport>( *this );
+		blender = std::make_shared<Bind::Blender>( *this );
 
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
         stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
@@ -192,6 +194,7 @@ void Graphics::BeginFrame()
 	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
 	samplers[samplerToUse]->Bind( *this );
+	blender->Bind( *this );
 
 	// Render Cubemap First
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
@@ -330,13 +333,13 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
-	object.SetScale( 1.1f, 1.f, 1.1f );
+	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	object.SetScale( 1.0f, 1.0f, 1.0f );
+	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 }
@@ -351,13 +354,13 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
-	cube->SetScale( cube->GetScaleFloat3().x + 0.1f, cube->GetScaleFloat3().y + 0.1f, cube->GetScaleFloat3().z + 0.1f );
+	cube->SetScale( cube->GetScaleFloat3().x + outlineScale, cube->GetScaleFloat3().y + outlineScale, cube->GetScaleFloat3().z + outlineScale );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	cube->SetScale( cube->GetScaleFloat3().x - 0.1f, cube->GetScaleFloat3().y - 0.1f, cube->GetScaleFloat3().z - 0.1f );
+	cube->SetScale( cube->GetScaleFloat3().x - outlineScale, cube->GetScaleFloat3().y - outlineScale, cube->GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }
@@ -416,8 +419,14 @@ void Graphics::SpawnControlWindow()
             ImGui::EndCombo();
         }
 
+		// Update Alpha Blending
+		ImGui::SliderFloat( "Alpha", &alphaFactor, 0.0f, 1.0f, "%.1f" );
+
 		// Update Stencil Outline Colour
-		ImGui::ColorEdit3( "Outline", &outlineColor.x );
+		ImGui::Separator();
+		ImGui::Text( "Stencil Outline" );
+		ImGui::ColorEdit3( "Colour", &outlineColor.x );
+		ImGui::SliderFloat( "Scale", &outlineScale, 0.0f, 1.0f, "%.1f" );
 	}
 	ImGui::End();
 }

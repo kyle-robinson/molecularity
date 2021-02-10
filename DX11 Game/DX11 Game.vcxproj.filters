@@ -350,6 +350,9 @@
     <ClInclude Include="Objects\SpotLight.h">
       <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Blender.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
