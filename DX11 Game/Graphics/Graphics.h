@@ -94,9 +94,10 @@ private:
 	// Constant Buffers
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_PS_outline> cb_ps_outline;
-	ConstantBuffer<CB_PS_spot> cb_ps_spot;
+	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_PS_point> cb_ps_point;
 	ConstantBuffer<CB_PS_directional> cb_ps_directional;
+	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 
 	// Local Variables
 	UINT windowWidth;

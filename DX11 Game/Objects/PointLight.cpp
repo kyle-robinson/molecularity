@@ -6,8 +6,18 @@
 
 void PointLight::SpawnControlWindow()
 {
-	if ( ImGui::Begin( "Point Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	if ( ImGui::Begin( "Point Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
+		ImGui::Text( "Usage: " );
+		ImGui::SameLine();
+		static int enableGroup = 0;
+		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
+			enable = 1.0f;
+		ImGui::SameLine();
+		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
+			enable = 0.0f;
+
+		ImGui::SliderFloat3( "Position", &position.x, -20.0f, 20.0f, "%.1f" );
 		if ( ImGui::CollapsingHeader( "Ambient Components" ) )
 		{
 			ImGui::ColorEdit3( "Colour##1", &ambientColor.x );
@@ -15,8 +25,8 @@ void PointLight::SpawnControlWindow()
 		}
 		if ( ImGui::CollapsingHeader( "Diffuse Components" ) )
 		{
-			ImGui::ColorEdit3( "Colour##2", &lightColor.x );
-			ImGui::SliderFloat( "Intensity##2", &lightStrength, 0.1f, 1.0f, "%.1f" );
+			ImGui::ColorEdit3( "Colour##2", &diffuseColor.x );
+			ImGui::SliderFloat( "Intensity##2", &diffuseStrength, 0.1f, 1.0f, "%.1f" );
 		}
 		if ( ImGui::CollapsingHeader( "Specular Components" ) )
 		{
@@ -38,13 +48,14 @@ void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point,
 {
 	cb_ps_point.data.pointAmbientColor = ambientColor;
 	cb_ps_point.data.pointAmbientStrength = ambientStrength;
-	cb_ps_point.data.pointDiffuseColor = lightColor;
-	cb_ps_point.data.pointDiffuseStrength = lightStrength;
+	cb_ps_point.data.pointDiffuseColor = diffuseColor;
+	cb_ps_point.data.pointDiffuseStrength = diffuseStrength;
 	cb_ps_point.data.pointSpecularColor = specularColor;
 	cb_ps_point.data.pointSpecularStrength = specularStrength;
 	cb_ps_point.data.pointSpecularPower = specularPower;
-	cb_ps_point.data.pointPosition = lightPosition;
+	cb_ps_point.data.pointPosition = position;
 	cb_ps_point.data.pointConstant = constant;
 	cb_ps_point.data.pointLinear = linear;
 	cb_ps_point.data.pointQuadratic = quadratic;
+	cb_ps_point.data.pointEnable = enable;
 }

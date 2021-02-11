@@ -1,7 +1,7 @@
 #pragma pack_matrix( row_major )
 
-// Vertex Shader
-cbuffer ConstantBuffer : register( b0 )
+// VERTEX SHADER
+cbuffer ObjectBuffer : register( b0 )
 {
 	float4x4 worldMatrix;
     float4x4 viewMatrix;
@@ -30,7 +30,7 @@ VS_OUTPUT VS( VS_INPUT input )
     return output;
 }
 
-// Pixel Shader
+// PIXEL SHADER
 cbuffer ColorBuffer : register( b1 )
 {
     float3 outlineColor;

@@ -11,9 +11,14 @@ public:
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional );
 	void SpawnControlWindow();
 private:
-	DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
-	DirectX::XMFLOAT3 color = { 0.4f, 1.0f, 0.1f };
-	float strength = 1.0f;
+	float enable = true;
+	float diffuseStrength = 0.5f;
+	float specularPower = 10.0f;
+	float specularStrength = 0.3f;
+
+	DirectX::XMFLOAT3 position = { 10.0f, 20.0f, 10.0f };
+	DirectX::XMFLOAT3 diffuseColor = { 0.4f, 1.0f, 0.1f };
+	DirectX::XMFLOAT3 specularColor = { 0.4f, 1.0f, 0.1f };
 };
 
 #endif

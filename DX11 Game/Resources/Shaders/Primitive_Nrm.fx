@@ -36,9 +36,15 @@ VS_OUTPUT VS( VS_INPUT input )
 }
 
 // PIXEL SHADER
-cbuffer PointLightBuffer : register( b1 )
+cbuffer SceneBuffer : register( b2 )
 {
-    float3 pointAmbientColor; // point light
+    float useTexture;
+    float alphaFactor;
+}
+
+cbuffer PointLightBuffer : register( b3 )
+{
+    float3 pointAmbientColor;
     float pointAmbientStrength;
     
     float3 pointDiffuseColor;
@@ -50,23 +56,27 @@ cbuffer PointLightBuffer : register( b1 )
     float pointSpecularPower;
     float3 pointPosition;
     
-    float pointConstant; // attenuation
+    float pointConstant;
     float pointLinear;
     float pointQuadratic;
-    float useTexture; // miscellaneous
-    
-    float alphaFactor;
+    float pointEnable;
 };
 
-cbuffer DirectionalLightBuffer : register( b2 )
+cbuffer DirectionalLightBuffer : register( b4 )
 {
-    float directionalStrength;
     float3 directionalPosition;
+    float directionalDiffuseStrength;
     
-    float3 directionalColor;
+    float3 directionalDiffuseColor;
+    float directionalSpecularStrength;
+    
+    float3 directionalSpecularColor;
+    float directionalSpecularPower;
+    
+    float directionalEnable;
 }
 
-cbuffer SpotLightBuffer : register( b3 )
+cbuffer SpotLightBuffer : register( b5 )
 {
     float spotRange;
     float3 spotPosition;
@@ -76,6 +86,8 @@ cbuffer SpotLightBuffer : register( b3 )
     
     float spotDiffuseStrength;
     float3 spotDiffuseColor;
+    
+    float spotEnable;
 }
 
 struct PS_INPUT
@@ -104,7 +116,7 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         const float NDotL = dot( directionToLight, input.inNormal );
         
         // Diffuse component
-        const float3 diffuse = directionalColor * saturate( NDotL ) * directionalStrength;
+        const float3 diffuse = directionalDiffuseColor * saturate( NDotL ) * directionalDiffuseStrength;
         
         // Get the angle bewteen object normals and the light position
         const float3 incidence = input.inNormal * dot( toLight, input.inNormal );
@@ -113,10 +125,11 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         const float3 reflection = incidence * 2.0f - toLight;
         
         // Specular component
-        const float3 specular = pointSpecularColor * pointSpecularStrength *
-            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), pointSpecularPower );
+        const float3 specular = directionalSpecularColor * directionalSpecularStrength *
+            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), directionalSpecularPower );
         
-        //cumulativeColor += diffuse + specular;
+        if ( directionalEnable )
+            cumulativeColor += diffuse + specular;
     }
     
     // POINT LIGHT
@@ -144,7 +157,8 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         const float3 specular = pointSpecularColor * pointSpecularStrength * attenuation *
             pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), pointSpecularPower );
         
-        cumulativeColor += ambient + diffuse + specular;
+        if ( pointEnable )
+            cumulativeColor += ambient + diffuse + specular;
     }
     
     // SPOT LIGHT
@@ -175,7 +189,8 @@ float4 PS( PS_INPUT input ) : SV_TARGET
                 finalSpotLightColor *= pow( max( dot( -lightToPixelVec, spotDirection ), 0.0f ), spotCone );
             }
             
-            cumulativeColor += finalSpotLightColor;       
+            if ( spotEnable )
+                cumulativeColor += finalSpotLightColor;       
         }
     }
 
