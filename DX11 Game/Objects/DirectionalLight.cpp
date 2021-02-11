@@ -8,6 +8,15 @@ void DirectionalLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Directional Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
+		ImGui::Text( "Usage: " );
+		ImGui::SameLine();
+		static int enableGroup = 0;
+		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
+			enable = 1.0f;
+		ImGui::SameLine();
+		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
+			enable = 0.0f;
+
 		ImGui::SliderFloat3( "Position", &position.x, -20.0f, 20.0f, "%.1f" );
 		if ( ImGui::CollapsingHeader( "Diffuse Components" ) )
 		{
@@ -26,6 +35,7 @@ void DirectionalLight::SpawnControlWindow()
 
 void DirectionalLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional )
 {
+	cb_ps_directional.data.directionalEnable = enable;
 	cb_ps_directional.data.directionalPosition = position;
 	cb_ps_directional.data.directionalDiffuseColor = diffuseColor;
 	cb_ps_directional.data.directionalDiffuseStrength = diffuseStrength;

@@ -8,6 +8,15 @@ void SpotLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
+		ImGui::Text( "Usage: " );
+		ImGui::SameLine();
+		static int enableGroup = 0;
+		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
+			enable = 1.0f;
+		ImGui::SameLine();
+		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
+			enable = 0.0f;
+
 		ImGui::ColorEdit3( "Colour", &color.x );
 		ImGui::SliderFloat( "Cone", &cone, 5.0f, 40.0f, "%1.f" );
 		ImGui::SliderFloat( "Range", &range, 500.0f, 10000.0f, "%10.f" );
@@ -18,6 +27,7 @@ void SpotLight::SpawnControlWindow()
 
 void SpotLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_spot>& cb_ps_spot, std::unique_ptr<Camera>& camera )
 {
+	cb_ps_spot.data.spotEnable = enable;
 	cb_ps_spot.data.spotCone = cone;
 	cb_ps_spot.data.spotRange = range;
 	cb_ps_spot.data.spotDiffuseColor = color;

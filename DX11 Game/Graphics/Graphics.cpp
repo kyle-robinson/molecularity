@@ -375,7 +375,7 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 //--------------//
 void Graphics::SpawnControlWindow()
 {
-	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		// Update Texture Usage
 		ImGui::Text( "Texture Usage: " );

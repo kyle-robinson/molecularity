@@ -11,6 +11,7 @@ public:
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera );
 	void SpawnControlWindow();
 private:
+	float enable = true;
 	float constant = 1.0f;
 	float linear = 0.045f;
 	float quadratic = 0.0075f;

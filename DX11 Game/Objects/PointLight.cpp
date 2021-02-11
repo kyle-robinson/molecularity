@@ -8,6 +8,15 @@ void PointLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Point Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
+		ImGui::Text( "Usage: " );
+		ImGui::SameLine();
+		static int enableGroup = 0;
+		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
+			enable = 1.0f;
+		ImGui::SameLine();
+		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
+			enable = 0.0f;
+
 		ImGui::SliderFloat3( "Position", &position.x, -20.0f, 20.0f, "%.1f" );
 		if ( ImGui::CollapsingHeader( "Ambient Components" ) )
 		{
@@ -48,4 +57,5 @@ void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point,
 	cb_ps_point.data.pointConstant = constant;
 	cb_ps_point.data.pointLinear = linear;
 	cb_ps_point.data.pointQuadratic = quadratic;
+	cb_ps_point.data.pointEnable = enable;
 }

@@ -39,6 +39,7 @@ struct CB_PS_point
 	float pointConstant;
 	float pointLinear;
 	float pointQuadratic;
+	float pointEnable;
 };
 
 struct CB_PS_directional
@@ -51,6 +52,8 @@ struct CB_PS_directional
 
 	DirectX::XMFLOAT3 directionalSpecularColor;
 	float directionalSpecularPower;
+
+	float directionalEnable;
 };
 
 struct CB_PS_spot
@@ -63,6 +66,8 @@ struct CB_PS_spot
 
 	float spotDiffuseStrength;
 	DirectX::XMFLOAT3 spotDiffuseColor;
+
+	float spotEnable;
 };
 
 #endif

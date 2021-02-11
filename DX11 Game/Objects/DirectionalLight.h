@@ -11,6 +11,7 @@ public:
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional );
 	void SpawnControlWindow();
 private:
+	float enable = true;
 	float diffuseStrength = 0.5f;
 	float specularPower = 10.0f;
 	float specularStrength = 0.3f;
