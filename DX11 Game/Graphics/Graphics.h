@@ -3,11 +3,13 @@
 #define GRAPHICS_H
 
 #include <map>
-#include "cube.h"
-#include "Light.h"
+#include "Cube.h"
 #include "Camera.h"
 #include "Shaders.h"
+#include "SpotLight.h"
+#include "PointLight.h"
 #include "ImGuiManager.h"
+#include "DirectionalLight.h"
 #include "RenderableGameObject.h"
 #include <dxtk/SpriteFont.h>
 #include <dxtk/SpriteBatch.h>
@@ -15,6 +17,7 @@
 
 namespace Bind
 {
+	class Blender;
 	class DepthStencil;
 	class Rasterizer;
 	class RenderTarget;
@@ -27,10 +30,10 @@ namespace Bind
 class Graphics
 {
 	friend class GraphicsResource;
-	enum SamplerType { ANISOTROPIC, BILINEAR, POINT_SAMPLING } samplerType;
 public:
 	enum ToolType { CONVERT, RESIZE } toolType = CONVERT;
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
+
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 	void BeginFrame();
@@ -41,20 +44,20 @@ public:
 	UINT GetHeight() const noexcept { return windowHeight; }
 
 	// Global Objects
-	Light light;
 	int boxToUse = 0;
-	int sizeToUse = 1;
 	int sizeAmount = 2;
-	std::string selectedBox = "Default";
+	float sizeToUse = 1.0f;
 	bool cubeHover = false;
+	
+	SpotLight spotLight;
 	std::unique_ptr<Cube> cube;
 	std::unique_ptr<Camera> camera;
+	std::string selectedBox = "Default";
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
 	void SpawnControlWindow();
-	void SpawnInstructionWindow();
 
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
 	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
@@ -68,6 +71,7 @@ private:
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
 	// Pipeline State
+	std::shared_ptr<Bind::Blender> blender;
 	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
@@ -90,22 +94,33 @@ private:
 	// Constant Buffers
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_PS_outline> cb_ps_outline;
-	ConstantBuffer<CB_PS_light> cb_ps_light;
+	ConstantBuffer<CB_PS_scene> cb_ps_scene;
+	ConstantBuffer<CB_PS_point> cb_ps_point;
+	ConstantBuffer<CB_PS_directional> cb_ps_directional;
+	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 
 	// Local Variables
 	UINT windowWidth;
 	UINT windowHeight;
 	ImGuiManager imgui;
-	bool useTexture = true;
+
 	bool rasterizerSolid = true;
+	std::string samplerToUse = "Anisotropic";
+
+	float useTexture = 1.0f;
 	float alphaFactor = 1.0f;
+	float outlineScale = 0.1f;
 	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// Local Objects
-	std::unique_ptr<Cube> skybox;
+	PointLight pointLight;
+	DirectionalLight directionalLight;
+
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+
+	std::unique_ptr<Cube> skybox;
 	std::map<std::string, RenderableGameObject> renderables;
 };
 

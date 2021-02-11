@@ -11,31 +11,63 @@ struct CB_VS_matrix
 	DirectX::XMMATRIX projectionMatrix;
 };
 
-struct CB_PS_light
+struct CB_PS_outline
 {
-	DirectX::XMFLOAT3 ambientLightColor;
-	float ambientLightStrength;
-	DirectX::XMFLOAT3 dynamicLightColor;
-	float dynamicLightStrength;
-	DirectX::XMFLOAT3 specularLightColor;
-	float specularLightStrength;
-	float specularLightPower;
-	DirectX::XMFLOAT3 dynamicLightPosition;
-	
-	float directionalLightStrength;
-	DirectX::XMFLOAT3 directionalLightPosition;
-	DirectX::XMFLOAT3 directionalLightColor;
+	DirectX::XMFLOAT3 outlineColor;
+};
 
-	float lightConstant;
-	float lightLinear;
-	float lightQuadratic;
-	bool useTexture;
+struct CB_PS_scene
+{
+	float useTexture;
 	float alphaFactor;
 };
 
-struct CB_PS_outline
+struct CB_PS_point
 {
-	alignas(16) DirectX::XMFLOAT3 outlineColor;
+	DirectX::XMFLOAT3 pointAmbientColor;
+	float pointAmbientStrength;
+	
+	DirectX::XMFLOAT3 pointDiffuseColor;
+	float pointDiffuseStrength;
+	
+	DirectX::XMFLOAT3 pointSpecularColor;
+	float pointSpecularStrength;
+	
+	float pointSpecularPower;
+	DirectX::XMFLOAT3 pointPosition;
+
+	float pointConstant;
+	float pointLinear;
+	float pointQuadratic;
+	float pointEnable;
+};
+
+struct CB_PS_directional
+{
+	DirectX::XMFLOAT3 directionalPosition;
+	float directionalDiffuseStrength;
+
+	DirectX::XMFLOAT3 directionalDiffuseColor;
+	float directionalSpecularStrength;
+
+	DirectX::XMFLOAT3 directionalSpecularColor;
+	float directionalSpecularPower;
+
+	float directionalEnable;
+};
+
+struct CB_PS_spot
+{
+	float spotRange;
+	DirectX::XMFLOAT3 spotPosition;
+
+	float spotCone;
+	DirectX::XMFLOAT3 spotDirection;
+
+	float spotDiffuseStrength;
+	DirectX::XMFLOAT3 spotDiffuseColor;
+
+	float spotEnable;
 };
 
 #endif

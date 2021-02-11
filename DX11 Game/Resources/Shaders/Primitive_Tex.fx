@@ -1,9 +1,11 @@
 #pragma pack_matrix( row_major )
 
-// Vertex Shader
-cbuffer ConstantBuffer : register( b0 )
+// VERTEX SHADER
+cbuffer ObjectBuffer : register( b0 )
 {
 	float4x4 worldMatrix;
+    float4x4 viewMatrix;
+    float4x4 projectionMatrix;
 }
 
 struct VS_INPUT
@@ -22,11 +24,13 @@ VS_OUTPUT VS( VS_INPUT input )
 {    
     VS_OUTPUT output;
     output.outPos = mul( float4( input.inPos, 1.0f ), worldMatrix );
+    output.outPos = mul( output.outPos, viewMatrix );
+    output.outPos = mul( output.outPos, projectionMatrix );
     output.outTex = input.inTex;
     return output;
 }
 
-// Pixel Shader
+// PIXEL SHADER
 struct PS_INPUT
 {
     float4 inPos : SV_POSITION;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Graphics.h"
 #include "Billboard.h"
+#include "Blender.h"
 #include "Stencil.h"
 #include "Sampler.h"
 #include "Viewport.h"
@@ -32,6 +33,7 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 		renderTarget = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
 		viewport = std::make_shared<Bind::Viewport>( *this );
+		blender = std::make_shared<Bind::Blender>( *this );
 
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
         stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
@@ -108,16 +110,28 @@ bool Graphics::InitializeScene()
 {
 	try
 	{
-		// Initialize Games Objects
-		if ( !ModelData::LoadModelData( "GameObjects.json" ) )
+		// Initialize Scene Models
+		if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
             return false;
         if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
             return false;
 
-		light.SetScale( 0.01f, 0.01f, 0.01f );
-		if ( !light.Initialize( device.Get(), context.Get(), cb_vs_matrix ) )
+		// Initialize Scene Lights
+		pointLight.SetScale( 0.01f, 0.01f, 0.01f );
+		if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
+			return false;
+		pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
+
+		directionalLight.SetScale( 0.01f, 0.01f, 0.01f );
+		if ( !directionalLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
+			return false;
+		directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
+
+		spotLight.SetScale( 0.01f, 0.01f, 0.01f );
+		if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 
+		// Initialize Scene Primitives
 		cube = std::make_unique<Cube>();
 		if ( !cube->Initialize( context.Get(), device.Get() ) )
 			return false;
@@ -129,6 +143,7 @@ bool Graphics::InitializeScene()
 		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		skybox->SetScale( 250.0f, 250.0f, 250.0f );
 
+		// Initialize Camera
 		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
 		camera = std::make_unique<Camera>( 0.0f, 9.0f, -15.0f );
 		camera->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
@@ -153,11 +168,20 @@ bool Graphics::InitializeScene()
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
 
-		hr = cb_ps_light.Initialize( device.Get(), context.Get() );
-		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_light' Constant Buffer!" );
-
 		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_outline' Constant Buffer!" );
+
+		hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_scene' Constant Buffer!" );
+
+		hr = cb_ps_point.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_point' Constant Buffer!" );
+
+		hr = cb_ps_directional.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_directional' Constant Buffer!" );
+
+		hr = cb_ps_spot.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_spot' Constant Buffer!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -172,12 +196,8 @@ void Graphics::BeginFrame()
 	// Clear Render Target
 	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
-	switch ( samplerType )
-	{
-	case ANISOTROPIC: samplers["Anisotropic"]->Bind( *this ); break;
-	case BILINEAR: samplers["Bilinear"]->Bind( *this ); break;
-	case POINT_SAMPLING: samplers["Point"]->Bind( *this ); break;
-	}
+	samplers[samplerToUse]->Bind( *this );
+	blender->Bind( *this );
 
 	// Render Cubemap First
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
@@ -188,28 +208,42 @@ void Graphics::BeginFrame()
 	// Reset Rasterizer
 	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
-	// Setup Constant Buffers
-	light.UpdateConstantBuffer( cb_ps_light, camera );
-	cb_ps_light.data.useTexture = useTexture;
-	cb_ps_light.data.alphaFactor = alphaFactor;
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	// Update Scene Constant Buffer
+	cb_ps_scene.data.useTexture = useTexture;
+	cb_ps_scene.data.alphaFactor = alphaFactor;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+
+	// Update Point Light Constant Buffer
+	pointLight.UpdateConstantBuffer( cb_ps_point, camera );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
+
+	// Update Directional Light Constant Buffer
+	directionalLight.UpdateConstantBuffer( cb_ps_directional );
+	if ( !cb_ps_directional.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
+
+	// Update Spot Light Constant Buffer
+	spotLight.UpdateConstantBuffer( cb_ps_spot, camera );
+	if ( !cb_ps_spot.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
 }
 
 void Graphics::RenderFrame()
 {
-	// Render Game Objects
-	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	light.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	// Render Models w/out Normals
+	pointLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	directionalLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	
-	// Render List of Models
+	// Render Models w/ Normals
+	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
+	spotLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	for ( auto const& object : renderables )
 		renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
-	if ( cubeHover )
-		DrawWithOutline( cube, outlineColor );
-	else
+	cubeHover ? DrawWithOutline( cube, outlineColor ) :
 		cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }
 
@@ -258,9 +292,12 @@ void Graphics::EndFrame()
 	imgui.BeginRender();
 	imgui.SpawnInstructionWindow();
 	SpawnControlWindow();
-	light.SpawnControlWindow();
+	pointLight.SpawnControlWindow();
+	directionalLight.SpawnControlWindow();
+	spotLight.SpawnControlWindow();
 	imgui.EndRender();
 
+	// Unbind Render Target
 	renderTarget->BindAsNull( *this );
 
 	// Display Current Frame
@@ -279,15 +316,9 @@ void Graphics::Update( float dt )
 	// Update Game Components
 	skybox->SetPosition( camera->GetPositionFloat3() );
 
+	// Set Updated Cube Size
 	if ( toolType == RESIZE )
-	{
-		switch ( sizeToUse )
-		{
-		case 0: cube->SetScale( 0.25f, 0.25f, 0.25f ); break;
-		case 1: cube->SetScale( 1.0f, 1.0f, 1.0f ); break;
-		case 2: cube->SetScale( 2.5f, 2.5f, 2.5f ); break;
-		}
-	}
+		cube->SetScale( sizeToUse, sizeToUse, sizeToUse );
 
 	// Billboard Model
 	float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );
@@ -304,16 +335,16 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
-	object.SetScale( 1.1f, 1.f, 1.1f );
+	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	object.SetScale( 1.0f, 1.0f, 1.0f );
+	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 }
@@ -325,16 +356,16 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
-	cube->SetScale( cube->GetScaleFloat3().x + 0.1f, cube->GetScaleFloat3().y + 0.1f, cube->GetScaleFloat3().z + 0.1f );
+	cube->SetScale( cube->GetScaleFloat3().x + outlineScale, cube->GetScaleFloat3().y + outlineScale, cube->GetScaleFloat3().z + outlineScale );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
-	if ( !cb_ps_light.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_light.GetAddressOf() );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	cube->SetScale( cube->GetScaleFloat3().x - 0.1f, cube->GetScaleFloat3().y - 0.1f, cube->GetScaleFloat3().z - 0.1f );
+	cube->SetScale( cube->GetScaleFloat3().x - outlineScale, cube->GetScaleFloat3().y - outlineScale, cube->GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }
@@ -344,20 +375,34 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 //--------------//
 void Graphics::SpawnControlWindow()
 {
-	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
-		static int fillGroup = 0;
-	    if ( ImGui::RadioButton( "Solid", &fillGroup, 0 ) )
+		// Update Texture Usage
+		ImGui::Text( "Texture Usage: " );
+		ImGui::SameLine();
+		static int textureGroup = 0;
+		if ( ImGui::RadioButton( "Apply", &textureGroup, 0 ) )
+			useTexture = 1.0f;
+		ImGui::SameLine();
+		if ( ImGui::RadioButton( "Discard", &textureGroup, 1 ) )
+			useTexture = 0.0f;
+		
+		// Update Rasterizer State
+		ImGui::Text( "Rasterizer: " );
+		ImGui::SameLine();
+		static int rasterizerGroup = 0;
+	    if ( ImGui::RadioButton( "Solid", &rasterizerGroup, 0 ) )
             rasterizerSolid = true;
 	    ImGui::SameLine();
-	    if ( ImGui::RadioButton( "Wireframe", &fillGroup, 1 ) )
+	    if ( ImGui::RadioButton( "Wireframe", &rasterizerGroup, 1 ) )
             rasterizerSolid = false;
 
+		// Update Sampler State
 		static int activeSampler = 0;
         static bool selectedSampler[3];
         static std::string previewValueSampler = "Anisotropic";
         static const char* samplerList[]{ "Anisotropic", "Bilinear", "Point Sampling" };
-        if ( ImGui::BeginCombo( "Sampler Type", previewValueSampler.c_str() ) )
+        if ( ImGui::BeginCombo( "Sampler", previewValueSampler.c_str() ) )
         {
             for ( unsigned int i = 0; i < IM_ARRAYSIZE( samplerList ); i++ )
             {
@@ -371,14 +416,22 @@ void Graphics::SpawnControlWindow()
 
             switch ( activeSampler )
             {
-            case 0: samplerType = ANISOTROPIC; break;
-            case 1: samplerType = BILINEAR; break;
-            case 2: samplerType = POINT_SAMPLING; break;
+			case 0: samplerToUse = "Anisotropic"; break;
+            case 1: samplerToUse = "Bilinear"; break;
+            case 2: samplerToUse = "Point"; break;
             }
 
             ImGui::EndCombo();
         }
 
-		ImGui::ColorEdit3( "Outline", &outlineColor.x );
-	} ImGui::End();
+		// Update Alpha Blending
+		ImGui::SliderFloat( "Alpha", &alphaFactor, 0.0f, 1.0f, "%.1f" );
+
+		// Update Stencil Outline Colour
+		ImGui::Separator();
+		ImGui::Text( "Stencil Outline" );
+		ImGui::ColorEdit3( "Colour", &outlineColor.x );
+		ImGui::SliderFloat( "Scale", &outlineScale, 0.0f, 1.0f, "%.1f" );
+	}
+	ImGui::End();
 }

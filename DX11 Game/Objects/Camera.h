@@ -16,6 +16,7 @@ public:
 
 	const XMMATRIX& GetViewMatrix() const noexcept;
 	const XMMATRIX& GetProjectionMatrix() const noexcept;
+	const XMFLOAT3& GetCameraTarget() const noexcept;
 
 	const float& GetCameraSpeed() const noexcept;
 	void SetCameraSpeed( float newSpeed ) noexcept;
@@ -27,6 +28,7 @@ public:
 private:
 	void UpdateMatrix() override;
 	XMMATRIX view, projection;
+	XMFLOAT3 cameraTarget;
 	float cameraSpeed, fovDegrees;
 	float nearZ, farZ;
 };

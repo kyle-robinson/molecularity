@@ -82,6 +82,12 @@
     <Filter Include="Resource Files\Cursors\Bonus">
       <UniqueIdentifier>{e2b37bbe-b64a-4efc-873b-64a7d4fafa65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Objects\Lights">
+      <UniqueIdentifier>{f31af59b-81e3-44f0-bed1-bfd6829e742e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Lights">
+      <UniqueIdentifier>{1675194d-c52e-4038-8f1e-f1a9926b7829}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -132,9 +138,6 @@
     <ClCompile Include="Model\Texture.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Light.cpp">
-      <Filter>Source Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\stdafx.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -171,8 +174,17 @@
     <ClCompile Include="Input\MousePicking.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\JSON_Helper.cpp">
-      <Filter>Source Files\Utility</Filter>
+    <ClCompile Include="Objects\DirectionalLight.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\PointLight.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Light.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\SpotLight.cpp">
+      <Filter>Source Files\Objects\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,9 +263,6 @@
     <ClInclude Include="Model\Colour.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Light.h">
-      <Filter>Header Files\Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\stdafx.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -329,9 +338,38 @@
     <ClInclude Include="resource.h">
       <Filter>Resource Files\Miscellaneous</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\JSON_Helper.h">
-      <Filter>Header Files\Utility</Filter>
+    <ClInclude Include="Objects\PointLight.h">
+      <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\DirectionalLight.h">
+      <Filter>Header Files\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Light.h">
+      <Filter>Header Files\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\SpotLight.h">
+      <Filter>Header Files\Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Blender.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_Tex.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_Nrm.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_NoNrm.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Primitive_Outline.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\CrashBox.png">
@@ -410,12 +448,5 @@
     <None Include="Resources\Cursors\NightDiamond\Bonus\Unavailable (Bonus).ani">
       <Filter>Resource Files\Cursors\Bonus</Filter>
     </None>
-    <None Include="Resources\Shaders\Primitive_Tex.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resources\Shaders\Primitive_Col.fx" />
-    <None Include="Resources\Shaders\Primitive_NoNrm.fx" />
-    <None Include="Resources\Shaders\Primitive_Nrm.fx" />
-    <None Include="Resources\Shaders\Primitive_Outline.fx" />
   </ItemGroup>
 </Project>

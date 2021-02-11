@@ -4,11 +4,11 @@ bool Model::Initialize(
 	const std::string& filePath,
 	ID3D11Device* device,
 	ID3D11DeviceContext* context,
-	ConstantBuffer<CB_VS_matrix>& cb_vs_vertexshader )
+	ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	this->device = device;
 	this->context = context;
-	this->cb_vs_vertexshader = &cb_vs_vertexshader;
+	this->cb_vs_matrix = &cb_vs_matrix;
 
 	try
 	{
@@ -26,14 +26,14 @@ bool Model::Initialize(
 
 void Model::Draw( const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix )
 {
-	cb_vs_vertexshader->data.viewMatrix = viewMatrix;
-	cb_vs_vertexshader->data.projectionMatrix = projectionMatrix;
-	context->VSSetConstantBuffers( 0, 1, cb_vs_vertexshader->GetAddressOf() );
+	cb_vs_matrix->data.viewMatrix = viewMatrix;
+	cb_vs_matrix->data.projectionMatrix = projectionMatrix;
+	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix->GetAddressOf() );
 	
 	for ( int i = 0; i < meshes.size(); i++ )
 	{
-		cb_vs_vertexshader->data.worldMatrix = meshes[i].GetTransformMatrix() * worldMatrix;
-		cb_vs_vertexshader->ApplyChanges();
+		cb_vs_matrix->data.worldMatrix = meshes[i].GetTransformMatrix() * worldMatrix;
+		cb_vs_matrix->ApplyChanges();
 		meshes[i].Draw();
 	}
 }

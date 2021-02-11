@@ -12,7 +12,7 @@ public:
 		const std::string& filePath,
 		ID3D11Device* device,
 		ID3D11DeviceContext* context,
-		ConstantBuffer<CB_VS_matrix>& cb_vs_vertexshader );
+		ConstantBuffer<CB_VS_matrix>& cb_vs_matrix);
 	void Draw( const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix );
 private:
 	bool LoadModel( const std::string& filePath );
@@ -26,7 +26,7 @@ private:
 	std::vector<Mesh> meshes;
 	ID3D11Device* device = nullptr;
 	ID3D11DeviceContext* context = nullptr;
-	ConstantBuffer<CB_VS_matrix>* cb_vs_vertexshader = nullptr;
+	ConstantBuffer<CB_VS_matrix>* cb_vs_matrix = nullptr;
 };
 
 #endif

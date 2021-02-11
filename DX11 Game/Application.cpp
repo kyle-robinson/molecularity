@@ -99,9 +99,16 @@ void Application::Update()
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.sizeAmount > 0 )
 				gfx.sizeAmount--;
 
-			// Set the box size to the previously selected
+			// Set the box scale to use based on the option previously selected
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
-				gfx.sizeToUse = gfx.sizeAmount;
+			{
+				switch ( gfx.sizeAmount )
+				{
+				case 0: gfx.sizeToUse = 0.25f; break;
+				case 1: gfx.sizeToUse = 1.0f; break;
+				case 2: gfx.sizeToUse = 2.0f; break;
+				}
+			}
 		}
 	}
 
@@ -137,12 +144,12 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
-	// Set Light Position
-	XMVECTOR lightPosition = gfx.camera->GetPositionVector();
-	lightPosition += gfx.camera->GetForwardVector() / 4;
-	lightPosition += gfx.camera->GetRightVector() / 2;
-	gfx.light.SetPosition( lightPosition );
-	gfx.light.SetRotation( gfx.camera->GetRotationFloat3().x + XM_PI, gfx.camera->GetRotationFloat3().y, gfx.camera->GetRotationFloat3().z );
+	// Set position of spot light model
+	XMVECTOR spotLightPosition = gfx.camera->GetPositionVector();
+	spotLightPosition += gfx.camera->GetForwardVector() / 4;
+	spotLightPosition += gfx.camera->GetRightVector() / 2;
+	gfx.spotLight.SetPosition( spotLightPosition );
+	gfx.spotLight.SetRotation( gfx.camera->GetRotationFloat3().x + XM_PI, gfx.camera->GetRotationFloat3().y, gfx.camera->GetRotationFloat3().z );
 
 	gfx.Update( dt );
 }
