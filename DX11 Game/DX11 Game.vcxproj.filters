@@ -171,6 +171,9 @@
     <ClCompile Include="Input\MousePicking.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\JSON_Helper.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -326,23 +329,9 @@
     <ClInclude Include="resource.h">
       <Filter>Resource Files\Miscellaneous</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_Tex.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_Nrm.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_NoNrm.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_Outline.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
+    <ClInclude Include="Utility\JSON_Helper.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\CrashBox.png">
@@ -421,5 +410,12 @@
     <None Include="Resources\Cursors\NightDiamond\Bonus\Unavailable (Bonus).ani">
       <Filter>Resource Files\Cursors\Bonus</Filter>
     </None>
+    <None Include="Resources\Shaders\Primitive_Tex.fx">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resources\Shaders\Primitive_Col.fx" />
+    <None Include="Resources\Shaders\Primitive_NoNrm.fx" />
+    <None Include="Resources\Shaders\Primitive_Nrm.fx" />
+    <None Include="Resources\Shaders\Primitive_Outline.fx" />
   </ItemGroup>
 </Project>

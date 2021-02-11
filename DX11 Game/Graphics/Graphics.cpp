@@ -109,7 +109,7 @@ bool Graphics::InitializeScene()
 	try
 	{
 		// Initialize Games Objects
-		if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
+		if ( !ModelData::LoadModelData( "GameObjects.json" ) )
             return false;
         if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
             return false;

@@ -3,7 +3,7 @@
 
 
 //gets all game objects out of a file
-vector<ModdleData> JSON_LOADER::LoadGameObjects(string fileName)
+vector<JSON_LOADER::ModdleData> JSON_LOADER::LoadGameObjects(string fileName)
 {
 	Document d = ParseFile(fileName);
 	
@@ -23,10 +23,10 @@ vector<ModdleData> JSON_LOADER::LoadGameObjects(string fileName)
 		{
 			ObjectData.FileName = GameObject["FileName"].GetString();
 		}
-		if (CheckIsThere("Texture", GameObject))
+		/*	if (CheckIsThere("Texture", GameObject))
 		{
 			ObjectData.Texture = GameObject["Texture"].GetString();
-		}
+		}*/
 
 		if(CheckIsThere("Positon", GameObject)) {
 			ObjectData.Position = { GameObject["Positon"][0].GetFloat(),GameObject["Positon"][1].GetFloat(),GameObject["Positon"][2].GetFloat() };
@@ -250,17 +250,17 @@ vector<string> JSON_LOADER::LoadFileData(string fileName)
 
 				break;
 			case(kNumberType):
-				if (itr->value.IsInt()) {
-					StringData = to_string(itr->value.GetInt());
+				if (Object->value.IsInt()) {
+					StringData = to_string(Object->value.GetInt());
 
 				}
-				else if (itr->value.IsUint()) {
-					StringData = to_string(itr->value.GetUint());
+				else if (Object->value.IsUint()) {
+					StringData = to_string(Object->value.GetUint());
 
 				}
 				else
 				{
-					StringData = to_string(itr->value.GetFloat());
+					StringData = to_string(Object->value.GetFloat());
 
 				}
 				break;
@@ -403,7 +403,7 @@ bool JSON_LOADER::CheckIsThere(string ObjectName, Value& doc)
 Document JSON_LOADER::ParseFile(string File)
 {
 	Document d;
-	std::ifstream t("JSON_File/" + File);
+	std::ifstream t("JSON_File\\" + File);
 	if (!t.is_open()) {
 		//error
 		OutputDebugStringA("Not Open");

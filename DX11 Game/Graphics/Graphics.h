@@ -3,7 +3,7 @@
 #define GRAPHICS_H
 
 #include <map>
-#include "Cube.h"
+#include "cube.h"
 #include "Light.h"
 #include "Camera.h"
 #include "Shaders.h"

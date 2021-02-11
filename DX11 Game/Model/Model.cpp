@@ -40,6 +40,7 @@ void Model::Draw( const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const
 
 bool Model::LoadModel( const std::string& filePath )
 {
+
 	directory = StringConverter::GetDirectoryFromPath( filePath );
 	Assimp::Importer importer;
 	const aiScene* pScene = importer.ReadFile( filePath,
