@@ -109,13 +109,15 @@ bool Graphics::InitializeShaders()
 bool Graphics::InitializeScene()
 {
 	try
-	{
-		// Initialize Scene Models
-		if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
-            return false;
-        if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
-            return false;
+	{	
+		
+		 //Initialize Scene Models
+		if (!ModelData::LoadModelData("GameObjects.json"))
+			return false;
+		if (!ModelData::InitializeModelData(context.Get(), device.Get(), cb_vs_matrix, renderables))
+			return false;
 
+		//TODO add json Load
 		// Initialize Scene Lights
 		pointLight.SetScale( 0.01f, 0.01f, 0.01f );
 		if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
@@ -131,6 +133,7 @@ bool Graphics::InitializeScene()
 		if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 
+		////TODO Load Json For cubes
 		// Initialize Scene Primitives
 		cube = std::make_unique<Cube>();
 		if ( !cube->Initialize( context.Get(), device.Get() ) )
@@ -148,6 +151,7 @@ bool Graphics::InitializeScene()
 		camera = std::make_unique<Camera>( 0.0f, 9.0f, -15.0f );
 		camera->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 
+		//TODO BoxTextures Json
 		// Initialize Textures
 		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTextures["Default"].GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create BOX texture from file!" );
@@ -242,6 +246,7 @@ void Graphics::RenderFrame()
 	for ( auto const& object : renderables )
 		renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
+	
 	// Render Objects w/ Stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
 		cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
@@ -374,7 +379,7 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 // IMGUI WINDOW //
 //--------------//
 void Graphics::SpawnControlWindow()
-{
+{	//TODO Json settings
 	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		// Update Texture Usage

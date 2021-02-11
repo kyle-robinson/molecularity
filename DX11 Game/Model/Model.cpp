@@ -25,7 +25,7 @@ bool Model::Initialize(
 }
 
 void Model::Draw( const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix )
-{
+{	
 	cb_vs_matrix->data.viewMatrix = viewMatrix;
 	cb_vs_matrix->data.projectionMatrix = projectionMatrix;
 	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix->GetAddressOf() );

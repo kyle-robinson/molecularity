@@ -23,10 +23,10 @@ vector<JSON_LOADER::ModdleData> JSON_LOADER::LoadGameObjects(string fileName)
 		{
 			ObjectData.FileName = GameObject["FileName"].GetString();
 		}
-		/*	if (CheckIsThere("Texture", GameObject))
-		{
-			ObjectData.Texture = GameObject["Texture"].GetString();
-		}*/
+		//	if (CheckIsThere("Texture", GameObject))
+		//{
+		//	ObjectData.Texture = GameObject["Texture"].GetString();
+		//}
 
 		if(CheckIsThere("Positon", GameObject)) {
 			ObjectData.Position = { GameObject["Positon"][0].GetFloat(),GameObject["Positon"][1].GetFloat(),GameObject["Positon"][2].GetFloat() };
@@ -52,7 +52,12 @@ vector<JSON_LOADER::ModdleData> JSON_LOADER::LoadGameObjects(string fileName)
 	
 }
 
-void JSON_LOADER::LoadSettings()
+
+
+
+
+//load all settings
+vector<JSON_LOADER::SettingData>  JSON_LOADER::LoadSettings()
 {
 	vector<SettingData>Settings;
 	Document document = ParseFile("Settings.json");
@@ -118,7 +123,7 @@ void JSON_LOADER::LoadSettings()
 
 
 	//return data
-	
+	return Settings;
 }
 
 void JSON_LOADER::UpdateSettings(string SettingType, string SettingName, string UPdateData)

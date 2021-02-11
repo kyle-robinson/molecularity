@@ -6,11 +6,10 @@
 
 using namespace rapidjson;
 using namespace std;
-//structs to store loaded object 
 
 
 namespace JSON_LOADER {
-	
+//structs to store loaded object 
 struct ModdleData
 {
 	string ObjectName;
@@ -29,17 +28,20 @@ struct SettingData
 };
 
 struct TextData {
-
+	string Name;
+	string Text;
+	//add more data here eg position
 };
+
 
 	//load GameObjects grabe all data
 	vector<ModdleData> LoadGameObjects(string fileName);
 	
 	//load text data get all data
-	void LoadTextData(string FileName);
+	vector<TextData> LoadTextDataItems(string FileName);
 	
 	//Load Setting Files get all data
-	void LoadSettings();
+	vector<SettingData> LoadSettings();
 	void UpdateSettings(string SettingType,string SettingName,string UPdateData);
 
 

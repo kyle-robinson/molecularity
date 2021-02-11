@@ -36,7 +36,7 @@ void ImGuiManager::EndRender() const noexcept
 }
 
 void ImGuiManager::SpawnInstructionWindow() const noexcept
-{
+{   //TODO SEttings
 	if ( ImGui::Begin( "Scene Instructions", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		if ( ImGui::CollapsingHeader( "Camera Controls" ) )
