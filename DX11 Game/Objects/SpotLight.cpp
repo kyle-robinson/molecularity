@@ -6,7 +6,7 @@
 
 void SpotLight::SpawnControlWindow()
 {
-	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		ImGui::ColorEdit3( "Colour", &color.x );
 		ImGui::SliderFloat( "Cone", &cone, 5.0f, 40.0f, "%1.f" );

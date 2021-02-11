@@ -60,10 +60,14 @@ cbuffer PointLightBuffer : register( b1 )
 
 cbuffer DirectionalLightBuffer : register( b2 )
 {
-    float directionalStrength;
     float3 directionalPosition;
+    float directionalDiffuseStrength;
     
-    float3 directionalColor;
+    float3 directionalDiffuseColor;
+    float directionalSpecularStrength;
+    
+    float3 directionalSpecularColor;
+    float directionalSpecularPower;
 }
 
 cbuffer SpotLightBuffer : register( b3 )
@@ -104,7 +108,7 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         const float NDotL = dot( directionToLight, input.inNormal );
         
         // Diffuse component
-        const float3 diffuse = directionalColor * saturate( NDotL ) * directionalStrength;
+        const float3 diffuse = directionalDiffuseColor * saturate( NDotL ) * directionalDiffuseStrength;
         
         // Get the angle bewteen object normals and the light position
         const float3 incidence = input.inNormal * dot( toLight, input.inNormal );
@@ -113,10 +117,10 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         const float3 reflection = incidence * 2.0f - toLight;
         
         // Specular component
-        const float3 specular = pointSpecularColor * pointSpecularStrength *
-            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), pointSpecularPower );
+        const float3 specular = directionalSpecularColor * directionalSpecularStrength *
+            pow( max( 0.0f, dot( normalize( -reflection ), normalize( input.inWorldPos ) ) ), directionalSpecularPower );
         
-        //cumulativeColor += diffuse + specular;
+        cumulativeColor += diffuse + specular;
     }
     
     // POINT LIGHT

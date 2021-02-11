@@ -35,10 +35,14 @@ struct CB_PS_point
 
 struct CB_PS_directional
 {
-	float directionalStrength;
 	DirectX::XMFLOAT3 directionalPosition;
+	float directionalDiffuseStrength;
 
-	DirectX::XMFLOAT3 directionalColor;
+	DirectX::XMFLOAT3 directionalDiffuseColor;
+	float directionalSpecularStrength;
+
+	DirectX::XMFLOAT3 directionalSpecularColor;
+	float directionalSpecularPower;
 };
 
 struct CB_PS_spot
