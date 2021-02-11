@@ -11,9 +11,20 @@ struct CB_VS_matrix
 	DirectX::XMMATRIX projectionMatrix;
 };
 
+struct CB_PS_outline
+{
+	DirectX::XMFLOAT3 outlineColor;
+};
+
+struct CB_PS_scene
+{
+	float useTexture;
+	float alphaFactor;
+};
+
 struct CB_PS_point
 {
-	DirectX::XMFLOAT3 pointAmbientColor; // point light
+	DirectX::XMFLOAT3 pointAmbientColor;
 	float pointAmbientStrength;
 	
 	DirectX::XMFLOAT3 pointDiffuseColor;
@@ -25,12 +36,9 @@ struct CB_PS_point
 	float pointSpecularPower;
 	DirectX::XMFLOAT3 pointPosition;
 
-	float pointConstant; // attenuation
+	float pointConstant;
 	float pointLinear;
 	float pointQuadratic;
-	float useTexture; // miscellaneous
-
-	float alphaFactor;
 };
 
 struct CB_PS_directional
@@ -55,11 +63,6 @@ struct CB_PS_spot
 
 	float spotDiffuseStrength;
 	DirectX::XMFLOAT3 spotDiffuseColor;
-};
-
-struct CB_PS_outline
-{
-	DirectX::XMFLOAT3 outlineColor;
 };
 
 #endif

@@ -168,6 +168,12 @@ bool Graphics::InitializeScene()
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix' Constant Buffer!" );
 
+		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_outline' Constant Buffer!" );
+
+		hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_scene' Constant Buffer!" );
+
 		hr = cb_ps_point.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_point' Constant Buffer!" );
 
@@ -176,9 +182,6 @@ bool Graphics::InitializeScene()
 
 		hr = cb_ps_spot.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_spot' Constant Buffer!" );
-
-		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
-		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_outline' Constant Buffer!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -205,44 +208,43 @@ void Graphics::BeginFrame()
 	// Reset Rasterizer
 	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
-	// Setup Point Light Constant Buffer
-	pointLight.UpdateConstantBuffer( cb_ps_point, camera );
-	cb_ps_point.data.useTexture = useTexture;
-	cb_ps_point.data.alphaFactor = alphaFactor;
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
+	// Update Scene Constant Buffer
+	cb_ps_scene.data.useTexture = useTexture;
+	cb_ps_scene.data.alphaFactor = alphaFactor;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
-	// Setup Directional Light Constant Buffer
+	// Update Point Light Constant Buffer
+	pointLight.UpdateConstantBuffer( cb_ps_point, camera );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
+
+	// Update Directional Light Constant Buffer
 	directionalLight.UpdateConstantBuffer( cb_ps_directional );
 	if ( !cb_ps_directional.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 2u, 1u, cb_ps_directional.GetAddressOf() );
+	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
 
 	// Update Spot Light Constant Buffer
 	spotLight.UpdateConstantBuffer( cb_ps_spot, camera );
 	if ( !cb_ps_spot.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_spot.GetAddressOf() );
+	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
 }
 
 void Graphics::RenderFrame()
 {
-	// Render Game Objects
+	// Render Models w/out Normals
 	pointLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	directionalLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 	
+	// Render Models w/ Normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	spotLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-
-	// Render List of Models
 	for ( auto const& object : renderables )
 		renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
-	if ( cubeHover )
-		DrawWithOutline( cube, outlineColor );
-	else
+	cubeHover ? DrawWithOutline( cube, outlineColor ) :
 		cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
-
-	// Render Transparent Objects...
 }
 
 void Graphics::EndFrame()
@@ -333,14 +335,14 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
 	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
@@ -354,14 +356,14 @@ void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& col
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_outline.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	cube->SetScale( cube->GetScaleFloat3().x + outlineScale, cube->GetScaleFloat3().y + outlineScale, cube->GetScaleFloat3().z + outlineScale );
 	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
 	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_point.GetAddressOf() );
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	cube->SetScale( cube->GetScaleFloat3().x - outlineScale, cube->GetScaleFloat3().y - outlineScale, cube->GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );

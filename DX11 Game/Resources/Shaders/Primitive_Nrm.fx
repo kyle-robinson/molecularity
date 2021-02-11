@@ -36,9 +36,15 @@ VS_OUTPUT VS( VS_INPUT input )
 }
 
 // PIXEL SHADER
-cbuffer PointLightBuffer : register( b1 )
+cbuffer SceneBuffer : register( b2 )
 {
-    float3 pointAmbientColor; // point light
+    float useTexture;
+    float alphaFactor;
+}
+
+cbuffer PointLightBuffer : register( b3 )
+{
+    float3 pointAmbientColor;
     float pointAmbientStrength;
     
     float3 pointDiffuseColor;
@@ -50,15 +56,12 @@ cbuffer PointLightBuffer : register( b1 )
     float pointSpecularPower;
     float3 pointPosition;
     
-    float pointConstant; // attenuation
+    float pointConstant;
     float pointLinear;
     float pointQuadratic;
-    float useTexture; // miscellaneous
-    
-    float alphaFactor;
 };
 
-cbuffer DirectionalLightBuffer : register( b2 )
+cbuffer DirectionalLightBuffer : register( b4 )
 {
     float3 directionalPosition;
     float directionalDiffuseStrength;
@@ -70,7 +73,7 @@ cbuffer DirectionalLightBuffer : register( b2 )
     float directionalSpecularPower;
 }
 
-cbuffer SpotLightBuffer : register( b3 )
+cbuffer SpotLightBuffer : register( b5 )
 {
     float spotRange;
     float3 spotPosition;
