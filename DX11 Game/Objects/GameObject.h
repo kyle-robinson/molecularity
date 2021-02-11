@@ -3,7 +3,6 @@
 #define GAMEOBJECT_H
 
 #include "Model.h"
-#define GRAVITY 9.81
 
 class GameObject
 {
