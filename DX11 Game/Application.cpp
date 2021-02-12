@@ -110,24 +110,6 @@ void Application::Update()
 		}
 	}
 
-	// World Collisions
-	//static float worldBoundary = 20.0f;
-
-	//if ( gfx.camera->GetPositionFloat3().x < -worldBoundary )
-	//	gfx.camera->SetPosition( -worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
-	//else if ( gfx.camera->GetPositionFloat3().x > worldBoundary )
-	//	gfx.camera->SetPosition( worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
-
-	//if ( gfx.camera->GetPositionFloat3().y < 0.0f )
-	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 0.0f, gfx.camera->GetPositionFloat3().z );
-	//else if ( gfx.camera->GetPositionFloat3().y > worldBoundary )
-	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, worldBoundary, gfx.camera->GetPositionFloat3().z );
-
-	//if ( gfx.camera->GetPositionFloat3().z < -worldBoundary )
-	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, -worldBoundary );
-	//else if ( gfx.camera->GetPositionFloat3().z > worldBoundary )
-	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, worldBoundary );
-
 	// Camera Movement
 	gfx.camera->SetCameraSpeed( 0.002f );
 	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera->SetCameraSpeed( 0.01f );
@@ -135,13 +117,12 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.camera, dt );
-	//if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.camera, dt );
-	//if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
 
+	// Camera World Collisions
 	if ( !gfx.wallCollision )
 	{
-		float dx = 0.0f - gfx.camera->GetPositionFloat3().x;
-		float dz = 0.0f - gfx.camera->GetPositionFloat3().z;
+		float dx = gfx.hubRoom.GetPositionFloat3().x - gfx.camera->GetPositionFloat3().x;
+		float dz = gfx.hubRoom.GetPositionFloat3().z - gfx.camera->GetPositionFloat3().z;
 		float length = std::sqrtf( dx * dx + dz * dz );
 		dx /= length;
 		dz /= length;
@@ -150,6 +131,7 @@ void Application::Update()
 		gfx.camera->AdjustPosition( dx, 0.0f, dz );
 	}
 
+	// Prevent Camera Y-Axis Movement
 	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 9.0f, gfx.camera->GetPositionFloat3().z );
 
 	// Multi-Tool Type

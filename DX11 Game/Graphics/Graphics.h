@@ -53,6 +53,7 @@ public:
 	
 	SpotLight spotLight;
 	std::unique_ptr<Cube> cube;
+	RenderableGameObject hubRoom;
 	std::unique_ptr<Camera> camera;
 	std::string selectedBox = "Default";
 private:
@@ -122,7 +123,6 @@ private:
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 
-	RenderableGameObject hubRoom;
 	std::unique_ptr<Cube> skybox;
 	//std::map<std::string, RenderableGameObject> renderables;
 };

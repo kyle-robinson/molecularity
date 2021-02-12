@@ -186,6 +186,9 @@
     <ClCompile Include="Objects\SpotLight.cpp">
       <Filter>Source Files\Objects\Lights</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\Collisions.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -352,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Blender.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Collisions.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

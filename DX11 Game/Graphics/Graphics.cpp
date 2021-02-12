@@ -7,6 +7,7 @@
 #include "Viewport.h"
 #include "SwapChain.h"
 #include "ModelData.h"
+#include "Collisions.h"
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
@@ -115,6 +116,7 @@ bool Graphics::InitializeScene()
         //    return false;
         //if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
         //    return false;
+
 		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 		if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
@@ -291,12 +293,6 @@ void Graphics::EndFrame()
 			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
 			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
-	if ( wallCollision )
-	{
-		spriteFont->DrawString( spriteBatch.get(), L"Wall Collision",
-			DirectX::XMFLOAT2( windowWidth - 260.0f, windowHeight - 300.0f ), DirectX::Colors::BlueViolet, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
-	}
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
@@ -322,27 +318,6 @@ void Graphics::EndFrame()
 	}
 }
 
-bool CheckCollisionCircle( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius )
-{
-	/*if ( ( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) *
-         ( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) +
-         ( camera->GetPositionFloat3().y - object.GetPositionFloat3().y ) *
-         ( camera->GetPositionFloat3().y - object.GetPositionFloat3().y ) +
-         ( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) *
-         ( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) <= radius * radius )
-		 return true;
-	else
-		 return false;*/
-
-	if (( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) *
-		( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) +
-		( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) *
-		( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) <= radius * radius )
-		return true;
-	else
-		return false;
-}
-
 void Graphics::Update( float dt )
 {
 	// Update Game Components
@@ -352,8 +327,7 @@ void Graphics::Update( float dt )
 	if ( toolType == RESIZE )
 		cube->SetScale( sizeToUse, sizeToUse, sizeToUse );
 
-	//hubRoom.AdjustRotation( 0.0f, 0.01f, 0.0f );
-	wallCollision = CheckCollisionCircle( camera, hubRoom, 25.0f );
+	wallCollision = Collisions::CheckCollisionCircle( camera, hubRoom, 25.0f );
 
 	// Billboard Model
 	//float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );
