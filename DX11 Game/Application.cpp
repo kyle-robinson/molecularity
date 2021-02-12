@@ -138,6 +138,18 @@ void Application::Update()
 	//if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.camera, dt );
 	//if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
 
+	if ( !gfx.wallCollision )
+	{
+		float dx = 0.0f - gfx.camera->GetPositionFloat3().x;
+		float dz = 0.0f - gfx.camera->GetPositionFloat3().z;
+		float length = std::sqrtf( dx * dx + dz * dz );
+		dx /= length;
+		dz /= length;
+		dx *= gfx.camera->GetCameraSpeed() * 10.0f;
+		dz *= gfx.camera->GetCameraSpeed() * 10.0f;
+		gfx.camera->AdjustPosition( dx, 0.0f, dz );
+	}
+
 	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 9.0f, gfx.camera->GetPositionFloat3().z );
 
 	// Multi-Tool Type
