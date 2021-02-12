@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "Input\\CameraMovement.h"
+#include "CameraMovement.h"
 
 bool Application::Initialize(
 	HINSTANCE hInstance,
@@ -111,22 +111,22 @@ void Application::Update()
 	}
 
 	// World Collisions
-	static float worldBoundary = 20.0f;
+	//static float worldBoundary = 20.0f;
 
-	if ( gfx.camera->GetPositionFloat3().x < -worldBoundary )
-		gfx.camera->SetPosition( -worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
-	else if ( gfx.camera->GetPositionFloat3().x > worldBoundary )
-		gfx.camera->SetPosition( worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
+	//if ( gfx.camera->GetPositionFloat3().x < -worldBoundary )
+	//	gfx.camera->SetPosition( -worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
+	//else if ( gfx.camera->GetPositionFloat3().x > worldBoundary )
+	//	gfx.camera->SetPosition( worldBoundary, gfx.camera->GetPositionFloat3().y, gfx.camera->GetPositionFloat3().z );
 
-	if ( gfx.camera->GetPositionFloat3().y < 0.0f )
-		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 0.0f, gfx.camera->GetPositionFloat3().z );
-	else if ( gfx.camera->GetPositionFloat3().y > worldBoundary )
-		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, worldBoundary, gfx.camera->GetPositionFloat3().z );
+	//if ( gfx.camera->GetPositionFloat3().y < 0.0f )
+	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 0.0f, gfx.camera->GetPositionFloat3().z );
+	//else if ( gfx.camera->GetPositionFloat3().y > worldBoundary )
+	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, worldBoundary, gfx.camera->GetPositionFloat3().z );
 
-	if ( gfx.camera->GetPositionFloat3().z < -worldBoundary )
-		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, -worldBoundary );
-	else if ( gfx.camera->GetPositionFloat3().z > worldBoundary )
-		gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, worldBoundary );
+	//if ( gfx.camera->GetPositionFloat3().z < -worldBoundary )
+	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, -worldBoundary );
+	//else if ( gfx.camera->GetPositionFloat3().z > worldBoundary )
+	//	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, gfx.camera->GetPositionFloat3().y, worldBoundary );
 
 	// Camera Movement
 	gfx.camera->SetCameraSpeed( 0.002f );
@@ -135,8 +135,10 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.camera, dt );
 	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.camera, dt );
-	if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.camera, dt );
-	if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
+	//if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.camera, dt );
+	//if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.camera, dt );
+
+	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 9.0f, gfx.camera->GetPositionFloat3().z );
 
 	// Multi-Tool Type
 	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;

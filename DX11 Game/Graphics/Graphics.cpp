@@ -111,23 +111,27 @@ bool Graphics::InitializeScene()
 	try
 	{
 		// Initialize Scene Models
-		if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
-            return false;
-        if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
-            return false;
+		//if ( !ModelData::LoadModelData( "Resources\\Objects.json" ) )
+        //    return false;
+        //if ( !ModelData::InitializeModelData( context.Get(), device.Get(), cb_vs_matrix, renderables ) )
+        //    return false;
+		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
+		if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
+			return false;
+		hubRoom.SetInitialPosition( 0.0f, 0.0f, 0.0f );
 
 		// Initialize Scene Lights
-		pointLight.SetScale( 0.01f, 0.01f, 0.01f );
+		pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 		if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 		pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
 
-		directionalLight.SetScale( 0.01f, 0.01f, 0.01f );
+		directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 		if ( !directionalLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 		directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
 
-		spotLight.SetScale( 0.01f, 0.01f, 0.01f );
+		spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 		if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) )
 			return false;
 
@@ -141,7 +145,7 @@ bool Graphics::InitializeScene()
 		if ( !skybox->Initialize( context.Get(), device.Get() ) )
 			return false;
 		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
-		skybox->SetScale( 250.0f, 250.0f, 250.0f );
+		skybox->SetInitialScale( 250.0f, 250.0f, 250.0f );
 
 		// Initialize Camera
 		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
@@ -239,8 +243,9 @@ void Graphics::RenderFrame()
 	// Render Models w/ Normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	spotLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	for ( auto const& object : renderables )
-		renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	hubRoom.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	//for ( auto const& object : renderables )
+	//	renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
@@ -286,6 +291,12 @@ void Graphics::EndFrame()
 			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
 			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
+	if ( wallCollision )
+	{
+		spriteFont->DrawString( spriteBatch.get(), L"Wall Collision",
+			DirectX::XMFLOAT2( windowWidth - 260.0f, windowHeight - 300.0f ), DirectX::Colors::BlueViolet, 0.0f,
+			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+	}
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
@@ -311,6 +322,27 @@ void Graphics::EndFrame()
 	}
 }
 
+bool CheckCollisionCircle( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius )
+{
+	/*if ( ( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) *
+         ( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) +
+         ( camera->GetPositionFloat3().y - object.GetPositionFloat3().y ) *
+         ( camera->GetPositionFloat3().y - object.GetPositionFloat3().y ) +
+         ( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) *
+         ( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) <= radius * radius )
+		 return true;
+	else
+		 return false;*/
+
+	if (( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) *
+		( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) +
+		( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) *
+		( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) <= radius * radius )
+		return true;
+	else
+		return false;
+}
+
 void Graphics::Update( float dt )
 {
 	// Update Game Components
@@ -320,9 +352,12 @@ void Graphics::Update( float dt )
 	if ( toolType == RESIZE )
 		cube->SetScale( sizeToUse, sizeToUse, sizeToUse );
 
+	//hubRoom.AdjustRotation( 0.0f, 0.01f, 0.0f );
+	wallCollision = CheckCollisionCircle( camera, hubRoom, 25.0f );
+
 	// Billboard Model
-	float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );
-	renderables["Nanosuit"].SetRotation( 0.0f, rotation, 0.0f );
+	//float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );
+	//renderables["Nanosuit"].SetRotation( 0.0f, rotation, 0.0f );
 }
 
 //------------------//

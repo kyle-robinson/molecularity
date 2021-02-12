@@ -44,6 +44,8 @@ public:
 	UINT GetHeight() const noexcept { return windowHeight; }
 
 	// Global Objects
+	bool wallCollision = false;
+
 	int boxToUse = 0;
 	int sizeAmount = 2;
 	float sizeToUse = 1.0f;
@@ -120,8 +122,9 @@ private:
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 
+	RenderableGameObject hubRoom;
 	std::unique_ptr<Cube> skybox;
-	std::map<std::string, RenderableGameObject> renderables;
+	//std::map<std::string, RenderableGameObject> renderables;
 };
 
 #endif
