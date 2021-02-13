@@ -68,7 +68,7 @@ void Application::Update()
 		// Mouse Picking
 		mousePick.UpdateMatrices( gfx.cameras[gfx.cameraToUse]->GetViewMatrix(),
 			gfx.cameras[gfx.cameraToUse]->GetProjectionMatrix() );
-		if ( mousePick.TestIntersection( me.GetPosX(), me.GetPosY(), *gfx.cube.get() ) )
+		if ( mousePick.TestIntersection( gfx.GetWidth() / 2, gfx.GetHeight() / 2, *gfx.cube.get() ) )
 			gfx.cubeHover = true;
 		else
 			gfx.cubeHover = false;
