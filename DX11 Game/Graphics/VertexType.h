@@ -11,6 +11,12 @@ struct Vertex3D
 	DirectX::XMFLOAT3 normals;
 };
 
+struct Vertex2D
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT2 texcoord;
+};
+
 struct Vertex_Pos_Col
 {
 	DirectX::XMFLOAT3 position;

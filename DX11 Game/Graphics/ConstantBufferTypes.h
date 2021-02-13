@@ -11,6 +11,11 @@ struct CB_VS_matrix
 	DirectX::XMMATRIX projectionMatrix;
 };
 
+struct CB_VS_matrix_2D
+{
+	DirectX::XMMATRIX wvpMatrix;
+};
+
 struct CB_PS_outline
 {
 	DirectX::XMFLOAT3 outlineColor;

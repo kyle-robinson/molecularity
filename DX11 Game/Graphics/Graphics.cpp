@@ -66,7 +66,7 @@ bool Graphics::InitializeShaders()
 {
 	try
 	{
-		// Normal Layout
+		// Normal Shaders
 		D3D11_INPUT_ELEMENT_DESC layoutPosTexNrm[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -79,7 +79,7 @@ bool Graphics::InitializeShaders()
 		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Primitive_NoNrm.fx" );
 		COM_ERROR_IF_FAILED( hr, "Failed to create no light pixel shader!" );
 
-		// Texture Layout
+		// Texture Shaders
 		D3D11_INPUT_ELEMENT_DESC layoutPosTex[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -89,7 +89,15 @@ bool Graphics::InitializeShaders()
         hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture pixel shader!" );
 
-		// Colour Layout
+		// Sprite Shaders
+		hr = vertexShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx", layoutPosTex, ARRAYSIZE( layoutPosTex ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create sprite vertex shader!" );
+        hr = pixelShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create sprite pixel shader!" );
+		hr = pixelShader_2D_discard.Initialize( device, L"Resources\\Shaders\\Sprite_Discard.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create sprite discard pixel shader!" );
+
+		// Colour Shaders
 		D3D11_INPUT_ELEMENT_DESC layoutPosCol[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -149,6 +157,11 @@ bool Graphics::InitializeScene()
 		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		skybox->SetInitialScale( 250.0f, 250.0f, 250.0f );
 
+		// Initialize Sprites
+		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\Crosshair.png", cb_vs_matrix_2d ) )
+            return false;
+        crosshair.SetInitialPosition( windowWidth / 2 - crosshair.GetWidth() / 2, windowHeight / 2 - crosshair.GetHeight() / 2, 0 );
+
 		// Initialize Cameras
 		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
 		cameras.emplace( "Default", std::make_unique<Camera>( 0.0f, 9.0f, -15.0f ) );
@@ -156,6 +169,7 @@ bool Graphics::InitializeScene()
 		cameras.emplace( "Debug", std::make_unique<Camera>( 0.0f, 9.0f, -10.0f ) );
 		for ( const auto& cam : cameras )
 			cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
+		camera2D.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
 
 		// Initialize Textures
 		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTextures["Default"].GetAddressOf() );
@@ -191,6 +205,9 @@ bool Graphics::InitializeScene()
 
 		hr = cb_ps_spot.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_ps_spot' Constant Buffer!" );
+
+		hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'cb_vs_matrix_2d' Constant Buffer!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -255,6 +272,13 @@ void Graphics::RenderFrame()
 	// Render Objects w/ Stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
 		cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+
+	// Render Sprites
+	Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
+	cb_ps_scene.data.useTexture = true;
+    if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1, 1, cb_ps_scene.GetAddressOf() );
+    crosshair.Draw( camera2D.GetWorldOrthoMatrix() );
 }
 
 void Graphics::EndFrame()
