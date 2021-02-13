@@ -184,8 +184,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	}
 	case WM_RBUTTONDOWN:
 	{
-		if ( cursorEnabled )
-			DisableCursor();
+		//if ( cursorEnabled )
+		//	DisableCursor();
 
 		if ( imio.WantCaptureMouse )
 			return 0;
@@ -197,8 +197,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	}
 	case WM_RBUTTONUP:
 	{
-		if ( !cursorEnabled )
-			EnableCursor();
+		//if ( !cursorEnabled )
+		//	EnableCursor();
 		
 		if ( imio.WantCaptureMouse )
 			return 0;

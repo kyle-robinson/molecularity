@@ -48,17 +48,20 @@ void Application::Update()
 		Mouse::MouseEvent me = mouse.ReadEvent();
 
 		// Camera Orientation
-		if ( mouse.IsRightDown() )
+		if ( gfx.cameraToUse != "Static" )
 		{
-			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
+			if ( mouse.IsRightDown() || !cursorEnabled )
 			{
-				gfx.cameras[gfx.cameraToUse]->AdjustRotation(
-					XMFLOAT3(
-						static_cast<float>( me.GetPosY() ) * 0.005f,
-						static_cast<float>( me.GetPosX() ) * 0.005f,
-						0.0f
-					)
-				);
+				if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
+				{
+					gfx.cameras[gfx.cameraToUse]->AdjustRotation(
+						XMFLOAT3(
+							static_cast<float>( me.GetPosY() ) * 0.005f,
+							static_cast<float>( me.GetPosX() ) * 0.005f,
+							0.0f
+						)
+					);
+				}
 			}
 		}
 		
@@ -117,8 +120,24 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( VK_F2 ) ) gfx.cameraToUse = "Static";
 	if ( keyboard.KeyIsPressed( VK_F3 ) ) gfx.cameraToUse = "Debug";
 
+	// Set Cursor Enabled/Disabled
+	if ( keyboard.KeyIsPressed( VK_HOME ) && cursorEnabled )
+	{
+		DisableCursor();
+		cursorEnabled = false;
+	}
+	else if ( keyboard.KeyIsPressed( VK_END ) && !cursorEnabled )
+	{
+		EnableCursor();
+		cursorEnabled = true;
+	}
+
 	// Camera Movement
-	if ( gfx.cameraToUse != "Static" )
+	if ( gfx.cameraToUse == "Static" )
+	{
+		gfx.cameras["Static"]->SetLookAtPos( gfx.cameras["Default"]->GetPositionFloat3() );
+	}
+	else
 	{
 		gfx.cameras[gfx.cameraToUse]->SetCameraSpeed( 0.002f );
 		if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.cameras[gfx.cameraToUse]->SetCameraSpeed( 0.01f );
@@ -126,11 +145,11 @@ void Application::Update()
 		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.cameras[gfx.cameraToUse], dt );
 		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.cameras[gfx.cameraToUse], dt );
 		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.cameras[gfx.cameraToUse], dt );
-	}
-	if ( gfx.cameraToUse == "Debug" )
-	{
-		if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.cameras["Debug"], dt );
-		if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.cameras["Debug"], dt );
+		if ( gfx.cameraToUse == "Debug" )
+		{
+			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.cameras["Debug"], dt );
+			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.cameras["Debug"], dt );
+		}
 	}
 
 	// Camera World Collisions
@@ -144,7 +163,7 @@ void Application::Update()
 		dx *= gfx.cameras["Default"]->GetCameraSpeed() * 10.0f;
 		dz *= gfx.cameras["Default"]->GetCameraSpeed() * 10.0f;
 		gfx.cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
-	}
+	} 
 
 	// Prevent Camera Y-Axis Movement
 	gfx.cameras["Default"]->SetPosition(
