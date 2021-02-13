@@ -43,19 +43,22 @@ public:
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
 
-	// Global Objects
-	bool wallCollision = false;
-
-	int boxToUse = 0;
+	// Cube Variables
+	bool cubeHover = false;
 	int sizeAmount = 2;
 	float sizeToUse = 1.0f;
-	bool cubeHover = false;
-	
-	SpotLight spotLight;
-	std::unique_ptr<Cube> cube;
-	RenderableGameObject hubRoom;
-	std::unique_ptr<Camera> camera;
+	int boxToUse = 0;
 	std::string selectedBox = "Default";
+	std::unique_ptr<Cube> cube;
+	
+	// Room Variables
+	SpotLight spotLight;
+	bool wallCollision = false;
+	RenderableGameObject hubRoom;
+
+	// Camera Variables
+	std::string cameraToUse = "Default";
+	std::map<std::string, std::unique_ptr<Camera>> cameras;
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();

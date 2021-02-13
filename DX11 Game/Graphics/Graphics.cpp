@@ -149,10 +149,13 @@ bool Graphics::InitializeScene()
 		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		skybox->SetInitialScale( 250.0f, 250.0f, 250.0f );
 
-		// Initialize Camera
+		// Initialize Cameras
 		XMFLOAT2 aspectRatio = { static_cast<float>( windowWidth ), static_cast<float>( windowHeight ) };
-		camera = std::make_unique<Camera>( 0.0f, 9.0f, -15.0f );
-		camera->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
+		cameras.emplace( "Default", std::make_unique<Camera>( 0.0f, 9.0f, -15.0f ) );
+		cameras.emplace( "Static", std::make_unique<Camera>( 0.0f, 9.0f, 0.0f ) );
+		cameras.emplace( "Debug", std::make_unique<Camera>( 0.0f, 9.0f, -10.0f ) );
+		for ( const auto& cam : cameras )
+			cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 
 		// Initialize Textures
 		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTextures["Default"].GetAddressOf() );
@@ -221,7 +224,7 @@ void Graphics::BeginFrame()
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
 	// Update Point Light Constant Buffer
-	pointLight.UpdateConstantBuffer( cb_ps_point, camera );
+	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 
@@ -231,7 +234,7 @@ void Graphics::BeginFrame()
 	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
 
 	// Update Spot Light Constant Buffer
-	spotLight.UpdateConstantBuffer( cb_ps_spot, camera );
+	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
 	if ( !cb_ps_spot.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
 }
@@ -239,15 +242,15 @@ void Graphics::BeginFrame()
 void Graphics::RenderFrame()
 {
 	// Render Models w/out Normals
-	pointLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	directionalLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	pointLight.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	directionalLight.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
 	
 	// Render Models w/ Normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	spotLight.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
-	hubRoom.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	spotLight.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	hubRoom.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
 	//for ( auto const& object : renderables )
-	//	renderables[object.first].Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	//	renderables[object.first].Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
 
 	// Render Objects w/ Stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
@@ -293,6 +296,9 @@ void Graphics::EndFrame()
 			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
 			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
+	spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
+		DirectX::XMFLOAT2( 20.0f, 0.0f ), DirectX::Colors::IndianRed, 0.0f,
+		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
 
 	// Spawn ImGui Windows
@@ -321,13 +327,13 @@ void Graphics::EndFrame()
 void Graphics::Update( float dt )
 {
 	// Update Game Components
-	skybox->SetPosition( camera->GetPositionFloat3() );
+	skybox->SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
 
 	// Set Updated Cube Size
 	if ( toolType == RESIZE )
 		cube->SetScale( sizeToUse, sizeToUse, sizeToUse );
 
-	wallCollision = Collisions::CheckCollisionCircle( camera, hubRoom, 25.0f );
+	wallCollision = Collisions::CheckCollisionCircle( cameras["Default"], hubRoom, 25.0f );
 
 	// Billboard Model
 	//float rotation = Billboard::BillboardModel( camera, renderables["Nanosuit"] );
@@ -340,7 +346,7 @@ void Graphics::Update( float dt )
 void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color )
 {
 	stencils["Write"]->Bind( *this );
-	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
@@ -348,14 +354,14 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
-	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
 
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
-	object.Draw( camera->GetViewMatrix(), camera->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
 }
 
 void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color )

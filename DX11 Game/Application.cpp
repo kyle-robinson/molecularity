@@ -17,7 +17,8 @@ bool Application::Initialize(
 	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
 
-	mousePick.Initialize( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix(), width, height );
+	mousePick.Initialize( gfx.cameras[gfx.cameraToUse]->GetViewMatrix(),
+		gfx.cameras[gfx.cameraToUse]->GetProjectionMatrix(), width, height );
 
 	return true;
 }
@@ -51,7 +52,7 @@ void Application::Update()
 		{
 			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
 			{
-				gfx.camera->AdjustRotation(
+				gfx.cameras[gfx.cameraToUse]->AdjustRotation(
 					XMFLOAT3(
 						static_cast<float>( me.GetPosY() ) * 0.005f,
 						static_cast<float>( me.GetPosX() ) * 0.005f,
@@ -62,7 +63,8 @@ void Application::Update()
 		}
 		
 		// Mouse Picking
-		mousePick.UpdateMatrices( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix() );
+		mousePick.UpdateMatrices( gfx.cameras[gfx.cameraToUse]->GetViewMatrix(),
+			gfx.cameras[gfx.cameraToUse]->GetProjectionMatrix() );
 		if ( mousePick.TestIntersection( me.GetPosX(), me.GetPosY(), *gfx.cube.get() ) )
 			gfx.cubeHover = true;
 		else
@@ -110,56 +112,73 @@ void Application::Update()
 		}
 	}
 
+	// Set Camera To Use
+	if ( keyboard.KeyIsPressed( VK_F1 ) ) gfx.cameraToUse = "Default";
+	if ( keyboard.KeyIsPressed( VK_F2 ) ) gfx.cameraToUse = "Static";
+	if ( keyboard.KeyIsPressed( VK_F3 ) ) gfx.cameraToUse = "Debug";
+
 	// Camera Movement
-	gfx.camera->SetCameraSpeed( 0.002f );
-	if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.camera->SetCameraSpeed( 0.01f );
-	if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.camera, dt );
-	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.camera, dt );
-	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.camera, dt );
-	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.camera, dt );
+	if ( gfx.cameraToUse != "Static" )
+	{
+		gfx.cameras[gfx.cameraToUse]->SetCameraSpeed( 0.002f );
+		if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.cameras[gfx.cameraToUse]->SetCameraSpeed( 0.01f );
+		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.cameras[gfx.cameraToUse], dt );
+		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.cameras[gfx.cameraToUse], dt );
+		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.cameras[gfx.cameraToUse], dt );
+		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.cameras[gfx.cameraToUse], dt );
+	}
+	if ( gfx.cameraToUse == "Debug" )
+	{
+		if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.cameras["Debug"], dt );
+		if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.cameras["Debug"], dt );
+	}
 
 	// Camera World Collisions
 	if ( !gfx.wallCollision )
 	{
-		float dx = gfx.hubRoom.GetPositionFloat3().x - gfx.camera->GetPositionFloat3().x;
-		float dz = gfx.hubRoom.GetPositionFloat3().z - gfx.camera->GetPositionFloat3().z;
+		float dx = gfx.hubRoom.GetPositionFloat3().x - gfx.cameras["Default"]->GetPositionFloat3().x;
+		float dz = gfx.hubRoom.GetPositionFloat3().z - gfx.cameras["Default"]->GetPositionFloat3().z;
 		float length = std::sqrtf( dx * dx + dz * dz );
 		dx /= length;
 		dz /= length;
-		dx *= gfx.camera->GetCameraSpeed() * 10.0f;
-		dz *= gfx.camera->GetCameraSpeed() * 10.0f;
-		gfx.camera->AdjustPosition( dx, 0.0f, dz );
+		dx *= gfx.cameras["Default"]->GetCameraSpeed() * 10.0f;
+		dz *= gfx.cameras["Default"]->GetCameraSpeed() * 10.0f;
+		gfx.cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
 	}
 
 	// Prevent Camera Y-Axis Movement
-	gfx.camera->SetPosition( gfx.camera->GetPositionFloat3().x, 9.0f, gfx.camera->GetPositionFloat3().z );
+	gfx.cameras["Default"]->SetPosition(
+		gfx.cameras["Default"]->GetPositionFloat3().x,
+		9.0f,
+		gfx.cameras["Default"]->GetPositionFloat3().z
+	);
 
 	// Multi-Tool Type
 	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
 	// Pick-Up Cube - Set position relative to camera
-	if ( keyboard.KeyIsPressed( 'E' ) )
+	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" )
 	{
-		XMVECTOR cubePosition = gfx.camera->GetPositionVector();
-		cubePosition += gfx.camera->GetForwardVector() * 2;
+		XMVECTOR cubePosition = gfx.cameras[gfx.cameraToUse]->GetPositionVector();
+		cubePosition += gfx.cameras[gfx.cameraToUse]->GetForwardVector() * 2;
 		gfx.cube->SetPosition( cubePosition );
 		gfx.cube->SetRotation(
 			gfx.cube->GetRotationFloat3().x,
-			gfx.camera->GetRotationFloat3().y,
+			gfx.cameras[gfx.cameraToUse]->GetRotationFloat3().y,
 			gfx.cube->GetRotationFloat3().z
 		);
 	}
 
 	// Set position of spot light model
-	XMVECTOR spotLightPosition = gfx.camera->GetPositionVector();
-	spotLightPosition += gfx.camera->GetForwardVector() / 4;
-	spotLightPosition += gfx.camera->GetRightVector() / 2;
+	XMVECTOR spotLightPosition = gfx.cameras["Default"]->GetPositionVector();
+	spotLightPosition += gfx.cameras["Default"]->GetForwardVector() / 4;
+	spotLightPosition += gfx.cameras["Default"]->GetRightVector() / 2;
 	gfx.spotLight.SetPosition( spotLightPosition );
 	gfx.spotLight.SetRotation(
-		gfx.camera->GetRotationFloat3().x + XM_PI,
-		gfx.camera->GetRotationFloat3().y,
-		gfx.camera->GetRotationFloat3().z
+		gfx.cameras["Default"]->GetRotationFloat3().x + XM_PI,
+		gfx.cameras["Default"]->GetRotationFloat3().y,
+		gfx.cameras["Default"]->GetRotationFloat3().z
 	);
 
 	gfx.Update( dt );
