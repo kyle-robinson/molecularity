@@ -138,12 +138,29 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
+	// Pick-Up Cube - Set position relative to camera
+	if ( keyboard.KeyIsPressed( 'E' ) )
+	{
+		XMVECTOR cubePosition = gfx.camera->GetPositionVector();
+		cubePosition += gfx.camera->GetForwardVector() * 2;
+		gfx.cube->SetPosition( cubePosition );
+		gfx.cube->SetRotation(
+			gfx.cube->GetRotationFloat3().x,
+			gfx.camera->GetRotationFloat3().y,
+			gfx.cube->GetRotationFloat3().z
+		);
+	}
+
 	// Set position of spot light model
 	XMVECTOR spotLightPosition = gfx.camera->GetPositionVector();
 	spotLightPosition += gfx.camera->GetForwardVector() / 4;
 	spotLightPosition += gfx.camera->GetRightVector() / 2;
 	gfx.spotLight.SetPosition( spotLightPosition );
-	gfx.spotLight.SetRotation( gfx.camera->GetRotationFloat3().x + XM_PI, gfx.camera->GetRotationFloat3().y, gfx.camera->GetRotationFloat3().z );
+	gfx.spotLight.SetRotation(
+		gfx.camera->GetRotationFloat3().x + XM_PI,
+		gfx.camera->GetRotationFloat3().y,
+		gfx.camera->GetRotationFloat3().z
+	);
 
 	gfx.Update( dt );
 }
