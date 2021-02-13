@@ -55,13 +55,19 @@ public:
 	bool wallCollision = false;
 	RenderableGameObject hubRoom;
 
+	float useTexture = 1.0f;
+	float alphaFactor = 1.0f;
+	float outlineScale = 0.1f;
+	bool rasterizerSolid = true;
+	std::string samplerToUse = "Anisotropic";
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
+
 	std::string cameraToUse = "Default";
 	std::map<std::string, std::unique_ptr<Camera>> cameras;
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
-	void SpawnControlWindow();
 
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
 	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
@@ -105,15 +111,7 @@ private:
 	UINT windowWidth;
 	UINT windowHeight;
 	ImGuiManager imgui;
-
-	bool rasterizerSolid = true;
-	std::string samplerToUse = "Anisotropic";
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-
-	float useTexture = 1.0f;
-	float alphaFactor = 1.0f;
-	float outlineScale = 0.1f;
-	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 
 	Sprite crosshair;
 	Camera2D camera2D;

@@ -33,7 +33,6 @@ void Application::Update()
 	float dt = timer.GetMilliSecondsElapsed();
 	timer.Restart();
 
-	// Read Input
     while ( !keyboard.CharBufferIsEmpty() )
 	{
 		unsigned char ch = keyboard.ReadChar();
@@ -46,8 +45,6 @@ void Application::Update()
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-
-		// Camera Orientation
 		if ( gfx.cameraToUse != "Static" )
 		{
 			if ( mouse.IsRightDown() || !cursorEnabled )
@@ -65,7 +62,7 @@ void Application::Update()
 			}
 		}
 		
-		// Mouse Picking
+		// mouse picking
 		mousePick.UpdateMatrices( gfx.cameras[gfx.cameraToUse]->GetViewMatrix(),
 			gfx.cameras[gfx.cameraToUse]->GetProjectionMatrix() );
 		if ( mousePick.TestIntersection( gfx.GetWidth() / 2, gfx.GetHeight() / 2, *gfx.cube.get() ) )
@@ -73,16 +70,16 @@ void Application::Update()
 		else
 			gfx.cubeHover = false;
 		
-		// Manage Multi-Tool Options
+		// manage multi-tool options
 		if ( gfx.toolType == gfx.CONVERT )
 		{
-			// Change selected texture to use on box
+			// change selected texture to use on box
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
 				gfx.boxToUse++;
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
 				gfx.boxToUse--;
 
-			// Update box texture on click while hovering
+			// update box texture on click while hovering
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
 			{
 				switch ( gfx.boxToUse )
@@ -96,13 +93,13 @@ void Application::Update()
 		}
 		else if ( gfx.toolType == gfx.RESIZE )
 		{
-			// Change size amount to change box to
+			// change size amount to change box to
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.sizeAmount < 2 )
 				gfx.sizeAmount++;
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.sizeAmount > 0 )
 				gfx.sizeAmount--;
 
-			// Set the box scale to use based on the option previously selected
+			// set the box scale to use based on the option previously selected
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
 			{
 				switch ( gfx.sizeAmount )
@@ -115,12 +112,12 @@ void Application::Update()
 		}
 	}
 
-	// Set Camera To Use
+	// set camera to use
 	if ( keyboard.KeyIsPressed( VK_F1 ) ) gfx.cameraToUse = "Default";
 	if ( keyboard.KeyIsPressed( VK_F2 ) ) gfx.cameraToUse = "Static";
 	if ( keyboard.KeyIsPressed( VK_F3 ) ) gfx.cameraToUse = "Debug";
 
-	// Set Cursor Enabled/Disabled
+	// set cursor enabled/disabled
 	if ( keyboard.KeyIsPressed( VK_HOME ) && cursorEnabled )
 	{
 		DisableCursor();
@@ -132,7 +129,7 @@ void Application::Update()
 		cursorEnabled = true;
 	}
 
-	// Camera Movement
+	// camera movement
 	if ( gfx.cameraToUse == "Static" )
 	{
 		gfx.cameras["Static"]->SetLookAtPos( gfx.cameras["Default"]->GetPositionFloat3() );
@@ -152,7 +149,7 @@ void Application::Update()
 		}
 	}
 
-	// Camera World Collisions
+	// camera world collisions
 	if ( !gfx.wallCollision )
 	{
 		float dx = gfx.hubRoom.GetPositionFloat3().x - gfx.cameras["Default"]->GetPositionFloat3().x;
@@ -165,18 +162,11 @@ void Application::Update()
 		gfx.cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
 	} 
 
-	// Prevent Camera Y-Axis Movement
-	gfx.cameras["Default"]->SetPosition(
-		gfx.cameras["Default"]->GetPositionFloat3().x,
-		9.0f,
-		gfx.cameras["Default"]->GetPositionFloat3().z
-	);
-
-	// Multi-Tool Type
+	// set multi-tool type
 	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
-	// Pick-Up Cube - Set position relative to camera
+	// pick-up cube - set position relative to camera
 	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" )
 	{
 		XMVECTOR cubePosition = gfx.cameras[gfx.cameraToUse]->GetPositionVector();
@@ -188,17 +178,6 @@ void Application::Update()
 			gfx.cube->GetRotationFloat3().z
 		);
 	}
-
-	// Set position of spot light model
-	XMVECTOR spotLightPosition = gfx.cameras["Default"]->GetPositionVector();
-	spotLightPosition += gfx.cameras["Default"]->GetForwardVector() / 4;
-	spotLightPosition += gfx.cameras["Default"]->GetRightVector() / 2;
-	gfx.spotLight.SetPosition( spotLightPosition );
-	gfx.spotLight.SetRotation(
-		gfx.cameras["Default"]->GetRotationFloat3().x + XM_PI,
-		gfx.cameras["Default"]->GetRotationFloat3().y,
-		gfx.cameras["Default"]->GetRotationFloat3().z
-	);
 
 	gfx.Update( dt );
 }

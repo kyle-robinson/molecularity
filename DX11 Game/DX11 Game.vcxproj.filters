@@ -88,6 +88,12 @@
     <Filter Include="Source Files\Objects\Lights">
       <UniqueIdentifier>{1675194d-c52e-4038-8f1e-f1a9926b7829}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics\Bindables">
+      <UniqueIdentifier>{55c4c676-3769-4417-a4f1-4c5a4a77286c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics\Buffers">
+      <UniqueIdentifier>{fc7ead9b-8f06-4e88-86b1-4a144710ff25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -195,8 +201,8 @@
     <ClCompile Include="Objects\GameObject2D.cpp">
       <Filter>Source Files\Objects\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Sprite.cpp">
-      <Filter>Source Files\Graphics</Filter>
+    <ClCompile Include="Objects\Sprite.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,28 +239,13 @@
     <ClInclude Include="Graphics\Indices.h">
       <Filter>Header Files\Graphics\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\ConstantBuffer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\ConstantBufferTypes.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Graphics.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\ImGuiManager.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\IndexBuffer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Shaders.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\VertexBuffer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\VertexType.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input\Keyboard.h">
@@ -287,27 +278,6 @@
     <ClInclude Include="Window\WindowContainer.h">
       <Filter>Header Files\Window</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GraphicsResource.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\SwapChain.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\RenderTarget.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\DepthStencil.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Viewport.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Rasterizer.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Sampler.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\RenderableGameObject.h">
       <Filter>Header Files\Objects\Managers</Filter>
     </ClInclude>
@@ -338,9 +308,6 @@
     <ClInclude Include="Utility\Billboard.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Stencil.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Input\MousePicking.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
@@ -362,9 +329,6 @@
     <ClInclude Include="Objects\SpotLight.h">
       <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Blender.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\Collisions.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -374,8 +338,53 @@
     <ClInclude Include="Objects\GameObject2D.h">
       <Filter>Header Files\Objects\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Sprite.h">
-      <Filter>Header Files\Graphics</Filter>
+    <ClInclude Include="Graphics\Blender.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DepthStencil.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsResource.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Rasterizer.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderTarget.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Sampler.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Stencil.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\SwapChain.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Viewport.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexBuffer.h">
+      <Filter>Header Files\Graphics\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\IndexBuffer.h">
+      <Filter>Header Files\Graphics\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ConstantBufferTypes.h">
+      <Filter>Header Files\Graphics\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ConstantBuffer.h">
+      <Filter>Header Files\Graphics\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexType.h">
+      <Filter>Header Files\Graphics\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Sprite.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\InputLayout.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
