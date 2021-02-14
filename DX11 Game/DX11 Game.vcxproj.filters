@@ -386,6 +386,9 @@
     <ClInclude Include="Graphics\InputLayout.h">
       <Filter>Header Files\Graphics\Bindables</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Bindables.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Primitive_Col.fx">

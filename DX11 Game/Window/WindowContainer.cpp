@@ -56,7 +56,6 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		DestroyWindow( hWnd );
 		PostQuitMessage( 0 );
 		exit( -1 );
-		return 0;
 	// Keyboard Events
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:

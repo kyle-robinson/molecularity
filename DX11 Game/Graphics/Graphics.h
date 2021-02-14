@@ -41,36 +41,39 @@ public:
 	void RenderFrame();
 	void EndFrame();
 	void Update( float dt );
+	
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
+	
+	Cube& GetCube() noexcept { return cube; };
+	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; };
 
+	// scene parameters
+	bool rasterizerSolid = true;
+	std::string cameraToUse = "Default";
+	std::string samplerToUse = "Anisotropic";
+
+	// cube parameters
 	int boxToUse = 0;
 	int sizeAmount = 2;
 	bool cubeHover = false;
 	float sizeToUse = 1.0f;
-	std::unique_ptr<Cube> cube;
 	std::string selectedBox = "Default";
 
-	SpotLight spotLight;
-	bool wallCollision = false;
-	RenderableGameObject hubRoom;
-
+	// light parameters
 	float useTexture = 1.0f;
 	float alphaFactor = 1.0f;
-	float outlineScale = 0.1f;
-	bool rasterizerSolid = true;
-	std::string samplerToUse = "Anisotropic";
-	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 
-	std::string cameraToUse = "Default";
-	std::map<std::string, std::unique_ptr<Camera>> cameras;
+	// outline parameters
+	float outlineScale = 0.1f;
+	DirectX::XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
 
+	void DrawWithOutline( Cube& cube, const XMFLOAT3& color );
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
-	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
 
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
@@ -111,16 +114,22 @@ private:
 	UINT windowWidth;
 	UINT windowHeight;
 	ImGuiManager imgui;
-	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	Sprite crosshair;
 	Camera2D camera2D;
+
+	SpotLight spotLight;
 	PointLight pointLight;
-	std::unique_ptr<Cube> skybox;
 	DirectionalLight directionalLight;
+
+	Cube cube;
+	Cube skybox;
+	RenderableGameObject hubRoom;
+	std::map<std::string, std::unique_ptr<Camera>> cameras;
+	//std::map<std::string, RenderableGameObject> renderables;
+
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
-	//std::map<std::string, RenderableGameObject> renderables;
 };
 
 #endif

@@ -1,17 +1,8 @@
-#include "stdafx.h"
 #include "Graphics.h"
+#include "Bindables.h"
 #include "Billboard.h"
-#include "Blender.h"
-#include "Stencil.h"
-#include "Sampler.h"
-#include "Viewport.h"
-#include "SwapChain.h"
 #include "ModelData.h"
 #include "Collisions.h"
-#include "Rasterizer.h"
-#include "DepthStencil.h"
-#include "RenderTarget.h"
-#include "InputLayout.h"
 #include <imgui/imgui.h>
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
@@ -122,14 +113,12 @@ bool Graphics::InitializeScene()
 		spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
 		/*   PRIMITIVES   */
-		cube = std::make_unique<Cube>();
-		if ( !cube->Initialize( context.Get(), device.Get() ) ) return false;
-		cube->SetInitialPosition( 0.0f, 5.0f, 5.0f );
+		if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
+		cube.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 
-		skybox = std::make_unique<Cube>();
-		if ( !skybox->Initialize( context.Get(), device.Get() ) ) return false;
-		skybox->SetInitialScale( 250.0f, 250.0f, 250.0f );
-		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
+		if ( !skybox.Initialize( context.Get(), device.Get() ) ) return false;
+		skybox.SetInitialScale( 250.0f, 250.0f, 250.0f );
+		skybox.SetInitialPosition( 0.0f, 0.0f, 0.0f );
 
 		/*   SPRITES   */
 		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\Crosshair.png", cb_vs_matrix_2d ) ) return false;
@@ -173,6 +162,7 @@ bool Graphics::InitializeScene()
 void Graphics::BeginFrame()
 {
 	// clear render target
+	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
 
@@ -204,23 +194,34 @@ void Graphics::RenderFrame()
 {
 	// render cubemap
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-	stencils["Off"]->Bind( *this );
 	rasterizers["Cubemap"]->Bind( *this );
-	skybox->Draw( cb_vs_matrix, spaceTexture.Get() );
+	skybox.Draw( cb_vs_matrix, spaceTexture.Get() );
 	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
 	// render models w/out normals
-	pointLight.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
-	directionalLight.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	pointLight.Draw(
+		cameras[cameraToUse]->GetViewMatrix(),
+		cameras[cameraToUse]->GetProjectionMatrix()
+	);
+	directionalLight.Draw(
+		cameras[cameraToUse]->GetViewMatrix(),
+		cameras[cameraToUse]->GetProjectionMatrix()
+	);
 	
 	// render models w/ normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	spotLight.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
-	hubRoom.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	spotLight.Draw(
+		cameras[cameraToUse]->GetViewMatrix(),
+		cameras[cameraToUse]->GetProjectionMatrix()
+	);
+	hubRoom.Draw(
+		cameras[cameraToUse]->GetViewMatrix(),
+		cameras[cameraToUse]->GetProjectionMatrix()
+	);
 
 	// render objects w/ stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
-		cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+		cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
 	// render sprites
 	Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
@@ -269,7 +270,8 @@ void Graphics::EndFrame()
 			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
 			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	}
-	spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
+	spriteFont->DrawString( spriteBatch.get(),
+		std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
 		DirectX::XMFLOAT2( 20.0f, 0.0f ), DirectX::Colors::IndianRed, 0.0f,
 		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
@@ -302,9 +304,24 @@ void Graphics::EndFrame()
 
 void Graphics::Update( float dt )
 {
-	skybox->SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
-	if ( toolType == RESIZE )cube->SetScale( sizeToUse, sizeToUse, sizeToUse );
-	wallCollision = Collisions::CheckCollisionCircle( cameras["Default"], hubRoom, 25.0f );
+	UNREFERENCED_PARAMETER( dt );
+
+	skybox.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
+	if ( toolType == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
+
+	// camera world collisions
+	bool wallCollision = Collisions::CheckCollisionCircle( cameras["Default"], hubRoom, 25.0f );
+	if ( !wallCollision )
+	{
+		float dx = hubRoom.GetPositionFloat3().x - cameras["Default"]->GetPositionFloat3().x;
+		float dz = hubRoom.GetPositionFloat3().z - cameras["Default"]->GetPositionFloat3().z;
+		float length = std::sqrtf( dx * dx + dz * dz );
+		dx /= length;
+		dz /= length;
+		dx *= cameras["Default"]->GetCameraSpeed() * 10.0f;
+		dz *= cameras["Default"]->GetCameraSpeed() * 10.0f;
+		cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
+	} 
 
 	// prevent camera y-axis movement
 	cameras["Default"]->SetPosition(
@@ -326,10 +343,34 @@ void Graphics::Update( float dt )
 }
 
 // STENCIL OUTLINES //
+void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
+{
+	stencils["Write"]->Bind( *this );
+	cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+
+	cb_ps_outline.data.outlineColor = color;
+    if ( !cb_ps_outline.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
+	stencils["Mask"]->Bind( *this );
+	cube.SetScale( cube.GetScaleFloat3().x + outlineScale,
+		cube.GetScaleFloat3().y + outlineScale, cube.GetScaleFloat3().z + outlineScale );
+	cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
+	cube.SetScale( cube.GetScaleFloat3().x - outlineScale,
+		cube.GetScaleFloat3().y - outlineScale, cube.GetScaleFloat3().z - outlineScale );
+	stencils["Off"]->Bind( *this );
+	cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+}
+
 void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color )
 {
 	stencils["Write"]->Bind( *this );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
+		cameras[cameraToUse]->GetProjectionMatrix() );
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
@@ -337,33 +378,14 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
+		cameras[cameraToUse]->GetProjectionMatrix() );
 
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
-}
-
-void Graphics::DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color )
-{
-	stencils["Write"]->Bind( *this );
-	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
-
-	cb_ps_outline.data.outlineColor = color;
-    if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
-	stencils["Mask"]->Bind( *this );
-	cube->SetScale( cube->GetScaleFloat3().x + outlineScale, cube->GetScaleFloat3().y + outlineScale, cube->GetScaleFloat3().z + outlineScale );
-	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
-
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	cube->SetScale( cube->GetScaleFloat3().x - outlineScale, cube->GetScaleFloat3().y - outlineScale, cube->GetScaleFloat3().z - outlineScale );
-	stencils["Off"]->Bind( *this );
-	cube->Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
+		cameras[cameraToUse]->GetProjectionMatrix() );
 }
