@@ -14,11 +14,11 @@ using json = nlohmann::json;
 
 struct Drawable
 {
-    std::string modelName;
-    std::string fileName;
-    DirectX::XMFLOAT3 position;
-    DirectX::XMFLOAT3 rotation;
-    DirectX::XMFLOAT3 scale;
+    std::string modelName = "";
+    std::string fileName = "";
+    DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
+    DirectX::XMFLOAT3 rotation = { 0.0f, 0.0f, 0.0f };
+    DirectX::XMFLOAT3 scale = { 0.0f, 0.0f, 0.0f };
 };
 std::vector<Drawable> drawables;
 
@@ -36,9 +36,9 @@ public:
         std::string version = jFile["version"].get<std::string>();
 
         json objects = jFile["GameObjects"];
-        int size = objects.size();
+        size_t size = objects.size();
 
-        for ( unsigned int i = 0; i < size; i++ )
+        for ( size_t i = 0; i < size; i++ )
         {
             Drawable drawable;
             json objectDesc = objects[i];
