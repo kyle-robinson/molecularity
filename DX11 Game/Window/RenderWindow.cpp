@@ -125,11 +125,6 @@ bool RenderWindow::ProcessMessages() noexcept
 	return true;
 }
 
-HWND RenderWindow::GetHWND() const noexcept
-{
-	return hWnd;
-}
-
 void RenderWindow::RegisterWindowClass() noexcept
 {
 	WNDCLASSEX wc;

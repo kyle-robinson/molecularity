@@ -10,7 +10,7 @@ namespace Bind
 	class Sampler : public GraphicsResource
 	{
 	public:
-		static enum class Type
+		enum class Type
 		{
 			Anisotropic,
 			Bilinear,
