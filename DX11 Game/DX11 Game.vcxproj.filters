@@ -314,9 +314,6 @@
     <ClInclude Include="Model\ModelData.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Resource Files\Miscellaneous</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\PointLight.h">
       <Filter>Header Files\Objects\Lights</Filter>
     </ClInclude>
@@ -388,6 +385,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Bindables.h">
       <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\resource.h">
+      <Filter>Resource Files\Miscellaneous</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

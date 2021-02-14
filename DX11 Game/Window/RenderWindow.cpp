@@ -1,5 +1,5 @@
 #include "WindowContainer.h"
-#include "resource.h"
+#include "Resources\\resource.h"
 
 // Window icon made by https://www.freepik.com Freepik from https://www.flaticon.com/
 
