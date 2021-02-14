@@ -118,15 +118,23 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( VK_F3 ) ) gfx.cameraToUse = "Debug";
 
 	// set cursor enabled/disabled
-	if ( keyboard.KeyIsPressed( VK_HOME ) && cursorEnabled )
+	if ( gfx.cameraToUse == "Debug" )
+	{
+		if ( keyboard.KeyIsPressed( VK_HOME ) && !cursorEnabled )
+		{
+			EnableCursor();
+			cursorEnabled = true;
+		}
+		else if ( keyboard.KeyIsPressed( VK_END ) && cursorEnabled )
+		{
+			DisableCursor();
+			cursorEnabled = false;
+		}
+	}
+	else
 	{
 		DisableCursor();
 		cursorEnabled = false;
-	}
-	else if ( keyboard.KeyIsPressed( VK_END ) && !cursorEnabled )
-	{
-		EnableCursor();
-		cursorEnabled = true;
 	}
 
 	// camera movement

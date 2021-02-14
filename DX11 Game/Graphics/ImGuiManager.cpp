@@ -40,9 +40,8 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 {
 	if ( ImGui::Begin( "Scene Instructions", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
-		if ( ImGui::CollapsingHeader( "Camera Controls" ) )
+		if ( ImGui::CollapsingHeader( "Camera Controls", ImGuiTreeNodeFlags_DefaultOpen ) )
 		{
-			ImGui::Text( "Hold RMB          Rotate Camera" );
 			ImGui::Text( "W                 Forward" );
 			ImGui::Text( "A                 Left" );
 			ImGui::Text( "S                 Backward" );
@@ -50,6 +49,10 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 			ImGui::Text( "CTRL              Down" );
 			ImGui::Text( "SPACE             Up" );
 			ImGui::Text( "LSHIFT            Move Faster" );
+            ImGui::Separator();
+            ImGui::Text( "F1                Default Camera" );
+            ImGui::Text( "F2                Static Camera" );
+            ImGui::Text( "F3                Debug Camera" );
 		}
 		if ( ImGui::CollapsingHeader( "Multi-Tool Controls", ImGuiTreeNodeFlags_DefaultOpen ) )
 		{
@@ -65,6 +68,12 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 		{
 			ImGui::Text( "ESCAPE            Close Game" );
 		}
+        if ( ImGui::CollapsingHeader( "Debug Controls", ImGuiTreeNodeFlags_DefaultOpen ) )
+        {
+            ImGui::Text( "Hold RMB          Rotate Camera" );
+			ImGui::Text( "HOME              Enable Mouse" );
+			ImGui::Text( "END               Disable Mouse" );
+        }
 	}
     ImGui::End();
 }

@@ -105,21 +105,21 @@ bool Graphics::InitializeScene()
 	try
 	{
 		/*   MODELS   */
-		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 		if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		hubRoom.SetInitialPosition( 0.0f, 0.0f, 0.0f );
+		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 
 		/*   LIGHTS   */
-		pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 		if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
+		pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
-		directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 		if ( !directionalLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
+		directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
-		spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 		if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+		spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
 		/*   PRIMITIVES   */
 		cube = std::make_unique<Cube>();
@@ -128,8 +128,8 @@ bool Graphics::InitializeScene()
 
 		skybox = std::make_unique<Cube>();
 		if ( !skybox->Initialize( context.Get(), device.Get() ) ) return false;
-		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		skybox->SetInitialScale( 250.0f, 250.0f, 250.0f );
+		skybox->SetInitialPosition( 0.0f, 0.0f, 0.0f );
 
 		/*   SPRITES   */
 		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\Crosshair.png", cb_vs_matrix_2d ) ) return false;
@@ -275,13 +275,16 @@ void Graphics::EndFrame()
 	spriteBatch->End();
 
 	// display imgui
-	imgui.BeginRender();
-	imgui.SpawnInstructionWindow();
-	imgui.SpawnGraphicsWindow( *this );
-	pointLight.SpawnControlWindow();
-	directionalLight.SpawnControlWindow();
-	spotLight.SpawnControlWindow();
-	imgui.EndRender();
+	if ( cameraToUse == "Debug" )
+	{
+		imgui.BeginRender();
+		imgui.SpawnInstructionWindow();
+		imgui.SpawnGraphicsWindow( *this );
+		pointLight.SpawnControlWindow();
+		directionalLight.SpawnControlWindow();
+		spotLight.SpawnControlWindow();
+		imgui.EndRender();
+	}
 
 	// unbind render target
 	renderTarget->BindAsNull( *this );
