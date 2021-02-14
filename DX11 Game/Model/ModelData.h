@@ -16,9 +16,9 @@ struct Drawable
 {
     std::string modelName = "";
     std::string fileName = "";
-    DirectX::XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
-    DirectX::XMFLOAT3 rotation = { 0.0f, 0.0f, 0.0f };
-    DirectX::XMFLOAT3 scale = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT3 rotation = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT3 scale = { 0.0f, 0.0f, 0.0f };
 };
 std::vector<Drawable> drawables;
 

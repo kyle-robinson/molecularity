@@ -58,7 +58,7 @@ public:
 	int sizeAmount = 2;
 	bool cubeHover = false;
 	float sizeToUse = 1.0f;
-	std::string selectedBox = "Default";
+	std::string selectedBox = "Basic";
 
 	// light parameters
 	float useTexture = 1.0f;
@@ -66,7 +66,7 @@ public:
 
 	// outline parameters
 	float outlineScale = 0.1f;
-	DirectX::XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
@@ -77,6 +77,7 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> spaceTexture;
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
@@ -90,14 +91,10 @@ private:
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 
 	VertexShader vertexShader_2D;
-	VertexShader vertexShader_Tex;
-	VertexShader vertexShader_Col;
 	VertexShader vertexShader_light;
 	VertexShader vertexShader_outline;
 
 	PixelShader pixelShader_2D;
-	PixelShader pixelShader_Tex;
-	PixelShader pixelShader_Col;
 	PixelShader pixelShader_light;
 	PixelShader pixelShader_noLight;
 	PixelShader pixelShader_outline;
@@ -123,13 +120,12 @@ private:
 	DirectionalLight directionalLight;
 
 	Cube cube;
-	Cube skybox;
 	RenderableGameObject hubRoom;
+	RenderableGameObject skysphere;
 	std::map<std::string, std::unique_ptr<Camera>> cameras;
-	//std::map<std::string, RenderableGameObject> renderables;
 
-	std::unique_ptr<DirectX::SpriteFont> spriteFont;
-	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	std::unique_ptr<SpriteFont> spriteFont;
+	std::unique_ptr<SpriteBatch> spriteBatch;
 };
 
 #endif

@@ -33,7 +33,7 @@ bool Graphics::InitializeDirectX( HWND hWnd )
         stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
 
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
-        rasterizers.emplace( "Cubemap", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
+        rasterizers.emplace( "Skybox", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
         rasterizers.emplace( "Wireframe", std::make_shared<Bind::Rasterizer>( *this, false, true ) );
 
         samplers.emplace( "Anisotropic", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Anisotropic ) );
@@ -42,8 +42,8 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-		spriteBatch = std::make_unique<DirectX::SpriteBatch>( context.Get() );
-        spriteFont = std::make_unique<DirectX::SpriteFont>( device.Get(), L"Resources\\Fonts\\open_sans_ms_16.spritefont" );
+		spriteBatch = std::make_unique<SpriteBatch>( context.Get() );
+        spriteFont = std::make_unique<SpriteFont>( device.Get(), L"Resources\\Fonts\\open_sans_ms_16.spritefont" );
 	}
 	catch ( COMException& exception )
 	{
@@ -64,12 +64,6 @@ bool Graphics::InitializeShaders()
 		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Model_NoNrm.fx" );
 		COM_ERROR_IF_FAILED( hr, "Failed to create 'Light' shaders!" );
 
-		/*   TEXTURES   */
-		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Model_Tex.fx",
-			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
-		hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Model_Tex.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create 'Texture' shaders!" );
-
 		/*   SPRITES   */
 		hr = vertexShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx",
 			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
@@ -77,7 +71,7 @@ bool Graphics::InitializeShaders()
 		hr = pixelShader_2D_discard.Initialize( device, L"Resources\\Shaders\\Sprite_Discard.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create sprite 'Sprite' shaders!" );
 
-		/*   COLOUR   */
+		/*   OUTLINE   */
 		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx",
 			Layout::layoutPosCol, ARRAYSIZE( Layout::layoutPosCol ) );
 		hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx" );
@@ -100,6 +94,9 @@ bool Graphics::InitializeScene()
 		hubRoom.SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 
+		if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+		skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
+
 		/*   LIGHTS   */
 		if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
@@ -116,10 +113,6 @@ bool Graphics::InitializeScene()
 		if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
 		cube.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 
-		if ( !skybox.Initialize( context.Get(), device.Get() ) ) return false;
-		skybox.SetInitialScale( 250.0f, 250.0f, 250.0f );
-		skybox.SetInitialPosition( 0.0f, 0.0f, 0.0f );
-
 		/*   SPRITES   */
 		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\Crosshair.png", cb_vs_matrix_2d ) ) return false;
         crosshair.SetInitialPosition( windowWidth / 2 - crosshair.GetWidth() / 2, windowHeight / 2 - crosshair.GetHeight() / 2, 0 );
@@ -134,11 +127,10 @@ bool Graphics::InitializeScene()
 		camera2D.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
 
 		/*   TEXTURES   */
-		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTextures["Default"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\BounceBox.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\JumpBox.png", nullptr, boxTextures["Jump"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\TNT.png", nullptr, boxTextures["TNT"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\Space.png", nullptr, spaceTexture.GetAddressOf() );
+		HRESULT hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures["Basic"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures["Arrow"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures["TNT"].GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 
 		/*   CONSTANT BUFFERS   */
@@ -171,6 +163,12 @@ void Graphics::BeginFrame()
 	stencils["Off"]->Bind( *this );
 	blender->Bind( *this );
 
+	// render skysphere first
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	rasterizers["Skybox"]->Bind( *this );
+	skysphere.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
+
 	// update constant buffers
 	cb_ps_scene.data.useTexture = useTexture;
 	cb_ps_scene.data.alphaFactor = alphaFactor;
@@ -192,12 +190,6 @@ void Graphics::BeginFrame()
 
 void Graphics::RenderFrame()
 {
-	// render cubemap
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-	rasterizers["Cubemap"]->Bind( *this );
-	skybox.Draw( cb_vs_matrix, spaceTexture.Get() );
-	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
-
 	// render models w/out normals
 	pointLight.Draw(
 		cameras[cameraToUse]->GetViewMatrix(),
@@ -238,8 +230,8 @@ void Graphics::EndFrame()
 	if ( toolType == CONVERT )
 	{
 		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: CONVERT",
-			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 
 		static std::wstring boxType;
 		switch ( boxToUse )
@@ -250,14 +242,14 @@ void Graphics::EndFrame()
 		case 3: boxType = L"TNT Box"; break;
 		}
 		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Texture: " ).append( boxType ).c_str(),
-			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	}
 	else if ( toolType == RESIZE )
 	{
 		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: RESIZE",
-			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 
 		static std::wstring sizeType;
 		switch ( sizeAmount )
@@ -267,13 +259,13 @@ void Graphics::EndFrame()
 		case 2: sizeType = L"Growth Ray"; break;
 		}
 		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Size: " ).append( sizeType ).c_str(),
-			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::BlueViolet, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	}
 	spriteFont->DrawString( spriteBatch.get(),
 		std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
-		DirectX::XMFLOAT2( 20.0f, 0.0f ), DirectX::Colors::IndianRed, 0.0f,
-		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed, 0.0f,
+		XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
 
 	// display imgui
@@ -306,7 +298,7 @@ void Graphics::Update( float dt )
 {
 	UNREFERENCED_PARAMETER( dt );
 
-	skybox.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
+	skysphere.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
 	if ( toolType == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
 
 	// camera world collisions

@@ -4,7 +4,6 @@
 
 #include "GameObject3D.h"
 #include "RenderableGameObject.h"
-using namespace DirectX;
 
 class Camera : public GameObject3D
 {

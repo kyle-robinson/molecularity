@@ -46,9 +46,6 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 			ImGui::Text( "A                 Left" );
 			ImGui::Text( "S                 Backward" );
 			ImGui::Text( "D                 Right" );
-			ImGui::Text( "CTRL              Down" );
-			ImGui::Text( "SPACE             Up" );
-			ImGui::Text( "LSHIFT            Move Faster" );
             ImGui::Separator();
             ImGui::Text( "F1                Default Camera" );
             ImGui::Text( "F2                Static Camera" );
@@ -63,6 +60,8 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 			ImGui::Text( "2                 RESIZE Mode" );
 			ImGui::Text( "Scroll Up/Down    Change Size To Set" );
 			ImGui::Text( "LMB On Cube       Set Selected Size" );
+            ImGui::Separator();
+			ImGui::Text( "E                 Pick-Up Cube" );
 		}
 		if ( ImGui::CollapsingHeader( "Miscellaneous Controls" ) )
 		{
@@ -73,6 +72,8 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
             ImGui::Text( "Hold RMB          Rotate Camera" );
 			ImGui::Text( "HOME              Enable Mouse" );
 			ImGui::Text( "END               Disable Mouse" );
+			ImGui::Text( "SPACE             Up" );
+            ImGui::Text( "CTRL              Down" );
         }
 	}
     ImGui::End();

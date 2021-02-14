@@ -86,9 +86,9 @@ void Application::Update()
 			{
 				switch ( gfx.boxToUse )
 				{
-				case 0: gfx.selectedBox = "Default"; break;
+				case 0: gfx.selectedBox = "Basic"; break;
 				case 1: gfx.selectedBox = "Bounce"; break;
-				case 2: gfx.selectedBox = "Jump"; break;
+				case 2: gfx.selectedBox = "Arrow"; break;
 				case 3: gfx.selectedBox = "TNT"; break;
 				}
 			}

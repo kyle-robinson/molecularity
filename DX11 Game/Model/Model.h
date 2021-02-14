@@ -3,7 +3,6 @@
 #define MODEL_H
 
 #include "Mesh.h"
-using namespace DirectX;
 
 class Model
 {

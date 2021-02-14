@@ -409,9 +409,6 @@
     <FxCompile Include="Resources\Shaders\Model_Outline.fx">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Model_Tex.fx">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\CrashBox.png">
