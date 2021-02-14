@@ -146,17 +146,19 @@ void Application::Update()
 	}
 	else
 	{
-		gfx.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.002f );
-		if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.01f );
-		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.GetCamera( gfx.cameraToUse ), dt );
-		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.GetCamera( gfx.cameraToUse ), dt );
-		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.GetCamera( gfx.cameraToUse ), dt );
-		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.GetCamera( gfx.cameraToUse ), dt );
+		// update mode to ignore y-movement when not in debug mode
+		bool playMode = true;
 		if ( gfx.cameraToUse == "Debug" )
 		{
+			playMode = false;
 			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.GetCamera( "Debug" ), dt );
 			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.GetCamera( "Debug" ), dt );
 		}
+		gfx.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.01f );
+		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
 	}
 
 	// set multi-tool type

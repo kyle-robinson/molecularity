@@ -58,16 +58,16 @@ bool Graphics::InitializeShaders()
 	try
 	{
 		/*   MODELS   */
-		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Primitive_Nrm.fx",
+		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx",
 			Layout::layoutPosTexNrm, ARRAYSIZE( Layout::layoutPosTexNrm ) );
-	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Primitive_Nrm.fx" );
-		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Primitive_NoNrm.fx" );
+	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx" );
+		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Model_NoNrm.fx" );
 		COM_ERROR_IF_FAILED( hr, "Failed to create 'Light' shaders!" );
 
 		/*   TEXTURES   */
-		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx",
+		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Model_Tex.fx",
 			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
-		hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
+		hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Model_Tex.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create 'Texture' shaders!" );
 
 		/*   SPRITES   */
@@ -78,9 +78,9 @@ bool Graphics::InitializeShaders()
         COM_ERROR_IF_FAILED( hr, "Failed to create sprite 'Sprite' shaders!" );
 
 		/*   COLOUR   */
-		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx",
+		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx",
 			Layout::layoutPosCol, ARRAYSIZE( Layout::layoutPosCol ) );
-		hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx" );
+		hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create 'Colour' shaders!" );
 	}
 	catch ( COMException& exception )
