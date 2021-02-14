@@ -333,9 +333,11 @@ void Graphics::Update( float dt )
 // STENCIL OUTLINES //
 void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 {
+	// write pixels to the buffer, which will act as the stencil mask
 	stencils["Write"]->Bind( *this );
 	cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
+	// scale the cube and draw the stencil outline, ignoring the pixels previously written to the buffer
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
@@ -345,6 +347,7 @@ void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 		cube.GetScaleFloat3().y + outlineScale, cube.GetScaleFloat3().z + outlineScale );
 	cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
+	// rescale the cube and draw using the appropriate shaders and textures
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
@@ -356,9 +359,11 @@ void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 
 void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color )
 {
+	// write pixels to the buffer, which will act as the stencil mask
 	stencils["Write"]->Bind( *this );
 	object.Draw( cameras[cameraToUse] );
 
+	// scale the model and draw the stencil outline, ignoring the pixels previously written to the buffer
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
@@ -367,6 +372,7 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
 	object.Draw( cameras[cameraToUse] );
 
+	// rescale the model and draw using the appropriate shaders and textures
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
