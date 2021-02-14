@@ -10,7 +10,8 @@ namespace Bind
 	class Rasterizer : public GraphicsResource
 	{
 	public:
-		Rasterizer( Graphics& gfx, bool isSolid, bool isTwoSided ) : isSolid( isSolid ), isTwoSided( isTwoSided )
+		Rasterizer( Graphics& gfx, bool isSolid, bool isTwoSided )
+			: isSolid( isSolid ), isTwoSided( isTwoSided )
 		{
 			try
 			{

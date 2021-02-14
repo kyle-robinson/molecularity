@@ -10,7 +10,8 @@ namespace Bind
 	class DepthStencil : public GraphicsResource
 	{
 	public:
-		DepthStencil( Graphics& gfx ) : DepthStencil( gfx, static_cast<FLOAT>( gfx.GetWidth() ), static_cast<FLOAT>( gfx.GetHeight() ) ) {}
+		DepthStencil( Graphics& gfx ) : DepthStencil( gfx, static_cast<FLOAT>( gfx.GetWidth() ),
+			static_cast<FLOAT>( gfx.GetHeight() ) ) { }
 		DepthStencil( Graphics& gfx, float width, float height )
 		{
 			try

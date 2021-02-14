@@ -45,8 +45,8 @@ public:
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
 	
-	Cube& GetCube() noexcept { return cube; };
-	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; };
+	Cube& GetCube() noexcept { return cube; }
+	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; }
 
 	// scene parameters
 	bool rasterizerSolid = true;

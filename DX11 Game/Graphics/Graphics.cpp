@@ -322,8 +322,7 @@ void Graphics::Update( float dt )
 	}
 
 	// cube range collision check
-	cubeInRange = Collisions::CheckCollisionSphere( cameras["Default"], cube, 5.0f );
-	cubeInRange = Collisions::CheckCollisionSphere( cameras["Debug"], cube, 5.0f );
+	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
 
 	// prevent camera y-axis movement
 	cameras["Default"]->SetPosition(

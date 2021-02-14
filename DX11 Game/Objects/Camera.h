@@ -13,17 +13,17 @@ public:
 	Camera& operator=( Camera );
 	void SetProjectionValues( float fovDegrees, float aspectRatio, float nearZ, float farZ );
 
-	const XMMATRIX& GetViewMatrix() const noexcept;
-	const XMMATRIX& GetProjectionMatrix() const noexcept;
-	const XMFLOAT3& GetCameraTarget() const noexcept;
+	const XMMATRIX& GetViewMatrix() const noexcept { return view; }
+	const XMMATRIX& GetProjectionMatrix() const noexcept { return projection; }
+	const XMFLOAT3& GetCameraTarget() const noexcept { return cameraTarget; }
 
-	const float& GetCameraSpeed() const noexcept;
-	void SetCameraSpeed( float newSpeed ) noexcept;
-	void UpdateCameraSpeed( float updateSpeed ) noexcept;
+	const float& GetCameraSpeed() const noexcept { return cameraSpeed; }
+	void SetCameraSpeed( float newSpeed ) noexcept { cameraSpeed = newSpeed; }
+	void UpdateCameraSpeed( float updateSpeed ) noexcept { cameraSpeed += updateSpeed; }
 
-	const float& GetFoVDegrees() const noexcept;
-	const float& GetNearZ() const noexcept;
-	const float& GetFarZ() const noexcept;
+	const float& GetFoVDegrees() const noexcept { return fovDegrees; }
+	const float& GetNearZ() const noexcept { return nearZ; }
+	const float& GetFarZ() const noexcept { return farZ; }
 private:
 	void UpdateMatrix() override;
 	XMMATRIX view, projection;
