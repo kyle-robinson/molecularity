@@ -6,40 +6,41 @@
 
 struct CB_VS_matrix
 {
-	DirectX::XMMATRIX worldMatrix;
-	DirectX::XMMATRIX viewMatrix;
-	DirectX::XMMATRIX projectionMatrix;
+	XMMATRIX worldMatrix;
+	XMMATRIX viewMatrix;
+	XMMATRIX projectionMatrix;
 };
 
 struct CB_VS_matrix_2D
 {
-	DirectX::XMMATRIX wvpMatrix;
+	XMMATRIX wvpMatrix;
 };
 
 struct CB_PS_outline
 {
-	DirectX::XMFLOAT3 outlineColor;
+	XMFLOAT3 outlineColor;
 };
 
 struct CB_PS_scene
 {
 	float useTexture;
 	float alphaFactor;
+	float useNormalMap;
 };
 
 struct CB_PS_point
 {
-	DirectX::XMFLOAT3 pointAmbientColor;
+	XMFLOAT3 pointAmbientColor;
 	float pointAmbientStrength;
 	
-	DirectX::XMFLOAT3 pointDiffuseColor;
+	XMFLOAT3 pointDiffuseColor;
 	float pointDiffuseStrength;
 	
-	DirectX::XMFLOAT3 pointSpecularColor;
+	XMFLOAT3 pointSpecularColor;
 	float pointSpecularStrength;
 	
 	float pointSpecularPower;
-	DirectX::XMFLOAT3 pointPosition;
+	XMFLOAT3 pointPosition;
 
 	float pointConstant;
 	float pointLinear;
@@ -49,13 +50,13 @@ struct CB_PS_point
 
 struct CB_PS_directional
 {
-	DirectX::XMFLOAT3 directionalPosition;
+	XMFLOAT3 directionalPosition;
 	float directionalDiffuseStrength;
 
-	DirectX::XMFLOAT3 directionalDiffuseColor;
+	XMFLOAT3 directionalDiffuseColor;
 	float directionalSpecularStrength;
 
-	DirectX::XMFLOAT3 directionalSpecularColor;
+	XMFLOAT3 directionalSpecularColor;
 	float directionalSpecularPower;
 
 	float directionalEnable;
@@ -64,13 +65,13 @@ struct CB_PS_directional
 struct CB_PS_spot
 {
 	float spotRange;
-	DirectX::XMFLOAT3 spotPosition;
+	XMFLOAT3 spotPosition;
 
 	float spotCone;
-	DirectX::XMFLOAT3 spotDirection;
+	XMFLOAT3 spotDirection;
 
 	float spotDiffuseStrength;
-	DirectX::XMFLOAT3 spotDiffuseColor;
+	XMFLOAT3 spotDiffuseColor;
 
 	float spotEnable;
 };

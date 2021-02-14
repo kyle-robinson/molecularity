@@ -7,24 +7,24 @@
 class CameraMovement
 {
 public:
-	static void MoveForward( std::unique_ptr<Camera>& cam, const float dt )
+	static void MoveForward( std::unique_ptr<Camera>& cam, const bool playMode, const float dt )
 	{
-		cam->AdjustPosition( cam->GetForwardVector() * cam->GetCameraSpeed() * dt );
+		cam->AdjustPosition( cam->GetForwardVector( playMode ) * cam->GetCameraSpeed() * dt );
 	}
 
-	static void MoveBackward( std::unique_ptr<Camera>& cam, const float dt )
+	static void MoveBackward( std::unique_ptr<Camera>& cam, const bool playMode, const float dt )
 	{
-		cam->AdjustPosition( cam->GetBackwardVector() * cam->GetCameraSpeed() * dt );
+		cam->AdjustPosition( cam->GetBackwardVector( playMode ) * cam->GetCameraSpeed() * dt );
 	}
 
-	static void MoveLeft( std::unique_ptr<Camera>& cam, const float dt )
+	static void MoveLeft( std::unique_ptr<Camera>& cam, const bool playMode, const float dt )
 	{
-		cam->AdjustPosition( cam->GetLeftVector() * cam->GetCameraSpeed() * dt );
+		cam->AdjustPosition( cam->GetLeftVector( playMode ) * cam->GetCameraSpeed() * dt );
 	}
 
-	static void MoveRight( std::unique_ptr<Camera>& cam, const float dt )
+	static void MoveRight( std::unique_ptr<Camera>& cam, const bool playMode, const float dt )
 	{
-		cam->AdjustPosition( cam->GetRightVector() * cam->GetCameraSpeed() * dt );
+		cam->AdjustPosition( cam->GetRightVector( playMode ) * cam->GetCameraSpeed() * dt );
 	}
 
 	static void MoveUp( std::unique_ptr<Camera>& cam, const float dt )

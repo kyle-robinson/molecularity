@@ -10,6 +10,7 @@ class Collisions
 {
 public:
 	static bool CheckCollisionCircle( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept;
+	static bool CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept;
 };
 
 #endif

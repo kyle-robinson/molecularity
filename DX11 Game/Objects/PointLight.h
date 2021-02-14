@@ -21,10 +21,10 @@ private:
 	float specularPower = 10.0f;
 	float specularStrength = 0.6f;
 
-	DirectX::XMFLOAT3 position = { -5.0f, 9.0f, -10.0f };
-	DirectX::XMFLOAT3 ambientColor = { 1.0f, 1.0f, 1.0f };
-	DirectX::XMFLOAT3 diffuseColor = { 1.0f, 1.0f, 1.0f };
-	DirectX::XMFLOAT3 specularColor = { 1.0f, 1.0f, 1.0f };
+	XMFLOAT3 position = { -5.0f, 9.0f, -10.0f };
+	XMFLOAT3 ambientColor = { 1.0f, 1.0f, 1.0f };
+	XMFLOAT3 diffuseColor = { 1.0f, 1.0f, 1.0f };
+	XMFLOAT3 specularColor = { 1.0f, 1.0f, 1.0f };
 };
 
 #endif

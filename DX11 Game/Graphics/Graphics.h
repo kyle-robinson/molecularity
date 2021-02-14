@@ -4,6 +4,7 @@
 
 #include <map>
 #include "Cube.h"
+#include "Quad.h"
 #include "Sprite.h"
 #include "Camera.h"
 #include "Shaders.h"
@@ -45,8 +46,8 @@ public:
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
 	
-	Cube& GetCube() noexcept { return cube; };
-	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; };
+	Cube& GetCube() noexcept { return cube; }
+	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; }
 
 	// scene parameters
 	bool rasterizerSolid = true;
@@ -56,9 +57,11 @@ public:
 	// cube parameters
 	int boxToUse = 0;
 	int sizeAmount = 2;
-	bool cubeHover = false;
 	float sizeToUse = 1.0f;
-	std::string selectedBox = "Default";
+	bool cubeHover = false;
+	bool cubeInRange = false;
+	bool holdingCube = false;
+	std::string selectedBox = "Basic";
 
 	// light parameters
 	float useTexture = 1.0f;
@@ -66,7 +69,7 @@ public:
 
 	// outline parameters
 	float outlineScale = 0.1f;
-	DirectX::XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
@@ -77,7 +80,9 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> spaceTexture;
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
 	std::shared_ptr<Bind::Blender> blender;
@@ -90,14 +95,10 @@ private:
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 
 	VertexShader vertexShader_2D;
-	VertexShader vertexShader_Tex;
-	VertexShader vertexShader_Col;
 	VertexShader vertexShader_light;
 	VertexShader vertexShader_outline;
 
 	PixelShader pixelShader_2D;
-	PixelShader pixelShader_Tex;
-	PixelShader pixelShader_Col;
 	PixelShader pixelShader_light;
 	PixelShader pixelShader_noLight;
 	PixelShader pixelShader_outline;
@@ -123,13 +124,13 @@ private:
 	DirectionalLight directionalLight;
 
 	Cube cube;
-	Cube skybox;
+	Quad simpleQuad;
 	RenderableGameObject hubRoom;
+	RenderableGameObject skysphere;
 	std::map<std::string, std::unique_ptr<Camera>> cameras;
-	//std::map<std::string, RenderableGameObject> renderables;
 
-	std::unique_ptr<DirectX::SpriteFont> spriteFont;
-	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	std::unique_ptr<SpriteFont> spriteFont;
+	std::unique_ptr<SpriteBatch> spriteBatch;
 };
 
 #endif

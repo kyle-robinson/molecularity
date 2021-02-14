@@ -42,6 +42,7 @@ void Application::Update()
 	{
 		Keyboard::KeyboardEvent kbe = keyboard.ReadKey();
 		unsigned char keycode = kbe.GetKeyCode();
+		UNREFERENCED_PARAMETER( keycode );
 	}
 	while ( !mouse.EventBufferIsEmpty() )
 	{
@@ -86,9 +87,9 @@ void Application::Update()
 			{
 				switch ( gfx.boxToUse )
 				{
-				case 0: gfx.selectedBox = "Default"; break;
+				case 0: gfx.selectedBox = "Basic"; break;
 				case 1: gfx.selectedBox = "Bounce"; break;
-				case 2: gfx.selectedBox = "Jump"; break;
+				case 2: gfx.selectedBox = "Arrow"; break;
 				case 3: gfx.selectedBox = "TNT"; break;
 				}
 			}
@@ -146,17 +147,19 @@ void Application::Update()
 	}
 	else
 	{
-		gfx.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.002f );
-		if ( keyboard.KeyIsPressed( VK_SHIFT ) ) gfx.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.01f );
-		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.GetCamera( gfx.cameraToUse ), dt );
-		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.GetCamera( gfx.cameraToUse ), dt );
-		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.GetCamera( gfx.cameraToUse ), dt );
-		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.GetCamera( gfx.cameraToUse ), dt );
+		// update mode to ignore y-movement when not in debug mode
+		bool playMode = true;
 		if ( gfx.cameraToUse == "Debug" )
 		{
+			playMode = false;
 			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.GetCamera( "Debug" ), dt );
 			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.GetCamera( "Debug" ), dt );
 		}
+		gfx.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.01f );
+		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
 	}
 
 	// set multi-tool type
@@ -164,8 +167,9 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
 	// pick-up cube - set position relative to camera
-	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" )
+	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" && gfx.cubeInRange && gfx.cubeHover )
 	{
+		gfx.holdingCube = true;
 		XMVECTOR cubePosition = gfx.GetCamera( gfx.cameraToUse )->GetPositionVector();
 		cubePosition += gfx.GetCamera( gfx.cameraToUse )->GetForwardVector() * 2;
 		gfx.GetCube().SetPosition( cubePosition );
@@ -174,6 +178,10 @@ void Application::Update()
 			gfx.GetCamera( gfx.cameraToUse )->GetRotationFloat3().y,
 			gfx.GetCube().GetRotationFloat3().z
 		);
+	}
+	else
+	{
+		gfx.holdingCube = false;
 	}
 
 	gfx.Update( dt );

@@ -33,7 +33,7 @@ bool Graphics::InitializeDirectX( HWND hWnd )
         stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
 
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
-        rasterizers.emplace( "Cubemap", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
+        rasterizers.emplace( "Skybox", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
         rasterizers.emplace( "Wireframe", std::make_shared<Bind::Rasterizer>( *this, false, true ) );
 
         samplers.emplace( "Anisotropic", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Anisotropic ) );
@@ -42,8 +42,8 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-		spriteBatch = std::make_unique<DirectX::SpriteBatch>( context.Get() );
-        spriteFont = std::make_unique<DirectX::SpriteFont>( device.Get(), L"Resources\\Fonts\\open_sans_ms_16.spritefont" );
+		spriteBatch = std::make_unique<SpriteBatch>( context.Get() );
+        spriteFont = std::make_unique<SpriteFont>( device.Get(), L"Resources\\Fonts\\open_sans_ms_16.spritefont" );
 	}
 	catch ( COMException& exception )
 	{
@@ -58,17 +58,11 @@ bool Graphics::InitializeShaders()
 	try
 	{
 		/*   MODELS   */
-		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Primitive_Nrm.fx",
+		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx",
 			Layout::layoutPosTexNrm, ARRAYSIZE( Layout::layoutPosTexNrm ) );
-	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Primitive_Nrm.fx" );
-		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Primitive_NoNrm.fx" );
+	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx" );
+		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Model_NoNrm.fx" );
 		COM_ERROR_IF_FAILED( hr, "Failed to create 'Light' shaders!" );
-
-		/*   TEXTURES   */
-		hr = vertexShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx",
-			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
-		hr = pixelShader_Tex.Initialize( device, L"Resources\\Shaders\\Primitive_Tex.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create 'Texture' shaders!" );
 
 		/*   SPRITES   */
 		hr = vertexShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx",
@@ -77,10 +71,10 @@ bool Graphics::InitializeShaders()
 		hr = pixelShader_2D_discard.Initialize( device, L"Resources\\Shaders\\Sprite_Discard.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create sprite 'Sprite' shaders!" );
 
-		/*   COLOUR   */
-		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx",
+		/*   OUTLINE   */
+		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx",
 			Layout::layoutPosCol, ARRAYSIZE( Layout::layoutPosCol ) );
-		hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Primitive_Outline.fx" );
+		hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create 'Colour' shaders!" );
 	}
 	catch ( COMException& exception )
@@ -97,8 +91,10 @@ bool Graphics::InitializeScene()
 	{
 		/*   MODELS   */
 		if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
-		hubRoom.SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
+
+		if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+		skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
 
 		/*   LIGHTS   */
 		if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
@@ -116,12 +112,12 @@ bool Graphics::InitializeScene()
 		if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
 		cube.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 
-		if ( !skybox.Initialize( context.Get(), device.Get() ) ) return false;
-		skybox.SetInitialScale( 250.0f, 250.0f, 250.0f );
-		skybox.SetInitialPosition( 0.0f, 0.0f, 0.0f );
+		if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
+		simpleQuad.SetInitialPosition( 0.0f, 5.0f, -5.0f );
+		simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
 		/*   SPRITES   */
-		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\Crosshair.png", cb_vs_matrix_2d ) ) return false;
+		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
         crosshair.SetInitialPosition( windowWidth / 2 - crosshair.GetWidth() / 2, windowHeight / 2 - crosshair.GetHeight() / 2, 0 );
 
 		/*   CAMERAS   */
@@ -134,11 +130,12 @@ bool Graphics::InitializeScene()
 		camera2D.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
 
 		/*   TEXTURES   */
-		HRESULT hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\CrashBox.png", nullptr, boxTextures["Default"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\BounceBox.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\JumpBox.png", nullptr, boxTextures["Jump"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\TNT.png", nullptr, boxTextures["TNT"].GetAddressOf() );
-		hr = DirectX::CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\Space.png", nullptr, spaceTexture.GetAddressOf() );
+		HRESULT hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures["Basic"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures["Arrow"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures["TNT"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall.jpg", nullptr, brickwallTexture.GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall_normal.jpg", nullptr, brickwallNormalTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 
 		/*   CONSTANT BUFFERS   */
@@ -171,9 +168,16 @@ void Graphics::BeginFrame()
 	stencils["Off"]->Bind( *this );
 	blender->Bind( *this );
 
+	// render skysphere first
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	rasterizers["Skybox"]->Bind( *this );
+	skysphere.Draw( cameras[cameraToUse] );
+	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
+
 	// update constant buffers
 	cb_ps_scene.data.useTexture = useTexture;
 	cb_ps_scene.data.alphaFactor = alphaFactor;
+	cb_ps_scene.data.useNormalMap = 0.0f;
 	if ( !cb_ps_scene.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
@@ -192,32 +196,24 @@ void Graphics::BeginFrame()
 
 void Graphics::RenderFrame()
 {
-	// render cubemap
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-	rasterizers["Cubemap"]->Bind( *this );
-	skybox.Draw( cb_vs_matrix, spaceTexture.Get() );
-	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
-
 	// render models w/out normals
-	pointLight.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
-	directionalLight.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
+	pointLight.Draw( cameras[cameraToUse] );
+	directionalLight.Draw( cameras[cameraToUse] );
 	
 	// render models w/ normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	spotLight.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
-	hubRoom.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
+	spotLight.Draw( cameras[cameraToUse] );
+	hubRoom.Draw( cameras[cameraToUse] );
+
+	// render models w/ normal maps
+	cb_ps_scene.data.useNormalMap = 1.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+	simpleQuad.Draw( cb_vs_matrix, brickwallTexture.Get(), brickwallNormalTexture.Get() );
+
+	cb_ps_scene.data.useNormalMap = 0.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
 	// render objects w/ stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
@@ -227,7 +223,7 @@ void Graphics::RenderFrame()
 	Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
 	cb_ps_scene.data.useTexture = true;
     if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_scene.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
     crosshair.Draw( camera2D.GetWorldOrthoMatrix() );
 }
 
@@ -235,11 +231,17 @@ void Graphics::EndFrame()
 {
 	// render text
 	spriteBatch->Begin();
+	if ( cubeInRange && cubeHover && !holdingCube )
+	{
+		spriteFont->DrawString( spriteBatch.get(), L"Press 'E' to pick up cube.",
+			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
+	}
 	if ( toolType == CONVERT )
 	{
 		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: CONVERT",
-			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 
 		static std::wstring boxType;
 		switch ( boxToUse )
@@ -250,14 +252,14 @@ void Graphics::EndFrame()
 		case 3: boxType = L"TNT Box"; break;
 		}
 		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Texture: " ).append( boxType ).c_str(),
-			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::Orange, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	}
 	else if ( toolType == RESIZE )
 	{
 		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: RESIZE",
-			DirectX::XMFLOAT2( windowWidth - 760.0f, 0.0f ), DirectX::Colors::White, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 
 		static std::wstring sizeType;
 		switch ( sizeAmount )
@@ -267,13 +269,13 @@ void Graphics::EndFrame()
 		case 2: sizeType = L"Growth Ray"; break;
 		}
 		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Size: " ).append( sizeType ).c_str(),
-			DirectX::XMFLOAT2( windowWidth - 260.0f, 0.0f ), DirectX::Colors::BlueViolet, 0.0f,
-			DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::BlueViolet, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	}
 	spriteFont->DrawString( spriteBatch.get(),
 		std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
-		DirectX::XMFLOAT2( 20.0f, 0.0f ), DirectX::Colors::IndianRed, 0.0f,
-		DirectX::XMFLOAT2( 0.0f, 0.0f ), DirectX::XMFLOAT2( 1.0f, 1.0f ) );
+		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed, 0.0f,
+		XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	spriteBatch->End();
 
 	// display imgui
@@ -306,7 +308,7 @@ void Graphics::Update( float dt )
 {
 	UNREFERENCED_PARAMETER( dt );
 
-	skybox.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
+	skysphere.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
 	if ( toolType == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
 
 	// camera world collisions
@@ -321,7 +323,10 @@ void Graphics::Update( float dt )
 		dx *= cameras["Default"]->GetCameraSpeed() * 10.0f;
 		dz *= cameras["Default"]->GetCameraSpeed() * 10.0f;
 		cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
-	} 
+	}
+
+	// cube range collision check
+	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
 
 	// prevent camera y-axis movement
 	cameras["Default"]->SetPosition(
@@ -345,9 +350,11 @@ void Graphics::Update( float dt )
 // STENCIL OUTLINES //
 void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 {
+	// write pixels to the buffer, which will act as the stencil mask
 	stencils["Write"]->Bind( *this );
 	cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
+	// scale the cube and draw the stencil outline, ignoring the pixels previously written to the buffer
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
@@ -357,6 +364,7 @@ void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 		cube.GetScaleFloat3().y + outlineScale, cube.GetScaleFloat3().z + outlineScale );
 	cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 
+	// rescale the cube and draw using the appropriate shaders and textures
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
@@ -368,24 +376,24 @@ void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 
 void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color )
 {
+	// write pixels to the buffer, which will act as the stencil mask
 	stencils["Write"]->Bind( *this );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse] );
 
+	// scale the model and draw the stencil outline, ignoring the pixels previously written to the buffer
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse] );
 
+	// rescale the model and draw using the appropriate shaders and textures
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse] );
 }

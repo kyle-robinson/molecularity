@@ -5,7 +5,7 @@ Mesh::Mesh( ID3D11Device* device,
 	std::vector<Vertex3D>& vertices,
 	std::vector<WORD>& indices,
 	std::vector<Texture>& textures,
-	const DirectX::XMMATRIX& transformMatrix )
+	const XMMATRIX& transformMatrix )
 {
 	try
 	{
@@ -13,10 +13,10 @@ Mesh::Mesh( ID3D11Device* device,
 		this->textures = textures;
 		this->transformMatrix = transformMatrix;
 
-		HRESULT hr = vertexBuffer.Initialize( device, vertices.data(), vertices.size() );
+		HRESULT hr = vertexBuffer.Initialize( device, vertices.data(), static_cast<UINT>( vertices.size() ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize vertex buffer for mesh!" );
 
-		hr = indexBuffer.Initialize( device, indices.data(), indices.size() );
+		hr = indexBuffer.Initialize( device, indices.data(), static_cast<UINT>( indices.size() ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize index buffer for mesh!" );
 	}
 	catch ( COMException& exception )
@@ -26,7 +26,7 @@ Mesh::Mesh( ID3D11Device* device,
 	}
 }
 
-const DirectX::XMMATRIX& Mesh::GetTransformMatrix()
+const XMMATRIX& Mesh::GetTransformMatrix()
 {
 	return transformMatrix;
 }

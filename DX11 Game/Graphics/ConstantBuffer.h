@@ -11,7 +11,7 @@ template<class T>
 class ConstantBuffer
 {
 private:
-	ConstantBuffer( const ConstantBuffer<T>& rhs ) {}
+	ConstantBuffer( const ConstantBuffer<T>& rhs ) { }
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 	ID3D11DeviceContext* context = nullptr;
