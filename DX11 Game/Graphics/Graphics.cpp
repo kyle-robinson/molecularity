@@ -91,7 +91,6 @@ bool Graphics::InitializeScene()
 	{
 		/*   MODELS   */
 		if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
-		hubRoom.SetInitialPosition( 0.0f, 0.0f, 0.0f );
 		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 
 		if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
@@ -166,7 +165,7 @@ void Graphics::BeginFrame()
 	// render skysphere first
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
 	rasterizers["Skybox"]->Bind( *this );
-	skysphere.Draw( cameras[cameraToUse]->GetViewMatrix(), cameras[cameraToUse]->GetProjectionMatrix() );
+	skysphere.Draw( cameras[cameraToUse] );
 	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
 
 	// update constant buffers
@@ -191,25 +190,13 @@ void Graphics::BeginFrame()
 void Graphics::RenderFrame()
 {
 	// render models w/out normals
-	pointLight.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
-	directionalLight.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
+	pointLight.Draw( cameras[cameraToUse] );
+	directionalLight.Draw( cameras[cameraToUse] );
 	
 	// render models w/ normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	spotLight.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
-	hubRoom.Draw(
-		cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix()
-	);
+	spotLight.Draw( cameras[cameraToUse] );
+	hubRoom.Draw( cameras[cameraToUse] );
 
 	// render objects w/ stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
@@ -370,8 +357,7 @@ void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color )
 {
 	stencils["Write"]->Bind( *this );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse] );
 
 	cb_ps_outline.data.outlineColor = color;
     if ( !cb_ps_outline.ApplyChanges() ) return;
@@ -379,14 +365,12 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse] );
 
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
-	object.Draw( cameras[cameraToUse]->GetViewMatrix(),
-		cameras[cameraToUse]->GetProjectionMatrix() );
+	object.Draw( cameras[cameraToUse] );
 }

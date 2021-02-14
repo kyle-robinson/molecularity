@@ -1,4 +1,5 @@
 #include "RenderableGameObject.h"
+#include "Camera.h"
 
 bool RenderableGameObject::Initialize(
 	const std::string& filePath,
@@ -15,9 +16,9 @@ bool RenderableGameObject::Initialize(
 	return true;
 }
 
-void RenderableGameObject::Draw( const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix )
+void RenderableGameObject::Draw( const std::unique_ptr<Camera>& camera )
 {
-	model.Draw( worldMatrix, viewMatrix, projectionMatrix );
+	model.Draw( worldMatrix, camera );
 }
 
 void RenderableGameObject::UpdateMatrix()

@@ -29,8 +29,10 @@ VS_OUTPUT VS( VS_INPUT input )
     output.outPosition = mul( float4( input.inPosition, 1.0f ), worldMatrix );
     output.outPosition = mul( output.outPosition, viewMatrix );
     output.outPosition = mul( output.outPosition, projectionMatrix );
+    
     output.outTexCoord = input.inTexCoord;
     output.outNormal = normalize( mul( float4( input.inNormal, 0.0f ), worldMatrix ) );
+    
     output.outWorldPos = mul( float4( input.inPosition, 1.0f ), worldMatrix );
     return output;
 }

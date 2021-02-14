@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Camera.h"
 
 bool Model::Initialize(
 	const std::string& filePath,
@@ -24,16 +25,16 @@ bool Model::Initialize(
 	return true;
 }
 
-void Model::Draw( const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix, const XMMATRIX& projectionMatrix )
+void Model::Draw( const XMMATRIX& worldMatrix, const std::unique_ptr<Camera>& camera )
 {
-	cb_vs_matrix->data.viewMatrix = viewMatrix;
-	cb_vs_matrix->data.projectionMatrix = projectionMatrix;
+	cb_vs_matrix->data.viewMatrix = camera->GetViewMatrix();
+	cb_vs_matrix->data.projectionMatrix = camera->GetProjectionMatrix();
 	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix->GetAddressOf() );
 	
-	for ( int i = 0; i < meshes.size(); i++ )
+	for ( UINT i = 0u; i < meshes.size(); i++ )
 	{
 		cb_vs_matrix->data.worldMatrix = meshes[i].GetTransformMatrix() * worldMatrix;
-		cb_vs_matrix->ApplyChanges();
+		if ( !cb_vs_matrix->ApplyChanges() ) return;
 		meshes[i].Draw();
 	}
 }
@@ -54,13 +55,13 @@ void Model::ProcessNode( aiNode* node, const aiScene* scene, const XMMATRIX& par
 {
 	XMMATRIX nodeTransformMatrix = XMMatrixTranspose( static_cast<XMMATRIX>( &node->mTransformation.a1 ) ) * parentTransformMatrix;
 	
-	for ( UINT i = 0; i < node->mNumMeshes; i++ )
+	for ( UINT i = 0u; i < node->mNumMeshes; i++ )
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		meshes.push_back( ProcessMesh( mesh, scene, nodeTransformMatrix ) );
 	}
 
-	for ( UINT i = 0; i < node->mNumChildren; i++ )
+	for ( UINT i = 0u; i < node->mNumChildren; i++ )
 		ProcessNode( node->mChildren[i], scene, nodeTransformMatrix );
 }
 
@@ -70,7 +71,7 @@ Mesh Model::ProcessMesh( aiMesh* mesh, const aiScene* scene, const XMMATRIX& tra
 	std::vector<WORD> indices;
 
 	// get vertices
-	for ( UINT i = 0; i < mesh->mNumVertices; i++ )
+	for ( UINT i = 0u; i < mesh->mNumVertices; i++ )
 	{
 		Vertex3D vertex;
 
@@ -91,10 +92,10 @@ Mesh Model::ProcessMesh( aiMesh* mesh, const aiScene* scene, const XMMATRIX& tra
 		vertices.push_back( vertex );
 	}
 
-	for ( UINT i = 0; i < mesh->mNumFaces; i++ )
+	for ( UINT i = 0u; i < mesh->mNumFaces; i++ )
 	{
 		aiFace face = mesh->mFaces[i];
-		for ( UINT j = 0; j < face.mNumIndices; j++ )
+		for ( UINT j = 0u; j < face.mNumIndices; j++ )
 			indices.push_back( face.mIndices[j] );
 	}
 
@@ -153,7 +154,7 @@ std::vector<Texture> Model::LoadMaterialTextures( aiMaterial* pMaterial, aiTextu
 	TextureStorageType storeType = TextureStorageType::Invalid;
 	unsigned int textureCount = pMaterial->GetTextureCount( textureType );
 
-	if ( textureCount == 0 )
+	if ( textureCount == 0u )
 	{
 		storeType = TextureStorageType::None;
 		aiColor3D aiColor( 0.0f, 0.0f, 0.0f );
@@ -181,7 +182,7 @@ std::vector<Texture> Model::LoadMaterialTextures( aiMaterial* pMaterial, aiTextu
 	}
 	else
 	{
-		for ( UINT i = 0; i < textureCount; i++ )
+		for ( UINT i = 0u; i < textureCount; i++ )
 		{
 			aiString path;
 			pMaterial->GetTexture( textureType, i, &path );
