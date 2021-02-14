@@ -227,6 +227,12 @@ void Graphics::EndFrame()
 {
 	// render text
 	spriteBatch->Begin();
+	if ( cubeInRange && cubeHover && !holdingCube )
+	{
+		spriteFont->DrawString( spriteBatch.get(), L"Press 'E' to pick up cube.",
+			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen, 0.0f,
+			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
+	}
 	if ( toolType == CONVERT )
 	{
 		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: CONVERT",
@@ -313,7 +319,11 @@ void Graphics::Update( float dt )
 		dx *= cameras["Default"]->GetCameraSpeed() * 10.0f;
 		dz *= cameras["Default"]->GetCameraSpeed() * 10.0f;
 		cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
-	} 
+	}
+
+	// cube range collision check
+	cubeInRange = Collisions::CheckCollisionSphere( cameras["Default"], cube, 5.0f );
+	cubeInRange = Collisions::CheckCollisionSphere( cameras["Debug"], cube, 5.0f );
 
 	// prevent camera y-axis movement
 	cameras["Default"]->SetPosition(

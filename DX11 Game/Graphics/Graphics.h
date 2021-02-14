@@ -56,8 +56,10 @@ public:
 	// cube parameters
 	int boxToUse = 0;
 	int sizeAmount = 2;
-	bool cubeHover = false;
 	float sizeToUse = 1.0f;
+	bool cubeHover = false;
+	bool cubeInRange = false;
+	bool holdingCube = false;
 	std::string selectedBox = "Basic";
 
 	// light parameters

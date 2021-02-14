@@ -166,8 +166,9 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
 	// pick-up cube - set position relative to camera
-	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" )
+	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" && gfx.cubeInRange && gfx.cubeHover )
 	{
+		gfx.holdingCube = true;
 		XMVECTOR cubePosition = gfx.GetCamera( gfx.cameraToUse )->GetPositionVector();
 		cubePosition += gfx.GetCamera( gfx.cameraToUse )->GetForwardVector() * 2;
 		gfx.GetCube().SetPosition( cubePosition );
@@ -176,6 +177,10 @@ void Application::Update()
 			gfx.GetCamera( gfx.cameraToUse )->GetRotationFloat3().y,
 			gfx.GetCube().GetRotationFloat3().z
 		);
+	}
+	else
+	{
+		gfx.holdingCube = false;
 	}
 
 	gfx.Update( dt );
