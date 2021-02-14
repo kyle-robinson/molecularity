@@ -112,8 +112,12 @@ bool Graphics::InitializeScene()
 		if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
 		cube.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 
+		if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
+		simpleQuad.SetInitialPosition( 0.0f, 5.0f, -5.0f );
+		simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
+
 		/*   SPRITES   */
-		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\Crosshair.png", cb_vs_matrix_2d ) ) return false;
+		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
         crosshair.SetInitialPosition( windowWidth / 2 - crosshair.GetWidth() / 2, windowHeight / 2 - crosshair.GetHeight() / 2, 0 );
 
 		/*   CAMERAS   */
@@ -130,6 +134,8 @@ bool Graphics::InitializeScene()
 		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
 		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures["Arrow"].GetAddressOf() );
 		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures["TNT"].GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall.jpg", nullptr, brickwallTexture.GetAddressOf() );
+		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall_normal.jpg", nullptr, brickwallNormalTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 
 		/*   CONSTANT BUFFERS   */
@@ -171,6 +177,7 @@ void Graphics::BeginFrame()
 	// update constant buffers
 	cb_ps_scene.data.useTexture = useTexture;
 	cb_ps_scene.data.alphaFactor = alphaFactor;
+	cb_ps_scene.data.useNormalMap = 0.0f;
 	if ( !cb_ps_scene.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
@@ -198,6 +205,16 @@ void Graphics::RenderFrame()
 	spotLight.Draw( cameras[cameraToUse] );
 	hubRoom.Draw( cameras[cameraToUse] );
 
+	// render models w/ normal maps
+	cb_ps_scene.data.useNormalMap = 1.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+	simpleQuad.Draw( cb_vs_matrix, brickwallTexture.Get(), brickwallNormalTexture.Get() );
+
+	cb_ps_scene.data.useNormalMap = 0.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+
 	// render objects w/ stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
 		cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
@@ -206,7 +223,7 @@ void Graphics::RenderFrame()
 	Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
 	cb_ps_scene.data.useTexture = true;
     if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1, 1, cb_ps_scene.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
     crosshair.Draw( camera2D.GetWorldOrthoMatrix() );
 }
 

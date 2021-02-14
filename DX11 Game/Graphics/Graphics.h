@@ -4,6 +4,7 @@
 
 #include <map>
 #include "Cube.h"
+#include "Quad.h"
 #include "Sprite.h"
 #include "Camera.h"
 #include "Shaders.h"
@@ -80,7 +81,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> spaceTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
 	std::shared_ptr<Bind::Blender> blender;
@@ -122,6 +124,7 @@ private:
 	DirectionalLight directionalLight;
 
 	Cube cube;
+	Quad simpleQuad;
 	RenderableGameObject hubRoom;
 	RenderableGameObject skysphere;
 	std::map<std::string, std::unique_ptr<Camera>> cameras;

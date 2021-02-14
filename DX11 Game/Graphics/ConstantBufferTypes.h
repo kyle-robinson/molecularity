@@ -25,6 +25,7 @@ struct CB_PS_scene
 {
 	float useTexture;
 	float alphaFactor;
+	float useNormalMap;
 };
 
 struct CB_PS_point

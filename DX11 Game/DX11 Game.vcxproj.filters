@@ -204,6 +204,9 @@
     <ClCompile Include="Objects\Sprite.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Quad.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -388,6 +391,9 @@
     </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resource Files\Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Quad.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

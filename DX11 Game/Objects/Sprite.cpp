@@ -25,10 +25,10 @@ bool Sprite::Initialize( ID3D11Device* device, ID3D11DeviceContext* context,
 		2, 1, 3
 	};
 
-	HRESULT hr = vertices.Initialize( device, vertexData.data(), vertexData.size() );
+	HRESULT hr = vertices.Initialize( device, vertexData.data(), static_cast<UINT>( vertexData.size() ) );
 	COM_ERROR_IF_FAILED( hr, "Failed to initialize vertices for sprite!" );
 
-	hr = indices.Initialize( device, indexData.data(), indexData.size() );
+	hr = indices.Initialize( device, indexData.data(), static_cast<UINT>( indexData.size() ) );
 	COM_ERROR_IF_FAILED( hr, "Failed to initialize indices for sprite!" );
 
 	SetPosition( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );

@@ -42,6 +42,7 @@ cbuffer SceneBuffer : register( b2 )
 {
     float useTexture;
     float alphaFactor;
+    float useNormalMap;
 }
 
 cbuffer PointLightBuffer : register( b3 )
@@ -101,11 +102,20 @@ struct PS_INPUT
 };
 
 Texture2D objTexture : TEXTURE : register( t0 );
+Texture2D normalTexture : TEXTURE : register( t1 );
 SamplerState samplerState : SAMPLER : register( s0 );
 
 float4 PS( PS_INPUT input ) : SV_TARGET
-{
+{    
     float3 cumulativeColor = { 0.0f, 0.0f, 0.0f };
+    
+    if ( useNormalMap )
+    {
+        const float3 normalSample = normalTexture.Sample( samplerState, input.inTexCoord );
+        input.inNormal.x = normalSample.x * 2.0f - 1.0f;
+        input.inNormal.y = normalSample.y * 2.0f - 1.0f;
+        input.inNormal.z = -normalSample.z;
+    }
     
     // DIRECTIONAL LIGHT
     {

@@ -42,6 +42,7 @@ void Application::Update()
 	{
 		Keyboard::KeyboardEvent kbe = keyboard.ReadKey();
 		unsigned char keycode = kbe.GetKeyCode();
+		UNREFERENCED_PARAMETER( keycode );
 	}
 	while ( !mouse.EventBufferIsEmpty() )
 	{
