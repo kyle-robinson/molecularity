@@ -4,6 +4,7 @@
 
 #include <map>
 #include "Cube.h"
+#include "Camera.h"
 #include "Shaders.h"
 #include "SpotLight.h"
 #include "PointLight.h"
@@ -38,10 +39,12 @@ protected:
 	bool InitializeGraphics( HWND hWnd, int width, int height );
 	void ClearScene();
 	void UpdateRenderState();
-	void RenderSceneText();
+	void UpdateConstantBuffers();
 
 	void DrawWithOutline( Cube& cube, float scale, XMFLOAT3& color, ID3D11ShaderResourceView* texture );
 	void DrawWithOutline( RenderableGameObject& object, float scale, XMFLOAT3& color );
+
+	void RenderSceneText();
 	void RenderImGuiWindows();
 	void PresentScene();
 private:
@@ -57,8 +60,13 @@ public:
 	bool holdingCube = false;
 	std::string cameraToUse = "Default";
 protected:
+	float useTexture = 1.0f;
+	float alphaFactor = 1.0f;
+
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+	std::map<std::string, std::unique_ptr<Camera>> cameras;
+
 	std::shared_ptr<Bind::Blender> blender;
 	std::shared_ptr<Bind::TextRenderer> textRenderer;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
@@ -78,9 +86,12 @@ protected:
 	PixelShader pixelShader_outline;
 	PixelShader pixelShader_2D_discard;
 
+	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 	ConstantBuffer<CB_PS_point> cb_ps_point;
+	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_PS_outline> cb_ps_outline;
+	ConstantBuffer<CB_PS_directional> cb_ps_directional;
 private:
 	UINT windowWidth;
 	UINT windowHeight;

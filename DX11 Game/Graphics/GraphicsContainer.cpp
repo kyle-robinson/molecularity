@@ -96,49 +96,27 @@ void GraphicsContainer::UpdateRenderState()
 	blender->Bind( *this );
 }
 
-// TEXT RENDERING //
-void GraphicsContainer::RenderSceneText()
+void GraphicsContainer::UpdateConstantBuffers()
 {
-	if ( cubeInRange && cubeHover && !holdingCube )
-	{
-		textRenderer->DrawString( L"Press 'E' to pick up cube.",
-			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen );
-	}
-	if ( toolType == CONVERT )
-	{
-		textRenderer->DrawString( L"Multi-Tool: CONVERT",
-			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
+	cb_ps_scene.data.useTexture = useTexture;
+	cb_ps_scene.data.alphaFactor = alphaFactor;
+	cb_ps_scene.data.useNormalMap = 0.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
-		static std::wstring boxType;
-		switch ( boxToUse )
-		{
-		case 0: boxType = L"Default Box"; break;
-		case 1: boxType = L"Bounce Box"; break;
-		case 2: boxType = L"Jump Box"; break;
-		case 3: boxType = L"TNT Box"; break;
-		}
+	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 
-		textRenderer->DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange );
-	}
-	else if ( toolType == RESIZE )
-	{
-		textRenderer->DrawString( L"Multi-Tool: RESIZE",
-			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
+	directionalLight.UpdateConstantBuffer( cb_ps_directional );
+	if ( !cb_ps_directional.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
 
-		static std::wstring sizeType;
-		switch ( sizeAmount )
-		{
-		case 0: sizeType = L"Shrink Ray"; break;
-		case 1: sizeType = L"Reset Ray"; break;
-		case 2: sizeType = L"Growth Ray"; break;
-		}
+	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
+	if ( !cb_ps_spot.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
 
-		textRenderer->DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::BlueViolet );
-	}
-	textRenderer->DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
-		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
+	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
 }
 
 // STENCIL OUTLINES //
@@ -190,6 +168,51 @@ void GraphicsContainer::DrawWithOutline( RenderableGameObject& object, float sca
 	object.SetScale( object.GetScaleFloat3().x - scale, 1.0f, object.GetScaleFloat3().z - scale );
 	stencils["Off"]->Bind( *this );
 	object.Draw();
+}
+
+// TEXT RENDERING //
+void GraphicsContainer::RenderSceneText()
+{
+	if ( cubeInRange && cubeHover && !holdingCube )
+	{
+		textRenderer->DrawString( L"Press 'E' to pick up cube.",
+			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen );
+	}
+	if ( toolType == CONVERT )
+	{
+		textRenderer->DrawString( L"Multi-Tool: CONVERT",
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
+
+		static std::wstring boxType;
+		switch ( boxToUse )
+		{
+		case 0: boxType = L"Default Box"; break;
+		case 1: boxType = L"Bounce Box"; break;
+		case 2: boxType = L"Jump Box"; break;
+		case 3: boxType = L"TNT Box"; break;
+		}
+
+		textRenderer->DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange );
+	}
+	else if ( toolType == RESIZE )
+	{
+		textRenderer->DrawString( L"Multi-Tool: RESIZE",
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
+
+		static std::wstring sizeType;
+		switch ( sizeAmount )
+		{
+		case 0: sizeType = L"Shrink Ray"; break;
+		case 1: sizeType = L"Reset Ray"; break;
+		case 2: sizeType = L"Growth Ray"; break;
+		}
+
+		textRenderer->DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::BlueViolet );
+	}
+	textRenderer->DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
+		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
 }
 
 // IMGUI WINDOWS //

@@ -148,30 +148,6 @@ void Graphics::Update( float dt )
 	);
 }
 
-// SCENE SETUP //
-void Graphics::UpdateConstantBuffers()
-{
-	cb_ps_scene.data.useTexture = useTexture;
-	cb_ps_scene.data.alphaFactor = alphaFactor;
-	cb_ps_scene.data.useNormalMap = 0.0f;
-	if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
-
-	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-
-	directionalLight.UpdateConstantBuffer( cb_ps_directional );
-	if ( !cb_ps_directional.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
-
-	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
-	if ( !cb_ps_spot.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
-
-	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
-}
-
 // RENDER METHODS //
 void Graphics::RenderSkySphere()
 {
