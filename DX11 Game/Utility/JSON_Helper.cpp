@@ -5,187 +5,142 @@
 //gets all game objects out of a file
 vector<JSON_LOADER::ModdleData> JSON_LOADER::LoadGameObjects(string fileName)
 {
-	Document d = ParseFile(fileName);
-	
+	Document d;	
 	vector<ModdleData> Data;
 	ModdleData ObjectData;
 	
+		d = ParseFile(fileName);
+		if (!d.IsNull()) {
+			//load from file
+			for (Value& GameObject : d["GameObjects"].GetArray()) {
 
-	//load from file
-	for (Value& GameObject : d["GameObjects"].GetArray()) {
+				if (CheckDataIsThere<Value>("Name", GameObject))
+				{
+					ObjectData.ObjectName = GameObject["Name"].GetString();
 
-		if( CheckIsThere("Name", GameObject))
-		{
-			ObjectData.ObjectName = GameObject["Name"].GetString();
-			
+				}
+				if (CheckDataIsThere<Value>("FileName", GameObject))
+				{
+					ObjectData.FileName = GameObject["FileName"].GetString();
+				}
+				if (CheckDataIsThere<Value>("Positon", GameObject)) {
+					ObjectData.Position = { GameObject["Positon"][0].GetFloat(),GameObject["Positon"][1].GetFloat(),GameObject["Positon"][2].GetFloat() };
+				}
+				if (CheckDataIsThere<Value>("Scale", GameObject)) {
+					ObjectData.Scale = { GameObject["Scale"][0].GetFloat(),GameObject["Scale"][1].GetFloat(),GameObject["Scale"][2].GetFloat() };
+				}
+				if (CheckDataIsThere<Value>("Rotation", GameObject)) {
+					ObjectData.Rotation = { GameObject["Rotation"][0].GetFloat(),GameObject["Rotation"][1].GetFloat(),GameObject["Rotation"][2].GetFloat() };
+				}
+				Data.push_back(ObjectData);
+			}
 		}
-		if (CheckIsThere("FileName", GameObject))
-		{
-			ObjectData.FileName = GameObject["FileName"].GetString();
-		}
-		//	if (CheckIsThere("Texture", GameObject))
-		//{
-		//	ObjectData.Texture = GameObject["Texture"].GetString();
-		//}
-
-		if(CheckIsThere("Positon", GameObject)) {
-			ObjectData.Position = { GameObject["Positon"][0].GetFloat(),GameObject["Positon"][1].GetFloat(),GameObject["Positon"][2].GetFloat() };
-		}
-		if (CheckIsThere("Scale", GameObject)) {
-			ObjectData.Scale = { GameObject["Scale"][0].GetFloat(),GameObject["Scale"][1].GetFloat(),GameObject["Scale"][2].GetFloat() };
-		}
-		if (CheckIsThere("Rotation", GameObject)) {
-			ObjectData.Rotation = { GameObject["Rotation"][0].GetFloat(),GameObject["Rotation"][1].GetFloat(),GameObject["Rotation"][2].GetFloat() };
-		}
-		Data.push_back(ObjectData);
-	}
-
 
 	//check if data is loaded 
 	if (Data.size()==0)
 	{
 		//error
-	}
-	else {
-		return Data;
+		
+		OutputDebugStringA("Error: no data found");
+		
 	}
 	
+		return Data;
+	
 }
+//load Text
+vector<JSON_LOADER::TextData> JSON_LOADER::LoadTextDataItems(string FileName)
+{
+	Document document = ParseFile(FileName);
+	
+	vector<TextData> Data;
 
+	//load data
 
+	//load Data in data
+	for (Value::ConstMemberIterator Object = document.MemberBegin();
+		Object != document.MemberEnd(); ++Object)
+	{
+		for (Value& GameObject : document[Object->name.GetString()].GetArray()) {
+			
+				
+				//stor strings in struct and vector
+				TextData textData;
+				if(CheckDataIsThere<Value>("Name", GameObject))
+				textData.Name = GameObject["Name"].GetString();
+				if(CheckDataIsThere<Value>("Text",GameObject))
+				textData.Name = GameObject["Text"].GetString();
+				Data.push_back(textData);
+			
 
+		}
+	}
+
+	//error checks
+	//check if data is loaded 
+	if (Data.size() == 0)
+	{
+		//error
+		OutputDebugStringA("Error: no data found");
+		
+	}
+	
+	return Data;
+}
 
 
 //load all settings
 vector<JSON_LOADER::SettingData>  JSON_LOADER::LoadSettings()
 {
-	vector<SettingData>Settings;
-	Document document = ParseFile("Settings.json");
-	//load Data in string format
-	for (Value::ConstMemberIterator Object = document.MemberBegin();
-		Object != document.MemberEnd(); ++Object) 
-	{
 	
-		for (Value& GameObject :document[Object->name.GetString()].GetArray()) {
-			for (Value::ConstMemberIterator itr = GameObject.MemberBegin();
-				itr != GameObject.MemberEnd(); ++itr)
-			{
-				//getData
-				string c = itr->name.GetString();
-				string b;
-				switch (itr->value.GetType())
-				{
-				case(kStringType):
-					b = itr->value.GetString();
-
-					break;
-				case(kNumberType):
-					if (itr->value.IsInt()) {
-						b = to_string(itr->value.GetInt());
-
-					}
-					else if (itr->value.IsUint()) {
-						b = to_string(itr->value.GetUint());
-
-					}
-					else
-					{
-						b = to_string(itr->value.GetFloat());
-
-					}
-					break;
-
-				case(kArrayType):
-
-					break;
-				case(kFalseType):
-					b = "False";
-					break;
-				case(kTrueType):
-					b = "True";
-					break;
-				default:
-					break;
-				}
-
-
-				//stor strings in struct and vector
-				SettingData Setting;
-				Setting.Name = c;
-				Setting.Setting = b;
-				Settings.push_back(Setting);
-			}
-
-		}
-	}
-
-	//errors
-
-
-	//return data
-	return Settings;
-}
-
-void JSON_LOADER::UpdateSettings(string SettingType, string SettingName, string UPdateData)
-{
 	
-
-	//find setting
-	UpdateJSONItemEX("Settings.json", SettingType, "", UPdateData, SettingName);
-
-
-}
-
-//only returns one value
-vector<string> JSON_LOADER::LoadJSONNode(string JSONFIle, string Node, string DataNode)
-{
-	vector<string> Result;
-	
-	Value Data;
-	
-	Document d=ParseFile(JSONFIle);
-	if (d.IsNull()) {
-		Data.SetString("Error Empty File");
-		Result.push_back(Data.GetString());
-		return Result;
-	}
-
-	//check is there
-	if (d.HasMember(Node.c_str())) {
-		if (d[Node.c_str()].IsArray()) {
-			//load from file
-			for (Value& Object : d[Node.c_str()].GetArray()) {
-				
-				Data = CheckType(Object, DataNode);
-				/*if (!Data.IsString()) {
-					Data=to_string(Data.GetInt());
-				}*/
-
-
-
-				Result.push_back(Data.GetString());
-			}
-		}
-		else
-		{
-			Data = CheckType(d, Node);
-			Result.push_back(Data.GetString());
-		}
-	}
-
-	//check if data is loaded 
-	if (Result.size() == 0)
-	{
-		//error
-	}
-	else {
-
-		OutputDebugStringA(Result[0].c_str());
 		
-		return Result;
-	}
+		vector<SettingData>Settings;
+		string p;
+		Document document = ParseFile("Settings.json");
+		//load Data in data
+		for (Value::ConstMemberIterator Object = document.MemberBegin();
+			Object != document.MemberEnd(); ++Object) 
+		{
+			if (Object->value.IsArray()) {
+				for (Value& GameObject : document[Object->name.GetString()].GetArray()) {
+					for (Value::ConstMemberIterator itr = GameObject.MemberBegin();
+						itr != GameObject.MemberEnd(); ++itr)
+					{
+						//getData
+						SettingData Setting;
+
+						string c = itr->name.GetString();
+						Setting.Name = c;
+						//stor strings in struct and vector
+					
+						Setting.Setting = GetDataAny(itr);
+			
+						Settings.push_back(Setting);
+					}
+				}
+			}
+			else
+			{
+			
+						SettingData Setting;
+						Setting.Name = Object->name.GetString();
+						Setting.Setting = GetDataAny(Object);
+						Settings.push_back(Setting);
+			}
+
+		}
+
+		return Settings;
+	
+	
+
+	
+	
 }
 
+
+//get data as string
 vector<string> JSON_LOADER::LoadFileData(string fileName)
 {
 	vector<string>Data;
@@ -200,231 +155,169 @@ vector<string> JSON_LOADER::LoadFileData(string fileName)
 					itr != GameObject.MemberEnd(); ++itr)
 				{
 
-					string StringData;
-					switch (itr->value.GetType())
-					{
-					case(kStringType):
-						StringData = itr->value.GetString();
-
-						break;
-					case(kNumberType):
-						if (itr->value.IsInt()) {
-							StringData = to_string(itr->value.GetInt());
-
-						}
-						else if (itr->value.IsUint()) {
-							StringData = to_string(itr->value.GetUint());
-
-						}
-						else
-						{
-							StringData = to_string(itr->value.GetFloat());
-
-						}
-						break;
-
-					case(kArrayType):
-
-						break;
-					case(kFalseType):
-						StringData = "False";
-						break;
-					case(kTrueType):
-						StringData = "True";
-						break;
-					default:
-						break;
-					}
-
-
-					//stor strings in struct and vector
-
-
-					Data.push_back(StringData);
+					//store strings in struct and vector
+					Data.push_back(GetData(itr).second);
 				}
 			}
 		
 		}
 		else
 		{
-			string StringData;
-			switch (Object->value.GetType())
-			{
-			case(kStringType):
-				StringData = Object->value.GetString();
-
-				break;
-			case(kNumberType):
-				if (Object->value.IsInt()) {
-					StringData = to_string(Object->value.GetInt());
-
-				}
-				else if (Object->value.IsUint()) {
-					StringData = to_string(Object->value.GetUint());
-
-				}
-				else
-				{
-					StringData = to_string(Object->value.GetFloat());
-
-				}
-				break;
-
-			case(kArrayType):
-
-				break;
-			case(kFalseType):
-				StringData = "False";
-				break;
-			case(kTrueType):
-				StringData = "True";
-				break;
-			default:
-				break;
-			}
-			Data.push_back(StringData);
+			
+			Data.push_back(GetData(Object).second);
 		}
 	}
 	return Data;
 }
-
-void JSON_LOADER::UpdateJSONItem(string JSONFIle, string Node, string Data, string DataNode)
+//get data and there names as string 
+vector<pair<string, string>> JSON_LOADER::LoadFileDataAndName(string fileName)
 {
-	UpdateJSONItemEX(JSONFIle, Node,"", Data, DataNode);
-}
+	vector<pair<string, string>>Data;
+	Document document = ParseFile(fileName);
+	//load Data in string format
+	for (Value::ConstMemberIterator Object = document.MemberBegin();
+		Object != document.MemberEnd(); ++Object)
+	{
+		if (Object->value.IsArray()) {
+			for (Value& GameObject : document[Object->name.GetString()].GetArray()) {
+				for (Value::ConstMemberIterator itr = GameObject.MemberBegin();
+					itr != GameObject.MemberEnd(); ++itr)
+				{
 
-void JSON_LOADER::UpdateJSONItemEX(string JSONFIle, string Node, string DataName, string Data, string DataNode)
-{
-
-	Document d = ParseFile(JSONFIle);
-
-	if (d.HasMember(Node.c_str())) {
-		if (d[Node.c_str()].IsArray()) {
-			//load from file
-			for (Value& Object : d[Node.c_str()].GetArray()) {
-				if (DataNode != "") {
-					if (Object.HasMember(DataNode.c_str())) {
-						if (DataName != "") {
-							if (Object["Name"].GetString() == DataName)
-								Object[DataNode.c_str()].SetString(Data.c_str(), d.GetAllocator());
-						}
-						else{
-							Object[DataNode.c_str()].SetString(Data.c_str(), d.GetAllocator());
-						}
-					}
+					Data.push_back(GetData(itr));
 				}
 			}
+
 		}
 		else
 		{
-			d[Node.c_str()].SetString(Data.c_str(), d.GetAllocator());
+			
+			Data.push_back(GetData(Object));
 		}
 	}
+	return Data;
+	
+}
+//get data as string
+pair<string, string> JSON_LOADER::GetData(Value::ConstMemberIterator Value)
+{
 
-	std::ofstream t("JSON_File/" + JSONFIle);
+	string StringData;
+	switch (Value->value.GetType())
+	{
+	case(kStringType):
+		StringData = Value->value.GetString();
+
+		break;
+	case(kNumberType):
+		if (Value->value.IsInt()) {
+			StringData = to_string(Value->value.GetInt());
+
+		}
+		else if (Value->value.IsUint()) {
+			StringData = to_string(Value->value.GetUint());
+
+		}
+		else
+		{
+			StringData = to_string(Value->value.GetFloat());
+
+		}
+		break;
+
+	case(kArrayType):
+		
+		break;
+	case(kFalseType):
+		StringData = "False";
+		break;
+	case(kTrueType):
+		StringData = "True";
+		break;
+	default:
+		break;
+	}
+
+
+	//stor strings in struct and vector
+	
+	string Name = Value->name.GetString();
+	pair<string, string> a(Name, StringData);
+	return a;
+}
+
+JSON_LOADER::DataFromFile JSON_LOADER::GetDataAny(Value::ConstMemberIterator Value)
+{
+	DataFromFile data;
+	string p;
+	switch (Value->value.GetType())
+	{
+	case(kStringType):
+		p = Value->value.GetString();
+		data = p;
+		break;
+	case(kNumberType):
+		if (Value->value.IsInt()) {
+			data = Value->value.GetInt();
+
+		}
+		else if (Value->value.IsDouble()) {
+			data = Value->value.GetDouble();
+
+		}
+		else
+		{
+			data = Value->value.GetFloat();
+		}
+		break;
+
+	case(kArrayType):
+
+		break;
+	case(kFalseType):
+	case(kTrueType):
+		data = Value->value.GetBool();
+		break;
+	default:
+		break;
+	}
+	return data;
+}
+
+bool JSON_LOADER::StoreFile(string fileName, Document& d)
+{
+	//back to file
+	std::ofstream t("JSON_File/" + fileName);
 	OStreamWrapper s(t);
 	Writer<OStreamWrapper> writer(s);
 	d.Accept(writer);
 
 	t.close();
 
-}
-
-Value JSON_LOADER::CheckType(Document& Document, string Node)
-{
-	//check trype
-	Value value;
-	switch (Document[Node.c_str()].GetType())
-	{
-		case(kStringType):
-	
-			value.Set(Document[Node.c_str()].GetString());
-
-			break;
-		case(kNumberType):
-			if (Document[Node.c_str()].IsInt()) {
-				value.SetInt(Document[Node.c_str()].GetInt());
-			}
-			else if (Document[Node.c_str()].IsUint()) {
-				value.SetUint(Document[Node.c_str()].GetUint());
-			}
-			else
-			{
-				value.SetDouble(Document[Node.c_str()].GetDouble());
-			}
-			break;
-
-		case(kArrayType):
-
-			break;
-		default:
-
-			break;
-	}
-	return value;
-}
-
-Value JSON_LOADER::CheckType(Value& Document, string Node)
-{
-	Value value;
-	string a;
-	
-	switch (Document[Node.c_str()].GetType())
-	{
-	case(kStringType):
-		value.Set(Document[Node.c_str()].GetString());
-		
-		break;
-	case(kNumberType):
-		if (Document[Node.c_str()].IsInt()) {
-			value.SetInt(Document[Node.c_str()].GetInt());
-		}
-		else if (Document[Node.c_str()].IsUint()) {
-			value.SetUint(Document[Node.c_str()].GetUint());
-		}
-		else
-		{
-			value.SetDouble(Document[Node.c_str()].GetDouble());
-		}
-		break;
-	case(kArrayType):
-
-		break;
-
-	default:
-
-		break;
-	}
-	return value;
-}
-
-bool JSON_LOADER::CheckIsThere(string ObjectName, Value& doc)
-{
-
-	return doc.HasMember(ObjectName.c_str());
-
+	return true;
 }
 
 Document JSON_LOADER::ParseFile(string File)
 {
 	Document d;
-	std::ifstream t("JSON_File\\" + File);
-	if (!t.is_open()) {
-		//error
-		OutputDebugStringA("Not Open");
-	}
-	else
-	{
-		IStreamWrapper isw(t);
-
-		d.ParseStream(isw);
-		if (d.HasParseError()) {
+	
+		HRESULT hr;
+		std::ifstream t("JSON_File\\" + File);
+		if (!t.is_open()) {
 			//error
-			d = NULL;
+			d.SetNull();
 		}
-	}
+		else
+		{
+			IStreamWrapper isw(t);
 
-	t.close();
+			d.ParseStream(isw);
+			if (d.HasParseError()) {
+				//error
+				d.SetNull();
+			}
+			t.close();
+		}
 
 	return d;
 }

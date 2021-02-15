@@ -3,12 +3,13 @@
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/writer.h>
-
+#include<variant>
 using namespace rapidjson;
 using namespace std;
 
 
 namespace JSON_LOADER {
+	typedef std::variant<int, string, bool, float, double> DataFromFile;
 //structs to store loaded object 
 struct ModdleData
 {
@@ -20,10 +21,14 @@ struct ModdleData
 	DirectX::XMFLOAT3 Rotation;
 };
 
+
+
 struct SettingData
 {
 	string Name;
-	string Setting;
+	//Get data by:
+	// get<type>(array_name[Position_in_Array].Setting);
+	DataFromFile Setting;
 
 };
 
@@ -34,7 +39,7 @@ struct TextData {
 };
 
 
-	//load GameObjects grabe all data
+	//load GameObjects get all data
 	vector<ModdleData> LoadGameObjects(string fileName);
 	
 	//load text data get all data
@@ -42,48 +47,114 @@ struct TextData {
 	
 	//Load Setting Files get all data
 	vector<SettingData> LoadSettings();
-	void UpdateSettings(string SettingType,string SettingName,string UPdateData);
+	
 
-
-
-	//Load one Node
+	//Load one Node as string
 	vector<string> LoadJSONNode(string JSONFIle, string Node,string DataNode = "");
 
 	//Load all Nodes
 	vector<string> LoadFileData(string fileName);
 	vector<pair<string,string>> LoadFileDataAndName(string fileName);
-
-	//update file 
-	void UpdateJSONItem(string JSONFIle, string Node, string Data,string DataNode = "");
-	void UpdateJSONItemEX(string JSONFIle, string Node, string DataName,string Data,string DataNode = "");
-	void UpdateJSONItem(string JSONFIle, string Node, int Data, string DataNode = "");
-	void UpdateJSONItemEX(string JSONFIle, string Node, string DataName, int Data, string DataNode = "");
-	void UpdateJSONItem(string JSONFIle, string Node, float Data, string DataNode = "");
-	void UpdateJSONItemEX(string JSONFIle, string Node, string DataName, float Data, string DataNode = "");
-	void UpdateJSONItem(string JSONFIle, string Node, double Data, string DataNode = "");
-	void UpdateJSONItemEX(string JSONFIle, string Node, string DataName, double Data, string DataNode = "");
-	void UpdateJSONItem(string JSONFIle, string Node, DirectX::XMFLOAT3 Data, string DataNode = "");
-	void UpdateJSONItemEX(string JSONFIle, string Node, string DataName, DirectX::XMFLOAT3 Data, string DataNode = "");
+	pair<string, string> GetData(Value::ConstMemberIterator Value);
+	
+	DataFromFile GetDataAny(Value::ConstMemberIterator Value);
 
 	//add new Node
-	void AddNode(string fileName,string nodeName,string Data);
-	void AddNode(string fileName, string nodeName, int Data);
-	void AddNode(string fileName, string nodeName, float Data);
-	void AddNode(string fileName, string nodeName, double Data);
-	void AddNode(string fileName, string nodeName, DirectX::XMFLOAT3 Data);
-
-
-	//need to rename
-	Value CheckType(Document& Document,string Node);
-	Value CheckType(Value& Document, string Node);
+	template<typename DataType>
+	void AddNode(string fileName,string nodeName, DataType Data);
 	
-	//helpers
+
+
+	//get file
 	Document ParseFile(string File);
-	bool CheckIsThere(string ObjectName, Value& doc);
+	//store file
+	bool StoreFile(string fileName, Document& d);
+	
+	
+	//need to improved
+	template <typename DataFormat>
+	Value CheckType(DataFormat& Document,string Node);
+	template <typename DataFormat>
+	bool CheckDataIsThere(string ObjectName, DataFormat& doc) {
 
-	string getDataAsString(Value dataToGet);
-	//loop array
-	//loop node
+		return doc.HasMember(ObjectName.c_str());;
+	}
 
+	//function to set string data 
+ template <typename DataFormat> void addObject(DataFormat& d, string a,string data) {
+		Document document;
+		d[a.c_str()].SetString(data.c_str(), document.GetAllocator());
+	}
+	//function to set int data 
+	template <typename DataFormat> void addObject(DataFormat& d, string a, int data) {
+		Document document;
+		d[a.c_str()].SetInt(data);
+	}
+	//function to set double data 
+	template <typename DataFormat> void addObject(DataFormat& d, string a, double data) {
+		Document document;
+		d[a.c_str()].SetDouble(data);
+	}
+	//function to set float data 
+	template <typename DataFormat> void addObject(DataFormat& d, string a, float data) {
+		Document document;
+		d[a.c_str()].SetFloat(data);
+	}
+	//function to set bool data 
+	template <typename DataFormat> void addObject(DataFormat& d, string a, bool data) {
+		Document document;
+		d[a.c_str()].SetBool(data);
+	}
+
+	//Update Data: can update data by checking name data
+	template <typename DataTypeToSet>
+	void UpdateJSONItemEX(string JSONFIle, string Node, string DataNode, DataTypeToSet Data, string NameOfData)
+	{
+		//load document
+		Document d = ParseFile(JSONFIle);
+		auto b = Data;
+		//set node
+		if (d.HasMember(Node.c_str())) {
+			if (d[Node.c_str()].IsArray()) {
+				//load from file
+				for (Value& Object : d[Node.c_str()].GetArray()) {
+					if (DataNode != "") {
+						if (Object.HasMember(DataNode.c_str())) {
+							if (NameOfData != "") {
+								if (Object["Name"].GetString() == NameOfData) {
+									//chack type
+									addObject<Value>(Object, DataNode, b);
+								}
+							}
+							else {
+								
+								addObject<Value>(Object, DataNode, b);
+
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				addObject<Document>(d, Node, b);
+				
+			}
+		}
+
+		StoreFile(JSONFIle, d);
+
+	}
+
+
+	//will update nodes
+	template<typename DataTypeToSet>
+	void UpdateJSONItem(string JSONFIle, string Node, DataTypeToSet Data, string DataNode)
+	{
+		UpdateJSONItemEX<DataTypeToSet>(JSONFIle, Node, DataNode, Data, "");
+	}
 
 }
+
+
+

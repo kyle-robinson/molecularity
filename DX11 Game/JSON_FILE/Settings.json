@@ -4,7 +4,8 @@
       "Vsync": false,
       "MouceSpeed": 50,
       "FullScreen": true,
-      "WindowSize": [ 101, 101 ],
+      "WindowWidth": 101,
+      "WindowHight":  0,
       "FPS": 60
     }
   ],
@@ -15,8 +16,8 @@
       "Forward": "w",
       "Back": "s",
       "Jump": "Space",
-      "Action": "Left_Click",
-      "Pick_Up": "q",
+      "Action": "RMB",
+      "Pick_Up": "LMB",
       "Change_Gun_State": "Scroll"
     }
   ],
@@ -27,6 +28,7 @@
       "BackgroundSoundsOn": true,
       "BackgroundSoundsVolume": 10
     }
-  ]
-}
+  ],
+  "Verson": 1.0
  
+}

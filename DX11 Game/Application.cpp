@@ -1,8 +1,7 @@
 #include"stdafx.h"
 #include "Application.h"
 #include "Input\\CameraMovement.h"
-
-
+#include"Utility/JSON_Helper.h"
 bool Application::Initialize(
 	HINSTANCE hInstance,
 	const std::string& windowTitle,
@@ -21,6 +20,7 @@ bool Application::Initialize(
 
 	mousePick.Initialize( gfx.camera->GetViewMatrix(), gfx.camera->GetProjectionMatrix(), width, height );
 
+	JSON_LOADER::LoadGameObjects("tim.json");
 	return true;
 }
 
