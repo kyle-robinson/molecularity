@@ -40,10 +40,8 @@ bool Graphics::InitializeDirectX( HWND hWnd )
         samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
         samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
 
+		textRenderer = std::make_shared<Bind::TextRenderer>( *this, L"open_sans_ms_16.spritefont" );
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
-		spriteBatch = std::make_unique<SpriteBatch>( context.Get() );
-        spriteFont = std::make_unique<SpriteFont>( device.Get(), L"Resources\\Fonts\\open_sans_ms_16.spritefont" );
 	}
 	catch ( COMException& exception )
 	{
@@ -229,54 +227,7 @@ void Graphics::RenderFrame()
 
 void Graphics::EndFrame()
 {
-	// render text
-	spriteBatch->Begin();
-	if ( cubeInRange && cubeHover && !holdingCube )
-	{
-		spriteFont->DrawString( spriteBatch.get(), L"Press 'E' to pick up cube.",
-			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen, 0.0f,
-			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-	}
-	if ( toolType == CONVERT )
-	{
-		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: CONVERT",
-			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
-			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-
-		static std::wstring boxType;
-		switch ( boxToUse )
-		{
-		case 0: boxType = L"Default Box"; break;
-		case 1: boxType = L"Bounce Box"; break;
-		case 2: boxType = L"Jump Box"; break;
-		case 3: boxType = L"TNT Box"; break;
-		}
-		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Texture: " ).append( boxType ).c_str(),
-			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange, 0.0f,
-			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-	}
-	else if ( toolType == RESIZE )
-	{
-		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: RESIZE",
-			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
-			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-
-		static std::wstring sizeType;
-		switch ( sizeAmount )
-		{
-		case 0: sizeType = L"Shrink Ray"; break;
-		case 1: sizeType = L"Reset Ray"; break;
-		case 2: sizeType = L"Growth Ray"; break;
-		}
-		spriteFont->DrawString( spriteBatch.get(), std::wstring( L"Size: " ).append( sizeType ).c_str(),
-			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::BlueViolet, 0.0f,
-			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-	}
-	spriteFont->DrawString( spriteBatch.get(),
-		std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
-		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed, 0.0f,
-		XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-	spriteBatch->End();
+	RenderSceneText();
 
 	// display imgui
 	if ( cameraToUse == "Debug" )
@@ -345,6 +296,51 @@ void Graphics::Update( float dt )
 		cameras["Default"]->GetRotationFloat3().y,
 		cameras["Default"]->GetRotationFloat3().z
 	);
+}
+
+// TEXT RENDERING //
+void Graphics::RenderSceneText()
+{
+	if ( cubeInRange && cubeHover && !holdingCube )
+	{
+		textRenderer->DrawString( L"Press 'E' to pick up cube.",
+			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen );
+	}
+	if ( toolType == CONVERT )
+	{
+		textRenderer->DrawString( L"Multi-Tool: CONVERT",
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
+
+		static std::wstring boxType;
+		switch ( boxToUse )
+		{
+		case 0: boxType = L"Default Box"; break;
+		case 1: boxType = L"Bounce Box"; break;
+		case 2: boxType = L"Jump Box"; break;
+		case 3: boxType = L"TNT Box"; break;
+		}
+
+		textRenderer->DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange );
+	}
+	else if ( toolType == RESIZE )
+	{
+		textRenderer->DrawString( L"Multi-Tool: RESIZE",
+			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
+
+		static std::wstring sizeType;
+		switch ( sizeAmount )
+		{
+		case 0: sizeType = L"Shrink Ray"; break;
+		case 1: sizeType = L"Reset Ray"; break;
+		case 2: sizeType = L"Growth Ray"; break;
+		}
+
+		textRenderer->DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
+			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::BlueViolet );
+	}
+	textRenderer->DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
+		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
 }
 
 // STENCIL OUTLINES //

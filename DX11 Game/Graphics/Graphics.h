@@ -13,8 +13,6 @@
 #include "PointLight.h"
 #include "ImGuiManager.h"
 #include "DirectionalLight.h"
-#include <dxtk/SpriteFont.h>
-#include <dxtk/SpriteBatch.h>
 #include <dxtk/WICTextureLoader.h>
 
 namespace Bind
@@ -26,6 +24,7 @@ namespace Bind
 	class Sampler;
 	class Stencil;
 	class SwapChain;
+	class TextRenderer;
 	class Viewport;
 }
 
@@ -75,6 +74,7 @@ private:
 	bool InitializeShaders();
 	bool InitializeScene();
 
+	void RenderSceneText();
 	void DrawWithOutline( Cube& cube, const XMFLOAT3& color );
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
 
@@ -90,6 +90,7 @@ private:
 	std::shared_ptr<Bind::SwapChain> swapChain;
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
+	std::shared_ptr<Bind::TextRenderer> textRenderer;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
@@ -128,9 +129,6 @@ private:
 	RenderableGameObject hubRoom;
 	RenderableGameObject skysphere;
 	std::map<std::string, std::unique_ptr<Camera>> cameras;
-
-	std::unique_ptr<SpriteFont> spriteFont;
-	std::unique_ptr<SpriteBatch> spriteBatch;
 };
 
 #endif

@@ -8,8 +8,9 @@
 #include "Viewport.h"
 #include "SwapChain.h"
 #include "Rasterizer.h"
-#include "DepthStencil.h"
 #include "InputLayout.h"
+#include "DepthStencil.h"
 #include "RenderTarget.h"
+#include "TextRenderer.h"
 
 #endif

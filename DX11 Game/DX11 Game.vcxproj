@@ -324,6 +324,7 @@
     <ClInclude Include="Graphics\Shaders.h" />
     <ClInclude Include="Graphics\Stencil.h" />
     <ClInclude Include="Graphics\SwapChain.h" />
+    <ClInclude Include="Graphics\TextRenderer.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\VertexType.h" />
     <ClInclude Include="Graphics\Vertices.h">
