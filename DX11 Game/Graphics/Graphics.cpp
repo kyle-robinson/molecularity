@@ -166,12 +166,6 @@ void Graphics::BeginFrame()
 	stencils["Off"]->Bind( *this );
 	blender->Bind( *this );
 
-	// render skysphere first
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-	rasterizers["Skybox"]->Bind( *this );
-	skysphere.Draw( cameras[cameraToUse] );
-	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
-
 	// update constant buffers
 	cb_ps_scene.data.useTexture = useTexture;
 	cb_ps_scene.data.alphaFactor = alphaFactor;
@@ -194,24 +188,26 @@ void Graphics::BeginFrame()
 
 void Graphics::RenderFrame()
 {
+	// setup model matrices before drawing
+	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
+
+	// render skysphere first
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	rasterizers["Skybox"]->Bind( *this );
+	skysphere.Draw();
+	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
+	
 	// render models w/out normals
-	pointLight.Draw( cameras[cameraToUse] );
-	directionalLight.Draw( cameras[cameraToUse] );
+	pointLight.Draw();
+	directionalLight.Draw();
 	
 	// render models w/ normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	spotLight.Draw( cameras[cameraToUse] );
-	hubRoom.Draw( cameras[cameraToUse] );
+	spotLight.Draw();
+	hubRoom.Draw();
 
 	// render models w/ normal maps
-	cb_ps_scene.data.useNormalMap = 1.0f;
-	if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
-	simpleQuad.Draw( cb_vs_matrix, brickwallTexture.Get(), brickwallNormalTexture.Get() );
-
-	cb_ps_scene.data.useNormalMap = 0.0f;
-	if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+	simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
 
 	// render objects w/ stencils
 	cubeHover ? DrawWithOutline( cube, outlineColor ) :
@@ -377,7 +373,7 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 {
 	// write pixels to the buffer, which will act as the stencil mask
 	stencils["Write"]->Bind( *this );
-	object.Draw( cameras[cameraToUse] );
+	object.Draw();
 
 	// scale the model and draw the stencil outline, ignoring the pixels previously written to the buffer
 	cb_ps_outline.data.outlineColor = color;
@@ -386,7 +382,7 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
 	stencils["Mask"]->Bind( *this );
 	object.SetScale( object.GetScaleFloat3().x + outlineScale, 1.0f, object.GetScaleFloat3().z + outlineScale );
-	object.Draw( cameras[cameraToUse] );
+	object.Draw();
 
 	// rescale the model and draw using the appropriate shaders and textures
 	if ( !cb_ps_point.ApplyChanges() ) return;
@@ -394,5 +390,5 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
 	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
-	object.Draw( cameras[cameraToUse] );
+	object.Draw();
 }

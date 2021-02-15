@@ -16,9 +16,9 @@ bool RenderableGameObject::Initialize(
 	return true;
 }
 
-void RenderableGameObject::Draw( const std::unique_ptr<Camera>& camera )
+void RenderableGameObject::Draw()
 {
-	model.Draw( worldMatrix, camera );
+	model.Draw( worldMatrix );
 }
 
 void RenderableGameObject::UpdateMatrix()

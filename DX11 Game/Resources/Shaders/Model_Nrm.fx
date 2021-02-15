@@ -115,6 +115,7 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         input.inNormal.x = normalSample.x * 2.0f - 1.0f;
         input.inNormal.y = -normalSample.y * 2.0f - 1.0f;
         input.inNormal.z = -normalSample.z * 2.0f - 1.0f;
+        input.inNormal = mul( input.inNormal, (float3x3)mul( worldMatrix, viewMatrix ) );
     }
     
     // DIRECTIONAL LIGHT
