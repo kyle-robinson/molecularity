@@ -4,13 +4,15 @@
 
 #include <map>
 #include "Cube.h"
+#include "Quad.h"
+#include "Sprite.h"
 #include "Camera.h"
 #include "Shaders.h"
+#include "Camera2D.h"
 #include "SpotLight.h"
 #include "PointLight.h"
 #include "ImGuiManager.h"
 #include "DirectionalLight.h"
-#include "RenderableGameObject.h"
 #include <dxtk/SpriteFont.h>
 #include <dxtk/SpriteBatch.h>
 #include <dxtk/WICTextureLoader.h>
@@ -40,37 +42,49 @@ public:
 	void RenderFrame();
 	void EndFrame();
 	void Update( float dt );
+	
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
+	
+	Cube& GetCube() noexcept { return cube; }
+	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; }
 
-	// Global Objects
+	// scene parameters
+	bool rasterizerSolid = true;
+	std::string cameraToUse = "Default";
+	std::string samplerToUse = "Anisotropic";
+
+	// cube parameters
 	int boxToUse = 0;
 	int sizeAmount = 2;
 	float sizeToUse = 1.0f;
 	bool cubeHover = false;
-	
-	SpotLight spotLight;
-	std::unique_ptr<Cube> cube;
-	std::unique_ptr<Camera> camera;
-	std::string selectedBox = "Default";
+	bool cubeInRange = false;
+	bool holdingCube = false;
+	std::string selectedBox = "Basic";
+
+	// light parameters
+	float useTexture = 1.0f;
+	float alphaFactor = 1.0f;
+
+	// outline parameters
+	float outlineScale = 0.1f;
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 	bool InitializeScene();
-	void SpawnControlWindow();
 
+	void DrawWithOutline( Cube& cube, const XMFLOAT3& color );
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
-	void DrawWithOutline( std::unique_ptr<Cube>& cube, const XMFLOAT3& color );
 
-	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
-	
-	// Textures
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> spaceTexture;
+
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
-	// Pipeline State
 	std::shared_ptr<Bind::Blender> blender;
 	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;
@@ -80,48 +94,43 @@ private:
 	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 
-	// Shaders
-	VertexShader vertexShader_Tex;
-	VertexShader vertexShader_Col;
+	VertexShader vertexShader_2D;
 	VertexShader vertexShader_light;
 	VertexShader vertexShader_outline;
-	PixelShader pixelShader_Tex;
-	PixelShader pixelShader_Col;
+
+	PixelShader pixelShader_2D;
 	PixelShader pixelShader_light;
 	PixelShader pixelShader_noLight;
 	PixelShader pixelShader_outline;
+	PixelShader pixelShader_2D_discard;
 
-	// Constant Buffers
-	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
-	ConstantBuffer<CB_PS_outline> cb_ps_outline;
+	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_PS_point> cb_ps_point;
+	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
+	ConstantBuffer<CB_PS_outline> cb_ps_outline;
+	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
 	ConstantBuffer<CB_PS_directional> cb_ps_directional;
-	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 
-	// Local Variables
 	UINT windowWidth;
 	UINT windowHeight;
 	ImGuiManager imgui;
 
-	bool rasterizerSolid = true;
-	std::string samplerToUse = "Anisotropic";
+	Sprite crosshair;
+	Camera2D camera2D;
 
-	float useTexture = 1.0f;
-	float alphaFactor = 1.0f;
-	float outlineScale = 0.1f;
-	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
-	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-
-	// Local Objects
+	SpotLight spotLight;
 	PointLight pointLight;
 	DirectionalLight directionalLight;
 
-	std::unique_ptr<DirectX::SpriteFont> spriteFont;
-	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	Cube cube;
+	Quad simpleQuad;
+	RenderableGameObject hubRoom;
+	RenderableGameObject skysphere;
+	std::map<std::string, std::unique_ptr<Camera>> cameras;
 
-	std::unique_ptr<Cube> skybox;
-	std::map<std::string, RenderableGameObject> renderables;
+	std::unique_ptr<SpriteFont> spriteFont;
+	std::unique_ptr<SpriteBatch> spriteBatch;
 };
 
 #endif

@@ -9,7 +9,7 @@
 class IndexBuffer
 {
 private:
-	IndexBuffer( const IndexBuffer& rhs ) {}
+	IndexBuffer( const IndexBuffer& rhs ) { UNREFERENCED_PARAMETER( rhs ); }
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 	UINT indexCount = 0;

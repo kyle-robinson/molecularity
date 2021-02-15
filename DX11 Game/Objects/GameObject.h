@@ -3,7 +3,6 @@
 #define GAMEOBJECT_H
 
 #include "Model.h"
-#define GRAVITY 9.81
 
 class GameObject
 {
@@ -41,9 +40,8 @@ public:
 protected:
 	virtual void UpdateMatrix();
 	XMFLOAT3 initialPos, initialRot, initialScale;
+	XMFLOAT3 position, rotation, scale;
 	XMVECTOR posVector, rotVector;
-	XMFLOAT3 position, rotation;
-	XMFLOAT3 scale;
 };
 
 #endif

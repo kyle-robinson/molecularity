@@ -10,12 +10,14 @@ namespace Bind
 	class DepthStencil : public GraphicsResource
 	{
 	public:
-		DepthStencil( Graphics& gfx ) : DepthStencil( gfx, static_cast<FLOAT>( gfx.GetWidth() ), static_cast<FLOAT>( gfx.GetHeight() ) ) {}
+		DepthStencil( Graphics& gfx ) : DepthStencil( gfx, static_cast<FLOAT>( gfx.GetWidth() ),
+			static_cast<FLOAT>( gfx.GetHeight() ) ) { }
 		DepthStencil( Graphics& gfx, float width, float height )
 		{
 			try
 			{
-				CD3D11_TEXTURE2D_DESC depthStencilDesc( DXGI_FORMAT_D24_UNORM_S8_UINT, width, height );
+				CD3D11_TEXTURE2D_DESC depthStencilDesc( DXGI_FORMAT_D24_UNORM_S8_UINT,
+					static_cast<UINT>( width ), static_cast<UINT>( height ) );
 				depthStencilDesc.MipLevels = 1;
 				depthStencilDesc.SampleDesc.Count = 1;
 				depthStencilDesc.SampleDesc.Quality = 0;
