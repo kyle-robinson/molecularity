@@ -172,7 +172,6 @@ void Graphics::UpdateConstantBuffers()
 	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
 }
 
-// RENDER METHODS //
 void Graphics::RenderSkySphere()
 {
 	// render skysphere first

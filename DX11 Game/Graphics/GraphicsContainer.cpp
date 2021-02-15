@@ -53,14 +53,14 @@ bool GraphicsContainer::InitializeShaders()
 {
 	try
 	{
-		// models
+		// Models
 		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx",
 			Layout::layoutPosTexNrm, ARRAYSIZE( Layout::layoutPosTexNrm ) );
 	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx" );
 		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Model_NoNrm.fx" );
 		COM_ERROR_IF_FAILED( hr, "Failed to create 'Light' shaders!" );
 
-		// sprites
+		// Sprites
 		hr = vertexShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx",
 			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
 		hr = pixelShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx" );
@@ -75,7 +75,6 @@ bool GraphicsContainer::InitializeShaders()
 	return true;
 }
 
-// RENDER STATE //
 void GraphicsContainer::ClearScene()
 {
 	// clear render target/depth stencil
@@ -91,52 +90,13 @@ void GraphicsContainer::UpdateRenderState()
 	blender->Bind( *this );
 }
 
-// TEXT RENDERING //
 void GraphicsContainer::RenderSceneText()
 {
-	if ( cubeInRange && cubeHover && !holdingCube )
-	{
-		textRenderer->DrawString( L"Press 'E' to pick up cube.",
-			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen );
-	}
-	if ( toolType == CONVERT )
-	{
-		textRenderer->DrawString( L"Multi-Tool: CONVERT",
-			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
-
-		static std::wstring boxType;
-		switch ( boxToUse )
-		{
-		case 0: boxType = L"Default Box"; break;
-		case 1: boxType = L"Bounce Box"; break;
-		case 2: boxType = L"Jump Box"; break;
-		case 3: boxType = L"TNT Box"; break;
-		}
-
-		textRenderer->DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange );
-	}
-	else if ( toolType == RESIZE )
-	{
-		textRenderer->DrawString( L"Multi-Tool: RESIZE",
-			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White );
-
-		static std::wstring sizeType;
-		switch ( sizeAmount )
-		{
-		case 0: sizeType = L"Shrink Ray"; break;
-		case 1: sizeType = L"Reset Ray"; break;
-		case 2: sizeType = L"Growth Ray"; break;
-		}
-
-		textRenderer->DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::BlueViolet );
-	}
-	textRenderer->DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( cameraToUse ) ).c_str(),
-		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
+	textRenderer->RenderCubeMoveText( *this );
+	textRenderer->RenderMultiToolText( *this );
+	textRenderer->RenderCameraText( *this );
 }
 
-// IMGUI WINDOWS //
 void GraphicsContainer::RenderImGuiWindows()
 {
 	if ( cameraToUse == "Debug" )
@@ -151,7 +111,6 @@ void GraphicsContainer::RenderImGuiWindows()
 	}
 }
 
-// PRESENT FRAME //
 void GraphicsContainer::PresentScene()
 {
 	// unbind render target
