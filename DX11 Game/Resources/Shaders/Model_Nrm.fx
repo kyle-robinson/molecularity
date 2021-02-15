@@ -113,8 +113,8 @@ float4 PS( PS_INPUT input ) : SV_TARGET
     {
         const float3 normalSample = normalTexture.Sample( samplerState, input.inTexCoord );
         input.inNormal.x = normalSample.x * 2.0f - 1.0f;
-        input.inNormal.y = normalSample.y * 2.0f - 1.0f;
-        input.inNormal.z = -normalSample.z;
+        input.inNormal.y = -normalSample.y * 2.0f - 1.0f;
+        input.inNormal.z = -normalSample.z * 2.0f - 1.0f;
     }
     
     // DIRECTIONAL LIGHT
