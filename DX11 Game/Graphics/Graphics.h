@@ -74,9 +74,21 @@ private:
 	bool InitializeShaders();
 	bool InitializeScene();
 
+	void ClearScene();
+	void UpdateRenderState();
+	void UpdateConstantBuffers();
+
+	void RenderSkySphere();
+	void RenderLights();
+	void RenderPrimitives();
+	void RenderSprites();
+
 	void RenderSceneText();
 	void DrawWithOutline( Cube& cube, const XMFLOAT3& color );
 	void DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& color );
+
+	void RenderImGuiWindows();
+	void PresentScene();
 
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;

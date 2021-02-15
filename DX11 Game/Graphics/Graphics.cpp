@@ -156,99 +156,24 @@ bool Graphics::InitializeScene()
 
 void Graphics::BeginFrame()
 {
-	// clear render target
-	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
-    depthStencil->ClearDepthStencil( *this );
-
-	// set render state
-	samplers[samplerToUse]->Bind( *this );
-	stencils["Off"]->Bind( *this );
-	blender->Bind( *this );
-
-	// update constant buffers
-	cb_ps_scene.data.useTexture = useTexture;
-	cb_ps_scene.data.alphaFactor = alphaFactor;
-	cb_ps_scene.data.useNormalMap = 0.0f;
-	if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
-
-	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-
-	directionalLight.UpdateConstantBuffer( cb_ps_directional );
-	if ( !cb_ps_directional.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
-
-	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
-	if ( !cb_ps_spot.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
+	ClearScene();
+	UpdateRenderState();
+	UpdateConstantBuffers();
 }
 
 void Graphics::RenderFrame()
 {
-	// setup model matrices before drawing
-	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
-
-	// render skysphere first
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-	rasterizers["Skybox"]->Bind( *this );
-	skysphere.Draw();
-	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
-	
-	// render models w/out normals
-	pointLight.Draw();
-	directionalLight.Draw();
-	
-	// render models w/ normals
-	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-	spotLight.Draw();
-	hubRoom.Draw();
-
-	// render models w/ normal maps
-	simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
-
-	// render objects w/ stencils
-	cubeHover ? DrawWithOutline( cube, outlineColor ) :
-		cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
-
-	// render sprites
-	Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
-	cb_ps_scene.data.useTexture = true;
-    if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-    crosshair.Draw( camera2D.GetWorldOrthoMatrix() );
+	RenderSkySphere();
+	RenderLights();
+	RenderPrimitives();
+	RenderSprites();
 }
 
 void Graphics::EndFrame()
 {
 	RenderSceneText();
-
-	// display imgui
-	if ( cameraToUse == "Debug" )
-	{
-		imgui.BeginRender();
-		imgui.SpawnInstructionWindow();
-		imgui.SpawnGraphicsWindow( *this );
-		pointLight.SpawnControlWindow();
-		directionalLight.SpawnControlWindow();
-		spotLight.SpawnControlWindow();
-		imgui.EndRender();
-	}
-
-	// unbind render target
-	renderTarget->BindAsNull( *this );
-
-	// display frame
-	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
-	if ( FAILED( hr ) )
-	{
-		hr == DXGI_ERROR_DEVICE_REMOVED ?
-            ErrorLogger::Log( device->GetDeviceRemovedReason(), "Swap Chain. Graphics device removed!" ) :
-            ErrorLogger::Log( hr, "Swap Chain failed to render frame!" );
-		exit( -1 );
-	}
+	RenderImGuiWindows();
+	PresentScene();
 }
 
 void Graphics::Update( float dt )
@@ -342,6 +267,86 @@ void Graphics::RenderSceneText()
 		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
 }
 
+// SCENE SETUP //
+void Graphics::ClearScene()
+{
+	// clear render target/depth stencil
+	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
+    depthStencil->ClearDepthStencil( *this );
+}
+
+void Graphics::UpdateRenderState()
+{
+	samplers[samplerToUse]->Bind( *this );
+	stencils["Off"]->Bind( *this );
+	blender->Bind( *this );
+}
+
+void Graphics::UpdateConstantBuffers()
+{
+	cb_ps_scene.data.useTexture = useTexture;
+	cb_ps_scene.data.alphaFactor = alphaFactor;
+	cb_ps_scene.data.useNormalMap = 0.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+
+	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
+
+	directionalLight.UpdateConstantBuffer( cb_ps_directional );
+	if ( !cb_ps_directional.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
+
+	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
+	if ( !cb_ps_spot.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
+
+	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
+}
+
+// RENDER METHODS //
+void Graphics::RenderSkySphere()
+{
+	// render skysphere first
+	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
+	rasterizers["Skybox"]->Bind( *this );
+	skysphere.Draw();
+	rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
+}
+
+void Graphics::RenderLights()
+{
+	// render models w/out normals
+	pointLight.Draw();
+	directionalLight.Draw();
+	
+	// render models w/ normals
+	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
+	spotLight.Draw();
+	hubRoom.Draw();
+}
+
+void Graphics::RenderPrimitives()
+{
+	// render models w/ normal maps
+	simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
+
+	// render objects w/ stencils
+	cubeHover ? DrawWithOutline( cube, outlineColor ) :
+		cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+}
+
+void Graphics::RenderSprites()
+{
+	Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
+	cb_ps_scene.data.useTexture = true;
+    if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+    crosshair.Draw( camera2D.GetWorldOrthoMatrix() );
+}
+
 // STENCIL OUTLINES //
 void Graphics::DrawWithOutline( Cube& cube, const XMFLOAT3& color )
 {
@@ -391,4 +396,36 @@ void Graphics::DrawWithOutline( RenderableGameObject& object, const XMFLOAT3& co
 	object.SetScale( object.GetScaleFloat3().x - outlineScale, 1.0f, object.GetScaleFloat3().z - outlineScale );
 	stencils["Off"]->Bind( *this );
 	object.Draw();
+}
+
+// IMGUI WINDOWS //
+void Graphics::RenderImGuiWindows()
+{
+	if ( cameraToUse == "Debug" )
+	{
+		imgui.BeginRender();
+		imgui.SpawnInstructionWindow();
+		imgui.SpawnGraphicsWindow( *this );
+		pointLight.SpawnControlWindow();
+		directionalLight.SpawnControlWindow();
+		spotLight.SpawnControlWindow();
+		imgui.EndRender();
+	}
+}
+
+// PRESENT FRAME //
+void Graphics::PresentScene()
+{
+	// unbind render target
+	renderTarget->BindAsNull( *this );
+
+	// display frame
+	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
+	if ( FAILED( hr ) )
+	{
+		hr == DXGI_ERROR_DEVICE_REMOVED ?
+            ErrorLogger::Log( device->GetDeviceRemovedReason(), "Swap Chain. Graphics device removed!" ) :
+            ErrorLogger::Log( hr, "Swap Chain failed to render frame!" );
+		exit( -1 );
+	}
 }
