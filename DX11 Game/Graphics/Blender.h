@@ -9,7 +9,7 @@ namespace Bind
 	class Blender : public GraphicsResource
 	{
 	public:
-		Blender( Graphics& gfx )
+		Blender( GraphicsContainer& gfx )
 		{
 			try
 			{
@@ -34,7 +34,7 @@ namespace Bind
 				return;
 			}
 		}
-		void Bind( Graphics& gfx ) noexcept override
+		void Bind( GraphicsContainer& gfx ) noexcept override
 		{
 			GetContext( gfx )->OMSetBlendState( blendState.Get(), NULL, 0xFFFFFFFF );
 		}

@@ -12,7 +12,7 @@ namespace Bind
 	class TextRenderer : public GraphicsResource
 	{
 	public:
-		TextRenderer( Graphics& gfx, const std::wstring& fileName )
+		TextRenderer( GraphicsContainer& gfx, const std::wstring& fileName )
 		{
 			spriteBatch = std::make_unique<SpriteBatch>( GetContext( gfx ) );
 			spriteFont = std::make_unique<SpriteFont>( GetDevice( gfx ),

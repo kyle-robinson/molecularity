@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ImGuiManager.h"
-#include "Graphics.h"
+#include "GraphicsContainer.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
@@ -79,9 +79,9 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
     ImGui::End();
 }
 
-void ImGuiManager::SpawnGraphicsWindow( Graphics& gfx ) const noexcept
+void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
 {
-	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
+	/*if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		// update texture usage
 		ImGui::Text( "Texture Usage: " );
@@ -139,7 +139,7 @@ void ImGuiManager::SpawnGraphicsWindow( Graphics& gfx ) const noexcept
 		ImGui::ColorEdit3( "Colour", &gfx.outlineColor.x );
 		ImGui::SliderFloat( "Scale", &gfx.outlineScale, 0.0f, 1.0f, "%.1f" );
 	}
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void ImGuiManager::SetBlackGoldStyle()

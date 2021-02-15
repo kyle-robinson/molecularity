@@ -14,11 +14,11 @@ bool Application::Initialize(
 	if ( !renderWindow.Initialize( this, hInstance, windowTitle, windowClass, width, height ) )
 		return false;
 
-	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) )
+	if ( !graphics.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
 
-	mousePick.Initialize( gfx.GetCamera( gfx.cameraToUse )->GetViewMatrix(),
-		gfx.GetCamera( gfx.cameraToUse )->GetProjectionMatrix(), width, height );
+	mousePick.Initialize( graphics.GetCamera( graphics.cameraToUse )->GetViewMatrix(),
+		graphics.GetCamera( graphics.cameraToUse )->GetProjectionMatrix(), width, height );
 
 	return true;
 }
@@ -47,13 +47,13 @@ void Application::Update()
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		if ( gfx.cameraToUse != "Static" )
+		if ( graphics.cameraToUse != "Static" )
 		{
 			if ( mouse.IsRightDown() || !cursorEnabled )
 			{
 				if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
 				{
-					gfx.GetCamera( gfx.cameraToUse )->AdjustRotation(
+					graphics.GetCamera( gfx.cameraToUse )->AdjustRotation(
 						XMFLOAT3(
 							static_cast<float>( me.GetPosY() ) * 0.005f,
 							static_cast<float>( me.GetPosX() ) * 0.005f,
@@ -65,51 +65,51 @@ void Application::Update()
 		}
 		
 		// mouse picking
-		mousePick.UpdateMatrices( gfx.GetCamera( gfx.cameraToUse )->GetViewMatrix(),
-			gfx.GetCamera( gfx.cameraToUse )->GetProjectionMatrix() );
+		mousePick.UpdateMatrices( graphics.GetCamera( graphics.cameraToUse )->GetViewMatrix(),
+			graphics.GetCamera( graphics.cameraToUse )->GetProjectionMatrix() );
 
-		if ( mousePick.TestIntersection( gfx.GetWidth() / 2, gfx.GetHeight() / 2, gfx.GetCube() ) )
-			gfx.cubeHover = true;
+		if ( mousePick.TestIntersection( gfx.GetWidth() / 2, gfx.GetHeight() / 2, graphics.GetCube() ) )
+			graphics.cubeHover = true;
 		else
-			gfx.cubeHover = false;
+			graphics.cubeHover = false;
 		
 		// manage multi-tool options
 		if ( gfx.toolType == gfx.CONVERT )
 		{
 			// change selected texture to use on box
-			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.boxToUse < 3 )
-				gfx.boxToUse++;
-			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.boxToUse > 0 )
-				gfx.boxToUse--;
+			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics.boxToUse < 3 )
+				graphics.boxToUse++;
+			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && graphics.boxToUse > 0 )
+				graphics.boxToUse--;
 
 			// update box texture on click while hovering
-			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics.cubeHover )
 			{
-				switch ( gfx.boxToUse )
+				switch ( graphics.boxToUse )
 				{
-				case 0: gfx.selectedBox = "Basic"; break;
-				case 1: gfx.selectedBox = "Bounce"; break;
-				case 2: gfx.selectedBox = "Arrow"; break;
-				case 3: gfx.selectedBox = "TNT"; break;
+				case 0: graphics.selectedBox = "Basic"; break;
+				case 1: graphics.selectedBox = "Bounce"; break;
+				case 2: graphics.selectedBox = "Arrow"; break;
+				case 3: graphics.selectedBox = "TNT"; break;
 				}
 			}
 		}
 		else if ( gfx.toolType == gfx.RESIZE )
 		{
 			// change size amount to change box to
-			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && gfx.sizeAmount < 2 )
-				gfx.sizeAmount++;
-			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && gfx.sizeAmount > 0 )
-				gfx.sizeAmount--;
+			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics.sizeAmount < 2 )
+				graphics.sizeAmount++;
+			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && graphics.sizeAmount > 0 )
+				graphics.sizeAmount--;
 
 			// set the box scale to use based on the option previously selected
-			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && gfx.cubeHover )
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics.cubeHover )
 			{
-				switch ( gfx.sizeAmount )
+				switch ( graphics.sizeAmount )
 				{
-				case 0: gfx.sizeToUse = 0.25f; break;
-				case 1: gfx.sizeToUse = 1.0f; break;
-				case 2: gfx.sizeToUse = 2.0f; break;
+				case 0: graphics.sizeToUse = 0.25f; break;
+				case 1: graphics.sizeToUse = 1.0f; break;
+				case 2: graphics.sizeToUse = 2.0f; break;
 				}
 			}
 		}
@@ -143,7 +143,7 @@ void Application::Update()
 	// camera movement
 	if ( gfx.cameraToUse == "Static" )
 	{
-		gfx.GetCamera( "Static" )->SetLookAtPos( gfx.GetCamera( "Default" )->GetPositionFloat3() );
+		graphics.GetCamera( "Static" )->SetLookAtPos( graphics.GetCamera( "Default" )->GetPositionFloat3() );
 	}
 	else
 	{
@@ -152,14 +152,14 @@ void Application::Update()
 		if ( gfx.cameraToUse == "Debug" )
 		{
 			playMode = false;
-			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( gfx.GetCamera( "Debug" ), dt );
-			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( gfx.GetCamera( "Debug" ), dt );
+			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( graphics.GetCamera( "Debug" ), dt );
+			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( graphics.GetCamera( "Debug" ), dt );
 		}
-		gfx.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.01f );
-		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( gfx.GetCamera( gfx.cameraToUse ), playMode, dt );
+		graphics.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.01f );
+		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( graphics.GetCamera( graphics.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( graphics.GetCamera( graphics.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( graphics.GetCamera( graphics.cameraToUse ), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( graphics.GetCamera( graphics.cameraToUse ), playMode, dt );
 	}
 
 	// set multi-tool type
@@ -167,29 +167,29 @@ void Application::Update()
 	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
 
 	// pick-up cube - set position relative to camera
-	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" && gfx.cubeInRange && gfx.cubeHover )
+	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" && graphics.cubeInRange && graphics.cubeHover )
 	{
-		gfx.holdingCube = true;
-		XMVECTOR cubePosition = gfx.GetCamera( gfx.cameraToUse )->GetPositionVector();
-		cubePosition += gfx.GetCamera( gfx.cameraToUse )->GetForwardVector() * 2;
-		gfx.GetCube().SetPosition( cubePosition );
-		gfx.GetCube().SetRotation(
-			gfx.GetCube().GetRotationFloat3().x,
-			gfx.GetCamera( gfx.cameraToUse )->GetRotationFloat3().y,
-			gfx.GetCube().GetRotationFloat3().z
+		graphics.holdingCube = true;
+		XMVECTOR cubePosition = graphics.GetCamera( graphics.cameraToUse )->GetPositionVector();
+		cubePosition += graphics.GetCamera( graphics.cameraToUse )->GetForwardVector() * 2;
+		graphics.GetCube().SetPosition( cubePosition );
+		graphics.GetCube().SetRotation(
+			graphics.GetCube().GetRotationFloat3().x,
+			graphics.GetCamera( graphics.cameraToUse )->GetRotationFloat3().y,
+			graphics.GetCube().GetRotationFloat3().z
 		);
 	}
 	else
 	{
-		gfx.holdingCube = false;
+		graphics.holdingCube = false;
 	}
 
-	gfx.Update( dt );
+	graphics.Update( dt );
 }
 
 void Application::Render()
 {
-	gfx.BeginFrame();
-	gfx.RenderFrame();
-	gfx.EndFrame();
+	graphics.BeginFrame();
+	graphics.RenderFrame();
+	graphics.EndFrame();
 }

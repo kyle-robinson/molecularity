@@ -9,7 +9,7 @@ namespace Bind
 	class SwapChain : public GraphicsResource
 	{
 	public:
-        SwapChain( Graphics& gfx, ID3D11DeviceContext** context, ID3D11Device** device, HWND hWnd )
+        SwapChain( GraphicsContainer& gfx, ID3D11DeviceContext** context, ID3D11Device** device, HWND hWnd )
 		{
 			try
 			{
