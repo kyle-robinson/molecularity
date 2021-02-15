@@ -259,8 +259,10 @@ void Graphics::Update( float dt )
 {
 	UNREFERENCED_PARAMETER( dt );
 
+	// update lights/skysphere
+	pointLight.SetPosition( pointLight.GetLightPosition() );
+	directionalLight.SetPosition( directionalLight.GetLightPosition() );
 	skysphere.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
-	if ( toolType == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
 
 	// camera world collisions
 	bool wallCollision = Collisions::CheckCollisionCircle( cameras["Default"], hubRoom, 25.0f );
@@ -276,15 +278,16 @@ void Graphics::Update( float dt )
 		cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
 	}
 
-	// cube range collision check
-	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
-
 	// prevent camera y-axis movement
 	cameras["Default"]->SetPosition(
 		cameras["Default"]->GetPositionFloat3().x,
 		9.0f,
 		cameras["Default"]->GetPositionFloat3().z
 	);
+	
+	// cube range collision check
+	if ( toolType == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
+	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
 
 	// set position of spot light model
 	XMVECTOR spotLightPosition = cameras["Default"]->GetPositionVector();

@@ -8,6 +8,7 @@ class Camera;
 class DirectionalLight : public Light
 {
 public:
+	inline const XMFLOAT3& const GetLightPosition() const noexcept { return position; };
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional );
 	void SpawnControlWindow();
 private:
