@@ -404,6 +404,9 @@
     <ClInclude Include="Graphics\GraphicsContainer.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\StencilOutline.h">
+      <Filter>Header Files\Graphics\Bindables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Sprite.fx">

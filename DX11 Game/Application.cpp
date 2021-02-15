@@ -53,7 +53,7 @@ void Application::Update()
 			{
 				if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
 				{
-					graphics.GetCamera( gfx.cameraToUse )->AdjustRotation(
+					graphics.GetCamera( graphics.cameraToUse )->AdjustRotation(
 						XMFLOAT3(
 							static_cast<float>( me.GetPosY() ) * 0.005f,
 							static_cast<float>( me.GetPosX() ) * 0.005f,
@@ -68,13 +68,13 @@ void Application::Update()
 		mousePick.UpdateMatrices( graphics.GetCamera( graphics.cameraToUse )->GetViewMatrix(),
 			graphics.GetCamera( graphics.cameraToUse )->GetProjectionMatrix() );
 
-		if ( mousePick.TestIntersection( gfx.GetWidth() / 2, gfx.GetHeight() / 2, graphics.GetCube() ) )
+		if ( mousePick.TestIntersection( graphics.GetWidth() / 2, graphics.GetHeight() / 2, graphics.GetCube() ) )
 			graphics.cubeHover = true;
 		else
 			graphics.cubeHover = false;
 		
 		// manage multi-tool options
-		if ( gfx.toolType == gfx.CONVERT )
+		if ( graphics.toolType == graphics.CONVERT )
 		{
 			// change selected texture to use on box
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics.boxToUse < 3 )
@@ -94,7 +94,7 @@ void Application::Update()
 				}
 			}
 		}
-		else if ( gfx.toolType == gfx.RESIZE )
+		else if ( graphics.toolType == graphics.RESIZE )
 		{
 			// change size amount to change box to
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics.sizeAmount < 2 )
@@ -116,12 +116,12 @@ void Application::Update()
 	}
 
 	// set camera to use
-	if ( keyboard.KeyIsPressed( VK_F1 ) ) gfx.cameraToUse = "Default";
-	if ( keyboard.KeyIsPressed( VK_F2 ) ) gfx.cameraToUse = "Static";
-	if ( keyboard.KeyIsPressed( VK_F3 ) ) gfx.cameraToUse = "Debug";
+	if ( keyboard.KeyIsPressed( VK_F1 ) ) graphics.cameraToUse = "Default";
+	if ( keyboard.KeyIsPressed( VK_F2 ) ) graphics.cameraToUse = "Static";
+	if ( keyboard.KeyIsPressed( VK_F3 ) ) graphics.cameraToUse = "Debug";
 
 	// set cursor enabled/disabled
-	if ( gfx.cameraToUse == "Debug" )
+	if ( graphics.cameraToUse == "Debug" )
 	{
 		if ( keyboard.KeyIsPressed( VK_HOME ) && !cursorEnabled )
 		{
@@ -141,7 +141,7 @@ void Application::Update()
 	}
 
 	// camera movement
-	if ( gfx.cameraToUse == "Static" )
+	if ( graphics.cameraToUse == "Static" )
 	{
 		graphics.GetCamera( "Static" )->SetLookAtPos( graphics.GetCamera( "Default" )->GetPositionFloat3() );
 	}
@@ -149,13 +149,13 @@ void Application::Update()
 	{
 		// update mode to ignore y-movement when not in debug mode
 		bool playMode = true;
-		if ( gfx.cameraToUse == "Debug" )
+		if ( graphics.cameraToUse == "Debug" )
 		{
 			playMode = false;
 			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( graphics.GetCamera( "Debug" ), dt );
 			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( graphics.GetCamera( "Debug" ), dt );
 		}
-		graphics.GetCamera( gfx.cameraToUse )->SetCameraSpeed( 0.01f );
+		graphics.GetCamera( graphics.cameraToUse )->SetCameraSpeed( 0.01f );
 		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( graphics.GetCamera( graphics.cameraToUse ), playMode, dt );
 		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( graphics.GetCamera( graphics.cameraToUse ), playMode, dt );
 		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( graphics.GetCamera( graphics.cameraToUse ), playMode, dt );
@@ -163,11 +163,11 @@ void Application::Update()
 	}
 
 	// set multi-tool type
-	if ( keyboard.KeyIsPressed( '1' ) ) gfx.toolType = gfx.CONVERT;
-	if ( keyboard.KeyIsPressed( '2' ) ) gfx.toolType = gfx.RESIZE;
+	if ( keyboard.KeyIsPressed( '1' ) ) graphics.toolType = graphics.CONVERT;
+	if ( keyboard.KeyIsPressed( '2' ) ) graphics.toolType = graphics.RESIZE;
 
 	// pick-up cube - set position relative to camera
-	if ( keyboard.KeyIsPressed( 'E' ) && gfx.cameraToUse != "Static" && graphics.cubeInRange && graphics.cubeHover )
+	if ( keyboard.KeyIsPressed( 'E' ) && graphics.cameraToUse != "Static" && graphics.cubeInRange && graphics.cubeHover )
 	{
 		graphics.holdingCube = true;
 		XMVECTOR cubePosition = graphics.GetCamera( graphics.cameraToUse )->GetPositionVector();

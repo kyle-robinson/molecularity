@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include "Rasterizer.h"
 #include "Collisions.h"
+#include "StencilOutline.h"
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
@@ -13,14 +14,14 @@ bool Graphics::InitializeScene()
 {
 	try
 	{
-		//   MODELS   //
+		// models
 		if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 
 		if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
 
-		//   LIGHTS   //
+		// lights
 		if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
 		pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
@@ -32,7 +33,7 @@ bool Graphics::InitializeScene()
 		if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 		spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
-		//   PRIMITIVES   //
+		// primitibes
 		if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
 		cube.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 
@@ -40,11 +41,11 @@ bool Graphics::InitializeScene()
 		simpleQuad.SetInitialPosition( 0.0f, 5.0f, -5.0f );
 		simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
-		//   SPRITES   //
+		// sprites
 		if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
         crosshair.SetInitialPosition( GetWidth() / 2 - crosshair.GetWidth() / 2, GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
 
-		//   CAMERAS   //
+		// cameras
 		XMFLOAT2 aspectRatio = { static_cast<float>( GetWidth() ), static_cast<float>( GetHeight() ) };
 		cameras.emplace( "Default", std::make_unique<Camera>( 0.0f, 9.0f, -15.0f ) );
 		cameras.emplace( "Static", std::make_unique<Camera>( 0.0f, 9.0f, 0.0f ) );
@@ -53,7 +54,7 @@ bool Graphics::InitializeScene()
 			cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 		camera2D.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
 
-		//   TEXTURES   //
+		// textures
 		HRESULT hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures["Basic"].GetAddressOf() );
 		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
 		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures["Arrow"].GetAddressOf() );
@@ -62,9 +63,8 @@ bool Graphics::InitializeScene()
 		hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall_normal.jpg", nullptr, brickwallNormalTexture.GetAddressOf() );
         COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 
-		//   CONSTANT BUFFERS   //
+		// constant buffers
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
-		hr = cb_ps_outline.Initialize( device.Get(), context.Get() );
 		hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
 		hr = cb_ps_point.Initialize( device.Get(), context.Get() );
 		hr = cb_ps_directional.Initialize( device.Get(), context.Get() );
@@ -91,6 +91,7 @@ void Graphics::RenderFrame()
 {
 	RenderSkySphere();
 	RenderLights();
+	RenderModels();
 	RenderPrimitives();
 	RenderSprites();
 }
@@ -148,6 +149,29 @@ void Graphics::Update( float dt )
 	);
 }
 
+void Graphics::UpdateConstantBuffers()
+{
+	cb_ps_scene.data.useTexture = useTexture;
+	cb_ps_scene.data.alphaFactor = alphaFactor;
+	cb_ps_scene.data.useNormalMap = 0.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+
+	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
+
+	directionalLight.UpdateConstantBuffer( cb_ps_directional );
+	if ( !cb_ps_directional.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
+
+	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
+	if ( !cb_ps_spot.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
+
+	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
+}
+
 // RENDER METHODS //
 void Graphics::RenderSkySphere()
 {
@@ -167,6 +191,10 @@ void Graphics::RenderLights()
 	// render models w/ normals
 	context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 	spotLight.Draw();
+}
+
+void Graphics::RenderModels()
+{
 	hubRoom.Draw();
 }
 
@@ -176,7 +204,9 @@ void Graphics::RenderPrimitives()
 	simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
 
 	// render objects w/ stencils
-	cubeHover ? DrawWithOutline( cube, outlineScale, outlineColor, boxTextures[selectedBox].Get() ) :
+	if ( cubeHover )
+		stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix, boxTextures[selectedBox].Get() );
+	else
 		cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 }
 

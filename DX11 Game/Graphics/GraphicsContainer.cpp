@@ -28,6 +28,7 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
         stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
         stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
+		stencilOutline = std::make_shared<Bind::StencilOutline>( *this );
 
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
         rasterizers.emplace( "Skybox", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
@@ -52,25 +53,19 @@ bool GraphicsContainer::InitializeShaders()
 {
 	try
 	{
-		//   MODELS   //
+		// models
 		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx",
 			Layout::layoutPosTexNrm, ARRAYSIZE( Layout::layoutPosTexNrm ) );
 	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx" );
 		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Model_NoNrm.fx" );
 		COM_ERROR_IF_FAILED( hr, "Failed to create 'Light' shaders!" );
 
-		//   SPRITES   //
+		// sprites
 		hr = vertexShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx",
 			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
 		hr = pixelShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx" );
 		hr = pixelShader_2D_discard.Initialize( device, L"Resources\\Shaders\\Sprite_Discard.fx" );
         COM_ERROR_IF_FAILED( hr, "Failed to create sprite 'Sprite' shaders!" );
-
-		//   OUTLINE   //
-		hr = vertexShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx",
-			Layout::layoutPosCol, ARRAYSIZE( Layout::layoutPosCol ) );
-		hr = pixelShader_outline.Initialize( device, L"Resources\\Shaders\\Model_Outline.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create 'Colour' shaders!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -94,80 +89,6 @@ void GraphicsContainer::UpdateRenderState()
 	samplers[samplerToUse]->Bind( *this );
 	stencils["Off"]->Bind( *this );
 	blender->Bind( *this );
-}
-
-void GraphicsContainer::UpdateConstantBuffers()
-{
-	cb_ps_scene.data.useTexture = useTexture;
-	cb_ps_scene.data.alphaFactor = alphaFactor;
-	cb_ps_scene.data.useNormalMap = 0.0f;
-	if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
-
-	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-
-	directionalLight.UpdateConstantBuffer( cb_ps_directional );
-	if ( !cb_ps_directional.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
-
-	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
-	if ( !cb_ps_spot.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
-
-	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
-}
-
-// STENCIL OUTLINES //
-void GraphicsContainer::DrawWithOutline( Cube& cube, float scale, XMFLOAT3& color, ID3D11ShaderResourceView* texture )
-{
-	// write pixels to the buffer, which will act as the stencil mask
-	stencils["Write"]->Bind( *this );
-	cube.Draw( cb_vs_matrix, texture );
-
-	// scale the cube and draw the stencil outline, ignoring the pixels previously written to the buffer
-	cb_ps_outline.data.outlineColor = color;
-    if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
-	stencils["Mask"]->Bind( *this );
-	cube.SetScale( cube.GetScaleFloat3().x + scale,
-		cube.GetScaleFloat3().y + scale, cube.GetScaleFloat3().z + scale );
-	cube.Draw( cb_vs_matrix, texture );
-
-	// rescale the cube and draw using the appropriate shaders and textures
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	cube.SetScale( cube.GetScaleFloat3().x - scale,
-		cube.GetScaleFloat3().y - scale, cube.GetScaleFloat3().z - scale );
-	stencils["Off"]->Bind( *this );
-	cube.Draw( cb_vs_matrix, texture );
-}
-
-void GraphicsContainer::DrawWithOutline( RenderableGameObject& object, float scale, XMFLOAT3& color )
-{
-	// write pixels to the buffer, which will act as the stencil mask
-	stencils["Write"]->Bind( *this );
-	object.Draw();
-
-	// scale the model and draw the stencil outline, ignoring the pixels previously written to the buffer
-	cb_ps_outline.data.outlineColor = color;
-    if ( !cb_ps_outline.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_outline, pixelShader_outline );
-	stencils["Mask"]->Bind( *this );
-	object.SetScale( object.GetScaleFloat3().x + scale, 1.0f, object.GetScaleFloat3().z + scale );
-	object.Draw();
-
-	// rescale the model and draw using the appropriate shaders and textures
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-	Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_light );
-	object.SetScale( object.GetScaleFloat3().x - scale, 1.0f, object.GetScaleFloat3().z - scale );
-	stencils["Off"]->Bind( *this );
-	object.Draw();
 }
 
 // TEXT RENDERING //

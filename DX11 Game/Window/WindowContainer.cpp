@@ -1,5 +1,6 @@
 #include "WindowContainer.h"
 #include <imgui/imgui.h>
+#include <memory>
 
 WindowContainer::WindowContainer()
 {

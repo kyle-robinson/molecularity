@@ -9,6 +9,11 @@
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
 
+namespace Bind
+{
+	class StencilOutline;
+}
+
 class Graphics : public GraphicsContainer
 {
 public:
@@ -26,18 +31,22 @@ public:
 	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; }
 private:
 	bool InitializeScene();
+	void UpdateConstantBuffers();
 	void RenderSkySphere();
 	void RenderLights();
+	void RenderModels();
 	void RenderPrimitives();
 	void RenderSprites();
 public:
 	// VARIABLES //
-	float outlineScale = 0.1f;
 	bool rasterizerSolid = true;
 	std::string selectedBox = "Basic";
-	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
 private:
+	ConstantBuffer<CB_PS_spot> cb_ps_spot;
+	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
+	ConstantBuffer<CB_PS_directional> cb_ps_directional;
+
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
