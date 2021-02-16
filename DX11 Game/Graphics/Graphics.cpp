@@ -237,7 +237,7 @@ void Graphics::EndFrame()
 			XMFLOAT2( windowWidth / 2 - 120.0f, windowHeight / 2 - 40.0f ), Colors::LightGreen, 0.0f,
 			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	}
-	if ( toolType == CONVERT )
+	if ( cube.GetEditableProperties()->GetType() == CONVERT )
 	{
 		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: CONVERT",
 			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
@@ -255,7 +255,7 @@ void Graphics::EndFrame()
 			XMFLOAT2( windowWidth - 260.0f, 0.0f ), Colors::Orange, 0.0f,
 			XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
 	}
-	else if ( toolType == RESIZE )
+	else if ( cube.GetEditableProperties()->GetType() == RESIZE )
 	{
 		spriteFont->DrawString( spriteBatch.get(), L"Multi-Tool: RESIZE",
 			XMFLOAT2( windowWidth - 760.0f, 0.0f ), Colors::White, 0.0f,
@@ -309,7 +309,7 @@ void Graphics::Update( float dt )
 	UNREFERENCED_PARAMETER( dt );
 
 	skysphere.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
-	if ( toolType == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
+	if ( cube.GetEditableProperties()->GetType() == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
 
 	// camera world collisions
 	bool wallCollision = Collisions::CheckCollisionCircle( cameras["Default"], hubRoom, 25.0f );

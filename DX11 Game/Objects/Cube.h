@@ -3,16 +3,25 @@
 #define CUBE_H
 
 #include "RenderableGameObject.h"
+#include "CubeProperties.h"
 
 class Cube : public RenderableGameObject
 {
 public:
 	bool Initialize( ID3D11DeviceContext* context, ID3D11Device* device );
 	void Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept;
+
+
+	CubeProperties* GetEditableProperties() { return editableProperties; }
+
+
 private:
 	ID3D11DeviceContext* context;
 	VertexBuffer<Vertex3D> vb_cube;
 	IndexBuffer ib_cube;
+
+	CubeProperties* editableProperties;
+
 };
 
 #endif
