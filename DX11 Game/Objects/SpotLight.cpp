@@ -6,7 +6,7 @@
 
 void SpotLight::SpawnControlWindow()
 {
-	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
+	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
 	{
 		ImGui::Text( "Usage: " );
 		ImGui::SameLine();

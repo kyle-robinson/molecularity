@@ -106,6 +106,7 @@ void GraphicsContainer::RenderImGuiWindows()
 		pointLight.SpawnControlWindow();
 		directionalLight.SpawnControlWindow();
 		spotLight.SpawnControlWindow();
+		fog.SpawnControlWindow();
 		imgui.EndRender();
 	}
 }

@@ -3,6 +3,7 @@
 #define CONSTANTBUFFERTYPES_H
 
 #include <DirectXMath.h>
+using namespace DirectX;
 
 struct CB_VS_matrix
 {
@@ -14,6 +15,15 @@ struct CB_VS_matrix
 struct CB_VS_matrix_2D
 {
 	XMMATRIX wvpMatrix;
+};
+
+struct CB_VS_fog
+{
+	XMFLOAT3 fogColor;
+	float fogStart;
+
+	float fogEnd;
+	BOOL fogEnable;
 };
 
 struct CB_PS_outline

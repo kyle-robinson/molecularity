@@ -25,10 +25,10 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Camera2D.cpp">
-      <Filter>Source\Objects\Cameras</Filter>
+      <Filter>Source\Graphics\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Camera.cpp">
-      <Filter>Source\Objects\Cameras</Filter>
+      <Filter>Source\Graphics\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="Utility\Collisions.cpp">
       <Filter>Source\Utility</Filter>
@@ -55,7 +55,7 @@
       <Filter>Source\Utility\Logging</Filter>
     </ClCompile>
     <ClCompile Include="Objects\DirectionalLight.cpp">
-      <Filter>Source\Objects\Lights</Filter>
+      <Filter>Source\Graphics\Drawables\Lights</Filter>
     </ClCompile>
     <ClCompile Include="Model\Colour.cpp">
       <Filter>Source\Model</Filter>
@@ -63,14 +63,11 @@
     <ClCompile Include="Graphics\GraphicsContainer.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\ImGuiManager.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Input\Keyboard.cpp">
       <Filter>Source\Input</Filter>
     </ClCompile>
     <ClCompile Include="Objects\Light.cpp">
-      <Filter>Source\Objects\Lights</Filter>
+      <Filter>Source\Graphics\Drawables\Lights</Filter>
     </ClCompile>
     <ClCompile Include="Model\Mesh.cpp">
       <Filter>Source\Model</Filter>
@@ -85,25 +82,19 @@
       <Filter>Source\Input</Filter>
     </ClCompile>
     <ClCompile Include="Objects\PointLight.cpp">
-      <Filter>Source\Objects\Lights</Filter>
+      <Filter>Source\Graphics\Drawables\Lights</Filter>
     </ClCompile>
     <ClCompile Include="Objects\GameObject.cpp">
-      <Filter>Source\Objects\Managers</Filter>
+      <Filter>Source\Graphics\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Objects\GameObject2D.cpp">
-      <Filter>Source\Objects\Managers</Filter>
+      <Filter>Source\Graphics\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Objects\GameObject3D.cpp">
-      <Filter>Source\Objects\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Quad.cpp">
-      <Filter>Source\Objects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Cube.cpp">
-      <Filter>Source\Objects\Primitives</Filter>
+      <Filter>Source\Graphics\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Objects\RenderableGameObject.cpp">
-      <Filter>Source\Objects\Managers</Filter>
+      <Filter>Source\Graphics\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Window\RenderWindow.cpp">
       <Filter>Source\Window</Filter>
@@ -117,9 +108,6 @@
     <ClCompile Include="Utility\Timer.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Shaders.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\stdafx.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
@@ -127,13 +115,28 @@
       <Filter>Source\Model</Filter>
     </ClCompile>
     <ClCompile Include="Objects\SpotLight.cpp">
-      <Filter>Source\Objects\Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Sprite.cpp">
-      <Filter>Source\Objects\Managers</Filter>
+      <Filter>Source\Graphics\Drawables\Lights</Filter>
     </ClCompile>
     <ClCompile Include="Utility\StringConverter.cpp">
       <Filter>Source\Utility\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ImGuiManager.cpp">
+      <Filter>Source\Graphics\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Shaders.cpp">
+      <Filter>Source\Graphics\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Sprite.cpp">
+      <Filter>Source\Graphics\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Quad.cpp">
+      <Filter>Source\Graphics\Drawables\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Cube.cpp">
+      <Filter>Source\Graphics\Drawables\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Fog.cpp">
+      <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,10 +144,10 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Camera.h">
-      <Filter>Headers\Objects\Cameras</Filter>
+      <Filter>Headers\Graphics\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Camera2D.h">
-      <Filter>Headers\Objects\Cameras</Filter>
+      <Filter>Headers\Graphics\Cameras</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Collisions.h">
       <Filter>Headers\Utility</Filter>
@@ -174,16 +177,10 @@
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="Objects\DirectionalLight.h">
-      <Filter>Headers\Objects\Lights</Filter>
+      <Filter>Headers\Graphics\Drawables\Lights</Filter>
     </ClInclude>
     <ClInclude Include="Utility\ErrorLogger.h">
       <Filter>Headers\Utility\Logging</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\CubeProperties.h">
-      <Filter>Headers\Objects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Cube.h">
-      <Filter>Headers\Objects\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imconfig.h">
       <Filter>Resources\ImGui</Filter>
@@ -218,9 +215,6 @@
     <ClInclude Include="Graphics\GraphicsResource.h">
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\ImGuiManager.h">
-      <Filter>Headers\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\InputLayout.h">
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
@@ -249,10 +243,10 @@
       <Filter>Headers\Window</Filter>
     </ClInclude>
     <ClInclude Include="Objects\SpotLight.h">
-      <Filter>Headers\Objects\Lights</Filter>
+      <Filter>Headers\Graphics\Drawables\Lights</Filter>
     </ClInclude>
     <ClInclude Include="Objects\PointLight.h">
-      <Filter>Headers\Objects\Lights</Filter>
+      <Filter>Headers\Graphics\Drawables\Lights</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Indices.h">
       <Filter>Headers\Graphics\Data</Filter>
@@ -272,29 +266,23 @@
     <ClInclude Include="Input\Keyboard.h">
       <Filter>Headers\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Quad.h">
-      <Filter>Headers\Objects\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\GameObject3D.h">
-      <Filter>Headers\Objects\Managers</Filter>
+      <Filter>Headers\Graphics\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Objects\GameObject.h">
-      <Filter>Headers\Objects\Managers</Filter>
+      <Filter>Headers\Graphics\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Objects\GameObject2D.h">
-      <Filter>Headers\Objects\Managers</Filter>
+      <Filter>Headers\Graphics\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Light.h">
-      <Filter>Headers\Objects\Lights</Filter>
+      <Filter>Headers\Graphics\Drawables\Lights</Filter>
     </ClInclude>
     <ClInclude Include="Model\Mesh.h">
       <Filter>Headers\Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\Model.h">
       <Filter>Headers\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Shaders.h">
-      <Filter>Headers\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\SwapChain.h">
       <Filter>Headers\Graphics\Bindables</Filter>
@@ -303,16 +291,13 @@
       <Filter>Headers\Model</Filter>
     </ClInclude>
     <ClInclude Include="Objects\RenderableGameObject.h">
-      <Filter>Headers\Objects\Managers</Filter>
+      <Filter>Headers\Graphics\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Model\ModelData.h">
       <Filter>Headers\Graphics\Data</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Viewport.h">
       <Filter>Headers\Graphics\Bindables</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Sprite.h">
-      <Filter>Headers\Objects\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Utility\StringConverter.h">
       <Filter>Headers\Utility\Logging</Filter>
@@ -334,6 +319,27 @@
     </ClInclude>
     <ClInclude Include="Utility\Timer.h">
       <Filter>Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Shaders.h">
+      <Filter>Headers\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ImGuiManager.h">
+      <Filter>Headers\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Sprite.h">
+      <Filter>Headers\Graphics\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Quad.h">
+      <Filter>Headers\Graphics\Drawables\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Cube.h">
+      <Filter>Headers\Graphics\Drawables\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CubeProperties.h">
+      <Filter>Headers\Graphics\Drawables\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Fog.h">
+      <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -485,14 +491,8 @@
     <Filter Include="Headers\Utility">
       <UniqueIdentifier>{99fb9d5a-cd65-4e81-b8e2-b8ec8dfb63bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Objects">
-      <UniqueIdentifier>{242e0ae8-e9e7-418b-a851-887c1883e7f2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Input">
       <UniqueIdentifier>{90b95aa6-f275-4901-b1b7-4b6093f29801}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Objects">
-      <UniqueIdentifier>{cdea6e79-2ea7-464e-95bc-23563d78b3c8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Model">
       <UniqueIdentifier>{46eeb48a-ba7d-4f92-ae69-32eaf7dc93aa}</UniqueIdentifier>
@@ -509,44 +509,17 @@
     <Filter Include="Headers\Graphics\Bindables">
       <UniqueIdentifier>{29105465-0577-4901-bef6-4c4e6197a247}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Graphics\Data">
-      <UniqueIdentifier>{20d77e7c-1574-498d-b84d-cb0128a3a3e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headers\Graphics\Buffers">
       <UniqueIdentifier>{d2d5e6f3-30f1-49be-afe7-8bb9d68aa5e8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Headers\Model">
       <UniqueIdentifier>{34542dee-f683-4368-bda8-3f6d8e737a38}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Objects\Cameras">
-      <UniqueIdentifier>{2b5ec36f-6b84-4dbc-8957-7261d7af5f1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Objects\Lights">
-      <UniqueIdentifier>{dd0fee10-2c72-46f9-bc73-97c4d53a19a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Objects\Cameras">
-      <UniqueIdentifier>{0c347300-ae3e-479e-960e-433718f487b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Objects\Lights">
-      <UniqueIdentifier>{a098b389-6247-4eea-809a-628a716deced}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Utility\Logging">
       <UniqueIdentifier>{bc1ec021-17b5-4c17-bec5-5eb61661cd49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Headers\Utility\Logging">
       <UniqueIdentifier>{637e3c98-c202-4f8a-b84d-381eb89fc2b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Objects\Managers">
-      <UniqueIdentifier>{cea79851-2cbf-4909-9ca3-f6aed91cfcd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Objects\Managers">
-      <UniqueIdentifier>{3f929c8d-56a9-4041-b038-445473f1a1ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Headers\Objects\Primitives">
-      <UniqueIdentifier>{5a325e01-1607-4695-a88a-faad4ee03957}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Objects\Primitives">
-      <UniqueIdentifier>{7c9ef99f-ec84-451e-8361-cf1170c7e0ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources\JSON">
       <UniqueIdentifier>{af0c37ec-0c6f-41aa-914a-7ddf56dfe8ff}</UniqueIdentifier>
@@ -571,6 +544,48 @@
     </Filter>
     <Filter Include="Resources\Miscellaneous">
       <UniqueIdentifier>{f0db4a89-36ec-4343-bcec-5ebd4281a9c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Bindables">
+      <UniqueIdentifier>{f719637d-3a88-4b61-b8aa-65a6a0b87e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Cameras">
+      <UniqueIdentifier>{0c347300-ae3e-479e-960e-433718f487b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Managers">
+      <UniqueIdentifier>{cea79851-2cbf-4909-9ca3-f6aed91cfcd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Drawables">
+      <UniqueIdentifier>{7c9ef99f-ec84-451e-8361-cf1170c7e0ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Drawables\Lights">
+      <UniqueIdentifier>{a098b389-6247-4eea-809a-628a716deced}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Graphics\Data">
+      <UniqueIdentifier>{20d77e7c-1574-498d-b84d-cb0128a3a3e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Drawables\Primitives">
+      <UniqueIdentifier>{1cad9884-307e-42da-80ad-76810d5fbc97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Graphics\Drawables">
+      <UniqueIdentifier>{5a325e01-1607-4695-a88a-faad4ee03957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Graphics\Drawables\Lights">
+      <UniqueIdentifier>{dd0fee10-2c72-46f9-bc73-97c4d53a19a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Graphics\Drawables\Primitives">
+      <UniqueIdentifier>{a9d72f97-0e76-403b-b249-2a7039072217}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Graphics\Cameras">
+      <UniqueIdentifier>{2b5ec36f-6b84-4dbc-8957-7261d7af5f1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Graphics\Managers">
+      <UniqueIdentifier>{3f929c8d-56a9-4041-b038-445473f1a1ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Graphics\Systems">
+      <UniqueIdentifier>{8458b8d9-ef84-498a-b6e5-78742a8a6e14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\Systems">
+      <UniqueIdentifier>{f25c3d41-b8bf-4f88-bfda-1187fcbaff1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

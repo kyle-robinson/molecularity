@@ -65,12 +65,13 @@ bool Graphics::InitializeScene()
         COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 
 		// constant buffers
+		hr = cb_ps_directional.Initialize( device.Get(), context.Get() );
+		hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
 		hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 		hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
 		hr = cb_ps_point.Initialize( device.Get(), context.Get() );
-		hr = cb_ps_directional.Initialize( device.Get(), context.Get() );
 		hr = cb_ps_spot.Initialize( device.Get(), context.Get() );
-		hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
+		hr = cb_vs_fog.Initialize( device.Get(), context.Get() );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
 	}
 	catch ( COMException& exception )
@@ -156,6 +157,11 @@ void Graphics::UpdateConstantBuffers()
 {
 	stencilOutline->SetOutlineColor( outlineColor );
 	stencilOutline->SetOutlineScale( outlineScale );
+
+	fog.UpdateConstantBuffer( cb_vs_fog );
+	if ( !cb_vs_fog.ApplyChanges() ) return;
+	context->VSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
+	context->PSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
 	
 	cb_ps_scene.data.useTexture = useTexture;
 	cb_ps_scene.data.alphaFactor = alphaFactor;

@@ -3,7 +3,7 @@
 #define GRAPHICSCONTAINER_H
 
 #include <map>
-#include "Cube.h"
+#include "Fog.h"
 #include "Camera.h"
 #include "Shaders.h"
 #include "SpotLight.h"
@@ -15,6 +15,7 @@ namespace Bind
 {
 	class Blender;
 	class DepthStencil;
+	class Fog;
 	class Rasterizer;
 	class RenderTarget;
 	class Sampler;
@@ -24,8 +25,6 @@ namespace Bind
 	class TextRenderer;
 	class Viewport;
 }
-
-class Cube;
 
 class GraphicsContainer
 {
@@ -71,6 +70,7 @@ protected:
 	std::shared_ptr<Bind::StencilOutline> stencilOutline;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 
+	Fog fog;
 	SpotLight spotLight;
 	PointLight pointLight;
 	DirectionalLight directionalLight;
