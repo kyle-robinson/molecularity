@@ -81,17 +81,17 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 
 void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
 {
-	/*if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
+	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		// update texture usage
 		ImGui::Text( "Texture Usage: " );
 		ImGui::SameLine();
 		static int textureGroup = 0;
 		if ( ImGui::RadioButton( "Apply", &textureGroup, 0 ) )
-			gfx.useTexture = 1.0f;
+            gfx.useTexture = 1.0f;
 		ImGui::SameLine();
 		if ( ImGui::RadioButton( "Discard", &textureGroup, 1 ) )
-			gfx.useTexture = 0.0f;
+            gfx.useTexture = 0.0f;
 		
 		// update rasterizer
 		ImGui::Text( "Rasterizer: " );
@@ -139,7 +139,7 @@ void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
 		ImGui::ColorEdit3( "Colour", &gfx.outlineColor.x );
 		ImGui::SliderFloat( "Scale", &gfx.outlineScale, 0.0f, 1.0f, "%.1f" );
 	}
-	ImGui::End();*/
+	ImGui::End();
 }
 
 void ImGuiManager::SetBlackGoldStyle()

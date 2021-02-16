@@ -8,8 +8,8 @@ class Camera;
 class PointLight : public Light
 {
 public:
-	inline const XMFLOAT3& const GetLightPosition() const noexcept { return position; };
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera );
+	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
 	void SpawnControlWindow();
 private:
 	float enable = true;

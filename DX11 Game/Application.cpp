@@ -124,20 +124,13 @@ void Application::Update()
 	if ( graphics.cameraToUse == "Debug" )
 	{
 		if ( keyboard.KeyIsPressed( VK_HOME ) && !cursorEnabled )
-		{
 			EnableCursor();
-			cursorEnabled = true;
-		}
 		else if ( keyboard.KeyIsPressed( VK_END ) && cursorEnabled )
-		{
 			DisableCursor();
-			cursorEnabled = false;
-		}
 	}
 	else
 	{
 		DisableCursor();
-		cursorEnabled = false;
 	}
 
 	// camera movement

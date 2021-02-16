@@ -9,15 +9,12 @@
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
 
-namespace Bind
-{
-	class StencilOutline;
-}
+namespace Bind { class StencilOutline; }
 
 class Graphics : public GraphicsContainer
 {
 public:
-	// FUNCTIONS //
+	// Functions
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
@@ -37,11 +34,15 @@ private:
 	void RenderModels();
 	void RenderPrimitives();
 	void RenderSprites();
-public:
-	// VARIABLES //
-	bool rasterizerSolid = true;
-	std::string selectedBox = "Basic";
-private:
+
+	// Variables
+	Cube cube;
+	Quad simpleQuad;
+	Sprite crosshair;
+	Camera2D camera2D;
+	RenderableGameObject hubRoom;
+	RenderableGameObject skysphere;
+
 	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
@@ -50,13 +51,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
 	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
-
-	Cube cube;
-	Quad simpleQuad;
-	Sprite crosshair;
-	Camera2D camera2D;
-	RenderableGameObject hubRoom;
-	RenderableGameObject skysphere;
 };
 
 #endif

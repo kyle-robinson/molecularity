@@ -11,21 +11,13 @@ namespace Bind
 {
 	class TextRenderer : public GraphicsResource
 	{
-	private:
+	public:
 		TextRenderer( GraphicsContainer& gfx, const std::wstring& fileName )
 		{
 			spriteBatch = std::make_unique<SpriteBatch>( GetContext( gfx ) );
 			spriteFont = std::make_unique<SpriteFont>( GetDevice( gfx ),
 				std::wstring( L"Resources\\Fonts\\" ).append( fileName ).c_str() );
 		}
-		void DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color )
-		{
-			spriteBatch->Begin();
-			spriteFont->DrawString( spriteBatch.get(), text.c_str(), position, color, 0.0f,
-				XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-			spriteBatch->End();
-		}
-	public:
 		void RenderCubeMoveText( GraphicsContainer& gfx )
 		{
 			if ( gfx.cubeInRange && gfx.cubeHover && !gfx.holdingCube )
@@ -72,6 +64,14 @@ namespace Bind
 		{
 			DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( gfx.cameraToUse ) ).c_str(),
 				XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
+		}
+	private:
+		void DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color )
+		{
+			spriteBatch->Begin();
+			spriteFont->DrawString( spriteBatch.get(), text.c_str(), position, color, 0.0f,
+				XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
+			spriteBatch->End();
 		}
 	private:
 		std::unique_ptr<SpriteFont> spriteFont;

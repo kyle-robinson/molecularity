@@ -245,7 +245,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	}
 	case WM_INPUT:
 	{
-		UINT dataSize;
+		UINT dataSize = 0u;
 		GetRawInputData( reinterpret_cast<HRAWINPUT>( lParam ), RID_INPUT, NULL, &dataSize, sizeof( RAWINPUTHEADER ) );
 		if ( dataSize > 0 )
 		{

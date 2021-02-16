@@ -151,6 +151,9 @@ void Graphics::Update( float dt )
 
 void Graphics::UpdateConstantBuffers()
 {
+	stencilOutline->SetOutlineColor( outlineColor );
+	stencilOutline->SetOutlineScale( outlineScale );
+	
 	cb_ps_scene.data.useTexture = useTexture;
 	cb_ps_scene.data.alphaFactor = alphaFactor;
 	cb_ps_scene.data.useNormalMap = 0.0f;

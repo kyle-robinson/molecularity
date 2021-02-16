@@ -11,7 +11,7 @@ namespace Bind
 	class StencilOutline : public GraphicsResource
 	{
 	public:
-		StencilOutline( GraphicsContainer& gfx, float outlineScale = 0.1f, XMFLOAT3 outlineColor = XMFLOAT3( 1.0f, 0.6f, 0.1f ) )
+		StencilOutline( GraphicsContainer& gfx, float outlineScale, XMFLOAT3 outlineColor )
 			: scale( outlineScale ), color( outlineColor )
 		{			
 			try
@@ -31,6 +31,8 @@ namespace Bind
 				return;
 			}
 		}
+		void SetOutlineScale( float outlineScale ) noexcept { scale = outlineScale; }
+		void SetOutlineColor( XMFLOAT3 outlineColor ) noexcept { color = outlineColor; }
 		void DrawWithOutline( GraphicsContainer& gfx, Cube& cube, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
 			ID3D11ShaderResourceView* texture )
 		{
@@ -89,9 +91,9 @@ namespace Bind
 	private:
 		float scale;
 		XMFLOAT3 color;
-		ConstantBuffer<CB_PS_outline> cb_ps_outline;
-		VertexShader vertexShader_outline;
 		PixelShader pixelShader_outline;
+		VertexShader vertexShader_outline;
+		ConstantBuffer<CB_PS_outline> cb_ps_outline;
 	};
 }
 

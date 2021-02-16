@@ -31,7 +31,7 @@ class GraphicsContainer
 {
 	friend class GraphicsResource;
 public:
-	// FUNCTIONS //
+	// Functions
 	enum ToolType { CONVERT, RESIZE } toolType = CONVERT;
 	virtual ~GraphicsContainer( void ) = default;
 	UINT GetWidth() const noexcept { return windowWidth; }
@@ -48,18 +48,23 @@ private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
 public:
-	// VARIABLES //
+	// Variables
 	int boxToUse = 0;
 	int sizeAmount = 2;
 	float sizeToUse = 1.0f;
 	bool cubeHover = false;
-	bool cubeInRange = false;
-	bool holdingCube = false;
-	std::string cameraToUse = "Default";
-protected:
 	float useTexture = 1.0f;
 	float alphaFactor = 1.0f;
+	bool cubeInRange = false;
+	bool holdingCube = false;
 
+	float outlineScale = 0.1f;
+	bool rasterizerSolid = true;
+	std::string selectedBox = "Basic";
+	std::string cameraToUse = "Default";
+	std::string samplerToUse = "Anisotropic";
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
+protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 	std::shared_ptr<Bind::StencilOutline> stencilOutline;
@@ -84,7 +89,6 @@ private:
 	UINT windowHeight;
 	ImGuiManager imgui;
 
-	std::string samplerToUse = "Anisotropic";
 	std::shared_ptr<Bind::Blender> blender;
 	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;

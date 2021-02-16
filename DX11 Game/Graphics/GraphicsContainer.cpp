@@ -28,7 +28,7 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
         stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
         stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
-		stencilOutline = std::make_shared<Bind::StencilOutline>( *this );
+		stencilOutline = std::make_shared<Bind::StencilOutline>( *this, outlineScale, outlineColor );
 
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
         rasterizers.emplace( "Skybox", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
