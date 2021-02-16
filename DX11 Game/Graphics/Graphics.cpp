@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include "Rasterizer.h"
 #include "Collisions.h"
+#include "TextRenderer.h"
 #include "StencilOutline.h"
 
 bool Graphics::Initialize( HWND hWnd, int width, int height )
@@ -99,6 +100,7 @@ void Graphics::RenderFrame()
 void Graphics::EndFrame()
 {
 	RenderSceneText();
+	textRenderer->RenderMultiToolText( *this );
 	RenderImGuiWindows();
 	PresentScene();
 }
@@ -134,8 +136,8 @@ void Graphics::Update( float dt )
 	);
 	
 	// cube range collision check
-  if ( cube.GetEditableProperties()->GetType() == RESIZE )
-      cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
+	if ( cube.GetEditableProperties()->GetType() == ToolType::RESIZE )
+		cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
 	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
 
 	// set position of spot light model

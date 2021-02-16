@@ -32,7 +32,6 @@ class GraphicsContainer
 	friend class GraphicsResource;
 public:
 	// Functions
-	enum ToolType { CONVERT, RESIZE } toolType = CONVERT;
 	virtual ~GraphicsContainer( void ) = default;
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
@@ -67,6 +66,8 @@ public:
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+
+	std::shared_ptr<Bind::TextRenderer> textRenderer;
 	std::shared_ptr<Bind::StencilOutline> stencilOutline;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 
@@ -94,7 +95,6 @@ private:
 	std::shared_ptr<Bind::SwapChain> swapChain;
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
-	std::shared_ptr<Bind::TextRenderer> textRenderer;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
 };

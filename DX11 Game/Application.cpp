@@ -74,7 +74,7 @@ void Application::Update()
 			graphics.cubeHover = false;
 		
 		// manage multi-tool options
-		if ( graphics.GetCube().GetEditableProperties()->GetType() == CONVERT )
+		if ( graphics.GetCube().GetEditableProperties()->GetType() == ToolType::CONVERT )
 		{
 			// change selected texture to use on box
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics.boxToUse < 3 )
@@ -94,7 +94,7 @@ void Application::Update()
 				}
 			}
 		}
-		else if ( graphics.GetCube().GetEditableProperties()->GetType() == RESIZE )
+		else if ( graphics.GetCube().GetEditableProperties()->GetType() == ToolType::RESIZE )
 		{
 			// change size amount to change box to
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics.sizeAmount < 2 )
@@ -156,8 +156,8 @@ void Application::Update()
 	}
 
 	// set multi-tool type
-	if ( keyboard.KeyIsPressed( '1' ) ) graphics.GetCube().GetEditableProperties()->SetType( CONVERT );
-	if ( keyboard.KeyIsPressed(	'2'	) ) graphics.GetCube().GetEditableProperties()->SetType( RESIZE );
+	if ( keyboard.KeyIsPressed( '1' ) ) graphics.GetCube().GetEditableProperties()->SetType( ToolType::CONVERT );
+	if ( keyboard.KeyIsPressed(	'2'	) ) graphics.GetCube().GetEditableProperties()->SetType( ToolType::RESIZE );
 
 	// pick-up cube - set position relative to camera
 	if ( keyboard.KeyIsPressed( 'E' ) && graphics.cameraToUse != "Static" && graphics.cubeInRange && graphics.cubeHover )

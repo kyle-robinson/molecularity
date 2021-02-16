@@ -93,7 +93,6 @@ void GraphicsContainer::UpdateRenderState()
 void GraphicsContainer::RenderSceneText()
 {
 	textRenderer->RenderCubeMoveText( *this );
-	textRenderer->RenderMultiToolText( *this );
 	textRenderer->RenderCameraText( *this );
 }
 
