@@ -34,7 +34,7 @@ class Graphics
 	friend class GraphicsResource;
 public:
 
-
+	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE; //might move this. It doenst do anything at the moment so left it incase.
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 	void BeginFrame();
