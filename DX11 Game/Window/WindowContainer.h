@@ -3,7 +3,6 @@
 #define WINDOWCONTAINER_H
 
 #include "RenderWindow.h"
-#include "Graphics.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 
@@ -25,7 +24,6 @@ protected:
 	bool cursorEnabled = false;
 	RenderWindow renderWindow;
 	Keyboard keyboard;
-	Graphics gfx;
 	Mouse mouse;
 };
 

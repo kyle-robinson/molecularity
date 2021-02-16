@@ -27,16 +27,27 @@ bool Quad::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
     return true;
 }
 
-void Quad::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
+void Quad::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ConstantBuffer<CB_PS_scene>& cb_ps_scene,
     ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* textureNormal ) noexcept
 {
     UINT offset = 0u;
     context->IASetVertexBuffers( 0u, 1u, vb_plane.GetAddressOf(), vb_plane.StridePtr(), &offset );
     context->IASetIndexBuffer( ib_plane.Get(), DXGI_FORMAT_R16_UINT, 0u );
+
     context->PSSetShaderResources( 0u, 1u, &texture );
     context->PSSetShaderResources( 1u, 1u, &textureNormal );
+
     cb_vs_matrix.data.worldMatrix = XMMatrixIdentity() * worldMatrix;
     if ( !cb_vs_matrix.ApplyChanges() ) return;
     context->VSSetConstantBuffers( 0u, 1u, cb_vs_matrix.GetAddressOf() );
+
+    cb_ps_scene.data.useNormalMap = 1.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+
     context->DrawIndexed( ib_plane.IndexCount(), 0u, 0u );
+
+    cb_ps_scene.data.useNormalMap = 0.0f;
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 }

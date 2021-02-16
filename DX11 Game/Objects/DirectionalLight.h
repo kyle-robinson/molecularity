@@ -9,6 +9,7 @@ class DirectionalLight : public Light
 {
 public:
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional );
+	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
 	void SpawnControlWindow();
 private:
 	float enable = true;

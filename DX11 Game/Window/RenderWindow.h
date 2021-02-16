@@ -35,7 +35,7 @@ private:
 	std::wstring windowTitle_Wide = L"";
 	std::string windowClass = "";
 	std::wstring windowClass_Wide = L"";
-	int width, height;
+	int width = 0, height = 0;
 };
 
 #endif

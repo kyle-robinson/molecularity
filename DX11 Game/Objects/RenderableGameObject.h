@@ -13,7 +13,7 @@ public:
 		ID3D11Device* device,
 		ID3D11DeviceContext* context,
 		ConstantBuffer<CB_VS_matrix>& cb_vs_vertexshader );
-	void Draw( const std::unique_ptr<Camera>& camera );
+	void Draw();
 protected:
 	Model model;
 	void UpdateMatrix() override;

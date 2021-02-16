@@ -3,6 +3,7 @@
 #define APPLICATION_H
 
 #include "Timer.h"
+#include "Graphics.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
 
@@ -21,6 +22,7 @@ public:
 	void Render();
 private:
 	Timer timer;
+	Graphics graphics;
 	MousePicking mousePick;
 };
 

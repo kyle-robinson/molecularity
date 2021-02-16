@@ -11,7 +11,7 @@ namespace Bind
 	class RenderTarget : public GraphicsResource
 	{
 	public:
-		RenderTarget( Graphics& gfx, IDXGISwapChain* swapChain )
+		RenderTarget( GraphicsContainer& gfx, IDXGISwapChain* swapChain )
 		{
 			try
 			{
@@ -27,12 +27,12 @@ namespace Bind
 				return;
 			}
 		}
-		void BindAsBuffer( Graphics& gfx, DepthStencil* depthStencil, float clearColor[4] ) noexcept
+		void BindAsBuffer( GraphicsContainer& gfx, DepthStencil* depthStencil, float clearColor[4] ) noexcept
 		{
 			GetContext( gfx )->OMSetRenderTargets( 1, backBuffer.GetAddressOf(), depthStencil->GetDepthStencilView() );
 			GetContext( gfx )->ClearRenderTargetView( backBuffer.Get(), clearColor );
 		}
-		void BindAsNull( Graphics& gfx ) noexcept
+		void BindAsNull( GraphicsContainer& gfx ) noexcept
 		{
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> nullRenderTarget = nullptr;
 			GetContext( gfx )->OMSetRenderTargets( 1, nullRenderTarget.GetAddressOf(), nullptr );
