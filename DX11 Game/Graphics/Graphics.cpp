@@ -134,7 +134,8 @@ void Graphics::Update( float dt )
 	);
 	
 	// cube range collision check
-	if ( toolType == RESIZE )cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
+  if ( cube.GetEditableProperties()->GetType() == RESIZE )
+      cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
 	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
 
 	// set position of spot light model

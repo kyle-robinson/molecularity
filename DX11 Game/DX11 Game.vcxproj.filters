@@ -406,6 +406,8 @@
     </ClInclude>
     <ClInclude Include="Graphics\StencilOutline.h">
       <Filter>Header Files\Graphics\Bindables</Filter>
+    <ClInclude Include="Objects\CubeProperties.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
