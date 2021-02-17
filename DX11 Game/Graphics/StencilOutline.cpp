@@ -2,9 +2,9 @@
 #include "RenderableGameObject.h"
 #include "InputLayout.h"
 #include "Cube.h"
+#include <imgui/imgui.h>
 
-StencilOutline::StencilOutline( GraphicsContainer& gfx, float outlineScale, XMFLOAT3 outlineColor )
-	: scale( outlineScale ), color( outlineColor )
+StencilOutline::StencilOutline( GraphicsContainer& gfx ) : scale( 0.1f ), color( XMFLOAT3( 1.0f, 0.6f, 0.1f ) )
 {			
 	try
 	{				
@@ -79,4 +79,14 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, RenderableGameObje
 	object.SetScale( object.GetScaleFloat3().x - scale, 1.0f, object.GetScaleFloat3().z - scale );
 	GetStencil( gfx, "Off" )->Bind( gfx );
 	object.Draw();
+}
+
+void StencilOutline::SpawnControlWindow()
+{
+	if ( ImGui::Begin( "Stencil Outline Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
+	{
+		ImGui::ColorEdit3( "Color", &color.x );
+		ImGui::SliderFloat( "Scale", &scale, 0.0f, 1.0f, "%.1f" );
+	}
+	ImGui::End();
 }

@@ -21,7 +21,6 @@ class TextRenderer;
 class Graphics : public GraphicsContainer
 {
 	friend class Application;
-	friend class ImGuiManager;
 public:
 	// Functions
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE; //might move this. It doenst do anything at the moment so left it incase.
@@ -48,16 +47,7 @@ public:
 	std::string cameraToUse = "Default";
 private:
 	float sizeToUse = 1.0f;
-	BOOL useTexture = TRUE;
-	float alphaFactor = 1.0f;
-	bool rasterizerSolid = true;
 	std::string selectedBox = "Basic";
-
-	float outlineScale = 0.1f;
-	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
-	std::shared_ptr<Fog> fogSystem;
-	std::shared_ptr<TextRenderer> textRenderer;
-	std::shared_ptr<StencilOutline> stencilOutline;
 
 	Cube cube;
 	Quad simpleQuad;
@@ -71,6 +61,9 @@ private:
 
 	Camera2D camera2D;
 	ImGuiManager imgui;
+	std::shared_ptr<Fog> fogSystem;
+	std::shared_ptr<TextRenderer> textRenderer;
+	std::shared_ptr<StencilOutline> stencilOutline;
 	std::map<std::string, std::unique_ptr<Camera>> cameras;
 
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;

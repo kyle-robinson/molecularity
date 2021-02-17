@@ -12,10 +12,11 @@ class RenderableGameObject;
 class StencilOutline : public GraphicsResource
 {
 public:
-	StencilOutline( GraphicsContainer& gfx, float outlineScale, XMFLOAT3 outlineColor );
+	StencilOutline( GraphicsContainer& gfx );
 	void DrawWithOutline( GraphicsContainer& gfx, Cube& cube, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
 		ConstantBuffer<CB_PS_point>& cb_ps_point, ID3D11ShaderResourceView* texture );
 	void DrawWithOutline( GraphicsContainer& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point );
+	void SpawnControlWindow();
 
 	void SetOutlineScale( float outlineScale ) noexcept { scale = outlineScale; }
 	void SetOutlineColor( XMFLOAT3 outlineColor ) noexcept { color = outlineColor; }

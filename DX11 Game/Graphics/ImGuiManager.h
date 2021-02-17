@@ -2,7 +2,7 @@
 #ifndef IMGUIMANAGER_H
 #define IMGUIMANAGER_H
 
-class Graphics;
+class GraphicsContainer;
 class ImGuiManager
 {
 public:
@@ -12,7 +12,7 @@ public:
 	void BeginRender() const noexcept;
 	void EndRender() const noexcept;
 	void SpawnInstructionWindow() const noexcept;
-	void SpawnGraphicsWindow( Graphics& gfx ) const noexcept;
+	void SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept;
 private:
 	void SetBlackGoldStyle();
 };

@@ -1,11 +1,19 @@
 #include "TextRenderer.h"
 #include "Graphics.h"
 
-TextRenderer::TextRenderer( GraphicsContainer& gfx, const std::wstring& fileName )
+TextRenderer::TextRenderer( GraphicsContainer& gfx ) : fileName( L"open_sans_ms_16.spritefont" )
 {
 	spriteBatch = std::make_unique<SpriteBatch>( GetContext( gfx ) );
 	spriteFont = std::make_unique<SpriteFont>( GetDevice( gfx ),
 		std::wstring( L"Resources\\Fonts\\" ).append( fileName ).c_str() );
+}
+
+void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color )
+{
+	spriteBatch->Begin();
+	spriteFont->DrawString( spriteBatch.get(), text.c_str(), position, color, 0.0f,
+		XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
+	spriteBatch->End();
 }
 
 void TextRenderer::RenderCubeMoveText( Graphics& gfx )
@@ -56,12 +64,4 @@ void TextRenderer::RenderCameraText( Graphics& gfx )
 {
 	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( gfx.cameraToUse ) ).c_str(),
 		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
-}
-
-void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color )
-{
-	spriteBatch->Begin();
-	spriteFont->DrawString( spriteBatch.get(), text.c_str(), position, color, 0.0f,
-		XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
-	spriteBatch->End();
 }

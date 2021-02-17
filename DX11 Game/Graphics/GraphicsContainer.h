@@ -24,6 +24,7 @@ namespace Bind
 
 class GraphicsContainer
 {
+	friend class ImGuiManager;
 	friend class GraphicsResource;
 public:
 	// Functions
@@ -52,6 +53,10 @@ protected:
 	PixelShader pixelShader_2D;
 	PixelShader pixelShader_noLight;
 	PixelShader pixelShader_2D_discard;
+
+	BOOL useTexture = TRUE;
+	float alphaFactor = 1.0f;
+	bool rasterizerSolid = true;
 private:
 	UINT windowWidth;
 	UINT windowHeight;

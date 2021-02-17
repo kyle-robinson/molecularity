@@ -63,10 +63,9 @@ bool Graphics::InitializeScene()
 
 		// SYSTEMS
 		{
-			stencilOutline = std::make_shared<StencilOutline>( *this, outlineScale, outlineColor );
-			textRenderer = std::make_shared<TextRenderer>( *this, L"open_sans_ms_16.spritefont" );
+			stencilOutline = std::make_shared<StencilOutline>( *this );
+			textRenderer = std::make_shared<TextRenderer>( *this );
 			fogSystem = std::make_shared<Fog>( *this );
-			//if ( !fog.Initialize( *this ) ) return false;
 		}
 
 		// TEXTURES
@@ -101,9 +100,6 @@ void Graphics::BeginFrame()
 {
 	ClearScene();
 	UpdateRenderState();
-
-	stencilOutline->SetOutlineColor( outlineColor );
-	stencilOutline->SetOutlineScale( outlineScale );
 
 	// update constant buffers
 	fogSystem->UpdateConstantBuffer( *this );
@@ -182,6 +178,7 @@ void Graphics::EndFrame()
 		pointLight.SpawnControlWindow();
 		spotLight.SpawnControlWindow();
 		fogSystem->SpawnControlWindow();
+		stencilOutline->SpawnControlWindow();
 		imgui.EndRender();
 	}
 
