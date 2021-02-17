@@ -15,11 +15,8 @@
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
 
-namespace Bind
-{
-	class StencilOutline;
-	class TextRenderer;
-}
+class StencilOutline;
+class TextRenderer;
 
 class Graphics : public GraphicsContainer
 {
@@ -49,7 +46,6 @@ public:
 	bool cubeInRange = false;
 	bool holdingCube = false;
 	std::string cameraToUse = "Default";
-	ConstantBuffer<CB_PS_point> cb_ps_point;
 private:
 	float sizeToUse = 1.0f;
 	BOOL useTexture = TRUE;
@@ -59,10 +55,10 @@ private:
 
 	float outlineScale = 0.1f;
 	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
-	std::shared_ptr<Bind::TextRenderer> textRenderer;
-	std::shared_ptr<Bind::StencilOutline> stencilOutline;
+	std::shared_ptr<Fog> fogSystem;
+	std::shared_ptr<TextRenderer> textRenderer;
+	std::shared_ptr<StencilOutline> stencilOutline;
 
-	Fog fog;
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;

@@ -8,6 +8,9 @@ bool PointLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix
 {
 	try
 	{
+		HRESULT hr = cb_ps_point.Initialize( GetDevice( gfx ), GetContext( gfx ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to create 'PointLight' constant buffer!" );
+
 		if ( !Light::Initialize( "Resources\\Models\\Disco\\scene.gltf", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
 			return false;
 	}
@@ -59,7 +62,7 @@ void PointLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point )
+void PointLight::UpdateConstantBuffer( GraphicsContainer& gfx )
 {
 	cb_ps_point.data.pointAmbientColor = ambientColor;
 	cb_ps_point.data.pointAmbientStrength = ambientStrength;
@@ -73,4 +76,7 @@ void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point 
 	cb_ps_point.data.pointLinear = linear;
 	cb_ps_point.data.pointQuadratic = quadratic;
 	cb_ps_point.data.pointEnable = enable;
+
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	GetContext( gfx )->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 }

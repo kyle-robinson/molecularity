@@ -138,6 +138,12 @@
     <ClCompile Include="Graphics\Fog.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\TextRenderer.cpp">
+      <Filter>Source\Graphics\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\StencilOutline.cpp">
+      <Filter>Source\Graphics\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">

@@ -4,13 +4,12 @@
 
 #include "ConstantBuffer.h"
 #include "ConstantBufferTypes.h"
-class GraphicsContainer;
+#include "GraphicsResource.h"
 
-class Fog
+class Fog : public GraphicsResource
 {
 public:
-	Fog();
-	bool Initialize( GraphicsContainer& gfx );
+	Fog( GraphicsContainer& gfx );
 	void UpdateConstantBuffer( GraphicsContainer& gfx ) noexcept;
 	void SpawnControlWindow();
 private:

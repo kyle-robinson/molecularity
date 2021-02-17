@@ -3,6 +3,7 @@
 #define BLENDER_H
 
 #include "GraphicsResource.h"
+#include "ErrorLogger.h"
 
 namespace Bind
 {

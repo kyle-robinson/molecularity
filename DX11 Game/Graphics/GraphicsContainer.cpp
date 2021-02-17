@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "GraphicsContainer.h"
 #include "Bindables.h"
 #include <imgui/imgui.h>
