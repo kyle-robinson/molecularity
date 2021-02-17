@@ -2,6 +2,7 @@
 #ifndef TEXTRENDERER_H
 #define TEXTRENDERER_H
 
+#include "Graphics.h"
 #include "GraphicsResource.h"
 #include <dxtk/SpriteFont.h>
 #include <dxtk/SpriteBatch.h>
@@ -18,7 +19,7 @@ namespace Bind
 			spriteFont = std::make_unique<SpriteFont>( GetDevice( gfx ),
 				std::wstring( L"Resources\\Fonts\\" ).append( fileName ).c_str() );
 		}
-		void RenderCubeMoveText( GraphicsContainer& gfx )
+		void RenderCubeMoveText( Graphics& gfx )
 		{
 			if ( gfx.cubeInRange && gfx.cubeHover && !gfx.holdingCube )
 			{
@@ -26,9 +27,9 @@ namespace Bind
 					XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
 			}
 		}
-		void RenderMultiToolText( GraphicsContainer& gfx )
+		void RenderMultiToolText( Graphics& gfx )
 		{
-			if ( gfx.toolType == gfx.CONVERT )
+			if ( gfx.GetCube().GetEditableProperties()->GetType() == ToolType::CONVERT )
 			{
 				DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
@@ -44,7 +45,7 @@ namespace Bind
 				DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
 					XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
 			}
-			else if ( gfx.toolType == gfx.RESIZE )
+			else if ( gfx.GetCube().GetEditableProperties()->GetType() == ToolType::RESIZE )
 			{
 				DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
@@ -60,7 +61,7 @@ namespace Bind
 					XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
 			}
 		}
-		void RenderCameraText( GraphicsContainer& gfx )
+		void RenderCameraText( Graphics& gfx )
 		{
 			DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( gfx.cameraToUse ) ).c_str(),
 				XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );

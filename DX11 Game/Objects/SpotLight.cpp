@@ -4,6 +4,24 @@
 
 // "Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
+bool SpotLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+{
+	try
+	{
+		HRESULT hr = cb_ps_spot.Initialize( GetDevice( gfx ), GetContext( gfx ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'SpotLight' constant buffer!" );
+
+		if ( !Light::Initialize( "Resources\\Models\\Flashlight.fbx", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
+			return false;
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
+	}
+	return true;
+}
+
 void SpotLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
@@ -12,10 +30,10 @@ void SpotLight::SpawnControlWindow()
 		ImGui::SameLine();
 		static int enableGroup = 0;
 		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
-			enable = 1.0f;
+			enable = TRUE;
 		ImGui::SameLine();
 		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
-			enable = 0.0f;
+			enable = FALSE;
 
 		ImGui::ColorEdit3( "Colour", &color.x );
 		ImGui::SliderFloat( "Cone", &cone, 5.0f, 40.0f, "%1.f" );
@@ -25,7 +43,7 @@ void SpotLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void SpotLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_spot>& cb_ps_spot, std::unique_ptr<Camera>& camera )
+void SpotLight::UpdateConstantBuffer( GraphicsContainer& gfx, std::unique_ptr<Camera>& camera )
 {
 	cb_ps_spot.data.spotEnable = enable;
 	cb_ps_spot.data.spotCone = cone;
@@ -43,4 +61,20 @@ void SpotLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_spot>& cb_ps_spot, st
 	direction.y = camera->GetCameraTarget().y - camera->GetPositionFloat3().y;
 	direction.z = camera->GetCameraTarget().z - camera->GetPositionFloat3().z;
 	cb_ps_spot.data.spotDirection = direction;
+
+	if ( !cb_ps_spot.ApplyChanges() ) return;
+	GetContext( gfx )->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
+}
+
+void SpotLight::UpdateModelPosition( std::unique_ptr<Camera>& camera )
+{
+	XMVECTOR spotLightPosition = camera->GetPositionVector();
+	spotLightPosition += camera->GetForwardVector() / 4;
+	spotLightPosition += camera->GetRightVector() / 2;
+	SetPosition( spotLightPosition );
+	SetRotation(
+		camera->GetRotationFloat3().x + XM_PI,
+		camera->GetRotationFloat3().y,
+		camera->GetRotationFloat3().z
+	);
 }

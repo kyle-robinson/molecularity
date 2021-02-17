@@ -41,13 +41,13 @@ void Quad::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ConstantBuffer<CB_P
     if ( !cb_vs_matrix.ApplyChanges() ) return;
     context->VSSetConstantBuffers( 0u, 1u, cb_vs_matrix.GetAddressOf() );
 
-    cb_ps_scene.data.useNormalMap = 1.0f;
+    cb_ps_scene.data.useNormalMap = TRUE;
 	if ( !cb_ps_scene.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
     context->DrawIndexed( ib_plane.IndexCount(), 0u, 0u );
 
-    cb_ps_scene.data.useNormalMap = 0.0f;
+    cb_ps_scene.data.useNormalMap = FALSE;
 	if ( !cb_ps_scene.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 }
