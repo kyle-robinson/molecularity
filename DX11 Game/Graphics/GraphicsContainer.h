@@ -3,6 +3,7 @@
 #define GRAPHICSCONTAINER_H
 
 #include <map>
+#include <memory>
 #include "Shaders.h"
 
 namespace Bind
@@ -13,14 +14,14 @@ namespace Bind
 	class RenderTarget;
 	class Sampler;
 	class Stencil;
-	class StencilOutline;
 	class SwapChain;
-	class TextRenderer;
 	class Viewport;
 }
 
 class GraphicsContainer
 {
+	friend class Fog;
+	friend class TextRenderer;
 	friend class GraphicsResource;
 public:
 	// Functions

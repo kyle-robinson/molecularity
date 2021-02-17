@@ -4,15 +4,14 @@
 
 #include "ConstantBuffer.h"
 #include "ConstantBufferTypes.h"
-class Graphics;
+class GraphicsContainer;
 
 class Fog
 {
 public:
 	Fog();
-	//Fog( Graphics& gfx, XMFLOAT3 fogColor, float fogStart, float fogEnd );
-	bool Initialize( Graphics& gfx );
-	void UpdateConstantBuffer( Graphics& gfx ) noexcept;
+	bool Initialize( GraphicsContainer& gfx );
+	void UpdateConstantBuffer( GraphicsContainer& gfx ) noexcept;
 	void SpawnControlWindow();
 private:
 	float end;

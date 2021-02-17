@@ -2,13 +2,16 @@
 #ifndef SPOTLIGHT_H
 #define SPOTLIGHT_H
 
-#include "Light.h"
 class Camera;
+#include "Light.h"
+#include "GraphicsResource.h"
 
-class SpotLight : public Light
+class SpotLight : public Light, public GraphicsResource
 {
 public:
-	void UpdateConstantBuffer( ConstantBuffer<CB_PS_spot>& cb_ps_spot, std::unique_ptr<Camera>& camera );
+	bool Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
+	void UpdateConstantBuffer( GraphicsContainer& gfx, std::unique_ptr<Camera>& camera );
+	void UpdateModelPosition( std::unique_ptr<Camera>& camera );
 	void SpawnControlWindow();
 private:
 	BOOL enable = TRUE;
@@ -18,6 +21,8 @@ private:
 
 	XMFLOAT3 color = { 1.0f, 0.2f, 1.0f };
 	XMFLOAT3 direction = { 0.0f, 0.0f, 1.0f };
+
+	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 };
 
 #endif

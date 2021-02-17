@@ -219,7 +219,9 @@
     <ClCompile Include="Graphics\Graphics.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Graphics\GraphicsContainer.cpp" />
+    <ClCompile Include="Graphics\GraphicsContainer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Graphics\ImGuiManager.cpp" />
     <ClCompile Include="Graphics\Shaders.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
@@ -420,7 +422,7 @@
     <Image Include="Resources\Textures\crates\basic_crate.png" />
     <Image Include="Resources\Textures\crates\bounce_crate.png" />
     <Image Include="Resources\Textures\crates\tnt_crate.png" />
-    <Image Include="Resources\Textures\Crosshair.png" />
+    <Image Include="Resources\Textures\crosshair.png" />
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg" />
     <Image Include="Resources\Textures\skybox\full_earth.png" />
     <Image Include="Resources\Textures\skybox\half_earth.png" />

@@ -15,12 +15,16 @@
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
 
+namespace Bind
+{
+	class StencilOutline;
+	class TextRenderer;
+}
+
 class Graphics : public GraphicsContainer
 {
-	friend class Fog;
 	friend class Application;
 	friend class ImGuiManager;
-	friend class TextRenderer;
 public:
 	// Functions
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE; //might move this. It doenst do anything at the moment so left it incase.
@@ -58,10 +62,6 @@ private:
 	std::shared_ptr<Bind::TextRenderer> textRenderer;
 	std::shared_ptr<Bind::StencilOutline> stencilOutline;
 
-	SpotLight spotLight;
-	PointLight pointLight;
-	DirectionalLight directionalLight;
-
 	Fog fog;
 	Cube cube;
 	Quad simpleQuad;
@@ -69,15 +69,17 @@ private:
 	RenderableGameObject hubRoom;
 	RenderableGameObject skysphere;
 
+	SpotLight spotLight;
+	PointLight pointLight;
+	DirectionalLight directionalLight;
+
 	Camera2D camera2D;
 	ImGuiManager imgui;
 	std::map<std::string, std::unique_ptr<Camera>> cameras;
 
-	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
-	ConstantBuffer<CB_PS_directional> cb_ps_directional;
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;

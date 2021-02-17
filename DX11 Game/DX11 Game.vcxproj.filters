@@ -227,13 +227,7 @@
     <ClInclude Include="Graphics\Sampler.h">
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\StencilOutline.h">
-      <Filter>Headers\Graphics\Bindables</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Stencil.h">
-      <Filter>Headers\Graphics\Bindables</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\TextRenderer.h">
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="Window\WindowContainer.h">
@@ -341,6 +335,12 @@
     <ClInclude Include="Graphics\Fog.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\TextRenderer.h">
+      <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\StencilOutline.h">
+      <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Controller.ico">
@@ -354,9 +354,6 @@
     </Image>
     <Image Include="Resources\Textures\brickwall.jpg">
       <Filter>Resources\Textures\Brickwall</Filter>
-    </Image>
-    <Image Include="Resources\Textures\Crosshair.png">
-      <Filter>Resources\Textures\Sprites</Filter>
     </Image>
     <Image Include="Resources\Textures\crates\tnt_crate.png">
       <Filter>Resources\Textures\Crates</Filter>
@@ -387,6 +384,9 @@
     </Image>
     <Image Include="Resources\Textures\skybox\nebula.png">
       <Filter>Resources\Textures\HDRI</Filter>
+    </Image>
+    <Image Include="Resources\Textures\crosshair.png">
+      <Filter>Resources\Textures\Sprites</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

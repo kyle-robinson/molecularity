@@ -2,15 +2,17 @@
 #ifndef POINTLIGHT_H
 #define POINTLIGHT_H
 
-#include "Light.h"
 class Camera;
+#include "Light.h"
+#include "GraphicsResource.h"
 
-class PointLight : public Light
+class PointLight : public Light, public GraphicsResource
 {
 public:
-	void UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera );
-	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
+	bool Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
+	void UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point );
 	void SpawnControlWindow();
+	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
 private:
 	BOOL enable = TRUE;
 	float constant = 1.0f;

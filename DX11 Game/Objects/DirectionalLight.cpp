@@ -4,6 +4,24 @@
 
 // "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
+bool DirectionalLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+{
+	try
+	{
+		HRESULT hr = cb_ps_directional.Initialize( GetDevice( gfx ), GetContext( gfx ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'DirectionalLight' constant buffer!" );
+
+		if ( !Light::Initialize( "Resources\\Models\\Disco\\scene.gltf", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
+			return false;
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
+	}
+	return true;
+}
+
 void DirectionalLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Directional Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
@@ -33,7 +51,7 @@ void DirectionalLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void DirectionalLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& cb_ps_directional )
+void DirectionalLight::UpdateConstantBuffer( GraphicsContainer& gfx )
 {
 	cb_ps_directional.data.directionalEnable = enable;
 	cb_ps_directional.data.directionalPosition = position;
@@ -42,4 +60,7 @@ void DirectionalLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_directional>& 
 	cb_ps_directional.data.directionalSpecularColor = specularColor;
 	cb_ps_directional.data.directionalSpecularStrength = specularStrength;
 	cb_ps_directional.data.directionalSpecularPower = specularPower;
+
+	if ( !cb_ps_directional.ApplyChanges() ) return;
+	GetContext( gfx )->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
 }

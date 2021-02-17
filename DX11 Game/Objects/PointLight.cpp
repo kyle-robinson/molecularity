@@ -4,6 +4,21 @@
 
 // "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
+bool PointLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+{
+	try
+	{
+		if ( !Light::Initialize( "Resources\\Models\\Disco\\scene.gltf", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
+			return false;
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
+	}
+	return true;
+}
+
 void PointLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Point Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
@@ -44,7 +59,7 @@ void PointLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera )
+void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point )
 {
 	cb_ps_point.data.pointAmbientColor = ambientColor;
 	cb_ps_point.data.pointAmbientStrength = ambientStrength;

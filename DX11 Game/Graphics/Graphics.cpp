@@ -26,15 +26,15 @@ bool Graphics::InitializeScene()
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
 
 			// lights
-			if ( !pointLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+			if ( !directionalLight.Initialize( *this, cb_vs_matrix ) ) return false;
+			directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
+			directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
+			
+			if ( !pointLight.Initialize( *this, cb_vs_matrix ) ) return false;
 			pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
 			pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
-			if ( !directionalLight.Initialize( "Resources\\Models\\Disco\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
-			directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
-			directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
-
-			if ( !spotLight.Initialize( "Resources\\Models\\Flashlight.fbx", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+			if ( !spotLight.Initialize( *this, cb_vs_matrix ) ) return false;
 			spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
 			// primitives
@@ -81,12 +81,10 @@ bool Graphics::InitializeScene()
 
 		// CONSTANT BUFFERS
 		{
-			HRESULT hr = cb_ps_directional.Initialize( device.Get(), context.Get() );
-			hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
+			HRESULT hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
 			hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 			hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
 			hr = cb_ps_point.Initialize( device.Get(), context.Get() );
-			hr = cb_ps_spot.Initialize( device.Get(), context.Get() );
 			COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
 		}
 	}
@@ -116,17 +114,12 @@ void Graphics::BeginFrame()
 	if ( !cb_ps_scene.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
-	pointLight.UpdateConstantBuffer( cb_ps_point, cameras[cameraToUse] );
+	pointLight.UpdateConstantBuffer( cb_ps_point );
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 
-	directionalLight.UpdateConstantBuffer( cb_ps_directional );
-	if ( !cb_ps_directional.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 4u, 1u, cb_ps_directional.GetAddressOf() );
-
-	spotLight.UpdateConstantBuffer( cb_ps_spot, cameras["Default"] );
-	if ( !cb_ps_spot.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 5u, 1u, cb_ps_spot.GetAddressOf() );
+	directionalLight.UpdateConstantBuffer( *this );
+	spotLight.UpdateConstantBuffer( *this, cameras["Default"] );
 
 	// bind camera matrices
 	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
@@ -170,7 +163,7 @@ void Graphics::RenderFrame()
 	// SPRITES
 	{
 		Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
-		cb_ps_scene.data.useTexture = true;
+		cb_ps_scene.data.useTexture = TRUE;
 		if ( !cb_ps_scene.ApplyChanges() ) return;
 		context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
 		crosshair.Draw( camera2D.GetWorldOrthoMatrix() );
@@ -188,8 +181,8 @@ void Graphics::EndFrame()
 		imgui.BeginRender();
 		imgui.SpawnInstructionWindow();
 		imgui.SpawnGraphicsWindow( *this );
-		pointLight.SpawnControlWindow();
 		directionalLight.SpawnControlWindow();
+		pointLight.SpawnControlWindow();
 		spotLight.SpawnControlWindow();
 		fog.SpawnControlWindow();
 		imgui.EndRender();
@@ -220,13 +213,6 @@ void Graphics::Update( float dt )
 		dz *= cameras["Default"]->GetCameraSpeed() * 10.0f;
 		cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
 	}
-
-	// prevent camera y-axis movement
-	cameras["Default"]->SetPosition(
-		cameras["Default"]->GetPositionFloat3().x,
-		9.0f,
-		cameras["Default"]->GetPositionFloat3().z
-	);
 	
 	// cube range collision check
 	if ( cube.GetEditableProperties()->GetType() == ToolType::RESIZE )
@@ -234,13 +220,5 @@ void Graphics::Update( float dt )
 	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
 
 	// set position of spot light model
-	XMVECTOR spotLightPosition = cameras["Default"]->GetPositionVector();
-	spotLightPosition += cameras["Default"]->GetForwardVector() / 4;
-	spotLightPosition += cameras["Default"]->GetRightVector() / 2;
-	spotLight.SetPosition( spotLightPosition );
-	spotLight.SetRotation(
-		cameras["Default"]->GetRotationFloat3().x + XM_PI,
-		cameras["Default"]->GetRotationFloat3().y,
-		cameras["Default"]->GetRotationFloat3().z
-	);
+	spotLight.UpdateModelPosition( cameras["Default"] );
 }

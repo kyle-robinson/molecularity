@@ -1,10 +1,10 @@
 #include "Fog.h"
-#include "Graphics.h"
+#include "GraphicsContainer.h"
 #include <imgui/imgui.h>
 
 Fog::Fog() : color( XMFLOAT3( 0.3f, 0.1f, 0.025f ) ), start( 25.0f ), end( 75.0f ) { }
 
-bool Fog::Initialize( Graphics& gfx )
+bool Fog::Initialize( GraphicsContainer& gfx )
 {
 	try
 	{
@@ -19,7 +19,7 @@ bool Fog::Initialize( Graphics& gfx )
 	return true;
 }
 
-void Fog::UpdateConstantBuffer( Graphics& gfx ) noexcept
+void Fog::UpdateConstantBuffer( GraphicsContainer& gfx ) noexcept
 {
 	cb_vs_fog.data.fogEnable = enable;
 	cb_vs_fog.data.fogColor = color;
