@@ -11,7 +11,7 @@ public:
 	void UpdateConstantBuffer( ConstantBuffer<CB_PS_spot>& cb_ps_spot, std::unique_ptr<Camera>& camera );
 	void SpawnControlWindow();
 private:
-	float enable = true;
+	BOOL enable = TRUE;
 	float cone = 20.0f;
 	float range = 1000.0f;
 	float strength = 1.0f;

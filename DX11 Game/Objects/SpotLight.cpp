@@ -6,16 +6,16 @@
 
 void SpotLight::SpawnControlWindow()
 {
-	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		ImGui::Text( "Usage: " );
 		ImGui::SameLine();
 		static int enableGroup = 0;
 		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
-			enable = 1.0f;
+			enable = TRUE;
 		ImGui::SameLine();
 		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
-			enable = 0.0f;
+			enable = FALSE;
 
 		ImGui::ColorEdit3( "Colour", &color.x );
 		ImGui::SliderFloat( "Cone", &cone, 5.0f, 40.0f, "%1.f" );

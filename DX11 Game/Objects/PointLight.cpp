@@ -12,10 +12,10 @@ void PointLight::SpawnControlWindow()
 		ImGui::SameLine();
 		static int enableGroup = 0;
 		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
-			enable = 1.0f;
+			enable = TRUE;
 		ImGui::SameLine();
 		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
-			enable = 0.0f;
+			enable = FALSE;
 
 		ImGui::SliderFloat3( "Position", &position.x, -20.0f, 20.0f, "%.1f" );
 		if ( ImGui::CollapsingHeader( "Ambient Components" ) )

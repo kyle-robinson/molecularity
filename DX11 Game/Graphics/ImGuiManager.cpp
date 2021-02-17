@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ImGuiManager.h"
-#include "GraphicsContainer.h"
+#include "Graphics.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
@@ -79,7 +79,7 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
     ImGui::End();
 }
 
-void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
+void ImGuiManager::SpawnGraphicsWindow( Graphics& gfx ) const noexcept
 {
 	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -88,10 +88,10 @@ void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
 		ImGui::SameLine();
 		static int textureGroup = 0;
 		if ( ImGui::RadioButton( "Apply", &textureGroup, 0 ) )
-            gfx.useTexture = 1.0f;
+            gfx.useTexture = TRUE;
 		ImGui::SameLine();
 		if ( ImGui::RadioButton( "Discard", &textureGroup, 1 ) )
-            gfx.useTexture = 0.0f;
+            gfx.useTexture = FALSE;
 		
 		// update rasterizer
 		ImGui::Text( "Rasterizer: " );

@@ -19,7 +19,7 @@ namespace Bind
 			spriteFont = std::make_unique<SpriteFont>( GetDevice( gfx ),
 				std::wstring( L"Resources\\Fonts\\" ).append( fileName ).c_str() );
 		}
-		void RenderCubeMoveText( GraphicsContainer& gfx )
+		void RenderCubeMoveText( Graphics& gfx )
 		{
 			if ( gfx.cubeInRange && gfx.cubeHover && !gfx.holdingCube )
 			{
@@ -61,7 +61,7 @@ namespace Bind
 					XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
 			}
 		}
-		void RenderCameraText( GraphicsContainer& gfx )
+		void RenderCameraText( Graphics& gfx )
 		{
 			DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( gfx.cameraToUse ) ).c_str(),
 				XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );

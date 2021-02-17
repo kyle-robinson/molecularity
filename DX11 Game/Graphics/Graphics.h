@@ -5,16 +5,24 @@
 #include "Fog.h"
 #include "Cube.h"
 #include "Quad.h"
-#include "Sprite.h"
 #include "Camera.h"
+#include "Sprite.h"
 #include "Camera2D.h"
+#include "SpotLight.h"
+#include "PointLight.h"
+#include "ImGuiManager.h"
+#include "DirectionalLight.h"
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
 
 class Graphics : public GraphicsContainer
 {
 	friend class Fog;
+	friend class Application;
+	friend class ImGuiManager;
+	friend class TextRenderer;
 public:
+	// Functions
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE; //might move this. It doenst do anything at the moment so left it incase.
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
@@ -28,24 +36,46 @@ public:
 	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; }
 private:
 	bool InitializeScene();
-	void UpdateConstantBuffers();
-	void RenderSkySphere();
-	void RenderLights();
-	void RenderModels();
-	void RenderPrimitives();
-	void RenderSprites();
 
+public:
 	// Variables
+	int boxToUse = 0;
+	int sizeAmount = 2;
+	bool cubeHover = false;
+	bool cubeInRange = false;
+	bool holdingCube = false;
+	std::string cameraToUse = "Default";
+	ConstantBuffer<CB_PS_point> cb_ps_point;
+private:
+	float sizeToUse = 1.0f;
+	BOOL useTexture = TRUE;
+	float alphaFactor = 1.0f;
+	bool rasterizerSolid = true;
+	std::string selectedBox = "Basic";
+
+	float outlineScale = 0.1f;
+	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
+	std::shared_ptr<Bind::TextRenderer> textRenderer;
+	std::shared_ptr<Bind::StencilOutline> stencilOutline;
+
+	SpotLight spotLight;
+	PointLight pointLight;
+	DirectionalLight directionalLight;
+
+	Fog fog;
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;
-	Camera2D camera2D;
 	RenderableGameObject hubRoom;
 	RenderableGameObject skysphere;
 
-	ConstantBuffer<CB_VS_fog> cb_vs_fog;
+	Camera2D camera2D;
+	ImGuiManager imgui;
+	std::map<std::string, std::unique_ptr<Camera>> cameras;
+
 	ConstantBuffer<CB_PS_spot> cb_ps_spot;
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
+	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
 	ConstantBuffer<CB_PS_directional> cb_ps_directional;
 

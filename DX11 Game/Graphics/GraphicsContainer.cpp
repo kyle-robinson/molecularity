@@ -10,7 +10,6 @@ bool GraphicsContainer::InitializeGraphics( HWND hWnd, int width, int height )
 
 	if ( !InitializeDirectX( hWnd ) ) return false;
 	if ( !InitializeShaders() ) return false;
-	imgui.Initialize( hWnd, device.Get(), context.Get() );
 
 	return true;
 }
@@ -28,7 +27,6 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
         stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
         stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
-		stencilOutline = std::make_shared<Bind::StencilOutline>( *this, outlineScale, outlineColor );
 
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
         rasterizers.emplace( "Skybox", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
@@ -38,7 +36,6 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
         samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
         samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
 
-		textRenderer = std::make_shared<Bind::TextRenderer>( *this, L"open_sans_ms_16.spritefont" );
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	}
 	catch ( COMException& exception )
@@ -88,27 +85,6 @@ void GraphicsContainer::UpdateRenderState()
 	samplers[samplerToUse]->Bind( *this );
 	stencils["Off"]->Bind( *this );
 	blender->Bind( *this );
-}
-
-void GraphicsContainer::RenderSceneText()
-{
-	textRenderer->RenderCubeMoveText( *this );
-	textRenderer->RenderCameraText( *this );
-}
-
-void GraphicsContainer::RenderImGuiWindows()
-{
-	if ( cameraToUse == "Debug" )
-	{
-		imgui.BeginRender();
-		imgui.SpawnInstructionWindow();
-		imgui.SpawnGraphicsWindow( *this );
-		pointLight.SpawnControlWindow();
-		directionalLight.SpawnControlWindow();
-		spotLight.SpawnControlWindow();
-		fog.SpawnControlWindow();
-		imgui.EndRender();
-	}
 }
 
 void GraphicsContainer::PresentScene()

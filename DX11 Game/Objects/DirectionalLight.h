@@ -12,7 +12,7 @@ public:
 	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
 	void SpawnControlWindow();
 private:
-	float enable = true;
+	BOOL enable = TRUE;
 	float diffuseStrength = 0.5f;
 	float specularPower = 10.0f;
 	float specularStrength = 0.3f;

@@ -54,9 +54,9 @@ VS_OUTPUT VS( VS_INPUT input )
 // PIXEL SHADER
 cbuffer SceneBuffer : register( b2 )
 {
-    float useTexture;
+    bool useTexture;
     float alphaFactor;
-    float useNormalMap;
+    bool useNormalMap;
 }
 
 cbuffer PointLightBuffer : register( b3 )
@@ -76,7 +76,7 @@ cbuffer PointLightBuffer : register( b3 )
     float pointConstant;
     float pointLinear;
     float pointQuadratic;
-    float pointEnable;
+    bool pointEnable;
 };
 
 cbuffer DirectionalLightBuffer : register( b4 )
@@ -90,7 +90,7 @@ cbuffer DirectionalLightBuffer : register( b4 )
     float3 directionalSpecularColor;
     float directionalSpecularPower;
     
-    float directionalEnable;
+    bool directionalEnable;
 }
 
 cbuffer SpotLightBuffer : register( b5 )
@@ -104,7 +104,7 @@ cbuffer SpotLightBuffer : register( b5 )
     float spotDiffuseStrength;
     float3 spotDiffuseColor;
     
-    float spotEnable;
+    bool spotEnable;
 }
 
 struct PS_INPUT
@@ -230,7 +230,7 @@ float4 PS( PS_INPUT input ) : SV_TARGET
     
     // Output colour
     float3 finalColor = saturate( cumulativeColor );
-    finalColor *= ( useTexture == 1.0f ? objTexture.Sample( samplerState, input.inTexCoord ) : 1.0f );
+    finalColor *= useTexture ? objTexture.Sample( samplerState, input.inTexCoord ) : 1.0f;
     
     // FOG FACTOR
     {

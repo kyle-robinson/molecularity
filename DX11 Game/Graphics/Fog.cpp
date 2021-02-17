@@ -1,24 +1,39 @@
-#include "stdafx.h"
 #include "Fog.h"
 #include "Graphics.h"
 #include <imgui/imgui.h>
 
 Fog::Fog() : color( XMFLOAT3( 0.3f, 0.1f, 0.025f ) ), start( 25.0f ), end( 75.0f ) { }
 
-Fog::Fog( XMFLOAT3 fogColor, float fogStart, float fogEnd )
-	: color( fogColor ), start( fogStart ), end( fogEnd ) { }
+bool Fog::Initialize( Graphics& gfx )
+{
+	try
+	{
+		HRESULT hr = cb_vs_fog.Initialize( gfx.device.Get(), gfx.context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'fog' constant buffer!" );
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
+	}
+	return true;
+}
 
-void Fog::UpdateConstantBuffer( ConstantBuffer<CB_VS_fog>& cb_vs_fog ) noexcept
+void Fog::UpdateConstantBuffer( Graphics& gfx ) noexcept
 {
 	cb_vs_fog.data.fogEnable = enable;
 	cb_vs_fog.data.fogColor = color;
 	cb_vs_fog.data.fogStart = start;
 	cb_vs_fog.data.fogEnd = end;
+
+	if ( !cb_vs_fog.ApplyChanges() ) return;
+	gfx.context->VSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
+	gfx.context->PSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
 }
 
 void Fog::SpawnControlWindow()
 {
-	if ( ImGui::Begin( "Fog Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
+	if ( ImGui::Begin( "Fog Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
 		ImGui::Text( "Usage: " );
 		ImGui::SameLine();

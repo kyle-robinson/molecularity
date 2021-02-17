@@ -33,9 +33,9 @@ struct CB_PS_outline
 
 struct CB_PS_scene
 {
-	float useTexture;
+	BOOL useTexture;
 	float alphaFactor;
-	float useNormalMap;
+	BOOL useNormalMap;
 };
 
 struct CB_PS_point
@@ -55,7 +55,7 @@ struct CB_PS_point
 	float pointConstant;
 	float pointLinear;
 	float pointQuadratic;
-	float pointEnable;
+	BOOL pointEnable;
 };
 
 struct CB_PS_directional
@@ -69,7 +69,7 @@ struct CB_PS_directional
 	XMFLOAT3 directionalSpecularColor;
 	float directionalSpecularPower;
 
-	float directionalEnable;
+	BOOL directionalEnable;
 };
 
 struct CB_PS_spot
@@ -83,7 +83,7 @@ struct CB_PS_spot
 	float spotDiffuseStrength;
 	XMFLOAT3 spotDiffuseColor;
 
-	float spotEnable;
+	BOOL spotEnable;
 };
 
 #endif

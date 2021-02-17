@@ -12,7 +12,7 @@ public:
 	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
 	void SpawnControlWindow();
 private:
-	float enable = true;
+	BOOL enable = TRUE;
 	float constant = 1.0f;
 	float linear = 0.045f;
 	float quadratic = 0.0075f;
