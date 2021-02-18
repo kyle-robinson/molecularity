@@ -286,6 +286,7 @@
     <ClCompile Include="Objects\Sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Utility\Collisions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -371,6 +372,7 @@
     <ClInclude Include="Objects\SpotLight.h" />
     <ClInclude Include="Objects\Sprite.h" />
     <ClInclude Include="Resources\resource.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Utility\Billboard.h" />
     <ClInclude Include="Utility\Collisions.h" />
     <ClInclude Include="Utility\COMException.h" />

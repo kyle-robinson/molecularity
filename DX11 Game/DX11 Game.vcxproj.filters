@@ -144,6 +144,9 @@
     <ClCompile Include="Graphics\StencilOutline.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -346,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\StencilOutline.h">
       <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Headers\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -592,6 +598,12 @@
     </Filter>
     <Filter Include="Source\Graphics\Systems">
       <UniqueIdentifier>{f25c3d41-b8bf-4f88-bfda-1187fcbaff1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Audio">
+      <UniqueIdentifier>{b62d8be5-0170-47b4-affa-fbe4d7ab2069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Audio">
+      <UniqueIdentifier>{087b9678-f634-45e9-a859-9d006f37207e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
