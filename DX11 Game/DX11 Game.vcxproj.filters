@@ -347,6 +347,18 @@
     <ClInclude Include="Graphics\StencilOutline.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Physics\ParticleTransform.h">
+      <Filter>Source\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ParticleSystem.h">
+      <Filter>Source\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ParticleManager.h">
+      <Filter>Source\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Particle.h">
+      <Filter>Source\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Controller.ico">
@@ -592,6 +604,12 @@
     </Filter>
     <Filter Include="Source\Graphics\Systems">
       <UniqueIdentifier>{f25c3d41-b8bf-4f88-bfda-1187fcbaff1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Physics">
+      <UniqueIdentifier>{4c795db4-0234-4587-a0ea-e28d4cc1be26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Physics">
+      <UniqueIdentifier>{0b8aaf0c-bb3f-4d27-a62c-afb591fa49c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
