@@ -144,6 +144,9 @@
     <ClCompile Include="Graphics\StencilOutline.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="PhysicsModel.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -347,17 +350,20 @@
     <ClInclude Include="Graphics\StencilOutline.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\ParticleTransform.h">
-      <Filter>Source\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\ParticleSystem.h">
-      <Filter>Source\Physics</Filter>
+    <ClInclude Include="Physics\Particle.h">
+      <Filter>Headers\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Physics\ParticleManager.h">
-      <Filter>Source\Physics</Filter>
+      <Filter>Headers\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\Particle.h">
-      <Filter>Source\Physics</Filter>
+    <ClInclude Include="Physics\ParticleSystem.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ParticleTransform.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsModel.h">
+      <Filter>Headers\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
