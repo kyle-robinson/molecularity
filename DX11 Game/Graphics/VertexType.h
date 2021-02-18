@@ -2,6 +2,11 @@
 #ifndef VERTEXTYPE_H
 #define VERTEXTYPE_H
 
+/// <summary>
+/// Contains structs for reference by VertexBuffer.h to determine the type of vertices it is to be given.
+/// This shader to be used must reflect the VertexType that is templated on in VertexBuffer.h
+/// </summary>
+
 #include <DirectXMath.h>
 using namespace DirectX;
 

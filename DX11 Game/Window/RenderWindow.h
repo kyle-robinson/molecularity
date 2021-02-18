@@ -2,6 +2,11 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
+/// <summary>
+/// Create/intialize the main application window.
+/// Handle the processing of messages.
+/// </summary>
+
 #include "ErrorLogger.h"
 
 class WindowContainer;
@@ -35,7 +40,7 @@ private:
 	std::wstring windowTitle_Wide = L"";
 	std::string windowClass = "";
 	std::wstring windowClass_Wide = L"";
-	int width, height;
+	int width = 0, height = 0;
 };
 
 #endif

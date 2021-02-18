@@ -2,6 +2,11 @@
 #ifndef MODELDATA_H
 #define MODELDATA_H
 
+/// <summary>
+/// Used JSON file parsing to load and store model information.
+/// Main use is to quickly setup models with predetermined positions and scales from a JSON file.
+/// </summary>
+
 // "Rickenbacker 4001" (https://skfb.ly/HYEN) by Yogensia is licensed under CC Attribution-NonCommercial-ShareAlike (http://creativecommons.org/licenses/by-nc-sa/4.0/).
 // "Headphones" (https://skfb.ly/6ANxo) by Ren is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 // "Zelda - Breath Of The Wild" (https://skfb.ly/6QWNH) by theStoff is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).

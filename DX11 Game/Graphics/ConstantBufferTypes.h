@@ -2,7 +2,13 @@
 #ifndef CONSTANTBUFFERTYPES_H
 #define CONSTANTBUFFERTYPES_H
 
+/// <summary>
+/// Contains a list of structs which can be templated on by a ConstantBuffer.
+/// Must adhere to 16-byte alignment packing.
+/// </summary>
+
 #include <DirectXMath.h>
+using namespace DirectX;
 
 struct CB_VS_matrix
 {
@@ -16,6 +22,15 @@ struct CB_VS_matrix_2D
 	XMMATRIX wvpMatrix;
 };
 
+struct CB_VS_fog
+{
+	XMFLOAT3 fogColor;
+	float fogStart;
+
+	float fogEnd;
+	BOOL fogEnable;
+};
+
 struct CB_PS_outline
 {
 	XMFLOAT3 outlineColor;
@@ -23,9 +38,9 @@ struct CB_PS_outline
 
 struct CB_PS_scene
 {
-	float useTexture;
+	BOOL useTexture;
 	float alphaFactor;
-	float useNormalMap;
+	BOOL useNormalMap;
 };
 
 struct CB_PS_point
@@ -45,7 +60,7 @@ struct CB_PS_point
 	float pointConstant;
 	float pointLinear;
 	float pointQuadratic;
-	float pointEnable;
+	BOOL pointEnable;
 };
 
 struct CB_PS_directional
@@ -59,7 +74,7 @@ struct CB_PS_directional
 	XMFLOAT3 directionalSpecularColor;
 	float directionalSpecularPower;
 
-	float directionalEnable;
+	BOOL directionalEnable;
 };
 
 struct CB_PS_spot
@@ -73,7 +88,7 @@ struct CB_PS_spot
 	float spotDiffuseStrength;
 	XMFLOAT3 spotDiffuseColor;
 
-	float spotEnable;
+	BOOL spotEnable;
 };
 
 #endif

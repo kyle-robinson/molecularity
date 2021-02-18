@@ -28,8 +28,9 @@ VS_OUPUT VS( VS_INPUT input )
 // pixel shader
 cbuffer ColorBuffer : register( b1 )
 {
-    float alphaFactor;
     bool useTexture;
+    float alphaFactor;
+    bool useNormalMap;
 }
 
 struct PS_INPUT

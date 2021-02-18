@@ -4,6 +4,24 @@
 
 // "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
+bool PointLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+{
+	try
+	{
+		HRESULT hr = cb_ps_point.Initialize( GetDevice( gfx ), GetContext( gfx ) );
+		COM_ERROR_IF_FAILED( hr, "Failed to create 'PointLight' constant buffer!" );
+
+		if ( !Light::Initialize( "Resources\\Models\\Disco\\scene.gltf", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
+			return false;
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
+	}
+	return true;
+}
+
 void PointLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Point Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
@@ -12,10 +30,10 @@ void PointLight::SpawnControlWindow()
 		ImGui::SameLine();
 		static int enableGroup = 0;
 		if ( ImGui::RadioButton( "Enable", &enableGroup, 0 ) )
-			enable = 1.0f;
+			enable = TRUE;
 		ImGui::SameLine();
 		if ( ImGui::RadioButton( "Disable", &enableGroup, 1 ) )
-			enable = 0.0f;
+			enable = FALSE;
 
 		ImGui::SliderFloat3( "Position", &position.x, -20.0f, 20.0f, "%.1f" );
 		if ( ImGui::CollapsingHeader( "Ambient Components" ) )
@@ -44,7 +62,7 @@ void PointLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera )
+void PointLight::UpdateConstantBuffer( GraphicsContainer& gfx )
 {
 	cb_ps_point.data.pointAmbientColor = ambientColor;
 	cb_ps_point.data.pointAmbientStrength = ambientStrength;
@@ -58,4 +76,7 @@ void PointLight::UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point,
 	cb_ps_point.data.pointLinear = linear;
 	cb_ps_point.data.pointQuadratic = quadratic;
 	cb_ps_point.data.pointEnable = enable;
+
+	if ( !cb_ps_point.ApplyChanges() ) return;
+	GetContext( gfx )->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
 }

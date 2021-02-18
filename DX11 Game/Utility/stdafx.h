@@ -2,6 +2,12 @@
 #ifndef STDAFX_H
 #define STDAFX_H
 
+/// <summary>
+/// Precompiled header. If a class is using a precompiled header, this class must be the first thing included in the cpp file.
+/// Used to reduce compilation times throughout program by precompiling commonly used libraries/classes.
+/// Cherno: Precompiled Headers in C++ - https://www.youtube.com/watch?v=eSI4wctZUto
+/// </summary>
+
 #include <memory>
 #include <algorithm>
 

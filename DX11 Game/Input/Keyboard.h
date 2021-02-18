@@ -2,6 +2,11 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+/// <summary>
+/// Handles the processing of keyboard messages received from WindowProc in WindowContainer.h
+/// Provides function interfaces to check for relevant key presses and enable/disable keyboard functionality.
+/// </summary>
+
 #include <queue>
 
 class Keyboard

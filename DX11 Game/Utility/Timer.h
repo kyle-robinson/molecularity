@@ -2,6 +2,10 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+/// <summary>
+/// Creates a timer object which stores the applications delta time.
+/// </summary>
+
 #include <chrono>
 
 class Timer

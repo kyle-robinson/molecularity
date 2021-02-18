@@ -25,18 +25,22 @@ bool Model::Initialize(
 	return true;
 }
 
-void Model::Draw( const XMMATRIX& worldMatrix, const std::unique_ptr<Camera>& camera )
-{
-	cb_vs_matrix->data.viewMatrix = camera->GetViewMatrix();
-	cb_vs_matrix->data.projectionMatrix = camera->GetProjectionMatrix();
-	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix->GetAddressOf() );
-	
+void Model::Draw( const XMMATRIX& worldMatrix )
+{	
 	for ( UINT i = 0u; i < meshes.size(); i++ )
 	{
 		cb_vs_matrix->data.worldMatrix = meshes[i].GetTransformMatrix() * worldMatrix;
 		if ( !cb_vs_matrix->ApplyChanges() ) return;
 		meshes[i].Draw();
 	}
+}
+
+void Model::BindMatrices( ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
+	const std::unique_ptr<Camera>& camera ) noexcept
+{
+	cb_vs_matrix.data.viewMatrix = camera->GetViewMatrix();
+	cb_vs_matrix.data.projectionMatrix = camera->GetProjectionMatrix();
+	context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
 }
 
 bool Model::LoadModel( const std::string& filePath )

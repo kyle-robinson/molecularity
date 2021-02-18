@@ -2,6 +2,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+/// <summary>
+/// Load models from file using Assimp library.
+/// Processing of individual meshes and textures is deferred to the appropriate classes.
+/// </summary>
+
 #include "Mesh.h"
 class Camera;
 
@@ -13,7 +18,9 @@ public:
 		ID3D11Device* device,
 		ID3D11DeviceContext* context,
 		ConstantBuffer<CB_VS_matrix>& cb_vs_matrix);
-	void Draw( const XMMATRIX& worldMatrix, const std::unique_ptr<Camera>& camera );
+	void Draw( const XMMATRIX& worldMatrix );
+	static void BindMatrices( ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
+		const std::unique_ptr<Camera>& camera ) noexcept;
 private:
 	bool LoadModel( const std::string& filePath );
 	void ProcessNode( aiNode* node, const aiScene* scene, const XMMATRIX& parentTransformMatrix );

@@ -12,6 +12,7 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
         COM_ERROR_IF_FAILED( hr, "Failed to create cube vertex buffer!" );
         hr = ib_cube.Initialize( device, Idx::indicesCube, ARRAYSIZE( Idx::indicesCube ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create cube index buffer!" );
+        editableProperties = new CubeProperties();
 
         SetPosition( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
 	    SetRotation( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );

@@ -2,16 +2,25 @@
 #ifndef POINTLIGHT_H
 #define POINTLIGHT_H
 
-#include "Light.h"
-class Camera;
+/// <summary>
+/// Creates a dynamic point light.
+/// Provides functions to automatically update constant buffer and spawn ImGui control window.
+/// </summary>
 
-class PointLight : public Light
+class Camera;
+#include "Light.h"
+#include "GraphicsResource.h"
+
+class PointLight : public Light, public GraphicsResource
 {
 public:
-	void UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point, std::unique_ptr<Camera>& camera );
+	bool Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
+	void UpdateConstantBuffer( GraphicsContainer& gfx );
 	void SpawnControlWindow();
+	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; }
+	inline ConstantBuffer<CB_PS_point>& const GetConstantBuffer() noexcept { return cb_ps_point; }
 private:
-	float enable = true;
+	BOOL enable = TRUE;
 	float constant = 1.0f;
 	float linear = 0.045f;
 	float quadratic = 0.0075f;
@@ -25,6 +34,8 @@ private:
 	XMFLOAT3 ambientColor = { 1.0f, 1.0f, 1.0f };
 	XMFLOAT3 diffuseColor = { 1.0f, 1.0f, 1.0f };
 	XMFLOAT3 specularColor = { 1.0f, 1.0f, 1.0f };
+
+	ConstantBuffer<CB_PS_point> cb_ps_point;
 };
 
 #endif
