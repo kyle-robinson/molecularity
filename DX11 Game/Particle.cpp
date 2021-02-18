@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Particle.h"
 
-Particle::Particle()
+Particle::Particle(ParticleSystem* system) : mParentSystem(system)
 {
-
+	mPosition = mParentSystem->GetPosition();
 }
 
 Particle::~Particle()

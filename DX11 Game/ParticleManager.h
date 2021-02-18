@@ -1,4 +1,7 @@
 #pragma once
+#ifndef PARTICLEMANAGER_H
+#define PARTICLEMANAGER_H
+
 #include <vector>
 #include <ParticleSystem.h>
 
@@ -20,3 +23,5 @@ public:
 private:
 	vector<ParticleSystem*> mParticleSystems;
 };
+
+#endif
