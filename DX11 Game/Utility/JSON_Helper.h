@@ -37,6 +37,32 @@ struct TextData {
 	string Text;
 	//add more data here eg position
 };
+enum CamraType
+{
+	Default,
+	Static,
+	Debug
+};
+struct CamraData {
+	string Name;
+	string type;
+	DirectX::XMFLOAT3 Position;
+	
+};
+
+enum LightType
+{
+	Point,
+	directional,
+	spotlight
+};
+struct LigthData {
+	string Name;
+	
+
+
+
+};
 
 
 	//load GameObjects get all data
@@ -61,7 +87,9 @@ struct TextData {
 
 	//add new Node
 	template<typename DataType>
-	void AddNode(string fileName,string nodeName, DataType Data);
+	void AddNode(string fileName, string nodeName, DataType Data) {
+
+	}
 	
 
 
@@ -70,10 +98,7 @@ struct TextData {
 	//store file
 	bool StoreFile(string fileName, Document& d);
 	
-	
-	//need to improved
-	template <typename DataFormat>
-	Value CheckType(DataFormat& Document,string Node);
+	//check node is ther
 	template <typename DataFormat>
 	bool CheckDataIsThere(string ObjectName, DataFormat& doc) {
 

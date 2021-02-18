@@ -1,0 +1,27 @@
+{
+  "Camera": [
+    {
+      "Name": "Hub_Room",
+      "Type": "Default",
+      "Positon": [ 0, 0, 0 ],
+      "Scale": [ 4.0, 4.0, 4.0 ],
+      "Rotation": [ 0, 0, 0 ]
+    },
+    {
+      "Name": "Hub_Room",
+      "Type": "Static",
+      "Positon": [ 0, 0, 0 ],
+      "Scale": [ 4.0, 4.0, 4.0 ],
+      "Rotation": [ 0, 0, 0 ]
+    },
+    {
+      "Name": "Hub_Room",
+      "Type": "Debug",
+      "Positon": [ 0, 0, 0 ],
+      "Scale": [ 4.0, 4.0, 4.0 ],
+      "Rotation": [ 0, 0, 0 ]
+    }
+
+  ],
+  "Verson": 1.0
+}

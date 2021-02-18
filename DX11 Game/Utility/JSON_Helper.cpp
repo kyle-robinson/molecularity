@@ -287,7 +287,7 @@ JSON_LOADER::DataFromFile JSON_LOADER::GetDataAny(Value::ConstMemberIterator Val
 bool JSON_LOADER::StoreFile(string fileName, Document& d)
 {
 	//back to file
-	std::ofstream t("JSON_File/" + fileName);
+	std::ofstream t("Resources\\JSON_File\\" + fileName);
 	OStreamWrapper s(t);
 	Writer<OStreamWrapper> writer(s);
 	d.Accept(writer);
@@ -302,7 +302,7 @@ Document JSON_LOADER::ParseFile(string File)
 	Document d;
 	
 		HRESULT hr;
-		std::ifstream t("JSON_File\\" + File);
+		std::ifstream t("Resources\\JSON_File\\" + File);
 		if (!t.is_open()) {
 			//error
 			d.SetNull();
