@@ -2,6 +2,11 @@
 #ifndef DEPTHSTENCIL_H
 #define DEPTHSTENCIL_H
 
+/// <summary>
+/// Creates the depth stencil/z-buffer for the application.
+/// Call "ClearDepthStencil( gfx )" in the render pipeline to clear the depth buffer.
+/// </summary>
+
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
@@ -10,12 +15,14 @@ namespace Bind
 	class DepthStencil : public GraphicsResource
 	{
 	public:
-		DepthStencil( Graphics& gfx ) : DepthStencil( gfx, static_cast<FLOAT>( gfx.GetWidth() ), static_cast<FLOAT>( gfx.GetHeight() ) ) {}
-		DepthStencil( Graphics& gfx, float width, float height )
+		DepthStencil( GraphicsContainer& gfx ) : DepthStencil( gfx, static_cast<FLOAT>( gfx.GetWidth() ),
+			static_cast<FLOAT>( gfx.GetHeight() ) ) { }
+		DepthStencil( GraphicsContainer& gfx, float width, float height )
 		{
 			try
 			{
-				CD3D11_TEXTURE2D_DESC depthStencilDesc( DXGI_FORMAT_D24_UNORM_S8_UINT, width, height );
+				CD3D11_TEXTURE2D_DESC depthStencilDesc( DXGI_FORMAT_D24_UNORM_S8_UINT,
+					static_cast<UINT>( width ), static_cast<UINT>( height ) );
 				depthStencilDesc.MipLevels = 1;
 				depthStencilDesc.SampleDesc.Count = 1;
 				depthStencilDesc.SampleDesc.Quality = 0;
@@ -39,7 +46,7 @@ namespace Bind
 				return;
 			}
 		}
-		void ClearDepthStencil( Graphics& gfx ) noexcept
+		void ClearDepthStencil( GraphicsContainer& gfx ) noexcept
 		{
 			GetContext( gfx )->ClearDepthStencilView( depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 			GetContext( gfx )->OMSetDepthStencilState( depthStencilState.Get(), NULL );

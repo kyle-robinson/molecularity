@@ -2,6 +2,11 @@
 #ifndef MESH_H
 #define MESH_H
 
+/// <summary>
+/// Load indiviual mesh components for a given model and store data in appropriate vertex/index buffers.
+/// Transformation matrices are applied iteratively to properly update a meshes position relevant to other meshes of the same object.
+/// </summary>
+
 #include "Texture.h"
 #include "VertexType.h"
 #include "IndexBuffer.h"
@@ -11,6 +16,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <vector>
+using namespace DirectX;
 
 class Mesh
 {
@@ -20,8 +26,8 @@ public:
 		std::vector<Vertex3D>& vertices,
 		std::vector<WORD>& indices,
 		std::vector<Texture>& textures,
-		const DirectX::XMMATRIX& transformMatrix );
-	const DirectX::XMMATRIX& GetTransformMatrix();
+		const XMMATRIX& transformMatrix );
+	const XMMATRIX& GetTransformMatrix();
 	Mesh( const Mesh& mesh );
 	void Draw();
 private:

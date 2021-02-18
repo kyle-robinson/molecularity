@@ -2,6 +2,12 @@
 #ifndef MOUSEPICKING_H
 #define MOUSEPICKING_H
 
+/// <summary>
+/// Used to test for mouse intersections with game objects in the scene.
+/// Must be initialized with appropriate camera view and projection matrices.
+/// Camera view and projection matrices must be updated each frame and the camera in use may change.
+/// </summary>
+
 #include <DirectXMath.h>
 using namespace DirectX;
 

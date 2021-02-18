@@ -2,6 +2,11 @@
 #ifndef CONSTANTBUFFER_H
 #define CONSTANTBUFFER_H
 
+/// <summary>
+/// Create and initialize a constant buffer by templating on a type. (Reference ConstantBufferTypes.h)
+/// Call "ApplyChanges()" on the constant buffer before binding it to the vertex/pixel shader in order to map changes.
+/// </summary>
+
 #include <d3d11.h>
 #include <wrl/client.h>
 #include "ErrorLogger.h"
@@ -11,7 +16,7 @@ template<class T>
 class ConstantBuffer
 {
 private:
-	ConstantBuffer( const ConstantBuffer<T>& rhs ) {}
+	ConstantBuffer( const ConstantBuffer<T>& rhs ) { }
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 	ID3D11DeviceContext* context = nullptr;

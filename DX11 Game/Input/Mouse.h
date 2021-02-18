@@ -2,6 +2,11 @@
 #ifndef MOUSE_H
 #define MOUSE_H
 
+/// <summary>
+/// Handles the processing of keyboard messages received from WindowProc in WindowContainer.h
+/// Provides function interfaces to check for mouse presses, and check X and Y position of mouse on screen.
+/// </summary>
+
 #include <queue>
 
 struct MousePoint

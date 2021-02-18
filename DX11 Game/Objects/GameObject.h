@@ -2,6 +2,11 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+/// <summary>
+/// Container for all game objects.
+/// Provides functions to get/set/update position/rotation/scale data.
+/// </summary>
+
 #include "Model.h"
 
 class GameObject
@@ -40,9 +45,8 @@ public:
 protected:
 	virtual void UpdateMatrix();
 	XMFLOAT3 initialPos, initialRot, initialScale;
+	XMFLOAT3 position, rotation, scale;
 	XMVECTOR posVector, rotVector;
-	XMFLOAT3 position, rotation;
-	XMFLOAT3 scale;
 };
 
 #endif

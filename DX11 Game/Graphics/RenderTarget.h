@@ -2,6 +2,12 @@
 #ifndef RENDERTARGET_H
 #define RENDERTARGET_H
 
+/// <summary>
+/// Creates a render target to render the scene to. Takes the SwapChain as a parameter.
+/// Call "BindAsBuffer( gfx, depthStencil, clearColor )" to both bind and clear the render target.
+/// Calling "BindAsNull( gfx )" simply unbinds the render target from the render pipeline.
+/// </summary>
+
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
@@ -11,7 +17,7 @@ namespace Bind
 	class RenderTarget : public GraphicsResource
 	{
 	public:
-		RenderTarget( Graphics& gfx, IDXGISwapChain* swapChain )
+		RenderTarget( GraphicsContainer& gfx, IDXGISwapChain* swapChain )
 		{
 			try
 			{
@@ -27,12 +33,12 @@ namespace Bind
 				return;
 			}
 		}
-		void BindAsBuffer( Graphics& gfx, DepthStencil* depthStencil, float clearColor[4] ) noexcept
+		void BindAsBuffer( GraphicsContainer& gfx, DepthStencil* depthStencil, float clearColor[4] ) noexcept
 		{
 			GetContext( gfx )->OMSetRenderTargets( 1, backBuffer.GetAddressOf(), depthStencil->GetDepthStencilView() );
 			GetContext( gfx )->ClearRenderTargetView( backBuffer.Get(), clearColor );
 		}
-		void BindAsNull( Graphics& gfx ) noexcept
+		void BindAsNull( GraphicsContainer& gfx ) noexcept
 		{
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> nullRenderTarget = nullptr;
 			GetContext( gfx )->OMSetRenderTargets( 1, nullRenderTarget.GetAddressOf(), nullptr );

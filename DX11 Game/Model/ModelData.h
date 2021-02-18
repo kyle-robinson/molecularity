@@ -2,6 +2,11 @@
 #ifndef MODELDATA_H
 #define MODELDATA_H
 
+/// <summary>
+/// Used JSON file parsing to load and store model information.
+/// Main use is to quickly setup models with predetermined positions and scales from a JSON file.
+/// </summary>
+
 // "Rickenbacker 4001" (https://skfb.ly/HYEN) by Yogensia is licensed under CC Attribution-NonCommercial-ShareAlike (http://creativecommons.org/licenses/by-nc-sa/4.0/).
 // "Headphones" (https://skfb.ly/6ANxo) by Ren is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 // "Zelda - Breath Of The Wild" (https://skfb.ly/6QWNH) by theStoff is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
@@ -14,11 +19,11 @@ using json = nlohmann::json;
 
 struct Drawable
 {
-    std::string modelName;
-    std::string fileName;
-    DirectX::XMFLOAT3 position;
-    DirectX::XMFLOAT3 rotation;
-    DirectX::XMFLOAT3 scale;
+    std::string modelName = "";
+    std::string fileName = "";
+    XMFLOAT3 position = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT3 rotation = { 0.0f, 0.0f, 0.0f };
+    XMFLOAT3 scale = { 0.0f, 0.0f, 0.0f };
 };
 std::vector<Drawable> drawables;
 
@@ -36,9 +41,9 @@ public:
         std::string version = jFile["version"].get<std::string>();
 
         json objects = jFile["GameObjects"];
-        int size = objects.size();
+        size_t size = objects.size();
 
-        for ( unsigned int i = 0; i < size; i++ )
+        for ( size_t i = 0; i < size; i++ )
         {
             Drawable drawable;
             json objectDesc = objects[i];

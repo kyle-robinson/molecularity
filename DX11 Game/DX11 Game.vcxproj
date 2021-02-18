@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)Physics;$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\lib;$(SolutionDir)External\lib\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -213,9 +213,23 @@
     <ClCompile Include="Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\Fog.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Graphics\Graphics.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsContainer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Graphics\ImGuiManager.cpp" />
     <ClCompile Include="Graphics\Shaders.cpp" />
+    <ClCompile Include="Graphics\StencilOutline.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Graphics\TextRenderer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Input\MousePicking.cpp">
@@ -236,10 +250,19 @@
     <ClCompile Include="Objects\Camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Objects\Camera2D.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Objects\Cube.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Objects\DirectionalLight.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Objects\GameObject.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Objects\GameObject2D.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Objects\GameObject3D.cpp">
@@ -248,13 +271,24 @@
     <ClCompile Include="Objects\Light.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Objects\PointLight.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Objects\Quad.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Objects\RenderableGameObject.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="ParticleManager.cpp" />
-    <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="ParticleTransform.cpp" />
+    <ClCompile Include="Objects\SpotLight.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Objects\Sprite.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utility\Collisions.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Utility\ErrorLogger.cpp" />
     <ClCompile Include="Utility\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -282,23 +316,36 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Graphics\Bindables.h" />
+    <ClInclude Include="Graphics\Blender.h" />
     <ClInclude Include="Graphics\ConstantBuffer.h" />
     <ClInclude Include="Graphics\ConstantBufferTypes.h" />
     <ClInclude Include="Graphics\DepthStencil.h" />
+    <ClInclude Include="Graphics\Fog.h" />
     <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\GraphicsContainer.h" />
     <ClInclude Include="Graphics\GraphicsResource.h" />
     <ClInclude Include="Graphics\ImGuiManager.h" />
     <ClInclude Include="Graphics\IndexBuffer.h" />
-    <ClInclude Include="Graphics\Indices.h" />
+    <ClInclude Include="Graphics\Indices.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Graphics\InputLayout.h" />
     <ClInclude Include="Graphics\Rasterizer.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\Sampler.h" />
     <ClInclude Include="Graphics\Shaders.h" />
     <ClInclude Include="Graphics\Stencil.h" />
+    <ClInclude Include="Graphics\StencilOutline.h" />
     <ClInclude Include="Graphics\SwapChain.h" />
+    <ClInclude Include="Graphics\TextRenderer.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\VertexType.h" />
-    <ClInclude Include="Graphics\Vertices.h" />
+    <ClInclude Include="Graphics\Vertices.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Graphics\Viewport.h" />
     <ClInclude Include="Input\CameraMovement.h" />
     <ClInclude Include="Input\Keyboard.h" />
@@ -310,17 +357,22 @@
     <ClInclude Include="Model\ModelData.h" />
     <ClInclude Include="Model\Texture.h" />
     <ClInclude Include="Objects\Camera.h" />
+    <ClInclude Include="Objects\Camera2D.h" />
     <ClInclude Include="Objects\Cube.h" />
+    <ClInclude Include="Objects\CubeProperties.h" />
+    <ClInclude Include="Objects\DirectionalLight.h" />
     <ClInclude Include="Objects\GameObject.h" />
+    <ClInclude Include="Objects\GameObject2D.h" />
     <ClInclude Include="Objects\GameObject3D.h" />
     <ClInclude Include="Objects\Light.h" />
+    <ClInclude Include="Objects\PointLight.h" />
+    <ClInclude Include="Objects\Quad.h" />
     <ClInclude Include="Objects\RenderableGameObject.h" />
-    <ClInclude Include="Particle.h" />
-    <ClInclude Include="ParticleManager.h" />
-    <ClInclude Include="ParticleSystem.h" />
-    <ClInclude Include="ParticleTransform.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="Objects\SpotLight.h" />
+    <ClInclude Include="Objects\Sprite.h" />
+    <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Utility\Billboard.h" />
+    <ClInclude Include="Utility\Collisions.h" />
     <ClInclude Include="Utility\COMException.h" />
     <ClInclude Include="Utility\ErrorLogger.h" />
     <ClInclude Include="Utility\stdafx.h" />
@@ -330,7 +382,7 @@
     <ClInclude Include="Window\WindowContainer.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shaders\Primitive_Col.fx">
+    <FxCompile Include="Resources\Shaders\Model_Col.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
@@ -340,11 +392,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_NoNrm.fx">
+    <FxCompile Include="Resources\Shaders\Model_NoNrm.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_Nrm.fx">
+    <FxCompile Include="Resources\Shaders\Model_Nrm.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
@@ -354,24 +406,35 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_Outline.fx">
+    <FxCompile Include="Resources\Shaders\Model_Outline.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\Primitive_Tex.fx">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    <FxCompile Include="Resources\Shaders\Sprite.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\Sprite_Discard.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Controller.ico" />
-    <Image Include="Resources\Textures\CrashBox.png" />
+    <Image Include="Resources\Textures\brickwall.jpg" />
+    <Image Include="Resources\Textures\brickwall_normal.jpg" />
+    <Image Include="Resources\Textures\brickwall_normal_obj.png" />
+    <Image Include="Resources\Textures\crates\arrow_crate.png" />
+    <Image Include="Resources\Textures\crates\basic_crate.png" />
+    <Image Include="Resources\Textures\crates\bounce_crate.png" />
+    <Image Include="Resources\Textures\crates\tnt_crate.png" />
+    <Image Include="Resources\Textures\crosshair.png" />
+    <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg" />
+    <Image Include="Resources\Textures\skybox\full_earth.png" />
+    <Image Include="Resources\Textures\skybox\half_earth.png" />
+    <Image Include="Resources\Textures\skybox\mars.png" />
+    <Image Include="Resources\Textures\skybox\nebula.png" />
+    <Image Include="Resources\Textures\skybox\omega_canis.png" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Game.rc" />
@@ -397,7 +460,8 @@
     <None Include="Resources\Cursors\NightDiamond\Unavailable.ani" />
     <None Include="Resources\Cursors\NightDiamond\Vertical Resize.ani" />
     <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
-    <None Include="Resources\Objects.json" />
+    <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
+    <None Include="Resources\JSON\Objects.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

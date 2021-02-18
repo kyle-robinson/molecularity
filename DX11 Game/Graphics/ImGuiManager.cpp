@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ImGuiManager.h"
+#include "GraphicsContainer.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
@@ -33,6 +34,106 @@ void ImGuiManager::EndRender() const noexcept
 {
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
+}
+
+void ImGuiManager::SpawnInstructionWindow() const noexcept
+{
+	if ( ImGui::Begin( "Scene Instructions", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
+	{
+		if ( ImGui::CollapsingHeader( "Camera Controls", ImGuiTreeNodeFlags_DefaultOpen ) )
+		{
+			ImGui::Text( "W                 Forward" );
+			ImGui::Text( "A                 Left" );
+			ImGui::Text( "S                 Backward" );
+			ImGui::Text( "D                 Right" );
+            ImGui::Separator();
+            ImGui::Text( "F1                Default Camera" );
+            ImGui::Text( "F2                Static Camera" );
+            ImGui::Text( "F3                Debug Camera" );
+		}
+		if ( ImGui::CollapsingHeader( "Multi-Tool Controls", ImGuiTreeNodeFlags_DefaultOpen ) )
+		{
+			ImGui::Text( "1                 CONVERT Mode" );
+			ImGui::Text( "Scroll Up/Down    Change Texture To Set" );
+			ImGui::Text( "LMB On Cube       Set Selected Texture" );
+			ImGui::Separator();
+			ImGui::Text( "2                 RESIZE Mode" );
+			ImGui::Text( "Scroll Up/Down    Change Size To Set" );
+			ImGui::Text( "LMB On Cube       Set Selected Size" );
+            ImGui::Separator();
+			ImGui::Text( "E                 Pick-Up Cube" );
+		}
+		if ( ImGui::CollapsingHeader( "Miscellaneous Controls" ) )
+		{
+			ImGui::Text( "ESCAPE            Close Game" );
+		}
+        if ( ImGui::CollapsingHeader( "Debug Controls", ImGuiTreeNodeFlags_DefaultOpen ) )
+        {
+            ImGui::Text( "Hold RMB          Rotate Camera" );
+			ImGui::Text( "HOME              Enable Mouse" );
+			ImGui::Text( "END               Disable Mouse" );
+			ImGui::Text( "SPACE             Up" );
+            ImGui::Text( "CTRL              Down" );
+        }
+	}
+    ImGui::End();
+}
+
+void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
+{
+	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
+	{
+		// update texture usage
+		ImGui::Text( "Texture Usage: " );
+		ImGui::SameLine();
+		static int textureGroup = 0;
+		if ( ImGui::RadioButton( "Apply", &textureGroup, 0 ) )
+            gfx.useTexture = TRUE;
+		ImGui::SameLine();
+		if ( ImGui::RadioButton( "Discard", &textureGroup, 1 ) )
+            gfx.useTexture = FALSE;
+		
+		// update rasterizer
+		ImGui::Text( "Rasterizer: " );
+		ImGui::SameLine();
+		static int rasterizerGroup = 0;
+	    if ( ImGui::RadioButton( "Solid", &rasterizerGroup, 0 ) )
+            gfx.rasterizerSolid = true;
+	    ImGui::SameLine();
+	    if ( ImGui::RadioButton( "Wireframe", &rasterizerGroup, 1 ) )
+            gfx.rasterizerSolid = false;
+
+		// update sampler
+		static int activeSampler = 0;
+        static bool selectedSampler[3];
+        static std::string previewValueSampler = "Anisotropic";
+        static const char* samplerList[]{ "Anisotropic", "Bilinear", "Point Sampling" };
+        if ( ImGui::BeginCombo( "Sampler", previewValueSampler.c_str() ) )
+        {
+            for ( unsigned int i = 0; i < IM_ARRAYSIZE( samplerList ); i++ )
+            {
+                const bool isSelected = i == activeSampler;
+                if ( ImGui::Selectable( samplerList[i], isSelected ) )
+                {
+                    activeSampler = i;
+                    previewValueSampler = samplerList[i];
+                }
+            }
+
+            switch ( activeSampler )
+            {
+			case 0: gfx.samplerToUse = "Anisotropic"; break;
+            case 1: gfx.samplerToUse = "Bilinear"; break;
+            case 2: gfx.samplerToUse = "Point"; break;
+            }
+
+            ImGui::EndCombo();
+        }
+
+		// update blending
+		ImGui::SliderFloat( "Alpha", &gfx.alphaFactor, 0.0f, 1.0f, "%.1f" );
+	}
+	ImGui::End();
 }
 
 void ImGuiManager::SetBlackGoldStyle()
@@ -105,36 +206,4 @@ void ImGuiManager::SetBlackGoldStyle()
     style->WindowMenuButtonPosition = ImGuiDir_Right;
 
     style->DisplaySafeAreaPadding = ImVec2(4, 4);
-}
-
-void ImGuiManager::SpawnInstructionWindow() const noexcept
-{
-	if ( ImGui::Begin( "Scene Instructions", FALSE, ImGuiWindowFlags_AlwaysAutoResize ) )
-	{
-		if ( ImGui::CollapsingHeader( "Camera Controls" ) )
-		{
-			ImGui::Text( "Hold RMB          Rotate Camera" );
-			ImGui::Text( "W                 Forward" );
-			ImGui::Text( "A                 Left" );
-			ImGui::Text( "S                 Backward" );
-			ImGui::Text( "D                 Right" );
-			ImGui::Text( "CTRL              Down" );
-			ImGui::Text( "SPACE             Up" );
-			ImGui::Text( "LSHIFT            Move Faster" );
-		}
-		if ( ImGui::CollapsingHeader( "Multi-Tool Controls" ) )
-		{
-			ImGui::Text( "1                 CONVERT Mode" );
-			ImGui::Text( "Scroll Up/Down    Change Texture To Set" );
-			ImGui::Text( "LMB On Cube       Set Selected Texture" );
-			ImGui::Separator();
-			ImGui::Text( "2                 RESIZE Mode" );
-			ImGui::Text( "Scroll Up/Down    Change Size To Set" );
-			ImGui::Text( "LMB On Cube       Set Selected Size" );
-		}
-		if ( ImGui::CollapsingHeader( "Miscellaneous Controls" ) )
-		{
-			ImGui::Text( "ESCAPE            Close Game" );
-		}
-	} ImGui::End();
 }

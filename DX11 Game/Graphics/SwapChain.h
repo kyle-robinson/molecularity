@@ -2,6 +2,11 @@
 #ifndef SWAPCHAIN_H
 #define SWAPCHAIN_H
 
+/// <summary>
+/// Creates and initializes the SwapChain component.
+/// Requires a reference to the device, device context and a handle to the current window.
+/// </summary>
+
 #include "GraphicsResource.h"
 
 namespace Bind
@@ -9,7 +14,7 @@ namespace Bind
 	class SwapChain : public GraphicsResource
 	{
 	public:
-        SwapChain( Graphics& gfx, ID3D11DeviceContext** context, ID3D11Device** device, HWND hWnd )
+        SwapChain( GraphicsContainer& gfx, ID3D11DeviceContext** context, ID3D11Device** device, HWND hWnd )
 		{
 			try
 			{
@@ -20,8 +25,8 @@ namespace Bind
 
                 DXGI_SWAP_CHAIN_DESC sd = { 0 };
                 sd.BufferCount = 1;
-                sd.BufferDesc.Width = static_cast<FLOAT>( gfx.GetWidth() );
-                sd.BufferDesc.Height = static_cast<FLOAT>( gfx.GetHeight() );
+                sd.BufferDesc.Width = gfx.GetWidth();
+                sd.BufferDesc.Height = gfx.GetHeight();
                 sd.BufferDesc.RefreshRate.Numerator = 60;
                 sd.BufferDesc.RefreshRate.Denominator = 1;
                 sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

@@ -2,40 +2,93 @@
 #ifndef CONSTANTBUFFERTYPES_H
 #define CONSTANTBUFFERTYPES_H
 
+/// <summary>
+/// Contains a list of structs which can be templated on by a ConstantBuffer.
+/// Must adhere to 16-byte alignment packing.
+/// </summary>
+
 #include <DirectXMath.h>
+using namespace DirectX;
 
 struct CB_VS_matrix
 {
-	DirectX::XMMATRIX worldMatrix;
-	DirectX::XMMATRIX viewMatrix;
-	DirectX::XMMATRIX projectionMatrix;
+	XMMATRIX worldMatrix;
+	XMMATRIX viewMatrix;
+	XMMATRIX projectionMatrix;
 };
 
-struct CB_PS_light
+struct CB_VS_matrix_2D
 {
-	DirectX::XMFLOAT3 ambientLightColor;
-	float ambientLightStrength;
-	DirectX::XMFLOAT3 dynamicLightColor;
-	float dynamicLightStrength;
-	DirectX::XMFLOAT3 specularLightColor;
-	float specularLightStrength;
-	float specularLightPower;
-	DirectX::XMFLOAT3 dynamicLightPosition;
-	
-	float directionalLightStrength;
-	DirectX::XMFLOAT3 directionalLightPosition;
-	DirectX::XMFLOAT3 directionalLightColor;
+	XMMATRIX wvpMatrix;
+};
 
-	float lightConstant;
-	float lightLinear;
-	float lightQuadratic;
-	bool useTexture;
-	float alphaFactor;
+struct CB_VS_fog
+{
+	XMFLOAT3 fogColor;
+	float fogStart;
+
+	float fogEnd;
+	BOOL fogEnable;
 };
 
 struct CB_PS_outline
 {
-	alignas(16) DirectX::XMFLOAT3 outlineColor;
+	XMFLOAT3 outlineColor;
+};
+
+struct CB_PS_scene
+{
+	BOOL useTexture;
+	float alphaFactor;
+	BOOL useNormalMap;
+};
+
+struct CB_PS_point
+{
+	XMFLOAT3 pointAmbientColor;
+	float pointAmbientStrength;
+	
+	XMFLOAT3 pointDiffuseColor;
+	float pointDiffuseStrength;
+	
+	XMFLOAT3 pointSpecularColor;
+	float pointSpecularStrength;
+	
+	float pointSpecularPower;
+	XMFLOAT3 pointPosition;
+
+	float pointConstant;
+	float pointLinear;
+	float pointQuadratic;
+	BOOL pointEnable;
+};
+
+struct CB_PS_directional
+{
+	XMFLOAT3 directionalPosition;
+	float directionalDiffuseStrength;
+
+	XMFLOAT3 directionalDiffuseColor;
+	float directionalSpecularStrength;
+
+	XMFLOAT3 directionalSpecularColor;
+	float directionalSpecularPower;
+
+	BOOL directionalEnable;
+};
+
+struct CB_PS_spot
+{
+	float spotRange;
+	XMFLOAT3 spotPosition;
+
+	float spotCone;
+	XMFLOAT3 spotDirection;
+
+	float spotDiffuseStrength;
+	XMFLOAT3 spotDiffuseColor;
+
+	BOOL spotEnable;
 };
 
 #endif
