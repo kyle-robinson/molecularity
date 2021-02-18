@@ -2,6 +2,10 @@
 #ifndef STRINGCONVERTER_H
 #define STRINGCONVERTER_H
 
+/// <summary>
+/// Primarily used to convert between narrow and wide strings.
+/// </summary>
+
 #include <string>
 
 class StringConverter

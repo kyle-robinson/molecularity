@@ -2,6 +2,11 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
+/// <summary>
+/// Create a 2D sprite object.
+/// Inherits from GameObject2D.h to allow for modification of position/rotation/scale data in 2D space.
+/// </summary>
+
 #include "GameObject2D.h"
 #include "ConstantBuffer.h"
 #include "VertexBuffer.h"

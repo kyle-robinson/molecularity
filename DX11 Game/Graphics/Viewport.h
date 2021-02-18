@@ -2,6 +2,11 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
+/// <summary>
+/// Create a viewport on which to project the current scene.
+/// Can be modified to allow for split-screen functionality.
+/// </summary>
+
 #include "GraphicsResource.h"
 
 class Graphics;

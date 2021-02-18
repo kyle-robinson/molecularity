@@ -2,6 +2,11 @@
 #ifndef DIRECTIONALLIGHT_H
 #define DIRECTIONALLIGHT_H
 
+/// <summary>
+/// Creates a simple directional light.
+/// Provides functions to automatically update constant buffer and spawn ImGui control window.
+/// </summary>
+
 class Camera;
 #include "Light.h"
 #include "GraphicsResource.h"

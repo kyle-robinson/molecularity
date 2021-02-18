@@ -2,6 +2,11 @@
 #ifndef SWAPCHAIN_H
 #define SWAPCHAIN_H
 
+/// <summary>
+/// Creates and initializes the SwapChain component.
+/// Requires a reference to the device, device context and a handle to the current window.
+/// </summary>
+
 #include "GraphicsResource.h"
 
 namespace Bind

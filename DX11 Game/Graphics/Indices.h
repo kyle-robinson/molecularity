@@ -2,6 +2,11 @@
 #ifndef INDICES_H
 #define INDICES_H
 
+/// <summary>
+/// Contains a list of index arrays for some primitive objects.
+/// Arrays are contained within the 'Idx' namespace.
+/// </summary>
+
 typedef unsigned short WORD;
 
 namespace Idx

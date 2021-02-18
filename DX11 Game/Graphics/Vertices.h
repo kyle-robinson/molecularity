@@ -2,6 +2,11 @@
 #ifndef VERTICES_H
 #define VERTICES_H
 
+/// <summary>
+/// Contains a list of vertex arrays for primitive objects.
+/// Arrays are contained within the 'Vtx' namespace.
+/// </summary>
+
 #include "VertexType.h"
 
 namespace Vtx

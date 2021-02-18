@@ -2,6 +2,11 @@
 #ifndef INPUTLAYOUT_H
 #define INPUTLAYOUT_H
 
+/// <summary>
+/// Provides a list of common input layouts in the "Layout" namespace to prevent possible conflicts.
+/// Input layouts are static to prevent multiple redefinitions preventing the application from building.
+/// </summary>
+
 #include <d3d11.h>
 
 namespace Layout

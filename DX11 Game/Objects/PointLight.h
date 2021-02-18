@@ -2,6 +2,11 @@
 #ifndef POINTLIGHT_H
 #define POINTLIGHT_H
 
+/// <summary>
+/// Creates a dynamic point light.
+/// Provides functions to automatically update constant buffer and spawn ImGui control window.
+/// </summary>
+
 class Camera;
 #include "Light.h"
 #include "GraphicsResource.h"

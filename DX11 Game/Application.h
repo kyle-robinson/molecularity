@@ -2,6 +2,12 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+/// <summary>
+/// Calls functions which initialize the window and main graphics components.
+/// Manages the keyboard/mouse input for the scene. (Needs refactored at some point.)
+/// Responsible for calling main render/update functions in Graphics.h
+/// </summary>
+
 #include "Timer.h"
 #include "Graphics.h"
 #include "MousePicking.h"

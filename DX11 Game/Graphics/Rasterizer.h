@@ -2,6 +2,12 @@
 #ifndef RASTERIZER_H
 #define RASTERIZER_H
 
+/// <summary>
+/// Creates a rasterizer bindable, referenced in GraphicsContainer.h
+/// Constructor takes 'bool' values to modify the CULL and FILL modes.
+/// Call "Bind( gfx )" on a class object to bind it to the render pipeline.
+/// </summary>
+
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
@@ -49,18 +55,6 @@ namespace Bind
 		void Bind( GraphicsContainer& gfx ) noexcept override
 		{
 			GetContext( gfx )->RSSetState( pRasterizer.Get() );
-		}
-		static void DrawSolid( GraphicsContainer& gfx, UINT indexCount ) noexcept
-		{
-			Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer_Solid;
-			GetContext( gfx )->RSSetState( pRasterizer_Solid.Get() );
-			GetContext( gfx )->DrawIndexed( indexCount, 0, 0 );
-		}
-		static void DrawWireframe( GraphicsContainer& gfx, UINT indexCount ) noexcept
-		{
-			Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer_Wireframe;
-			GetContext( gfx )->RSSetState( pRasterizer_Wireframe.Get() );
-			GetContext( gfx )->DrawIndexed( indexCount, 0, 0 );
 		}
 	private:
 		bool isSolid;

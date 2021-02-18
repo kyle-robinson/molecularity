@@ -2,6 +2,11 @@
 #ifndef RENDERABLEGAMEOBJECT_H
 #define RENDERABLEGAMEOBJECT_H
 
+/// <summary>
+/// Allows for a model to be bound to a 3D game object.
+/// Inherits from GameObject3D to allow for modification of position/rotation/scale data.
+/// </summary>
+
 #include "GameObject3D.h"
 class Camera;
 

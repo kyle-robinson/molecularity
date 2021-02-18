@@ -2,6 +2,11 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+/// <summary>
+/// Loads and renders/updates all the components and models for the current scene/level.
+/// Sets up any constant buffers that are specific to this particular scene/level.
+/// </summary>
+
 #include "Fog.h"
 #include "Cube.h"
 #include "Quad.h"
