@@ -2,8 +2,17 @@
 #ifndef GRAPHICSCONTAINER_H
 #define GRAPHICSCONTAINER_H
 
+/// <summary>
+/// Initializes DirectX components and shaders required by all scenes/levels.
+/// Holds some pipeline functions that clear/present the current frame and bind DirectX components.
+/// </summary>
+
 #include <map>
 #include <memory>
+#include <string>
+#include <Windows.h>
+#include <d3d11_1.h>
+#include <wrl/client.h>
 #include "Shaders.h"
 
 namespace Bind
@@ -20,8 +29,7 @@ namespace Bind
 
 class GraphicsContainer
 {
-	friend class Fog;
-	friend class TextRenderer;
+	friend class ImGuiManager;
 	friend class GraphicsResource;
 public:
 	// Functions
@@ -50,6 +58,10 @@ protected:
 	PixelShader pixelShader_2D;
 	PixelShader pixelShader_noLight;
 	PixelShader pixelShader_2D_discard;
+
+	BOOL useTexture = TRUE;
+	float alphaFactor = 1.0f;
+	bool rasterizerSolid = true;
 private:
 	UINT windowWidth;
 	UINT windowHeight;

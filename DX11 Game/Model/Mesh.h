@@ -2,6 +2,11 @@
 #ifndef MESH_H
 #define MESH_H
 
+/// <summary>
+/// Load indiviual mesh components for a given model and store data in appropriate vertex/index buffers.
+/// Transformation matrices are applied iteratively to properly update a meshes position relevant to other meshes of the same object.
+/// </summary>
+
 #include "Texture.h"
 #include "VertexType.h"
 #include "IndexBuffer.h"

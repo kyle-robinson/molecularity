@@ -2,6 +2,11 @@
 #ifndef INDEXBUFFER_H
 #define INDEXBUFFER_H
 
+/// <summary>
+/// Creates an IndexBuffer object to store the indices for a game object.
+/// Must be initialized which a struct which contains the appropriate indices.
+/// </summary>
+
 #include <memory>
 #include <d3d11.h>
 #include <wrl/client.h>

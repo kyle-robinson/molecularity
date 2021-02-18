@@ -2,6 +2,11 @@
 #ifndef CONSTANTBUFFERTYPES_H
 #define CONSTANTBUFFERTYPES_H
 
+/// <summary>
+/// Contains a list of structs which can be templated on by a ConstantBuffer.
+/// Must adhere to 16-byte alignment packing.
+/// </summary>
+
 #include <DirectXMath.h>
 using namespace DirectX;
 

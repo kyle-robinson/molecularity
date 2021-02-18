@@ -63,9 +63,9 @@ bool Graphics::InitializeScene()
 
 		// SYSTEMS
 		{
-			stencilOutline = std::make_shared<Bind::StencilOutline>( *this, outlineScale, outlineColor );
-			textRenderer = std::make_shared<Bind::TextRenderer>( *this, L"open_sans_ms_16.spritefont" );
-			if ( !fog.Initialize( *this ) ) return false;
+			stencilOutline = std::make_shared<StencilOutline>( *this );
+			textRenderer = std::make_shared<TextRenderer>( *this );
+			fogSystem = std::make_shared<Fog>( *this );
 		}
 
 		// TEXTURES
@@ -84,7 +84,6 @@ bool Graphics::InitializeScene()
 			HRESULT hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
 			hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 			hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
-			hr = cb_ps_point.Initialize( device.Get(), context.Get() );
 			COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
 		}
 	}
@@ -102,11 +101,8 @@ void Graphics::BeginFrame()
 	ClearScene();
 	UpdateRenderState();
 
-	stencilOutline->SetOutlineColor( outlineColor );
-	stencilOutline->SetOutlineScale( outlineScale );
-
 	// update constant buffers
-	fog.UpdateConstantBuffer( *this );
+	fogSystem->UpdateConstantBuffer( *this );
 	
 	cb_ps_scene.data.useNormalMap = FALSE;
 	cb_ps_scene.data.useTexture = useTexture;
@@ -114,10 +110,7 @@ void Graphics::BeginFrame()
 	if ( !cb_ps_scene.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
 
-	pointLight.UpdateConstantBuffer( cb_ps_point );
-	if ( !cb_ps_point.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-
+	pointLight.UpdateConstantBuffer( *this );
 	directionalLight.UpdateConstantBuffer( *this );
 	spotLight.UpdateConstantBuffer( *this, cameras["Default"] );
 
@@ -155,7 +148,7 @@ void Graphics::RenderFrame()
 
 		// w/ stencils
 		if ( cubeHover )
-			stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix, boxTextures[selectedBox].Get() );
+			stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix, pointLight.GetConstantBuffer(), boxTextures[selectedBox].Get() );
 		else
 			cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
 	}
@@ -184,7 +177,8 @@ void Graphics::EndFrame()
 		directionalLight.SpawnControlWindow();
 		pointLight.SpawnControlWindow();
 		spotLight.SpawnControlWindow();
-		fog.SpawnControlWindow();
+		fogSystem->SpawnControlWindow();
+		stencilOutline->SpawnControlWindow();
 		imgui.EndRender();
 	}
 

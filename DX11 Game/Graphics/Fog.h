@@ -2,15 +2,19 @@
 #ifndef FOG_H
 #define FOG_H
 
+/// <summary>
+/// Create and initialize a simple fog system.
+/// Provides functions to update constant buffer and spawn ImGui control window.
+/// </summary>
+
 #include "ConstantBuffer.h"
 #include "ConstantBufferTypes.h"
-class GraphicsContainer;
+#include "GraphicsResource.h"
 
-class Fog
+class Fog : public GraphicsResource
 {
 public:
-	Fog();
-	bool Initialize( GraphicsContainer& gfx );
+	Fog( GraphicsContainer& gfx );
 	void UpdateConstantBuffer( GraphicsContainer& gfx ) noexcept;
 	void SpawnControlWindow();
 private:

@@ -2,7 +2,13 @@
 #ifndef BLENDER_H
 #define BLENDER_H
 
+/// <summary>
+/// Sets up the alpha blending component for the application.
+/// Call "Bind( gfx )" on a class object to bind it to the render pipeline.
+/// </summary>
+
 #include "GraphicsResource.h"
+#include "ErrorLogger.h"
 
 namespace Bind
 {

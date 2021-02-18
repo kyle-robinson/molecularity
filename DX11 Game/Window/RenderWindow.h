@@ -2,6 +2,11 @@
 #ifndef RENDERWINDOW_H
 #define RENDERWINDOW_H
 
+/// <summary>
+/// Create/intialize the main application window.
+/// Handle the processing of messages.
+/// </summary>
+
 #include "ErrorLogger.h"
 
 class WindowContainer;

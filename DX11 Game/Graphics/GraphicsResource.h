@@ -2,6 +2,12 @@
 #ifndef GRAPHICSRESOURCE_H
 #define GRAPHICSRESOURCE_H
 
+/// <summary>
+/// Creates function interfaces for bindables to use without needing direct access to GraphicsContainer.h
+/// When creating a bindable, "Bind( gfx )" should be overridden and used to bind that component to the render pipeline.
+/// Is a 'friend' of GraphicsContainer.h allowing this class access to its private and protected member variables/functions.
+/// </summary>
+
 #include "GraphicsContainer.h"
 
 class GraphicsResource

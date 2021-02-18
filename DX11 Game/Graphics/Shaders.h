@@ -2,6 +2,11 @@
 #ifndef SHADERS_H
 #define SHADERS_H
 
+/// <summary>
+/// Handles the loading of vertex and pixel shaders from file.
+/// Call "Shaders::BindShaders( vertexShader, pixelShader )" to bind appropriate shaders to the pipeline.
+/// </summary>
+
 class VertexShader;
 class PixelShader;
 

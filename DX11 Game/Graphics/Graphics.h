@@ -2,6 +2,11 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+/// <summary>
+/// Loads and renders/updates all the components and models for the current scene/level.
+/// Sets up any constant buffers that are specific to this particular scene/level.
+/// </summary>
+
 #include "Fog.h"
 #include "Cube.h"
 #include "Quad.h"
@@ -15,16 +20,12 @@
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
 
-namespace Bind
-{
-	class StencilOutline;
-	class TextRenderer;
-}
+class StencilOutline;
+class TextRenderer;
 
 class Graphics : public GraphicsContainer
 {
 	friend class Application;
-	friend class ImGuiManager;
 public:
 	// Functions
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE; //might move this. It doenst do anything at the moment so left it incase.
@@ -49,20 +50,10 @@ public:
 	bool cubeInRange = false;
 	bool holdingCube = false;
 	std::string cameraToUse = "Default";
-	ConstantBuffer<CB_PS_point> cb_ps_point;
 private:
 	float sizeToUse = 1.0f;
-	BOOL useTexture = TRUE;
-	float alphaFactor = 1.0f;
-	bool rasterizerSolid = true;
 	std::string selectedBox = "Basic";
 
-	float outlineScale = 0.1f;
-	XMFLOAT3 outlineColor = { 1.0f, 0.6f, 0.1f };
-	std::shared_ptr<Bind::TextRenderer> textRenderer;
-	std::shared_ptr<Bind::StencilOutline> stencilOutline;
-
-	Fog fog;
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;
@@ -75,6 +66,9 @@ private:
 
 	Camera2D camera2D;
 	ImGuiManager imgui;
+	std::shared_ptr<Fog> fogSystem;
+	std::shared_ptr<TextRenderer> textRenderer;
+	std::shared_ptr<StencilOutline> stencilOutline;
 	std::map<std::string, std::unique_ptr<Camera>> cameras;
 
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;

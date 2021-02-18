@@ -2,6 +2,11 @@
 #ifndef CAMERA2D_H
 #define CAMERA2D_H
 
+/// <summary>
+/// Creates a 2D camera which creates an orthographic view on the scene.
+/// Used primarily for rendering sprites such as UI components.
+/// </summary>
+
 #include "GameObject2D.h"
 
 class Camera2D : public GameObject2D

@@ -2,6 +2,12 @@
 #ifndef VERTEXBUFFER_H
 #define VERTEXBUFFER_H
 
+/// <summary>
+/// Creates a VertexBuffer object which stores the vertices for a given object.
+/// Must be initialized with a struct which the appropriate vertices.
+/// Must be templated on using a struct found in VertexType.h
+/// </summary>
+
 #include <memory>
 #include <d3d11.h>
 #include <wrl/client.h>

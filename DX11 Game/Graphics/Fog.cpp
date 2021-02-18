@@ -1,22 +1,18 @@
 #include "Fog.h"
-#include "GraphicsContainer.h"
 #include <imgui/imgui.h>
 
-Fog::Fog() : color( XMFLOAT3( 0.3f, 0.1f, 0.025f ) ), start( 25.0f ), end( 75.0f ) { }
-
-bool Fog::Initialize( GraphicsContainer& gfx )
+Fog::Fog( GraphicsContainer& gfx ) : color( XMFLOAT3( 0.3f, 0.1f, 0.025f ) ), start( 25.0f ), end( 75.0f )
 {
 	try
 	{
-		HRESULT hr = cb_vs_fog.Initialize( gfx.device.Get(), gfx.context.Get() );
+		HRESULT hr = cb_vs_fog.Initialize( GetDevice( gfx ), GetContext( gfx ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'fog' constant buffer!" );
 	}
 	catch ( COMException& exception )
 	{
 		ErrorLogger::Log( exception );
-		return false;
+		return;
 	}
-	return true;
 }
 
 void Fog::UpdateConstantBuffer( GraphicsContainer& gfx ) noexcept
@@ -27,8 +23,8 @@ void Fog::UpdateConstantBuffer( GraphicsContainer& gfx ) noexcept
 	cb_vs_fog.data.fogEnd = end;
 
 	if ( !cb_vs_fog.ApplyChanges() ) return;
-	gfx.context->VSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
-	gfx.context->PSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
+	GetContext( gfx )->VSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
+	GetContext( gfx )->PSSetConstantBuffers( 1u, 1u, cb_vs_fog.GetAddressOf() );
 }
 
 void Fog::SpawnControlWindow()
@@ -45,8 +41,8 @@ void Fog::SpawnControlWindow()
 			enable = FALSE;
 
 		ImGui::ColorEdit3( "Fog Colour", &color.x );
-        ImGui::SliderFloat( "Start Distance", &start, 1.0f, end - 0.1f );
-        ImGui::SliderFloat( "End Distance", &end, start + 0.1f, 100.0f  );
+		ImGui::SliderFloat( "Start Distance", &start, 1.0f, end - 0.1f );
+		ImGui::SliderFloat( "End Distance", &end, start + 0.1f, 100.0f  );
 	}
 	ImGui::End();
 }

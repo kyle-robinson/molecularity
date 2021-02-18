@@ -2,6 +2,11 @@
 #ifndef POINTLIGHT_H
 #define POINTLIGHT_H
 
+/// <summary>
+/// Creates a dynamic point light.
+/// Provides functions to automatically update constant buffer and spawn ImGui control window.
+/// </summary>
+
 class Camera;
 #include "Light.h"
 #include "GraphicsResource.h"
@@ -10,9 +15,10 @@ class PointLight : public Light, public GraphicsResource
 {
 public:
 	bool Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
-	void UpdateConstantBuffer( ConstantBuffer<CB_PS_point>& cb_ps_point );
+	void UpdateConstantBuffer( GraphicsContainer& gfx );
 	void SpawnControlWindow();
-	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
+	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; }
+	inline ConstantBuffer<CB_PS_point>& const GetConstantBuffer() noexcept { return cb_ps_point; }
 private:
 	BOOL enable = TRUE;
 	float constant = 1.0f;
@@ -28,6 +34,8 @@ private:
 	XMFLOAT3 ambientColor = { 1.0f, 1.0f, 1.0f };
 	XMFLOAT3 diffuseColor = { 1.0f, 1.0f, 1.0f };
 	XMFLOAT3 specularColor = { 1.0f, 1.0f, 1.0f };
+
+	ConstantBuffer<CB_PS_point> cb_ps_point;
 };
 
 #endif

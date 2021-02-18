@@ -2,6 +2,11 @@
 #ifndef BILLBOARD_H
 #define BILLBOARD_H
 
+/// <summary>
+/// Contains a static function which is used to 'billboard' a game object to a target camera.
+/// This ensures that the object will always rotate to face the target camera regardless of position.
+/// </summary>
+
 #include "Camera.h"
 #include "GameObject3D.h"
 
