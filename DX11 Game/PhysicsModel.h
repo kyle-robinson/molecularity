@@ -31,7 +31,7 @@ public:
 private:
 	//constants
 	float mGravity = 9.81f;
-	float mForceLimit = 0.01f;
+	float mForceLimit = 0.000001f;
 	float mDragFactor = 0.75f;
 
 	//local property variables

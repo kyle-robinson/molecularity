@@ -23,6 +23,8 @@ PhysicsModel::~PhysicsModel()
 
 void PhysicsModel::Update(const float deltaTime)
 {
+	mPosition = mTransform->GetPositionFloat3();
+	OutputDebugStringA((std::to_string(mPosition.x) + "," + std::to_string(mPosition.y) + "," + std::to_string(mPosition.z) + " - " + std::to_string(deltaTime) + "\n").c_str());
 	AddWeight();
 	//AddDrag();
 	CalculateAcceleration();
@@ -36,7 +38,7 @@ void PhysicsModel::Update(const float deltaTime)
 
 void PhysicsModel::AddWeight()
 {
-	mNetForce.y -= (mWeight * mForceLimit) + mDrag.y;
+	mNetForce.y -= mWeight * mForceLimit;
 }
 
 void PhysicsModel::CalculateAcceleration()
@@ -87,28 +89,27 @@ void PhysicsModel::TurbulentDrag()
 
 void PhysicsModel::CalculatePosition(const float deltaTime)
 {
-	XMFLOAT3 position = mTransform->GetPositionFloat3();
-	position.x += mVelocity.x * deltaTime + 0.5f * mAcceleration.x * deltaTime * deltaTime;
-	position.y += mVelocity.y * deltaTime + 0.5f * mAcceleration.y * deltaTime * deltaTime;
-	position.z += mVelocity.z * deltaTime + 0.5f * mAcceleration.z * deltaTime * deltaTime;
+	mPosition = mTransform->GetPositionFloat3();
+	mPosition.x += mVelocity.x * deltaTime + 0.5f * mAcceleration.x * deltaTime * deltaTime;
+	mPosition.y += mVelocity.y * deltaTime + 0.5f * mAcceleration.y * deltaTime * deltaTime;
+	mPosition.z += mVelocity.z * deltaTime + 0.5f * mAcceleration.z * deltaTime * deltaTime;
 
 	CalculateVelocity(deltaTime);
 
-	mTransform->SetPosition(position);
+	mTransform->SetPosition(mPosition);
 }
 
 void PhysicsModel::AddGravity()
 {
-	XMFLOAT3 position = mTransform->GetPositionFloat3();
+	mPosition = mTransform->GetPositionFloat3();
 
-	// floor/ceiling collisions
-	if (position.y < 0.0f)
+	if (mPosition.y < 0.0f)
 	{
 		mVelocity = { mVelocity.x, 0.0f, mVelocity.z };
-		position.y = 0.0f;
-		mTransform->SetPosition(position);
+		mPosition.y = 0.0f;
+		mTransform->SetPosition(mPosition);
 	}
-	else if (position.y > 0.0f)
+	else if (mPosition.y > 0.0f)
 	{
 		mVelocity.y -= 0.01f;
 	}
