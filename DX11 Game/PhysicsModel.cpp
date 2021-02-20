@@ -3,8 +3,8 @@
 
 PhysicsModel::PhysicsModel(RenderableGameObject* transform) : mTransform(transform)
 {
-	mMass = 1.0f;
-	mUseLaminar = true;
+	mMass = 100.0f;
+	mUseLaminar = false;
 	mPosition = mTransform->GetPositionFloat3();
 
 	// object weight = mass * gravity
@@ -23,10 +23,8 @@ PhysicsModel::~PhysicsModel()
 
 void PhysicsModel::Update(const float deltaTime)
 {
-	mPosition = mTransform->GetPositionFloat3();
-	OutputDebugStringA((std::to_string(mPosition.x) + "," + std::to_string(mPosition.y) + "," + std::to_string(mPosition.z) + " - " + std::to_string(deltaTime) + "\n").c_str());
 	AddWeight();
-	//AddDrag();
+	AddDrag();
 	CalculateAcceleration();
 	//AddFriction(deltaTime);
 	CalculateVelocity(deltaTime);
@@ -38,7 +36,7 @@ void PhysicsModel::Update(const float deltaTime)
 
 void PhysicsModel::AddWeight()
 {
-	mNetForce.y -= mWeight * mForceLimit;
+	mNetForce.y -= mWeight;
 }
 
 void PhysicsModel::CalculateAcceleration()
@@ -103,13 +101,13 @@ void PhysicsModel::AddGravity()
 {
 	mPosition = mTransform->GetPositionFloat3();
 
-	if (mPosition.y < 0.0f)
+	if (mPosition.y < 1.0f)
 	{
 		mVelocity = { mVelocity.x, 0.0f, mVelocity.z };
-		mPosition.y = 0.0f;
+		mPosition.y = 1.0f;
 		mTransform->SetPosition(mPosition);
 	}
-	else if (mPosition.y > 0.0f)
+	else if (mPosition.y > 1.0f)
 	{
 		mVelocity.y -= 0.01f;
 	}

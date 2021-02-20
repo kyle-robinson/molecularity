@@ -43,5 +43,5 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 
 void Cube::UpdatePhysics(const float deltaTime) noexcept
 {
-    physicsModel->Update(deltaTime);
+    physicsModel->Update(deltaTime / 1000.0f);
 }
