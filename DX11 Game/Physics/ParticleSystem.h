@@ -2,31 +2,35 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
-#include <vector>
-#include <Particle.h>
-#include <Objects/RenderableGameObject.h>
-#include <ParticleTransform.h>
+/// <summary>
+/// Used to create a particle system.
+/// Each system can utilize particles with different parameters.
+/// </summary>
 
-using namespace std;
+#include "Particle.h"
+#include "ParticleTransform.h"
+#include "RenderableGameObject.h"
+
+class Particle;
 
 class ParticleSystem
 {
 public:
-	ParticleSystem(RenderableGameObject* parent, int maxParticles, float particleSize);
-	ParticleSystem(XMMATRIX position, int maxParticles, float particleSize);
-	~ParticleSystem();
+	ParticleSystem( std::shared_ptr<RenderableGameObject> parent, int maxParticles, float particleSize );
+	ParticleSystem( XMMATRIX position, int maxParticles, float particleSize );
+	virtual ~ParticleSystem() = default;
 
 	void Draw();
-	void Update(float t);
+	void Update( const float dt );
 
-	XMMATRIX GetPosition() const { return mPosition; }
-	void SetPosition(XMMATRIX pos) { mPosition = pos; }
+	XMMATRIX GetPosition() const noexcept { return mPosition; }
+	void SetPosition( XMMATRIX pos ) noexcept { mPosition = pos; }
 
-	vector<Particle*> GetParticles() const { return mParticles;  }
-	GameObject* GetParent() const { return mParent;  }
+	std::vector<std::shared_ptr<Particle>> GetParticles() const noexcept { return mParticles; }
+	std::shared_ptr<GameObject> GetParent() const noexcept { return mParent; }
 private:
-	vector<Particle*> mParticles;
-	RenderableGameObject* mParent;
+	std::vector<std::shared_ptr<Particle>> mParticles;
+	std::shared_ptr<RenderableGameObject> mParent;
 	XMMATRIX mPosition;
 };
 

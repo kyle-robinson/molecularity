@@ -144,7 +144,19 @@
     <ClCompile Include="Graphics\StencilOutline.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsModel.cpp">
+    <ClCompile Include="Physics\ParticleManager.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsModel.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\ParticleTransform.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Particle.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\ParticleSystem.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -362,7 +374,7 @@
     <ClInclude Include="Physics\ParticleTransform.h">
       <Filter>Headers\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsModel.h">
+    <ClInclude Include="Physics\PhysicsModel.h">
       <Filter>Headers\Physics</Filter>
     </ClInclude>
   </ItemGroup>

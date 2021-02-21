@@ -6,11 +6,6 @@ ParticleManager::ParticleManager()
 
 }
 
-ParticleManager::~ParticleManager()
-{
-
-}
-
 void ParticleManager::CreateParticleSystem()
 {
 

@@ -185,10 +185,8 @@ void Graphics::EndFrame()
 	PresentScene();
 }
 
-void Graphics::Update( float dt )
+void Graphics::Update( const float dt )
 {
-	UNREFERENCED_PARAMETER( dt );
-
 	// update lights/skysphere
 	pointLight.SetPosition( pointLight.GetLightPosition() );
 	directionalLight.SetPosition( directionalLight.GetLightPosition() );
@@ -217,6 +215,5 @@ void Graphics::Update( float dt )
 	spotLight.UpdateModelPosition( cameras["Default"] );
 
 	//update object physics
-	if(dt < 20.0f)
-		cube.UpdatePhysics(dt);
+	cube.UpdatePhysics( dt );
 }
