@@ -13,6 +13,7 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
         hr = ib_cube.Initialize( device, Idx::indicesCube, ARRAYSIZE( Idx::indicesCube ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create cube index buffer!" );
         editableProperties = new CubeProperties();
+        physicsModel = new PhysicsModel(this);
 
         SetPosition( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
 	    SetRotation( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
@@ -38,4 +39,9 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
     if ( !cb_vs_matrix.ApplyChanges() ) return;
     context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
     context->DrawIndexed( ib_cube.IndexCount(), 0, 0 );
+}
+
+void Cube::UpdatePhysics(const float deltaTime) noexcept
+{
+    physicsModel->Update(deltaTime / 1000.0f);
 }

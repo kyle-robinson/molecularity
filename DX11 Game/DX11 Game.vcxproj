@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Physics;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\lib;$(SolutionDir)External\lib\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -286,6 +286,7 @@
     <ClCompile Include="Objects\Sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PhysicsModel.cpp" />
     <ClCompile Include="Utility\Collisions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -370,6 +371,11 @@
     <ClInclude Include="Objects\RenderableGameObject.h" />
     <ClInclude Include="Objects\SpotLight.h" />
     <ClInclude Include="Objects\Sprite.h" />
+    <ClInclude Include="PhysicsModel.h" />
+    <ClInclude Include="Physics\Particle.h" />
+    <ClInclude Include="Physics\ParticleManager.h" />
+    <ClInclude Include="Physics\ParticleSystem.h" />
+    <ClInclude Include="Physics\ParticleTransform.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Utility\Billboard.h" />
     <ClInclude Include="Utility\Collisions.h" />

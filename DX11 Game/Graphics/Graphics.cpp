@@ -39,10 +39,10 @@ bool Graphics::InitializeScene()
 
 			// primitives
 			if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
-			cube.SetInitialPosition( 0.0f, 5.0f, 5.0f );
+			cube.SetInitialPosition( 0.0f, 10.0f, -6.0f );
 
 			if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
-			simpleQuad.SetInitialPosition( 0.0f, 5.0f, -5.0f );
+			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
 			// sprites
@@ -207,7 +207,7 @@ void Graphics::Update( float dt )
 		dz *= cameras["Default"]->GetCameraSpeed() * 10.0f;
 		cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
 	}
-	
+
 	// cube range collision check
 	if ( cube.GetEditableProperties()->GetType() == ToolType::RESIZE )
 		cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
@@ -215,4 +215,8 @@ void Graphics::Update( float dt )
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras["Default"] );
+
+	//update object physics
+	if(dt < 20.0f)
+		cube.UpdatePhysics(dt);
 }
