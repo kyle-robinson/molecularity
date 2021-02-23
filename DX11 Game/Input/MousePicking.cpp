@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MousePicking.h"
 #include "GameObject3D.h"
 #include <DirectXCollision.h>

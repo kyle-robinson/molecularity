@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TextRenderer.h"
 #include "Graphics.h"
 

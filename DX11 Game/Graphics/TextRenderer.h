@@ -11,7 +11,6 @@
 #include "GraphicsResource.h"
 #include <dxtk/SpriteFont.h>
 #include <dxtk/SpriteBatch.h>
-using namespace DirectX;
 
 class Graphics;
 

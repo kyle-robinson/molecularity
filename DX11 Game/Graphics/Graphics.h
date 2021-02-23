@@ -35,7 +35,7 @@ public:
 	void BeginFrame();
 	void RenderFrame();
 	void EndFrame();
-	void Update( float dt );
+	void Update( const float dt );
 	
 	Cube& GetCube() noexcept { return cube; }
 	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; }

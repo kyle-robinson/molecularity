@@ -8,9 +8,6 @@
 /// Camera view and projection matrices must be updated each frame and the camera in use may change.
 /// </summary>
 
-#include <DirectXMath.h>
-using namespace DirectX;
-
 class Graphics;
 class GameObject3D;
 

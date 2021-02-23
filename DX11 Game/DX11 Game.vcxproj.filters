@@ -144,7 +144,21 @@
     <ClCompile Include="Graphics\StencilOutline.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\JSON_Helper.cpp" />
+    <ClCompile Include="Physics\ParticleManager.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsModel.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\ParticleTransform.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Particle.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\ParticleSystem.cpp">
+      <Filter>Source\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -348,7 +362,21 @@
     <ClInclude Include="Graphics\StencilOutline.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\JSON_Helper.h" />
+    <ClInclude Include="Physics\Particle.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ParticleManager.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ParticleSystem.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ParticleTransform.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsModel.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Controller.ico">
@@ -594,6 +622,12 @@
     </Filter>
     <Filter Include="Source\Graphics\Systems">
       <UniqueIdentifier>{f25c3d41-b8bf-4f88-bfda-1187fcbaff1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Physics">
+      <UniqueIdentifier>{4c795db4-0234-4587-a0ea-e28d4cc1be26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Physics">
+      <UniqueIdentifier>{0b8aaf0c-bb3f-4d27-a62c-afb591fa49c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
