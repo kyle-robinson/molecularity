@@ -3,7 +3,7 @@
     {
       "Name": "Hub_Room",
       "FileName": "Resources\\Models\\Hub\\scene.gltf",
-      "Positon": [ 0, 0, 0 ],
+      "Position": [ 0, 0, 0 ],
       "Scale": [ 4.0, 4.0, 4.0 ],
       "Rotation": [ 0, 0, 0 ]
     }
@@ -14,7 +14,7 @@
       "Name": "pointLight1",
       "Type": "pointLight",
       "FileName": "Resources\\Models\\Disco\\scene.gltf",
-      "Positon": [ -5.0, 9.0, -10.0 ],
+      "Position": [ -5.0, 9.0, -10.0 ],
       "Scale": [ 0.01, 0.01, 0.01 ],
       "Rotation": [ 0, 0, 0 ]
     },
@@ -23,7 +23,7 @@
       "Name": "directionalLight1",
       "Type": "directionalLight",
       "FileName": "Resources\\Models\\Disco\\scene.gltf",
-      "Positon": [ 10.0, 20.0, 10.0 ],
+      "Position": [ 10.0, 20.0, 10.0 ],
       "Scale": [ 0.01, 0.01, 0.01 ],
       "Rotation": [ 0, 0, 0 ]
 
@@ -33,7 +33,7 @@
       "Name": "Touch",
       "Type": "spotLight",
       "FileName": "Resources\\Models\\Flashlight.fbx",
-      "Positon": [ 0, 0, 0 ],
+      "Position": [ 0, 0, 0 ],
       "Scale": [ 0.01, 0.01, 0.01 ],
       "Rotation": [ 0, 0, 0 ]
     }

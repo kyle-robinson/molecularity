@@ -1,22 +1,22 @@
 {
   "CubeTextures": [
     {
-      "Name": "Nanosuit",
+      "Name": "basic_crate",
       "TextureFile": "Resources\\Textures\\crates\\basic_crate.png"
 
     },
     {
-      "Name": "Nanosuit",
+      "Name": "bounce_crate",
       "TextureFile": "Resources\\Textures\\crates\\bounce_crate.png"
 
     },
     {
-      "Name": "Nanosuit",
+      "Name": "arrow_crate",
       "TextureFile": "Resources\\Textures\\crates\\arrow_crate.png"
 
     },
     {
-      "Name": "Nanosuit",
+      "Name": "tnt_crate",
       "TextureFile": "Resources\\Textures\\crates\\tnt_crate.png"
 
     }

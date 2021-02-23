@@ -8,6 +8,12 @@
 using namespace rapidjson;
 using namespace std;
 
+//Json Loader Can:
+//Load GameObjects
+//Load Settings Data
+//Text Data
+//Load Any json file as a string formate
+//Update Nodes 
 
 namespace JSON_LOADER {
 	typedef std::variant<int, string, bool, float, double> DataFromFile;
@@ -64,11 +70,13 @@ struct LigthData {
 
 };
 
-
-	void GameObjects(vector<ModdleData>& gameObjects,vector<LigthData>& LightData);
+	
+	
 	//load GameObjects get all data
 	vector<ModdleData> LoadGameObjects(string fileName);
-	vector<LigthData> LoadGameLights(string fileName);
+
+	//need to implment ligte data loading
+	//vector<LigthData> LoadGameLights(string fileName);
 
 	//load text data get all data
 	vector<TextData> LoadTextDataItems(string FileName);
@@ -77,8 +85,8 @@ struct LigthData {
 	vector<SettingData> LoadSettings();
 	
 
-	//Load one Node as string
-	vector<string> LoadJSONNode(string JSONFIle, string Node,string DataNode = "");
+	//Load one Node as string to be reworeked
+	/*vector<string> LoadJSONNode(string JSONFIle, string Node,string DataNode = "");*/
 
 	//Load all Nodes
 	vector<string> LoadFileData(string fileName);
@@ -87,11 +95,11 @@ struct LigthData {
 	
 	DataFromFile GetDataAny(Value::ConstMemberIterator Value);
 
-	//add new Node
-	template<typename DataType>
+	//add new Node (WIP)
+	/*template<typename DataType>
 	void AddNode(string fileName, string nodeName, DataType Data) {
 
-	}
+	}*/
 	
 
 
@@ -100,7 +108,7 @@ struct LigthData {
 	//store file
 	bool StoreFile(string fileName, Document& d);
 	
-	//check node is ther
+	//check node is there
 	template <typename DataFormat>
 	bool CheckDataIsThere(string ObjectName, DataFormat& doc) {
 

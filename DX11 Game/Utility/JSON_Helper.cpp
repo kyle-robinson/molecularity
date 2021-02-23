@@ -13,24 +13,76 @@ vector<JSON_LOADER::ModdleData> JSON_LOADER::LoadGameObjects(string fileName)
 		if (!d.IsNull()) {
 			//load from file
 			for (Value& GameObject : d["GameObjects"].GetArray()) {
-
+				//Name of object
 				if (CheckDataIsThere<Value>("Name", GameObject))
 				{
 					ObjectData.ObjectName = GameObject["Name"].GetString();
 
 				}
+				//object file data
 				if (CheckDataIsThere<Value>("FileName", GameObject))
 				{
 					ObjectData.FileName = GameObject["FileName"].GetString();
 				}
-				if (CheckDataIsThere<Value>("Positon", GameObject)) {
-					ObjectData.Position = { GameObject["Positon"][0].GetFloat(),GameObject["Positon"][1].GetFloat(),GameObject["Positon"][2].GetFloat() };
+
+				//posistion data
+				if (CheckDataIsThere<Value>("Position", GameObject)) {
+					ObjectData.Position = { GameObject["Position"][0].GetFloat(),GameObject["Position"][1].GetFloat(),GameObject["Position"][2].GetFloat() };
 				}
+				else if (CheckDataIsThere<Value>("PosX", GameObject)&& CheckDataIsThere<Value>("PosY", GameObject)&& CheckDataIsThere<Value>("PosZ", GameObject)) {
+
+					ObjectData.Position.x = GameObject["PosX"][0].GetFloat();
+					ObjectData.Position.y = GameObject["PosY"][0].GetFloat();
+					ObjectData.Position.z = GameObject["PosZ"][0].GetFloat();
+				}
+				else if (CheckDataIsThere<Value>("PositionX", GameObject) && CheckDataIsThere<Value>("PositionY", GameObject) && CheckDataIsThere<Value>("PositionZ", GameObject)) {
+					ObjectData.Position.x = GameObject["PositionX"][0].GetFloat();
+					ObjectData.Position.y = GameObject["PositionY"][0].GetFloat();
+					ObjectData.Position.z = GameObject["PositionZ"][0].GetFloat();
+				}
+				else
+				{
+					ObjectData.Position.x = 0;
+					ObjectData.Position.y = 0;
+					ObjectData.Position.z = 0;
+				}
+				
+				//scale data
 				if (CheckDataIsThere<Value>("Scale", GameObject)) {
 					ObjectData.Scale = { GameObject["Scale"][0].GetFloat(),GameObject["Scale"][1].GetFloat(),GameObject["Scale"][2].GetFloat() };
 				}
+				else if (CheckDataIsThere<Value>("ScaleX", GameObject) && CheckDataIsThere<Value>("ScaleY", GameObject) && CheckDataIsThere<Value>("ScaleZ", GameObject)) {
+
+					ObjectData.Scale.x = GameObject["ScaleX"][0].GetFloat();
+					ObjectData.Scale.y = GameObject["ScaleY"][0].GetFloat();
+					ObjectData.Scale.z = GameObject["ScaleZ"][0].GetFloat();
+				}
+				else
+				{
+					ObjectData.Scale.x = 0;
+					ObjectData.Scale.y = 0;
+					ObjectData.Scale.z = 0;
+				}
+
 				if (CheckDataIsThere<Value>("Rotation", GameObject)) {
 					ObjectData.Rotation = { GameObject["Rotation"][0].GetFloat(),GameObject["Rotation"][1].GetFloat(),GameObject["Rotation"][2].GetFloat() };
+				}
+				else if (CheckDataIsThere<Value>("RotX", GameObject) && CheckDataIsThere<Value>("RotY", GameObject) && CheckDataIsThere<Value>("RotZ", GameObject)) {
+
+					ObjectData.Rotation.x = GameObject["RotX"][0].GetFloat();
+					ObjectData.Rotation.y = GameObject["RotY"][0].GetFloat();
+					ObjectData.Rotation.z = GameObject["RotZ"][0].GetFloat();
+				}
+				else if (CheckDataIsThere<Value>("RotationX", GameObject) && CheckDataIsThere<Value>("RotationY", GameObject) && CheckDataIsThere<Value>("RotationZ", GameObject)) {
+					ObjectData.Rotation.x = GameObject["RotationX"][0].GetFloat();
+					ObjectData.Rotation.y = GameObject["RotationY"][0].GetFloat();
+					ObjectData.Rotation.z = GameObject["RotationZ"][0].GetFloat();
+				}
+				else
+				{
+					ObjectData.Rotation.x = 0;
+					ObjectData.Rotation.y = 0;
+					ObjectData.Rotation.z = 0;
 				}
 				Data.push_back(ObjectData);
 			}
@@ -287,7 +339,7 @@ JSON_LOADER::DataFromFile JSON_LOADER::GetDataAny(Value::ConstMemberIterator Val
 bool JSON_LOADER::StoreFile(string fileName, Document& d)
 {
 	//back to file
-	std::ofstream t("Resources\\JSON_File\\" + fileName);
+	std::ofstream t("Resources\\JSON\\" + fileName);
 	OStreamWrapper s(t);
 	Writer<OStreamWrapper> writer(s);
 	d.Accept(writer);
@@ -302,7 +354,7 @@ Document JSON_LOADER::ParseFile(string File)
 	Document d;
 	
 		HRESULT hr;
-		std::ifstream t("Resources\\JSON_File\\" + File);
+		std::ifstream t("Resources\\JSON\\" + File);
 		if (!t.is_open()) {
 			//error
 			d.SetNull();
