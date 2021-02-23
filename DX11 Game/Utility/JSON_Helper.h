@@ -1,4 +1,5 @@
 #pragma once
+
 #include"rapidjson/document.h"
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
@@ -15,7 +16,6 @@ struct ModdleData
 {
 	string ObjectName;
 	string FileName;
-	/*string Texture;*/
 	DirectX::XMFLOAT3 Position;
 	DirectX::XMFLOAT3 Scale;
 	DirectX::XMFLOAT3 Rotation;
@@ -65,9 +65,11 @@ struct LigthData {
 };
 
 
+	void GameObjects(vector<ModdleData>& gameObjects,vector<LigthData>& LightData);
 	//load GameObjects get all data
 	vector<ModdleData> LoadGameObjects(string fileName);
-	
+	vector<LigthData> LoadGameLights(string fileName);
+
 	//load text data get all data
 	vector<TextData> LoadTextDataItems(string FileName);
 	

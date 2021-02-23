@@ -144,6 +144,7 @@
     <ClCompile Include="Graphics\StencilOutline.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\JSON_Helper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -347,6 +348,7 @@
     <ClInclude Include="Graphics\StencilOutline.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\JSON_Helper.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Controller.ico">
