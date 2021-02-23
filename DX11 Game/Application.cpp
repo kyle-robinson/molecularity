@@ -17,6 +17,12 @@ bool Application::Initialize(
 	if ( !graphics.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
 
+	//if (!sound.Initialise(renderWindow.GetHWND()))
+	//{
+	//	MessageBox(renderWindow.GetHWND(), L"Could not initialise Direct Sound.", L"Error", MB_OK);
+	//	return false;
+	//}
+
 	mousePick.Initialize( graphics.GetCamera( graphics.cameraToUse )->GetViewMatrix(),
 		graphics.GetCamera( graphics.cameraToUse )->GetProjectionMatrix(), width, height );
 

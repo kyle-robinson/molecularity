@@ -12,6 +12,7 @@
 #include "Graphics.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
+#include "Sound.h"
 
 class Application : public WindowContainer
 {
@@ -30,6 +31,7 @@ private:
 	Timer timer;
 	Graphics graphics;
 	MousePicking mousePick;
+	Sound sound;
 };
 
 #endif

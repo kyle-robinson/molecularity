@@ -1,26 +1,56 @@
 #pragma once
+#ifndef _SOUND_H_
+#define _SOUND_H_
+
+
+#pragma comment(lib, "dsound.lib")
+#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "winmm.lib")
+
+#include <Windows.h>
+#include <mmsystem.h>
 #include <dsound.h>
+#include <stdio.h>
 
 class Sound
 {
 private:
+	struct WaveHeaderType
+	{
+		char chunkID[4];
+		unsigned long chunkSize;
+		char format[4];
+		char subChunkID[4];
+		unsigned long subChunkSize;
+		unsigned short audioFormat;
+		unsigned short numChannels;
+		unsigned long sampleRate;
+		unsigned long bytesPerSecond;
+		unsigned short blockAlign;
+		unsigned short bitsPerSample;
+		char dataChunkID[4];
+		unsigned long dataSize;
+	};
+
+public:
 	Sound();
 	~Sound();
 
-	bool Initialise();
+	bool Initialise(HWND);
 	void Close();
 
-	bool InitialiseDirectSound();
+private:
+	bool InitialiseDirectSound(HWND);
 	void CloseDirectSound();
 
-	bool LoadWavFile(char*, IDirectSoundBuffer8**);
+	bool LoadWavFile(const char*, IDirectSoundBuffer8**);
 	void CloseWavFile(IDirectSoundBuffer8**);
 
 	bool PlayWavFile();
 
-public:
 	IDirectSound8* _directSound;
-	IDirectSoundBuffer8* _primaryBuffer;
+	IDirectSoundBuffer* _primaryBuffer;
 	IDirectSoundBuffer8* _secondaryBuffer1;
 };
 
+#endif // !_SOUND_H_
