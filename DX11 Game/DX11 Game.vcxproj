@@ -230,6 +230,7 @@
     <ClCompile Include="Graphics\TextRenderer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Input\MousePicking.cpp">
@@ -354,6 +355,7 @@
     </ClInclude>
     <ClInclude Include="Graphics\Viewport.h" />
     <ClInclude Include="Input\CameraMovement.h" />
+    <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MousePicking.h" />

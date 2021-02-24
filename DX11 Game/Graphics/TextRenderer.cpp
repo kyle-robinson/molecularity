@@ -63,6 +63,25 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 
 void TextRenderer::RenderCameraText( Graphics& gfx )
 {
-	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( gfx.cameraToUse ) ).c_str(),
+	std::string text;
+
+	switch (gfx.cameraToUse)
+	{
+	case 0:
+		text = "Default";
+		break;
+	case 1:
+		text = "Static";
+		break;
+	case 2:
+		text = "Debug";
+		break;
+	default:
+		text = "Name needed in 'TextRenderer'";
+		break;
+
+	}
+
+	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( text ) ).c_str(),
 		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
 }

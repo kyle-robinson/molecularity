@@ -12,6 +12,7 @@
 #include "Graphics.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
+#include "Input.h"
 
 class Application : public WindowContainer
 {
@@ -27,9 +28,15 @@ public:
 	void Update();
 	void Render();
 private:
+	void UpdateMouse(const float dt);
+	void UpdateKeyboard(const float dt);
+
+private:
 	Timer timer;
 	Graphics graphics;
 	MousePicking mousePick;
+	Input input;
+
 };
 
 #endif

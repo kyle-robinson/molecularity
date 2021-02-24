@@ -159,6 +159,9 @@
     <ClCompile Include="Physics\ParticleSystem.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Source\Input</Filter>
+    </ClCompile>
     <ClCompile Include="Utility\JSON_Helper.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
@@ -379,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="Physics\PhysicsModel.h">
       <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Headers\Input</Filter>
     </ClInclude>
     <ClInclude Include="Utility\JSON_Helper.h">
       <Filter>Headers\Utility</Filter>
