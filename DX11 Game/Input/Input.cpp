@@ -2,7 +2,7 @@
 #include "Input.h"
 #include "CameraMovement.h"
 
-bool Input::Initialize(Graphics* graphicDevice,RenderWindow* renderDevice, int width, int height)
+void Input::Initialize(Graphics* graphicDevice,RenderWindow* renderDevice, int width, int height)
 {
 	EnableCursor();
 
@@ -12,7 +12,6 @@ bool Input::Initialize(Graphics* graphicDevice,RenderWindow* renderDevice, int w
 		graphics->GetCamera(graphics->cameraToUse)->GetProjectionMatrix(), width, height);
 
 
-	return true;
 }
 
 void Input::Update(const float dt)

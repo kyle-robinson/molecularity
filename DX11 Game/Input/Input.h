@@ -12,7 +12,7 @@
 class Input : public WindowContainer
 {
 public:
-	bool Initialize(Graphics* graphicDevice,RenderWindow* renderDevice, int width, int height);
+	void Initialize(Graphics* graphicDevice,RenderWindow* renderDevice, int width, int height);
 	void Update(const float dt);
 
 private:

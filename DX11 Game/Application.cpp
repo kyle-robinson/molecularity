@@ -16,8 +16,8 @@ bool Application::Initialize(
 	if ( !graphics.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
 
-	if (input.Initialize(&graphics, &renderWindow, width, height))
-		return false;
+
+	input.Initialize(&graphics, &renderWindow, width, height);
 
 
 	return true;
