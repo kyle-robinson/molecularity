@@ -159,6 +159,9 @@
     <ClCompile Include="Physics\ParticleSystem.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Source\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -376,6 +379,9 @@
     </ClInclude>
     <ClInclude Include="Physics\PhysicsModel.h">
       <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Headers\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,7 @@
 
 class StencilOutline;
 class TextRenderer;
+enum cameraTypes { Default, Static, Debug }; //Will need moved when cameraClass is made for itself or even moved to 
 
 class Graphics : public GraphicsContainer
 {
@@ -29,6 +30,7 @@ class Graphics : public GraphicsContainer
 public:
 	// Functions
 	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE; //might move this. It doenst do anything at the moment so left it incase.
+	
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 
@@ -38,22 +40,26 @@ public:
 	void Update( const float dt );
 	
 	Cube& GetCube() noexcept { return cube; }
-	std::unique_ptr<Camera>& GetCamera( const std::string& cam ) noexcept { return cameras[cam]; }
+	std::unique_ptr<Camera>& GetCamera(const cameraTypes& cam) noexcept {return cameras[cam]; }
 private:
 	bool InitializeScene();
 
 public:
-	// Variables
+	// Variables - to be moved to a cameraController (and changed by input class
 	int boxToUse = 0;
 	int sizeAmount = 2;
 	bool cubeHover = false;
 	bool cubeInRange = false;
 	bool holdingCube = false;
-	std::string cameraToUse = "Default";
-private:
-	float sizeToUse = 1.0f;
-	std::string selectedBox = "Basic";
 
+
+	cameraTypes cameraToUse = Default;
+	std::string selectedBox = "Basic"; //box needs to know what type of box it is, this will need to be moved possibly
+	float sizeToUse = 1.0f; //box should know what size it will be
+
+private:
+
+	
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;
@@ -69,7 +75,7 @@ private:
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<StencilOutline> stencilOutline;
-	std::map<std::string, std::unique_ptr<Camera>> cameras;
+	std::map<cameraTypes, std::unique_ptr<Camera>> cameras;
 
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
