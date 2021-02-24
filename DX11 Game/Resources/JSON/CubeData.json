@@ -1,0 +1,25 @@
+{
+  "CubeTextures": [
+    {
+      "Name": "basic_crate",
+      "TextureFile": "Resources\\Textures\\crates\\basic_crate.png"
+
+    },
+    {
+      "Name": "bounce_crate",
+      "TextureFile": "Resources\\Textures\\crates\\bounce_crate.png"
+
+    },
+    {
+      "Name": "arrow_crate",
+      "TextureFile": "Resources\\Textures\\crates\\arrow_crate.png"
+
+    },
+    {
+      "Name": "tnt_crate",
+      "TextureFile": "Resources\\Textures\\crates\\tnt_crate.png"
+
+    }
+  ],
+  "version": "1.0"
+}
