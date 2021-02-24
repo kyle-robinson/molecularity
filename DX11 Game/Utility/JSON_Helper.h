@@ -1,170 +1,177 @@
 #pragma once
+#ifndef JSON_HELPER_H
+#define JSON_HELPER_H
 
-#include"rapidjson/document.h"
+/// <summary>
+/// JSON Loader Features:
+/// - Load GameObject Data
+/// - Load Settings (Graphics/Controls)
+/// - Text/String Data
+/// - Parse JSON file to string
+/// - Update nodes
+/// </summary>
+
+#include <variant>
+#include <rapidjson/writer.h>
+#include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
-#include <rapidjson/writer.h>
-#include<variant>
 using namespace rapidjson;
-using namespace std;
 
-//Json Loader Can:
-//Load GameObjects
-//Load Settings Data
-//Text Data
-//Load Any json file as a string formate
-//Update Nodes 
-
-namespace JSON_LOADER {
-	typedef std::variant<int, string, bool, float, double> DataFromFile;
-//structs to store loaded object 
-struct ModdleData
+namespace JSON_LOADER
 {
-	string ObjectName;
-	string FileName;
-	DirectX::XMFLOAT3 Position;
-	DirectX::XMFLOAT3 Scale;
-	DirectX::XMFLOAT3 Rotation;
-};
-
-
-
-struct SettingData
-{
-	string Name;
-	//Get data by:
-	// get<type>(array_name[Position_in_Array].Setting);
-	DataFromFile Setting;
-
-};
-
-struct TextData {
-	string Name;
-	string Text;
-	//add more data here eg position
-};
-enum CamraType
-{
-	Default,
-	Static,
-	Debug
-};
-struct CamraData {
-	string Name;
-	string type;
-	DirectX::XMFLOAT3 Position;
+	typedef std::variant<int, std::string, bool, float, double> DataFromFile;
 	
-};
+	// Structs to store loaded object data
+	struct ModelData
+	{
+		std::string ObjectName;
+		std::string FileName;
+		XMFLOAT3 Position;
+		XMFLOAT3 Scale;
+		XMFLOAT3 Rotation;
+	};
 
-enum LightType
-{
-	Point,
-	directional,
-	spotlight
-};
-struct LigthData {
-	string Name;
-	
+	struct SettingData
+	{
+		std::string Name;
+		DataFromFile Setting;
+		// Get Data: get<type>(array_name[Position_in_Array].Setting);
+	};
 
+	struct TextData {
+		std::string Name;
+		std::string Text;
+		// Add more data here e.g. position
+	};
 
+	enum CameraType
+	{
+		Default,
+		Static,
+		Debug
+	};
 
-};
+	struct CameraData {
+		std::string Name;
+		std::string type;
+		XMFLOAT3 Position;
+	};
 
-	
+	enum LightType
+	{
+		Point,
+		directional,
+		spotlight
+	};
+
+	struct LightData
+	{
+		std::string Name;
+	};
 	
 	//load GameObjects get all data
-	vector<ModdleData> LoadGameObjects(string fileName);
+	std::vector<ModelData> LoadGameObjects( const std::string& fileName );
 
 	//need to implment ligte data loading
-	//vector<LigthData> LoadGameLights(string fileName);
+	//vector<LightData> LoadGameLights( const std::string& fileName );
 
 	//load text data get all data
-	vector<TextData> LoadTextDataItems(string FileName);
+	std::vector<TextData> LoadTextDataItems( const std::string& fileName );
 	
 	//Load Setting Files get all data
-	vector<SettingData> LoadSettings();
+	std::vector<SettingData> LoadSettings();
 	
 
-	//Load one Node as string to be reworeked
-	/*vector<string> LoadJSONNode(string JSONFIle, string Node,string DataNode = "");*/
+	// Load one Node as string to be reworeked
+	// vector<string> LoadJSONNode( const std::string& jsonFile, const std::string& node, const std::string& dataNode = "" );
 
-	//Load all Nodes
-	vector<string> LoadFileData(string fileName);
-	vector<pair<string,string>> LoadFileDataAndName(string fileName);
-	pair<string, string> GetData(Value::ConstMemberIterator Value);
+	// Load all Nodes
+	std::vector<std::string> LoadFileData( const std::string& fileName );
+	std::vector<std::pair<std::string, std::string>> LoadFileDataAndName( const std::string& fileName );
+	std::pair<std::string, std::string> GetData( Value::ConstMemberIterator value );
 	
-	DataFromFile GetDataAny(Value::ConstMemberIterator Value);
+	DataFromFile GetDataAny( Value::ConstMemberIterator value );
 
-	//add new Node (WIP)
-	/*template<typename DataType>
-	void AddNode(string fileName, string nodeName, DataType Data) {
-
-	}*/
-	
-
+	// Add new node (WIP)
+	//template<typename DataType>
+	//void AddNode( const std::string& fileName, const std::string& nodeName, DataType data )
+	//{
+	//
+	//}
 
 	//get file
-	Document ParseFile(string File);
+	Document ParseFile( const std::string& file );
 	//store file
-	bool StoreFile(string fileName, Document& d);
+	bool StoreFile( const std::string& fileName, const Document& document );
 	
 	//check node is there
 	template <typename DataFormat>
-	bool CheckDataIsThere(string ObjectName, DataFormat& doc) {
+	bool CheckDataIsThere( const std::string& objectName, const DataFormat& document )
+	{
+		return document.HasMember( objectName.c_str() );;
+	}
+	// Set string data 
+	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, const std::string& data )
+	{
+		Document document;
+		document[a.c_str()].SetString( data.c_str(), document.GetAllocator() );
+	}
+	// Set int data 
+	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, int data )
+	{
+		Document document;
+		document[a.c_str()].SetInt( data );
+	}
+	// Set double data 
+	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, double data )
+	{
+		Document document;
+		document[a.c_str()].SetDouble( data );
+	}
+	// Set float data 
+	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, float data )
+	{
+		Document document;
+		document[a.c_str()].SetFloat( data );
+	}
+	// Set bool data 
+	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, bool data )
+	{
+		Document document;
+		document[a.c_str()].SetBool( data );
+	}
 
-		return doc.HasMember(ObjectName.c_str());;
-	}
-
-	//function to set string data 
- template <typename DataFormat> void addObject(DataFormat& d, string a,string data) {
-		Document document;
-		d[a.c_str()].SetString(data.c_str(), document.GetAllocator());
-	}
-	//function to set int data 
-	template <typename DataFormat> void addObject(DataFormat& d, string a, int data) {
-		Document document;
-		d[a.c_str()].SetInt(data);
-	}
-	//function to set double data 
-	template <typename DataFormat> void addObject(DataFormat& d, string a, double data) {
-		Document document;
-		d[a.c_str()].SetDouble(data);
-	}
-	//function to set float data 
-	template <typename DataFormat> void addObject(DataFormat& d, string a, float data) {
-		Document document;
-		d[a.c_str()].SetFloat(data);
-	}
-	//function to set bool data 
-	template <typename DataFormat> void addObject(DataFormat& d, string a, bool data) {
-		Document document;
-		d[a.c_str()].SetBool(data);
-	}
-
-	//Update Data: can update data by checking name data
+	// Update Data: Can update data by checking name
 	template <typename DataTypeToSet>
-	void UpdateJSONItemEX(string JSONFIle, string Node, string DataNode, DataTypeToSet Data, string NameOfData)
+	void UpdateJSONItemEX( const std::string& jsonFile, const std::string& node, const std::string& dataNode, DataTypeToSet data, const std::string& dataName )
 	{
 		//load document
-		Document d = ParseFile(JSONFIle);
-		auto b = Data;
+		auto autoData = data;
+		Document document = ParseFile( jsonFile );
 		//set node
-		if (d.HasMember(Node.c_str())) {
-			if (d[Node.c_str()].IsArray()) {
+		if ( document.HasMember( node.c_str() ) )
+		{
+			if ( document[node.c_str()].IsArray() )
+			{
 				//load from file
-				for (Value& Object : d[Node.c_str()].GetArray()) {
-					if (DataNode != "") {
-						if (Object.HasMember(DataNode.c_str())) {
-							if (NameOfData != "") {
-								if (Object["Name"].GetString() == NameOfData) {
+				for ( Value& Object : document[node.c_str()].GetArray() )
+				{
+					if ( dataNode != "" )
+					{
+						if ( Object.HasMember( dataNode.c_str() ) )
+						{
+							if ( dataName != "" )
+							{
+								if ( Object["Name"].GetString() == dataName )
+								{
 									//chack type
-									addObject<Value>(Object, DataNode, b);
+									AddObject<Value>( Object, dataNode, autoData );
 								}
 							}
-							else {
-								
-								addObject<Value>(Object, DataNode, b);
-
+							else
+							{
+								AddObject<Value>( Object, dataNode, autoData );
 							}
 						}
 					}
@@ -172,24 +179,18 @@ struct LigthData {
 			}
 			else
 			{
-				addObject<Document>(d, Node, b);
-				
+				AddObject<Document>( document, node, autoData );
 			}
 		}
-
-		StoreFile(JSONFIle, d);
-
+		StoreFile( jsonFile, document );
 	}
 
-
-	//will update nodes
+	// Update nodes
 	template<typename DataTypeToSet>
-	void UpdateJSONItem(string JSONFIle, string Node, DataTypeToSet Data, string DataNode)
+	void UpdateJSONItem( const std::string& jsonFile, const std::string& node, DataTypeToSet data, const std::string& dataNode )
 	{
-		UpdateJSONItemEX<DataTypeToSet>(JSONFIle, Node, DataNode, Data, "");
+		UpdateJSONItemEX<DataTypeToSet>( jsonFile, node, dataNode, data, "" );
 	}
-
 }
 
-
-
+#endif
