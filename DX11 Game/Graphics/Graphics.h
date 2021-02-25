@@ -50,14 +50,7 @@ private:
 
 public:
 	// Variables - to be moved to a cameraController (and changed by input class)
-	int boxToUse = 0;
-	int sizeAmount = 2;
-	bool cubeHover = false;
-	bool cubeInRange = false;
-
 	JSON::CameraType cameraToUse = JSON::CameraType::Default;
-	std::string selectedBox = "Basic"; // box needs to know what type of box it is, this will need to be moved possibly
-	float sizeToUse = 1.0f; // box should know what size it will be
 private:
 	Cube cube;
 	Quad simpleQuad;
@@ -82,7 +75,7 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
-	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+	std::map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 };
 
 #endif

@@ -70,10 +70,10 @@ bool Graphics::InitializeScene()
 
 		// TEXTURES
 		{
-			HRESULT hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures["Basic"].GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures["Bounce"].GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures["Arrow"].GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures["TNT"].GetAddressOf() );
+			HRESULT hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures[BoxType::Default].GetAddressOf() );
+			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures[BoxType::Bounce].GetAddressOf() );
+			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures[BoxType::Arrow].GetAddressOf() );
+			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures[BoxType::TNT].GetAddressOf() );
 			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall.jpg", nullptr, brickwallTexture.GetAddressOf() );
 			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall_normal.jpg", nullptr, brickwallNormalTexture.GetAddressOf() );
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
@@ -147,10 +147,15 @@ void Graphics::RenderFrame()
 		simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
 
 		// w/ stencils
-		if ( cubeHover )
-			stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix, pointLight.GetConstantBuffer(), boxTextures[selectedBox].Get() );
+		if ( cube.GetIsHovering() )
+		{
+			stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix,
+				pointLight.GetConstantBuffer(), boxTextures[cube.GetBoxType()].Get() );
+		}
 		else
-			cube.Draw( cb_vs_matrix, boxTextures[selectedBox].Get() );
+		{
+			cube.Draw( cb_vs_matrix, boxTextures[cube.GetBoxType()].Get() );
+		}
 	}
 
 	// SPRITES
@@ -208,8 +213,8 @@ void Graphics::Update( const float dt )
 
 	// cube range collision check
 	if ( cube.GetEditableProperties()->GetType() == ToolType::RESIZE )
-		cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
-	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
+		cube.SetScale( cube.GetSizeToUse(), cube.GetSizeToUse(), cube.GetSizeToUse() );
+	cube.SetIsInRange( Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f ) );
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras[JSON::CameraType::Default] );

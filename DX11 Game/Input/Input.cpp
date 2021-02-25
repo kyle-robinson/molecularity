@@ -64,8 +64,8 @@ void Input::UpdateKeyboard( const float dt )
 	// pick-up cube - set position relative to camera.
 	if ( keyboard.KeyIsPressed( 'E' ) &&
 		graphics->cameraToUse != JSON::CameraType::Static &&
-		graphics->cubeInRange &&
-		( graphics->cubeHover || graphics->GetCube().GetIsHolding() ) )
+		graphics->GetCube().GetIsInRange() &&
+		( graphics->GetCube().GetIsHovering() || graphics->GetCube().GetIsHolding() ) )
 	{
 		graphics->GetCube().SetIsHolding( true );
 		XMVECTOR cubePosition = graphics->GetCamera( graphics->cameraToUse )->GetPositionVector();
@@ -110,47 +110,47 @@ void Input::UpdateMouse( const float dt )
 		mousePick.UpdateMatrices( graphics->GetCamera( graphics->cameraToUse ) );
 
 		if ( mousePick.TestIntersection( graphics->GetWidth() / 2, graphics->GetHeight() / 2, graphics->GetCube() ) )
-			graphics->cubeHover = true;
+			graphics->GetCube().SetIsHovering( true );
 		else
-			graphics->cubeHover = false;
+			graphics->GetCube().SetIsHovering( false );
 
 		// manage multi-tool options
 		if ( graphics->GetCube().GetEditableProperties()->GetType() == ToolType::CONVERT )
 		{
 			// change selected texture to use on box
-			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics->boxToUse < 3 )
-				graphics->boxToUse++;
-			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && graphics->boxToUse > 0 )
-				graphics->boxToUse--;
+			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics->GetCube().GetBoxToUse() < 3 )
+				graphics->GetCube().SetBoxToUse( graphics->GetCube().GetBoxToUse() + 1 );
+			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && graphics->GetCube().GetBoxToUse() > 0 )
+				graphics->GetCube().SetBoxToUse( graphics->GetCube().GetBoxToUse() - 1 );
 
 			// update box texture on click while hovering
-			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->cubeHover )
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube().GetIsHovering() )
 			{
-				switch ( graphics->boxToUse ) // might want to refactor this and how it worked (using enums instead of strings as well)
+				switch ( graphics->GetCube().GetBoxToUse() ) // might want to refactor this and how it worked (using enums instead of strings as well)
 				{
-				case 0: graphics->selectedBox = "Basic"; break;
-				case 1: graphics->selectedBox = "Bounce"; break;
-				case 2: graphics->selectedBox = "Arrow"; break;
-				case 3: graphics->selectedBox = "TNT"; break;
+				case 0: graphics->GetCube().SetBoxType( BoxType::Default ); break;
+				case 1: graphics->GetCube().SetBoxType( BoxType::Bounce ); break;
+				case 2: graphics->GetCube().SetBoxType( BoxType::Arrow ); break;
+				case 3: graphics->GetCube().SetBoxType( BoxType::TNT ); break;
 				}
 			}
 		}
 		else if ( graphics->GetCube().GetEditableProperties()->GetType() == ToolType::RESIZE )
 		{
 			// change size amount to change box to
-			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics->sizeAmount < 2 )
-				graphics->sizeAmount++;
-			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && graphics->sizeAmount > 0 )
-				graphics->sizeAmount--;
+			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics->GetCube().GetSizeAmount() < 2 )
+				graphics->GetCube().SetSizeAmount( graphics->GetCube().GetSizeAmount() + 1 );
+			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && graphics->GetCube().GetSizeAmount() > 0 )
+				graphics->GetCube().SetSizeAmount( graphics->GetCube().GetSizeAmount() - 1 );
 
 			// set the box scale to use based on the option previously selected
-			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->cubeHover )
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube().GetIsHovering() )
 			{
-				switch ( graphics->sizeAmount )
+				switch ( graphics->GetCube().GetSizeAmount() )
 				{
-				case 0: graphics->sizeToUse = 0.25f; break;
-				case 1: graphics->sizeToUse = 1.0f; break;
-				case 2: graphics->sizeToUse = 2.0f; break;
+				case 0: graphics->GetCube().SetSizeToUse( 0.25f ); break;
+				case 1: graphics->GetCube().SetSizeToUse( 1.0f ); break;
+				case 2: graphics->GetCube().SetSizeToUse( 2.0f ); break;
 				}
 			}
 		}
