@@ -144,6 +144,9 @@
     <ClCompile Include="Graphics\StencilOutline.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source\Audio</Filter>
+    </ClCompile>
     <ClCompile Include="Physics\ParticleManager.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\StencilOutline.h">
       <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Headers\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Physics\Particle.h">
       <Filter>Headers\Physics</Filter>
@@ -641,6 +647,11 @@
     <Filter Include="Source\Graphics\Systems">
       <UniqueIdentifier>{f25c3d41-b8bf-4f88-bfda-1187fcbaff1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headers\Audio">
+      <UniqueIdentifier>{b62d8be5-0170-47b4-affa-fbe4d7ab2069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Audio">
+      <UniqueIdentifier>{087b9678-f634-45e9-a859-9d006f37207e}</UniqueIdentifier>
     <Filter Include="Source\Physics">
       <UniqueIdentifier>{4c795db4-0234-4587-a0ea-e28d4cc1be26}</UniqueIdentifier>
     </Filter>
