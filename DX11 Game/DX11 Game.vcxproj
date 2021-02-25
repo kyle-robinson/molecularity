@@ -254,6 +254,7 @@
     <ClCompile Include="Objects\Camera2D.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Objects\CameraController.cpp" />
     <ClCompile Include="Objects\Cube.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -367,6 +368,7 @@
     <ClInclude Include="Model\Texture.h" />
     <ClInclude Include="Objects\Camera.h" />
     <ClInclude Include="Objects\Camera2D.h" />
+    <ClInclude Include="Objects\CameraController.h" />
     <ClInclude Include="Objects\Cube.h" />
     <ClInclude Include="Objects\CubeProperties.h" />
     <ClInclude Include="Objects\DirectionalLight.h" />

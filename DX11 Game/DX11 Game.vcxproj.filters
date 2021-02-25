@@ -168,6 +168,9 @@
     <ClCompile Include="Utility\JSON_Helper.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\CameraController.cpp">
+      <Filter>Source\Graphics\Cameras</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="Utility\JSON_Helper.h">
       <Filter>Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\CameraController.h">
+      <Filter>Headers\Graphics\Cameras</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
