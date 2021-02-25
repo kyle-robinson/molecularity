@@ -10,6 +10,7 @@
 
 #include "Input.h"
 #include "Timer.h"
+#include "Sound.h"
 
 class Application : public WindowContainer
 {
@@ -27,6 +28,7 @@ public:
 private:
 	Input input;
 	Timer timer;
+	Sound sound;
 	Graphics gfx;
 };
 

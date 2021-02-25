@@ -13,6 +13,14 @@ bool Application::Initialize(
 	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) ) return false;
 	input.Initialize( &gfx, renderWindow, width, height);
 
+	if (!sound.Initialise(renderWindow.GetHWND()))
+	{
+		MessageBox(renderWindow.GetHWND(), L"Could not initialise Direct Sound.", L"Error", MB_OK);
+		return false;
+	}
+
+	sound.PlayWavFile(MAIN_MUSIC, 0.75f);
+
 	return true;
 }
 
