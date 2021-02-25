@@ -9,7 +9,6 @@ bool Graphics::Initialize( HWND hWnd,CameraController* camera, int width, int he
 	if ( !InitializeGraphics( hWnd, width, height ) ) return false;
 	imgui.Initialize( hWnd, device.Get(), context.Get() );
 	if ( !InitializeScene() ) return false;
-
 	this->cameras = camera;
 
 
@@ -186,7 +185,7 @@ void Graphics::Update( const float dt )
 	directionalLight.SetPosition( directionalLight.GetLightPosition() );
 	skysphere.SetPosition( cameras->GetCamera(cameras->GetCurrentCamera())->GetPositionFloat3() );
 
-	// camera world collisions
+	// camera world collisions. Will be player object collisions in the future and ideally not here
 	bool wallCollision = Collisions::CheckCollisionCircle( cameras->GetCamera(JSON::CameraType::Default), hubRoom, 25.0f );
 	if ( !wallCollision )
 	{
