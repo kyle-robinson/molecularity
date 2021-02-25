@@ -91,7 +91,7 @@ void Input::UpdateMouse( const float dt )
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		if (cameras->GetCurrentCamera() != JSON::CameraType::Static )
+		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
 		{
 			if ( mouse.IsRightDown() || !cursorEnabled )
 			{

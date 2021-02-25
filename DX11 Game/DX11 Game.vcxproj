@@ -288,7 +288,6 @@
     <ClCompile Include="Objects\Sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Utility\Sound.cpp" />
     <ClCompile Include="Physics\Particle.cpp" />
     <ClCompile Include="Physics\ParticleManager.cpp" />
     <ClCompile Include="Physics\ParticleSystem.cpp" />
@@ -299,6 +298,7 @@
     </ClCompile>
     <ClCompile Include="Utility\ErrorLogger.cpp" />
     <ClCompile Include="Utility\JSON_Helper.cpp" />
+    <ClCompile Include="Utility\Sound.cpp" />
     <ClCompile Include="Utility\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
@@ -387,12 +387,12 @@
     <ClInclude Include="Physics\ParticleTransform.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
-    <ClInclude Include="Sound.h" />
     <ClInclude Include="Utility\Billboard.h" />
     <ClInclude Include="Utility\Collisions.h" />
     <ClInclude Include="Utility\COMException.h" />
     <ClInclude Include="Utility\ErrorLogger.h" />
     <ClInclude Include="Utility\JSON_Helper.h" />
+    <ClInclude Include="Utility\Sound.h" />
     <ClInclude Include="Utility\stdafx.h" />
     <ClInclude Include="Utility\StringConverter.h" />
     <ClInclude Include="Utility\Timer.h" />
@@ -480,6 +480,10 @@
     <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
     <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
     <None Include="Resources\JSON\Objects.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\Audio\Music.wav" />
+    <Media Include="Resources\Audio\Shot.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
