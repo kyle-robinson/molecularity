@@ -8,11 +8,8 @@
 /// Responsible for calling main render/update functions in Graphics.h
 /// </summary>
 
-#include "Timer.h"
-#include "Graphics.h"
-#include "MousePicking.h"
-#include "WindowContainer.h"
 #include "Input.h"
+#include "Timer.h"
 
 class Application : public WindowContainer
 {
@@ -28,15 +25,9 @@ public:
 	void Update();
 	void Render();
 private:
-	void UpdateMouse(const float dt);
-	void UpdateKeyboard(const float dt);
-
-private:
-	Timer timer;
-	Graphics graphics;
-	MousePicking mousePick;
 	Input input;
-
+	Timer timer;
+	Graphics gfx;
 };
 
 #endif

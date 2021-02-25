@@ -15,6 +15,7 @@
 #include "Camera2D.h"
 #include "SpotLight.h"
 #include "PointLight.h"
+#include "JSON_Helper.h"
 #include "ImGuiManager.h"
 #include "DirectionalLight.h"
 #include "GraphicsContainer.h"
@@ -22,15 +23,18 @@
 
 class StencilOutline;
 class TextRenderer;
-enum cameraTypes { Default, Static, Debug }; //Will need moved when cameraClass is made for itself or even moved to 
+
+// Will need moved when cameraClass is made for itself or even moved to 
+//static enum class CameraTypes { Default, Static, Debug };
 
 class Graphics : public GraphicsContainer
 {
 	friend class Application;
 public:
+	//might move this. It doenst do anything at the moment so left it incase.
+	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
+
 	// Functions
-	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE; //might move this. It doenst do anything at the moment so left it incase.
-	
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
 
@@ -40,26 +44,22 @@ public:
 	void Update( const float dt );
 	
 	Cube& GetCube() noexcept { return cube; }
-	std::unique_ptr<Camera>& GetCamera(const cameraTypes& cam) noexcept {return cameras[cam]; }
+	std::unique_ptr<Camera>& GetCamera( const JSON::CameraType& cam ) noexcept { return cameras[cam]; }
 private:
 	bool InitializeScene();
 
 public:
-	// Variables - to be moved to a cameraController (and changed by input class
+	// Variables - to be moved to a cameraController (and changed by input class)
 	int boxToUse = 0;
 	int sizeAmount = 2;
 	bool cubeHover = false;
 	bool cubeInRange = false;
 	bool holdingCube = false;
 
-
-	cameraTypes cameraToUse = Default;
-	std::string selectedBox = "Basic"; //box needs to know what type of box it is, this will need to be moved possibly
-	float sizeToUse = 1.0f; //box should know what size it will be
-
+	JSON::CameraType cameraToUse = JSON::CameraType::Default;
+	std::string selectedBox = "Basic"; // box needs to know what type of box it is, this will need to be moved possibly
+	float sizeToUse = 1.0f; // box should know what size it will be
 private:
-
-	
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;
@@ -75,7 +75,7 @@ private:
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<StencilOutline> stencilOutline;
-	std::map<cameraTypes, std::unique_ptr<Camera>> cameras;
+	std::map<JSON::CameraType, std::unique_ptr<Camera>> cameras;
 
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;

@@ -63,25 +63,16 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 
 void TextRenderer::RenderCameraText( Graphics& gfx )
 {
-	std::string text;
+	std::string displayText;
 
-	switch (gfx.cameraToUse)
+	switch ( gfx.cameraToUse )
 	{
-	case 0:
-		text = "Default";
-		break;
-	case 1:
-		text = "Static";
-		break;
-	case 2:
-		text = "Debug";
-		break;
-	default:
-		text = "Name needed in 'TextRenderer'";
-		break;
-
+	case JSON::CameraType::Default: displayText = "Default"; break;
+	case JSON::CameraType::Static: displayText = "Static"; break;
+	case JSON::CameraType::Debug: displayText = "Debug"; break;
+	default: displayText = "Camera name needed in TextRenderer.h"; break;
 	}
 
-	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( text ) ).c_str(),
+	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( displayText ) ).c_str(),
 		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
 }

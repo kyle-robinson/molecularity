@@ -1,20 +1,19 @@
 #include "stdafx.h"
+#include "Camera.h"
 #include "MousePicking.h"
 #include "GameObject3D.h"
 #include <DirectXCollision.h>
 
-void MousePicking::Initialize( XMMATRIX viewMatrix, XMMATRIX projectionMatrix, int width, int height )
+void MousePicking::Initialize( int width, int height )
 {
-	this->viewMatrix = viewMatrix;
-	this->projectionMatrix = projectionMatrix;
 	this->width = width;
 	this->height = height;
 }
 
-void MousePicking::UpdateMatrices( XMMATRIX viewMatrix, XMMATRIX projectionMatrix )
+void MousePicking::UpdateMatrices( std::unique_ptr<Camera>& camera )
 {
-	this->viewMatrix = viewMatrix;
-	this->projectionMatrix = projectionMatrix;
+	this->viewMatrix = camera->GetViewMatrix();
+	this->projectionMatrix = camera->GetProjectionMatrix();
 }
 
 bool MousePicking::TestIntersection( int mouseX, int mouseY, GameObject3D object )

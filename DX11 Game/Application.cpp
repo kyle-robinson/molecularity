@@ -9,16 +9,9 @@ bool Application::Initialize(
 	int height )
 {
 	timer.Start();
-
-	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) )
-		return false;
-	
-	if ( !graphics.Initialize( renderWindow.GetHWND(), width, height ) )
-		return false;
-
-
-	input.Initialize(&graphics, &renderWindow, width, height);
-
+	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
+	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) ) return false;
+	input.Initialize( &gfx, renderWindow, width, height);
 
 	return true;
 }
@@ -32,13 +25,13 @@ void Application::Update()
 {
 	float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
 	timer.Restart();
-	input.Update(dt);
-	graphics.Update( dt );
+	input.Update( dt );
+	gfx.Update( dt );
 }
 
 void Application::Render()
 {
-	graphics.BeginFrame();
-	graphics.RenderFrame();
-	graphics.EndFrame();
+	gfx.BeginFrame();
+	gfx.RenderFrame();
+	gfx.EndFrame();
 }

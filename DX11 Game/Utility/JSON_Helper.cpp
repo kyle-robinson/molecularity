@@ -2,7 +2,7 @@
 #include "JSON_Helper.h"
 
 // Parse game object data from file
-std::vector<JSON_LOADER::ModelData> JSON_LOADER::LoadGameObjects( const std::string& fileName )
+std::vector<JSON::ModelData> JSON::LoadGameObjects( const std::string& fileName )
 {
 	Document document;
 	ModelData objectData;
@@ -124,7 +124,7 @@ std::vector<JSON_LOADER::ModelData> JSON_LOADER::LoadGameObjects( const std::str
 	return data;
 }
 // parse text from file
-std::vector<JSON_LOADER::TextData> JSON_LOADER::LoadTextDataItems( const std::string& fileName )
+std::vector<JSON::TextData> JSON::LoadTextDataItems( const std::string& fileName )
 {
 	std::vector<TextData> data;
 	Document document = ParseFile( fileName );
@@ -154,7 +154,7 @@ std::vector<JSON_LOADER::TextData> JSON_LOADER::LoadTextDataItems( const std::st
 
 
 //load all settings
-std::vector<JSON_LOADER::SettingData> JSON_LOADER::LoadSettings()
+std::vector<JSON::SettingData> JSON::LoadSettings()
 {		
 	std::string p;
 	std::vector<SettingData> Settings;
@@ -194,7 +194,7 @@ std::vector<JSON_LOADER::SettingData> JSON_LOADER::LoadSettings()
 
 
 //get data as string
-std::vector<std::string> JSON_LOADER::LoadFileData( const std::string& fileName )
+std::vector<std::string> JSON::LoadFileData( const std::string& fileName )
 {
 	std::vector<std::string> data;
 	Document document = ParseFile( fileName );
@@ -223,7 +223,7 @@ std::vector<std::string> JSON_LOADER::LoadFileData( const std::string& fileName 
 	return data;
 }
 // Parse object data, and unique name as string
-std::vector<std::pair<std::string, std::string>> JSON_LOADER::LoadFileDataAndName( const std::string& fileName )
+std::vector<std::pair<std::string, std::string>> JSON::LoadFileDataAndName( const std::string& fileName )
 {
 	Document document = ParseFile( fileName );
 	std::vector<std::pair<std::string, std::string>> data;
@@ -252,7 +252,7 @@ std::vector<std::pair<std::string, std::string>> JSON_LOADER::LoadFileDataAndNam
 	return data;
 }
 // Parse data into strings
-std::pair<std::string, std::string> JSON_LOADER::GetData( Value::ConstMemberIterator itr )
+std::pair<std::string, std::string> JSON::GetData( Value::ConstMemberIterator itr )
 {
 	std::string stringData;
 
@@ -287,7 +287,7 @@ std::pair<std::string, std::string> JSON_LOADER::GetData( Value::ConstMemberIter
 	return data;
 }
 
-JSON_LOADER::DataFromFile JSON_LOADER::GetDataAny( Value::ConstMemberIterator itr )
+JSON::DataFromFile JSON::GetDataAny( Value::ConstMemberIterator itr )
 {
 	DataFromFile data;
 
@@ -317,7 +317,7 @@ JSON_LOADER::DataFromFile JSON_LOADER::GetDataAny( Value::ConstMemberIterator it
 	return data;
 }
 
-bool JSON_LOADER::StoreFile( const std::string& fileName, const Document& document )
+bool JSON::StoreFile( const std::string& fileName, const Document& document )
 {
 	// Write back to file
 	std::ofstream fileStream("Resources\\JSON\\" + fileName);
@@ -328,7 +328,7 @@ bool JSON_LOADER::StoreFile( const std::string& fileName, const Document& docume
 	return true;
 }
 
-Document JSON_LOADER::ParseFile( const std::string& file )
+Document JSON::ParseFile( const std::string& file )
 {
 	Document document;
 

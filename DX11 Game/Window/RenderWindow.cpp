@@ -3,7 +3,8 @@
 
 // Window icon made by https://www.freepik.com Freepik from https://www.flaticon.com/
 
-bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hInstance, const std::string& windowName, const std::string& windowClass, int width, int height )
+bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hInstance,
+	const std::string& windowName, const std::string& windowClass, int width, int height )
 {
 	// register window class
 	this->hInstance = hInstance;
@@ -103,8 +104,7 @@ LRESULT CALLBACK HandleMsgSetup( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 bool RenderWindow::ProcessMessages() noexcept
 {
-	MSG msg;
-	ZeroMemory( &msg, sizeof( MSG ) );
+	MSG msg = { 0 };
 	while ( PeekMessage( &msg, hWnd, 0u, 0u, PM_REMOVE ) )
 	{
 		TranslateMessage( &msg );

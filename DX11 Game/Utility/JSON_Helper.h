@@ -18,7 +18,7 @@
 #include <rapidjson/ostreamwrapper.h>
 using namespace rapidjson;
 
-namespace JSON_LOADER
+namespace JSON
 {
 	typedef std::variant<int, std::string, bool, float, double> DataFromFile;
 	
@@ -45,7 +45,7 @@ namespace JSON_LOADER
 		// Add more data here e.g. position
 	};
 
-	enum CameraType
+	static enum class CameraType
 	{
 		Default,
 		Static,
