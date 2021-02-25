@@ -19,6 +19,7 @@
 #include "ImGuiManager.h"
 #include "DirectionalLight.h"
 #include "GraphicsContainer.h"
+#include "CameraController.h"
 #include <dxtk/WICTextureLoader.h>
 
 class StencilOutline;
@@ -33,7 +34,7 @@ class Graphics : public GraphicsContainer
 public:
 	// Functions
 	virtual ~Graphics( void ) = default;
-	bool Initialize( HWND hWnd, int width, int height );
+	bool Initialize( HWND hWnd,CameraController* camera ,int width, int height );
 
 	void BeginFrame();
 	void RenderFrame();
@@ -41,7 +42,9 @@ public:
 	void Update( const float dt );
 	
 	Cube& GetCube() noexcept { return cube; }
-	std::unique_ptr<Camera>& GetCamera( const JSON::CameraType& cam ) noexcept { return cameras[cam]; }
+
+	CameraController* GetCameraController() { return cameras; } //not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
+
 private:
 	bool InitializeScene();
 public:
@@ -58,12 +61,10 @@ private:
 	PointLight pointLight;
 	DirectionalLight directionalLight;
 
-	Camera2D camera2D;
 	ImGuiManager imgui;
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<StencilOutline> stencilOutline;
-	std::map<JSON::CameraType, std::unique_ptr<Camera>> cameras;
 
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
@@ -72,6 +73,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
 	std::map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+
+	CameraController* cameras;
 };
 
 #endif

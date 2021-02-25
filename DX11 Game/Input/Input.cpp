@@ -2,11 +2,12 @@
 #include "Input.h"
 #include "CameraMovement.h"
 
-void Input::Initialize( Graphics* gfx, RenderWindow& window, int width, int height )
+void Input::Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height )
 {
 	DisableCursor();
 	this->graphics = gfx;
 	this->renderWindow = window;
+	this->cameras = camera;
 	mousePick.Initialize( width, height );
 }
 
@@ -19,12 +20,12 @@ void Input::Update( const float dt )
 void Input::UpdateKeyboard( const float dt )
 {
 	// set camera to use
-	if ( keyboard.KeyIsPressed( VK_F1 ) ) graphics->cameraToUse = JSON::CameraType::Default;
-	if ( keyboard.KeyIsPressed( VK_F2 ) ) graphics->cameraToUse = JSON::CameraType::Static;
-	if ( keyboard.KeyIsPressed( VK_F3 ) ) graphics->cameraToUse = JSON::CameraType::Debug;
+	if ( keyboard.KeyIsPressed( VK_F1 ) ) cameras->SetCurrentCamera(JSON::CameraType::Default);
+	if ( keyboard.KeyIsPressed( VK_F2 ) ) cameras->SetCurrentCamera(JSON::CameraType::Static);
+	if ( keyboard.KeyIsPressed( VK_F3 ) ) cameras->SetCurrentCamera(JSON::CameraType::Debug);
 
 	// set cursor enabled/disabled
-	if ( graphics->cameraToUse == JSON::CameraType::Debug )
+	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
 		if ( keyboard.KeyIsPressed( VK_HOME ) && !cursorEnabled ) EnableCursor();
 		else if ( keyboard.KeyIsPressed( VK_END ) && cursorEnabled ) DisableCursor();
@@ -35,26 +36,27 @@ void Input::UpdateKeyboard( const float dt )
 	}
 
 	// camera movement
-	if ( graphics->cameraToUse == JSON::CameraType::Static )
+	if (cameras->GetCurrentCamera() == JSON::CameraType::Static )
 	{
-		graphics->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
-			graphics->GetCamera( JSON::CameraType::Default )->GetPositionFloat3() );
+		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
+			cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3() );
 	}
 	else
 	{
-		// update mode to ignore y-movement when not in debug mode
+		// update mode to ignore y-movement when not in debug mode. Will be changed in the future likely when player can move around the enviroment with physics / collisions.
+		//Will also need to be changed to the player object when player becomes its own class. Unknown how that will work currently
 		bool playMode = true;
-		if ( graphics->cameraToUse == JSON::CameraType::Debug )
+		if (cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 		{
 			playMode = false;
-			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( graphics->GetCamera( JSON::CameraType::Debug ), dt );
-			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( graphics->GetCamera( JSON::CameraType::Debug ), dt );
+			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( cameras->GetCamera( JSON::CameraType::Debug ), dt );
+			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown(cameras->GetCamera( JSON::CameraType::Debug ), dt );
 		}
-		graphics->GetCamera( graphics->cameraToUse )->SetCameraSpeed( 0.01f );
-		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( graphics->GetCamera( graphics->cameraToUse ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( graphics->GetCamera( graphics->cameraToUse ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( graphics->GetCamera( graphics->cameraToUse ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( graphics->GetCamera( graphics->cameraToUse ), playMode, dt );
+		cameras->GetCamera(cameras->GetCurrentCamera())->SetCameraSpeed( 0.01f );
+		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt );
+		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt );
 	}
 
 	// set multi-tool type
@@ -63,17 +65,17 @@ void Input::UpdateKeyboard( const float dt )
 
 	// pick-up cube - set position relative to camera.
 	if ( keyboard.KeyIsPressed( 'E' ) &&
-		graphics->cameraToUse != JSON::CameraType::Static &&
+		graphics->GetCurrentCamera() != JSON::CameraType::Static &&
 		graphics->GetCube().GetIsInRange() &&
 		( graphics->GetCube().GetIsHovering() || graphics->GetCube().GetIsHolding() ) )
 	{
 		graphics->GetCube().SetIsHolding( true );
-		XMVECTOR cubePosition = graphics->GetCamera( graphics->cameraToUse )->GetPositionVector();
-		cubePosition += graphics->GetCamera( graphics->cameraToUse )->GetForwardVector() * 2;
+		XMVECTOR cubePosition = cameras->GetCamera(cameras->GetCurrentCamera())->GetPositionVector();
+		cubePosition += cameras->GetCamera(cameras->GetCurrentCamera())->GetForwardVector() * 2;
 		graphics->GetCube().SetPosition( cubePosition );
 		graphics->GetCube().SetRotation(
 			graphics->GetCube().GetRotationFloat3().x,
-			graphics->GetCamera( graphics->cameraToUse )->GetRotationFloat3().y,
+			cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().y,
 			graphics->GetCube().GetRotationFloat3().z
 		);
 	}
@@ -89,14 +91,14 @@ void Input::UpdateMouse( const float dt )
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		if ( graphics->cameraToUse != JSON::CameraType::Static )
+		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
 		{
 			if ( mouse.IsRightDown() || !cursorEnabled )
 			{
 				// update raw camera movement
 				if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
 				{
-					graphics->GetCamera( graphics->cameraToUse )->AdjustRotation(
+					cameras->GetCamera(cameras->GetCurrentCamera())->AdjustRotation(
 						XMFLOAT3(
 							static_cast<float>( me.GetPosY() ) * 0.005f,
 							static_cast<float>( me.GetPosX() ) * 0.005f,
@@ -108,7 +110,7 @@ void Input::UpdateMouse( const float dt )
 		}
 
 		// mouse picking
-		mousePick.UpdateMatrices( graphics->GetCamera( graphics->cameraToUse ) );
+		mousePick.UpdateMatrices( cameras->GetCamera(cameras->GetCurrentCamera()) );
 
 		if ( mousePick.TestIntersection( graphics->GetWidth() / 2, graphics->GetHeight() / 2, graphics->GetCube() ) )
 			graphics->GetCube().SetIsHovering( true );
