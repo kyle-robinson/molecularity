@@ -17,14 +17,16 @@ bool Application::Initialize(
 	if ( !graphics.Initialize( renderWindow.GetHWND(), width, height ) )
 		return false;
 
-	//if (!sound.Initialise(renderWindow.GetHWND()))
-	//{
-	//	MessageBox(renderWindow.GetHWND(), L"Could not initialise Direct Sound.", L"Error", MB_OK);
-	//	return false;
-	//}
-
 	mousePick.Initialize( graphics.GetCamera( graphics.cameraToUse )->GetViewMatrix(),
 		graphics.GetCamera( graphics.cameraToUse )->GetProjectionMatrix(), width, height );
+
+	if (!sound.Initialise(renderWindow.GetHWND()))
+	{
+		MessageBox(renderWindow.GetHWND(), L"Could not initialise Direct Sound.", L"Error", MB_OK);
+		return false;
+	}
+
+	sound.PlayWavFile(MAIN_MUSIC, 0.75f);
 
 	return true;
 }
@@ -91,6 +93,7 @@ void Application::Update()
 			// update box texture on click while hovering
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics.cubeHover )
 			{
+				sound.PlayWavFile(SHOT_SOUND, 0.75f);
 				switch ( graphics.boxToUse )
 				{
 				case 0: graphics.selectedBox = "Basic"; break;
@@ -111,6 +114,7 @@ void Application::Update()
 			// set the box scale to use based on the option previously selected
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics.cubeHover )
 			{
+				sound.PlayWavFile(SHOT_SOUND, 0.75f);
 				switch ( graphics.sizeAmount )
 				{
 				case 0: graphics.sizeToUse = 0.25f; break;

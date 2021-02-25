@@ -37,20 +37,28 @@ public:
 	~Sound();
 
 	bool Initialise(HWND);
+	bool PlayWavFile(int, float);
 	void Close();
 
 private:
 	bool InitialiseDirectSound(HWND);
 	void CloseDirectSound();
 
+	bool InitialiseSoundFiles();
+
 	bool LoadWavFile(const char*, IDirectSoundBuffer8**);
 	void CloseWavFile(IDirectSoundBuffer8**);
 
-	bool PlayWavFile();
-
 	IDirectSound8* _directSound;
 	IDirectSoundBuffer* _primaryBuffer;
-	IDirectSoundBuffer8* _secondaryBuffer1;
+};
+
+static IDirectSoundBuffer8* _secondaryBuffer[10];
+
+enum SOUND_NAMES
+{
+	MAIN_MUSIC = 0,
+	SHOT_SOUND
 };
 
 #endif // !_SOUND_H_

@@ -5,7 +5,7 @@ Sound::Sound()
 {
 	_directSound = 0;
 	_primaryBuffer = 0;
-	_secondaryBuffer1 = 0;
+	//_secondaryBuffer = 0;
 }
 
 Sound::~Sound()
@@ -22,13 +22,8 @@ bool Sound::Initialise(HWND hwnd)
 	if (!result)
 		return false;
 
-	//Load a WAV file and initialise the secondary buffer
-	result = LoadWavFile("Resources\\Audio\\Shot.wav", &_secondaryBuffer1);
-	if (!result)
-		return false;
-
-	//Plays the loaded WAV file
-	result = PlayWavFile();
+	//Initialises all the sound files into their own secondary buffers
+	result = InitialiseSoundFiles();
 	if (!result)
 		return false;
 
@@ -38,7 +33,7 @@ bool Sound::Initialise(HWND hwnd)
 void Sound::Close()
 {
 	//Frees the secondary buffer
-	CloseWavFile(&_secondaryBuffer1);
+	CloseWavFile(&_secondaryBuffer[0]);
 	CloseDirectSound();
 }
 
@@ -101,6 +96,22 @@ void Sound::CloseDirectSound()
 	}
 }
 
+bool Sound::InitialiseSoundFiles()
+{
+	bool result;
+
+	//Load a WAV file and initialise the secondary buffer
+	result = LoadWavFile("Resources\\Audio\\Music.wav", &_secondaryBuffer[MAIN_MUSIC]);
+	if (!result)
+		return false;
+
+	result = LoadWavFile("Resources\\Audio\\Shot.wav", &_secondaryBuffer[SHOT_SOUND]);
+	if (!result)
+		return false;
+
+	return true;
+}
+
 bool Sound::LoadWavFile(const char* fileName, IDirectSoundBuffer8** secondaryBuffer)
 {
 	int error;
@@ -127,10 +138,10 @@ bool Sound::LoadWavFile(const char* fileName, IDirectSoundBuffer8** secondaryBuf
 	if ((waveFileHeader.chunkID[0]) != 'R' || (waveFileHeader.chunkID[1] != 'I') || (waveFileHeader.chunkID[2] != 'F') || (waveFileHeader.chunkID[3] != 'F'))
 		return false;
 
-	if ((waveFileHeader.chunkID[0]) != 'W' || (waveFileHeader.chunkID[1] != 'A') || (waveFileHeader.chunkID[2] != 'V') || (waveFileHeader.chunkID[3] != 'E'))
+	if ((waveFileHeader.format[0]) != 'W' || (waveFileHeader.format[1] != 'A') || (waveFileHeader.format[2] != 'V') || (waveFileHeader.format[3] != 'E'))
 		return false;
 
-	if ((waveFileHeader.chunkID[0]) != 'f' || (waveFileHeader.chunkID[1] != 'm') || (waveFileHeader.chunkID[2] != 't') || (waveFileHeader.chunkID[3] != ' '))
+	if ((waveFileHeader.subChunkID[0]) != 'f' || (waveFileHeader.subChunkID[1] != 'm') || (waveFileHeader.subChunkID[2] != 't') || (waveFileHeader.subChunkID[3] != ' '))
 		return false;
 
 	if (waveFileHeader.audioFormat != WAVE_FORMAT_PCM)
@@ -145,7 +156,7 @@ bool Sound::LoadWavFile(const char* fileName, IDirectSoundBuffer8** secondaryBuf
 	if (waveFileHeader.bitsPerSample != 16)
 		return false;
 
-	if ((waveFileHeader.chunkID[0]) != 'd' || (waveFileHeader.chunkID[1] != 'a') || (waveFileHeader.chunkID[2] != 't') || (waveFileHeader.chunkID[3] != 'a'))
+	if ((waveFileHeader.dataChunkID[0]) != 'd' || (waveFileHeader.dataChunkID[1] != 'a') || (waveFileHeader.dataChunkID[2] != 't') || (waveFileHeader.dataChunkID[3] != 'a'))
 		return false;
 
 	//Setup secondary buffer and load the audio data
@@ -169,7 +180,7 @@ bool Sound::LoadWavFile(const char* fileName, IDirectSoundBuffer8** secondaryBuf
 	if (FAILED(result))
 		return false;
 
-	result = tempBuffer->QueryInterface(IID_IDirectSound3DBuffer8, (void**)&*secondaryBuffer);
+	result = tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*secondaryBuffer);
 	if (FAILED(result))
 		return false;
 
@@ -215,19 +226,19 @@ void Sound::CloseWavFile(IDirectSoundBuffer8** secondaryBuffer)
 	}
 }
 
-bool Sound::PlayWavFile()
+bool Sound::PlayWavFile(int num, float volume)
 {
 	HRESULT result;
 
-	result = _secondaryBuffer1->SetCurrentPosition(0);
+	result = _secondaryBuffer[num]->SetCurrentPosition(0);
 	if (FAILED(result))
 		return false;
 
-	result = _secondaryBuffer1->SetVolume(DSBVOLUME_MAX);
+	result = _secondaryBuffer[num]->SetVolume(DSBVOLUME_MIN + (10000 * volume));
 	if (FAILED(result))
 		return false;
 
-	result = _secondaryBuffer1->Play(0, 0, 0);
+	result = _secondaryBuffer[num]->Play(0, 0, 0);
 	if (FAILED(result))
 		return false;
 
