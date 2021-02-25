@@ -31,9 +31,6 @@ class Graphics : public GraphicsContainer
 {
 	friend class Application;
 public:
-	//might move this. It doenst do anything at the moment so left it incase.
-	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
-
 	// Functions
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd, int width, int height );
@@ -47,7 +44,6 @@ public:
 	std::unique_ptr<Camera>& GetCamera( const JSON::CameraType& cam ) noexcept { return cameras[cam]; }
 private:
 	bool InitializeScene();
-
 public:
 	// Variables - to be moved to a cameraController (and changed by input class)
 	JSON::CameraType cameraToUse = JSON::CameraType::Default;

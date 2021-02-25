@@ -28,32 +28,32 @@ void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 
 void TextRenderer::RenderMultiToolText( Graphics& gfx )
 {
-	if ( gfx.GetCube().GetEditableProperties()->GetType() == ToolType::CONVERT )
+	if ( gfx.GetCube().GetEditableProperties()->GetToolType() == ToolType::Convert )
 	{
 		DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 		static std::wstring boxType;
-		switch ( gfx.GetCube().GetBoxToUse() )
+		switch ( gfx.GetCube().GetEditableProperties()->GetBoxType() )
 		{
-		case 0: boxType = L"Default Box"; break;
-		case 1: boxType = L"Bounce Box"; break;
-		case 2: boxType = L"Jump Box"; break;
-		case 3: boxType = L"TNT Box"; break;
+		case BoxType::Default: boxType = L"Default Box"; break;
+		case BoxType::Bounce: boxType = L"Bounce Box"; break;
+		case BoxType::Arrow: boxType = L"Jump Box"; break;
+		case BoxType::TNT: boxType = L"TNT Box"; break;
 		}
 
 		DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
 			XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
 	}
-	else if ( gfx.GetCube().GetEditableProperties()->GetType() == ToolType::RESIZE )
+	else if ( gfx.GetCube().GetEditableProperties()->GetToolType() == ToolType::Resize )
 	{
 		DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 		static std::wstring sizeType;
-		switch ( gfx.GetCube().GetSizeAmount() )
+		switch ( gfx.GetCube().GetEditableProperties()->GetBoxSize() )
 		{
-		case 0: sizeType = L"Shrink Ray"; break;
-		case 1: sizeType = L"Reset Ray"; break;
-		case 2: sizeType = L"Growth Ray"; break;
+		case BoxSize::Small: sizeType = L"Shrink Ray"; break;
+		case BoxSize::Normal: sizeType = L"Reset Ray"; break;
+		case BoxSize::Large: sizeType = L"Growth Ray"; break;
 		}
 
 		DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),

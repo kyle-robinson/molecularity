@@ -11,14 +11,6 @@
 #include "CubeProperties.h"
 #include "PhysicsModel.h"
 
-static enum class BoxType
-{
-	Default,
-	Bounce,
-	Arrow,
-	TNT
-};
-
 class Cube : public RenderableGameObject
 {
 public:
@@ -29,19 +21,11 @@ public:
 	bool GetIsHolding() const noexcept { return isHeld; }
 	bool GetIsHovering() const noexcept { return cubeHover; }
 	bool GetIsInRange() const noexcept { return cubeInRange; }
-	int GetBoxToUse() const noexcept { return boxToUse; }
-	int GetSizeAmount() const noexcept { return sizeAmount; }
-	float GetSizeToUse() const noexcept { return sizeToUse; }
-	BoxType GetBoxType() const noexcept { return selectedBox; }
 
 	// Setters
 	void SetIsHolding( bool isHolding ) noexcept { isHeld = isHolding; }
 	void SetIsHovering( bool hover ) noexcept { cubeHover = hover; }
 	void SetIsInRange( bool range ) noexcept { cubeInRange = range; }
-	void SetBoxToUse( int box ) noexcept { boxToUse = box; }
-	void SetSizeAmount( int size ) noexcept { sizeAmount = size; }
-	void SetSizeToUse( float newSize ) noexcept { sizeToUse = newSize; }
-	void SetBoxType( BoxType boxType ) noexcept { selectedBox = boxType; }
 
 	void UpdatePhysics( const float deltaTime ) noexcept;
 	std::shared_ptr<CubeProperties> GetEditableProperties() const noexcept { return editableProperties; }
@@ -51,17 +35,10 @@ private:
 	ID3D11DeviceContext* context;
 	VertexBuffer<Vertex3D> vb_cube;
 	IndexBuffer ib_cube;
-	
-	int boxToUse = 0;
-	int sizeAmount = 2;
-	float sizeToUse = 1.0f;
 
 	bool isHeld = false;
 	bool cubeHover = false;
 	bool cubeInRange = false;
-
-	//std::string selectedBox = "Basic";
-	BoxType selectedBox = BoxType::Default;
 };
 
 #endif

@@ -150,11 +150,11 @@ void Graphics::RenderFrame()
 		if ( cube.GetIsHovering() )
 		{
 			stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix,
-				pointLight.GetConstantBuffer(), boxTextures[cube.GetBoxType()].Get() );
+				pointLight.GetConstantBuffer(), boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
 		}
 		else
 		{
-			cube.Draw( cb_vs_matrix, boxTextures[cube.GetBoxType()].Get() );
+			cube.Draw( cb_vs_matrix, boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
 		}
 	}
 
@@ -211,9 +211,11 @@ void Graphics::Update( const float dt )
 		cameras[JSON::CameraType::Default]->AdjustPosition( dx, 0.0f, dz );
 	}
 
+	// update cube scale multiplier
+	if ( cube.GetEditableProperties()->GetToolType() == ToolType::Resize )
+		cube.SetScale( static_cast<float>( cube.GetEditableProperties()->GetBoxSize() ) );
+
 	// cube range collision check
-	if ( cube.GetEditableProperties()->GetType() == ToolType::RESIZE )
-		cube.SetScale( cube.GetSizeToUse(), cube.GetSizeToUse(), cube.GetSizeToUse() );
 	cube.SetIsInRange( Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f ) );
 
 	// set position of spot light model
