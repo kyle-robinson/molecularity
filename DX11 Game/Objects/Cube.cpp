@@ -44,6 +44,6 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 
 void Cube::UpdatePhysics( const float deltaTime ) noexcept
 {
-    // TODO: Turn off physics when cube is being held.
-    physicsModel->Update( deltaTime / 1000.0f );
+    if ( !isHeld )
+        physicsModel->Update( deltaTime / 1000.0f );
 }

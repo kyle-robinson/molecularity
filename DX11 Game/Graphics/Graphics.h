@@ -54,7 +54,6 @@ public:
 	int sizeAmount = 2;
 	bool cubeHover = false;
 	bool cubeInRange = false;
-	bool holdingCube = false;
 
 	JSON::CameraType cameraToUse = JSON::CameraType::Default;
 	std::string selectedBox = "Basic"; // box needs to know what type of box it is, this will need to be moved possibly

@@ -19,7 +19,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 
 void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 {
-	if ( gfx.cubeInRange && gfx.cubeHover && !gfx.holdingCube )
+	if ( gfx.cubeInRange && gfx.cubeHover && !gfx.GetCube().GetIsHolding() )
 	{
 		DrawString( L"Press 'E' to pick up cube.",
 			XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );

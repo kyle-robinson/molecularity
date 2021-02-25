@@ -3,7 +3,7 @@
 #define PHYSICSMODEL_H
 
 /// <summary>
-/// 
+/// Managers the generic physics calculations for a given object.
 /// </summary>
 
 #include "RenderableGameObject.h"

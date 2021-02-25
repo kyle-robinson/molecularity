@@ -17,6 +17,9 @@ public:
 	bool Initialize( ID3D11DeviceContext* context, ID3D11Device* device );
 	void Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept;
 	
+	bool GetIsHolding() const noexcept { return isHeld; }
+	void SetIsHolding( bool isHolding ) noexcept { isHeld = isHolding; }
+
 	void UpdatePhysics( const float deltaTime ) noexcept;
 	std::shared_ptr<CubeProperties> GetEditableProperties() const noexcept { return editableProperties; }
 private:
@@ -25,6 +28,7 @@ private:
 	ID3D11DeviceContext* context;
 	VertexBuffer<Vertex3D> vb_cube;
 	IndexBuffer ib_cube;
+	bool isHeld = false;
 };
 
 #endif

@@ -65,9 +65,9 @@ void Input::UpdateKeyboard( const float dt )
 	if ( keyboard.KeyIsPressed( 'E' ) &&
 		graphics->cameraToUse != JSON::CameraType::Static &&
 		graphics->cubeInRange &&
-		( graphics->cubeHover || graphics->holdingCube ) )
+		( graphics->cubeHover || graphics->GetCube().GetIsHolding() ) )
 	{
-		graphics->holdingCube = true;
+		graphics->GetCube().SetIsHolding( true );
 		XMVECTOR cubePosition = graphics->GetCamera( graphics->cameraToUse )->GetPositionVector();
 		cubePosition += graphics->GetCamera( graphics->cameraToUse )->GetForwardVector() * 2;
 		graphics->GetCube().SetPosition( cubePosition );
@@ -79,7 +79,7 @@ void Input::UpdateKeyboard( const float dt )
 	}
 	else
 	{
-		graphics->holdingCube = false;
+		graphics->GetCube().SetIsHolding( false );
 	}
 }
 
