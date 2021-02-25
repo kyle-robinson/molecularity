@@ -9,7 +9,7 @@ class CameraController
 {
 public:
 	void Initialize(int width, int height);
-
+	void Update();
 
 	std::unique_ptr<Camera>& GetCamera(const JSON::CameraType& cam) noexcept { return cameras[cam]; } //Gets a specific camera
 	

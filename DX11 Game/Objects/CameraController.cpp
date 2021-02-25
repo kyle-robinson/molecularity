@@ -15,3 +15,10 @@ void CameraController::Initialize(int width, int height)
 	}
 
 }
+
+void CameraController::Update()
+{
+	//Currently forms nothing of value since cameras arent doing anything by themselves. 
+	//In the future will need cameras to passively connect themselves to the player (default) which can be done here / in the player
+
+}
