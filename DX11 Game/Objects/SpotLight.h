@@ -2,15 +2,14 @@
 #ifndef SPOTLIGHT_H
 #define SPOTLIGHT_H
 
-/// <summary>
-/// Creates a simple spot light.
-/// Provides functions to automatically update constant buffer and spawn ImGui control window.
-/// </summary>
-
 class Camera;
 #include "Light.h"
 #include "GraphicsResource.h"
 
+/// <summary>
+/// Creates a simple spot light.
+/// Provides functions to automatically update constant buffer and spawn ImGui control window.
+/// </summary>
 class SpotLight : public Light, public GraphicsResource
 {
 public:

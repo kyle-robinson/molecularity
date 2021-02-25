@@ -2,14 +2,13 @@
 #ifndef ERRORLOGGER_H
 #define ERRORLOGGER_H
 
+#include <Windows.h>
+#include "COMException.h"
+
 /// <summary>
 /// Provides a list of static functions to log errors in a MessageBox.
 /// MessageBox errors use macros to output the file, function and line that an error was throw.
 /// </summary>
-
-#include <Windows.h>
-#include "COMException.h"
-
 class ErrorLogger
 {
 public:

@@ -2,15 +2,14 @@
 #ifndef WINDOWCONTAINER_H
 #define WINDOWCONTAINER_H
 
-/// <summary>
-/// Contains a WindowProc which is used to defer window messages to Keyboard.h/Mouse.h for handling.
-/// Initialzes and defers raw mouse input to Mouse.h
-/// </summary>
-
 #include "RenderWindow.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 
+/// <summary>
+/// Contains a WindowProc which is used to defer window messages to Keyboard.h/Mouse.h for handling.
+/// Initialzes and defers raw mouse input to Mouse.h
+/// </summary>
 class WindowContainer
 {
 public:

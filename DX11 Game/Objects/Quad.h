@@ -2,13 +2,12 @@
 #ifndef QUAD_H
 #define QUAD_H
 
+#include "RenderableGameObject.h"
+
 /// <summary>
 /// Create simple quad object.
 /// Inherits from RenderableGameObject which allows for the individual setting of position/rotation/scale data.
 /// </summary>
-
-#include "RenderableGameObject.h"
-
 class Quad : public RenderableGameObject
 {
 public:

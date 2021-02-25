@@ -2,16 +2,15 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-/// <summary>
-/// Load texture information from model file when initializing data through Assimp library.
-/// Provides default colour textures for models that fail to properly load their textures.
-/// </summary>
-
 #include "Colour.h"
 #include <d3d11.h>
 #include <wrl/client.h>
 #include <assimp/material.h>
 
+/// <summary>
+/// Load texture information from model file when initializing data through Assimp library.
+/// Provides default colour textures for models that fail to properly load their textures.
+/// </summary>
 enum class TextureStorageType
 {
 	None,

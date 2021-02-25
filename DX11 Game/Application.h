@@ -2,17 +2,15 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-/// <summary>
-/// Calls functions which initialize the window and main graphics components.
-/// Manages the keyboard/mouse input for the scene. (Needs refactored at some point.)
-/// Responsible for calling main render/update functions in Graphics.h
-/// </summary>
-
 #include "Input.h"
 #include "Timer.h"
 #include "Sound.h"
 #include "CameraController.h"
 
+/// <summary>
+/// Calls functions which initialize the window and main graphics components.
+/// Responsible for calling main render/update functions in Graphics.h
+/// </summary>
 class Application : public WindowContainer
 {
 public:

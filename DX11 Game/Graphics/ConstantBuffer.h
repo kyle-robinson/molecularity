@@ -2,16 +2,15 @@
 #ifndef CONSTANTBUFFER_H
 #define CONSTANTBUFFER_H
 
-/// <summary>
-/// Create and initialize a constant buffer by templating on a type. (Reference ConstantBufferTypes.h)
-/// Call "ApplyChanges()" on the constant buffer before binding it to the vertex/pixel shader in order to map changes.
-/// </summary>
-
 #include <d3d11.h>
 #include <wrl/client.h>
 #include "ErrorLogger.h"
 #include "ConstantBufferTypes.h"
 
+/// <summary>
+/// Create and initialize a constant buffer by templating on a type. (Reference ConstantBufferTypes.h)
+/// Call "ApplyChanges()" on the constant buffer before binding it to the vertex/pixel shader in order to map changes.
+/// </summary>
 template<class T>
 class ConstantBuffer
 {

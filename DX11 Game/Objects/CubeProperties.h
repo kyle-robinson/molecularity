@@ -2,10 +2,6 @@
 #ifndef CUBEPROPERTIES_H
 #define CUBEPROPERTIES_H
 
-/// <summary>
-/// Editable object properties by the multitool. No CPP file at the moment since once was not needed.
-/// </summary>
-
 static enum class ToolType
 {
 	Convert,
@@ -27,6 +23,9 @@ static enum class BoxSize
 	Large
 };
 
+/// <summary>
+/// Editable object properties by the multitool.
+/// </summary>
 class CubeProperties
 {
 public:

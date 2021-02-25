@@ -5,7 +5,6 @@
 /// <summary>
 /// Update the world transform of a given particle.
 /// </summary>
-
 class ParticleTransform
 {
 public:

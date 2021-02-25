@@ -2,12 +2,11 @@
 #ifndef PHYSICSMODEL_H
 #define PHYSICSMODEL_H
 
+#include "RenderableGameObject.h"
+
 /// <summary>
 /// Managers the generic physics calculations for a given object.
 /// </summary>
-
-#include "RenderableGameObject.h"
-
 class PhysicsModel
 {
 public:

@@ -4,13 +4,12 @@
 #include "TextRenderer.h"
 #include "StencilOutline.h"
 
-bool Graphics::Initialize( HWND hWnd,CameraController* camera, int width, int height )
+bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int height )
 {
 	if ( !InitializeGraphics( hWnd, width, height ) ) return false;
 	imgui.Initialize( hWnd, device.Get(), context.Get() );
 	if ( !InitializeScene() ) return false;
 	this->cameras = camera;
-
 
 	return true;
 }
@@ -104,10 +103,10 @@ void Graphics::BeginFrame()
 
 	pointLight.UpdateConstantBuffer( *this );
 	directionalLight.UpdateConstantBuffer( *this );
-	spotLight.UpdateConstantBuffer( *this, cameras->GetCamera(JSON::CameraType::Default) );
+	spotLight.UpdateConstantBuffer( *this, cameras->GetCamera( JSON::CameraType::Default ) );
 
 	// bind camera matrices
-	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras->GetCamera(cameras->GetCurrentCamera()) );
+	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras->GetCamera( cameras->GetCurrentCamera() ) );
 }
 
 void Graphics::RenderFrame()
@@ -156,7 +155,7 @@ void Graphics::RenderFrame()
 		cb_ps_scene.data.useTexture = TRUE;
 		if ( !cb_ps_scene.ApplyChanges() ) return;
 		context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-		crosshair.Draw(cameras->GetUICamera().GetWorldOrthoMatrix());
+		crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
 	}
 }
 
@@ -184,24 +183,23 @@ void Graphics::EndFrame()
 
 void Graphics::Update( const float dt )
 {
-
 	// update lights/skysphere
 	pointLight.SetPosition( pointLight.GetLightPosition() );
 	directionalLight.SetPosition( directionalLight.GetLightPosition() );
-	skysphere.SetPosition( cameras->GetCamera(cameras->GetCurrentCamera())->GetPositionFloat3() );
+	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );
 
 	// camera world collisions. Will be player object collisions in the future and ideally not here
-	bool wallCollision = Collisions::CheckCollisionCircle( cameras->GetCamera(JSON::CameraType::Default), hubRoom, 25.0f );
+	bool wallCollision = Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f );
 	if ( !wallCollision )
 	{
-		float dx = hubRoom.GetPositionFloat3().x - cameras->GetCamera(JSON::CameraType::Default)->GetPositionFloat3().x;
-		float dz = hubRoom.GetPositionFloat3().z - cameras->GetCamera(JSON::CameraType::Default)->GetPositionFloat3().z;
+		float dx = hubRoom.GetPositionFloat3().x - cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3().x;
+		float dz = hubRoom.GetPositionFloat3().z - cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3().z;
 		float length = std::sqrtf( dx * dx + dz * dz );
 		dx /= length;
 		dz /= length;
-		dx *= cameras->GetCamera(JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
-		dz *= cameras->GetCamera(JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
-		cameras->GetCamera(JSON::CameraType::Default)->AdjustPosition( dx, 0.0f, dz );
+		dx *= cameras->GetCamera( JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
+		dz *= cameras->GetCamera( JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
+		cameras->GetCamera( JSON::CameraType::Default)->AdjustPosition( dx, 0.0f, dz );
 	}
 
 	// update cube scale multiplier
@@ -209,10 +207,10 @@ void Graphics::Update( const float dt )
 		cube.SetScale( static_cast<float>( cube.GetEditableProperties()->GetSizeMultiplier() ) );
 
 	// cube range collision check
-	cube.SetIsInRange( Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f ) );
+	cube.SetIsInRange( Collisions::CheckCollisionSphere( cameras->GetCamera( cameras->GetCurrentCamera() ), cube, 5.0f ) );
 
 	// set position of spot light model
-	spotLight.UpdateModelPosition( cameras->GetCamera(JSON::CameraType::Default) );
+	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
 
 	//update object physics
 	cube.UpdatePhysics( dt );

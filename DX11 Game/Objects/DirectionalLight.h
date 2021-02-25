@@ -2,15 +2,14 @@
 #ifndef DIRECTIONALLIGHT_H
 #define DIRECTIONALLIGHT_H
 
-/// <summary>
-/// Creates a simple directional light.
-/// Provides functions to automatically update constant buffer and spawn ImGui control window.
-/// </summary>
-
 class Camera;
 #include "Light.h"
 #include "GraphicsResource.h"
 
+/// <summary>
+/// Creates a simple directional light.
+/// Provides functions to automatically update constant buffer and spawn ImGui control window.
+/// </summary>
 class DirectionalLight : public Light, public GraphicsResource
 {
 public:
@@ -20,9 +19,9 @@ public:
 	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
 private:
 	BOOL enable = TRUE;
-	float diffuseStrength = 0.5f;
+	float diffuseStrength = 0.2f;
 	float specularPower = 10.0f;
-	float specularStrength = 0.3f;
+	float specularStrength = 0.2f;
 
 	XMFLOAT3 position = { 10.0f, 20.0f, 10.0f };
 	XMFLOAT3 diffuseColor = { 0.4f, 1.0f, 0.1f };

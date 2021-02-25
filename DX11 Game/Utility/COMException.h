@@ -2,16 +2,15 @@
 #ifndef COMEXCEPTION_H
 #define COMEXCEPTION_H
 
-/// <summary>
-/// Output error information by logging this class as a type through ErrorLogger.h when catching exceptions.
-/// Use the macro "COM_ERROR_IF_FAILED( hr, msg )" to check for errors on DirectX components that return an HRESULT.
-/// </summary>
-
 #include <comdef.h>
 #include "StringConverter.h"
 
 #define COM_ERROR_IF_FAILED( hr, msg ) if( FAILED( hr ) ) throw COMException( hr, msg, __FILE__, __FUNCTION__, __LINE__ )
 
+/// <summary>
+/// Output error information by logging this class as a type through ErrorLogger.h when catching exceptions.
+/// Use the macro "COM_ERROR_IF_FAILED( hr, msg )" to check for errors on DirectX components that return an HRESULT.
+/// </summary>
 class COMException
 {
 public:

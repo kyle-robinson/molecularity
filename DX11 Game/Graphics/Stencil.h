@@ -2,17 +2,16 @@
 #ifndef STENCIL_H
 #define STENCIL_H
 
-/// <summary>
-/// Creates a stencil buffer which is used to enable/disable drawing to the render target on a per-pixel basis.
-/// Constructor take a 'Mode' which is used to determine the method to which the stencil passes/fails drawing pixels.
-/// Currently only used by StencilOutline.h for applying a colour outline to game objects.
-/// </summary>
-
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
 namespace Bind
 {
+	/// <summary>
+	/// Creates a stencil buffer which is used to enable/disable drawing to the render target on a per-pixel basis.
+	/// Constructor take a 'Mode' which is used to determine the method to which the stencil passes/fails drawing pixels.
+	/// Currently only used by StencilOutline.h for applying a colour outline to game objects.
+	/// </summary>
 	class Stencil : public GraphicsResource
 	{
 	public:

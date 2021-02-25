@@ -2,14 +2,13 @@
 #ifndef GAMEOBJECT3D_H
 #define GAMEOBJECT3D_H
 
+#include "GameObject.h"
+
 /// <summary>
 /// 3D game objects must inherit from this class.
 /// Provides functions to get direction vectors of the game object.
 /// Inherits from GameObject to allow for modification of position/rotation/scale data.
 /// </summary>
-
-#include "GameObject.h"
-
 class GameObject3D : public GameObject
 {
 public:

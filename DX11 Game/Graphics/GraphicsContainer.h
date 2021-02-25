@@ -2,11 +2,6 @@
 #ifndef GRAPHICSCONTAINER_H
 #define GRAPHICSCONTAINER_H
 
-/// <summary>
-/// Initializes DirectX components and shaders required by all scenes/levels.
-/// Holds some pipeline functions that clear/present the current frame and bind DirectX components.
-/// </summary>
-
 #include <map>
 #include <memory>
 #include <string>
@@ -27,6 +22,10 @@ namespace Bind
 	class Viewport;
 }
 
+/// <summary>
+/// Initializes DirectX components and shaders required by all scenes/levels.
+/// Holds some pipeline functions that clear/present the current frame and bind DirectX components.
+/// </summary>
 class GraphicsContainer
 {
 	friend class ImGuiManager;

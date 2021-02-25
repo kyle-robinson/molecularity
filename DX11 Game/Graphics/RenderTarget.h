@@ -2,18 +2,17 @@
 #ifndef RENDERTARGET_H
 #define RENDERTARGET_H
 
-/// <summary>
-/// Creates a render target to render the scene to. Takes the SwapChain as a parameter.
-/// Call "BindAsBuffer( gfx, depthStencil, clearColor )" to both bind and clear the render target.
-/// Calling "BindAsNull( gfx )" simply unbinds the render target from the render pipeline.
-/// </summary>
-
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
 namespace Bind
 {
 	class DepthStencil;
+	/// <summary>
+	/// Creates a render target to render the scene to. Takes the SwapChain as a parameter.
+	/// Call "BindAsBuffer( gfx, depthStencil, clearColor )" to both bind and clear the render target.
+	/// Calling "BindAsNull( gfx )" simply unbinds the render target from the render pipeline.
+	/// </summary>
 	class RenderTarget : public GraphicsResource
 	{
 	public:

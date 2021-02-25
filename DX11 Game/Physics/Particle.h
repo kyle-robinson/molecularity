@@ -2,14 +2,13 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
+#include "ParticleSystem.h"
+class ParticleSystem;
+
 /// <summary>
 /// Create, modify and render a particle.
 /// Positions are derived from given particle system.
 /// </summary>
-
-#include "ParticleSystem.h"
-class ParticleSystem;
-
 class Particle
 {
 public:

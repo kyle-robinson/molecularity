@@ -2,14 +2,13 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+class Camera;
+#include "Mesh.h"
+
 /// <summary>
 /// Load models from file using Assimp library.
 /// Processing of individual meshes and textures is deferred to the appropriate classes.
 /// </summary>
-
-#include "Mesh.h"
-class Camera;
-
 class Model
 {
 public:

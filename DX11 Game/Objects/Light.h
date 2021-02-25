@@ -2,13 +2,12 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
+#include "RenderableGameObject.h"
+
 /// <summary>
 /// Container class for other light objects.
 /// Inherits from RenderableGameObject.h to enable lights to bind a model to their position.
 /// </summary>
-
-#include "RenderableGameObject.h"
-
 class Light : public RenderableGameObject
 {
 protected:

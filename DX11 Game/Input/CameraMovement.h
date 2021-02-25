@@ -2,13 +2,12 @@
 #ifndef CAMERAMOVEMENT_H
 #define CAMERAMOVEMENT_H
 
+#include "Camera.h"
+
 /// <summary>
 /// Provides a list of static functions to update camera movement.
 /// If 'playMode' is false, then debug mode is in use and Y movement vectors are used for fly camera, otherwise they are omitted.
 /// </summary>
-
-#include "Camera.h"
-
 class CameraMovement
 {
 public:

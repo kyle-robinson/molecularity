@@ -2,17 +2,15 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
-/// <summary>
-/// Used to create a particle system.
-/// Each system can utilize particles with different parameters.
-/// </summary>
-
+class Particle;
 #include "Particle.h"
 #include "ParticleTransform.h"
 #include "RenderableGameObject.h"
 
-class Particle;
-
+/// <summary>
+/// Used to create a particle system.
+/// Each system can utilize particles with different parameters.
+/// </summary>
 class ParticleSystem
 {
 public:

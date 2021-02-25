@@ -2,16 +2,15 @@
 #ifndef DEPTHSTENCIL_H
 #define DEPTHSTENCIL_H
 
-/// <summary>
-/// Creates the depth stencil/z-buffer for the application.
-/// Call "ClearDepthStencil( gfx )" in the render pipeline to clear the depth buffer.
-/// </summary>
-
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
 namespace Bind
 {
+	/// <summary>
+	/// Creates the depth stencil/z-buffer for the application.
+	/// Call "ClearDepthStencil( gfx )" in the render pipeline to clear the depth buffer.
+	/// </summary>
 	class DepthStencil : public GraphicsResource
 	{
 	public:

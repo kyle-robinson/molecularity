@@ -2,11 +2,6 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-/// <summary>
-/// Loads and renders/updates all the components and models for the current scene/level.
-/// Sets up any constant buffers that are specific to this particular scene/level.
-/// </summary>
-
 #include "Fog.h"
 #include "Cube.h"
 #include "Quad.h"
@@ -25,32 +20,30 @@
 class StencilOutline;
 class TextRenderer;
 
-// Will need moved when cameraClass is made for itself or even moved to 
-//static enum class CameraTypes { Default, Static, Debug };
-
+/// <summary>
+/// Loads and renders/updates all the components and models for the current scene/level.
+/// Sets up any constant buffers that are specific to this particular scene/level.
+/// </summary>
 class Graphics : public GraphicsContainer
 {
 	friend class Application;
 public:
 	// Functions
 	virtual ~Graphics( void ) = default;
-	bool Initialize( HWND hWnd,CameraController* camera ,int width, int height );
+	bool Initialize( HWND hWnd, CameraController* camera, int width, int height );
 
 	void BeginFrame();
 	void RenderFrame();
 	void EndFrame();
 	void Update( const float dt );
-	
+
+	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
+	CameraController* GetCameraController() const noexcept { return cameras; }
 	Cube& GetCube() noexcept { return cube; }
-
-	CameraController* GetCameraController() { return cameras; } //not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
-
 private:
 	bool InitializeScene();
-public:
-	// Variables - to be moved to a cameraController (and changed by input class)
-	JSON::CameraType cameraToUse = JSON::CameraType::Default;
-private:
+	
+	// Variables
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;
@@ -62,6 +55,7 @@ private:
 	DirectionalLight directionalLight;
 
 	ImGuiManager imgui;
+	CameraController* cameras;
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<StencilOutline> stencilOutline;
@@ -73,8 +67,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
 	std::map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
-
-	CameraController* cameras;
 };
 
 #endif

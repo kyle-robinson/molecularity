@@ -2,18 +2,16 @@
 #ifndef TEXTRENDERER_H
 #define TEXTRENDERER_H
 
+class Graphics;
+#include "GraphicsResource.h"
+#include <dxtk/SpriteFont.h>
+#include <dxtk/SpriteBatch.h>
+
 /// <summary>
 /// Uses SpriteFont and SpriteBatch to draw strings to the screen.
 /// Font to be used can be chagned within this classes constructor.
 /// Contains functions which render text relevant to multi-tool/camera/cube objects.
 /// </summary>
-
-#include "GraphicsResource.h"
-#include <dxtk/SpriteFont.h>
-#include <dxtk/SpriteBatch.h>
-
-class Graphics;
-
 class TextRenderer : public GraphicsResource
 {
 public:

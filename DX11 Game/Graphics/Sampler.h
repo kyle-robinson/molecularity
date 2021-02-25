@@ -2,17 +2,16 @@
 #ifndef SAMPLER_H
 #define SAMPLER_H
 
-/// <summary>
-/// Creates a sampler which changes the method used to sample texture colours in the pixel shader.
-/// Constructor takes a sampler type, which means multiple samplers can be created which used different sampling methods.
-/// Call "Bind( gfx )" on a class object to bind it to the render pipeline.
-/// </summary>
-
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
 namespace Bind
 {
+	/// <summary>
+	/// Creates a sampler which changes the method used to sample texture colours in the pixel shader.
+	/// Constructor takes a sampler type, which means multiple samplers can be created which used different sampling methods.
+	/// Call "Bind( gfx )" on a class object to bind it to the render pipeline.
+	/// </summary>
 	class Sampler : public GraphicsResource
 	{
 	public:

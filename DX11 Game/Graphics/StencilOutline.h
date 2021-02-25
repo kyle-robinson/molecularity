@@ -2,11 +2,6 @@
 #ifndef STENCILOUTLINE_H
 #define STENCILOUTLINE_H
 
-/// <summary>
-/// Uses the stencil buffer to create a stencil outline on a given game object.
-/// Provides functions to spawn ImGui control window and change outline parameters.
-/// </summary>
-
 #include "Stencil.h"
 #include "ConstantBuffer.h"
 #include "ConstantBufferTypes.h"
@@ -14,6 +9,10 @@
 class Cube;
 class RenderableGameObject;
 
+/// <summary>
+/// Uses the stencil buffer to create a stencil outline on a given game object.
+/// Provides functions to spawn ImGui control window and change outline parameters.
+/// </summary>
 class StencilOutline : public GraphicsResource
 {
 public:

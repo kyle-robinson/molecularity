@@ -2,12 +2,11 @@
 #ifndef COLOUR_H
 #define COLOUR_H
 
+typedef unsigned char BYTE;
+
 /// <summary>
 /// Set default colour of a model if a texture is not correctly loaded from a model file.
 /// </summary>
-
-typedef unsigned char BYTE;
-
 class Colour
 {
 public:

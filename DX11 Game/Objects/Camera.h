@@ -2,13 +2,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "GameObject3D.h"
+
 /// <summary>
 /// Creates a simple camera object.
 /// Inherits from GameObject3D.h allowing for its position/rotation to be set.
 /// </summary>
-
-#include "GameObject3D.h"
-
 class Camera : public GameObject3D
 {
 public:

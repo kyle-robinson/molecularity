@@ -65,7 +65,7 @@ void TextRenderer::RenderCameraText( Graphics& gfx )
 {
 	std::string displayText;
 
-	switch (gfx.GetCameraController()->GetCurrentCamera() )
+	switch ( gfx.GetCameraController()->GetCurrentCamera() )
 	{
 	case JSON::CameraType::Default: displayText = "Default"; break;
 	case JSON::CameraType::Static: displayText = "Static"; break;

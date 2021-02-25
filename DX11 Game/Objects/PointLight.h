@@ -2,15 +2,14 @@
 #ifndef POINTLIGHT_H
 #define POINTLIGHT_H
 
-/// <summary>
-/// Creates a dynamic point light.
-/// Provides functions to automatically update constant buffer and spawn ImGui control window.
-/// </summary>
-
 class Camera;
 #include "Light.h"
 #include "GraphicsResource.h"
 
+/// <summary>
+/// Creates a dynamic point light.
+/// Provides functions to automatically update constant buffer and spawn ImGui control window.
+/// </summary>
 class PointLight : public Light, public GraphicsResource
 {
 public:
@@ -26,9 +25,9 @@ private:
 	float quadratic = 0.0075f;
 
 	float ambientStrength = 0.1f;
-	float diffuseStrength = 0.6f;
+	float diffuseStrength = 0.2f;
 	float specularPower = 10.0f;
-	float specularStrength = 0.6f;
+	float specularStrength = 0.2f;
 
 	XMFLOAT3 position = { -5.0f, 9.0f, -10.0f };
 	XMFLOAT3 ambientColor = { 1.0f, 1.0f, 1.0f };

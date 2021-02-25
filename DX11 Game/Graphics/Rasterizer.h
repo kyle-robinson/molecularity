@@ -2,17 +2,16 @@
 #ifndef RASTERIZER_H
 #define RASTERIZER_H
 
-/// <summary>
-/// Creates a rasterizer bindable, referenced in GraphicsContainer.h
-/// Constructor takes 'bool' values to modify the CULL and FILL modes.
-/// Call "Bind( gfx )" on a class object to bind it to the render pipeline.
-/// </summary>
-
 #include "GraphicsResource.h"
 #include "ErrorLogger.h"
 
 namespace Bind
 {
+	/// <summary>
+	/// Creates a rasterizer bindable, referenced in GraphicsContainer.h
+	/// Constructor takes 'bool' values to modify the CULL and FILL modes.
+	/// Call "Bind( gfx )" on a class object to bind it to the render pipeline.
+	/// </summary>
 	class Rasterizer : public GraphicsResource
 	{
 	public:

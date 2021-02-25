@@ -1,17 +1,19 @@
 #pragma once
-#ifndef _SOUND_H_
-#define _SOUND_H_
+#ifndef SOUND_H
+#define SOUND_H
 
+#pragma comment( lib, "dsound.lib" )
+#pragma comment( lib, "dxguid.lib" )
+#pragma comment( lib, "winmm.lib" )
 
-#pragma comment(lib, "dsound.lib")
-#pragma comment(lib, "dxguid.lib")
-#pragma comment(lib, "winmm.lib")
-
-#include <Windows.h>
 #include <mmsystem.h>
 #include <dsound.h>
 #include <stdio.h>
 
+/// <summary>
+/// Initializes all sound clips to be used in the game.
+/// Call "PlayWavFile( 'enum', 'volume' )" to play a specified sound clip.
+/// </summary>
 class Sound
 {
 private:
@@ -34,25 +36,26 @@ private:
 
 public:
 	Sound();
-	~Sound();
+	virtual ~Sound( void ) = default;
 
-	bool Initialise(HWND);
-	bool PlayWavFile(int, float);
+	bool Initialize( HWND );
+	bool PlayWavFile( int, float );
 	void Close();
 
 private:
-	bool InitialiseDirectSound(HWND);
+	bool InitializeDirectSound( HWND );
 	void CloseDirectSound();
 
 	bool InitialiseSoundFiles();
 
-	bool LoadWavFile(const char*, IDirectSoundBuffer8**);
-	void CloseWavFile(IDirectSoundBuffer8**);
+	bool LoadWavFile( const char*, IDirectSoundBuffer8** );
+	void CloseWavFile( IDirectSoundBuffer8** );
 
 	IDirectSound8* _directSound;
 	IDirectSoundBuffer* _primaryBuffer;
 };
-//Make sure the size of the array keeps up with the sound name enum
+
+// Make sure the size of the array keeps up with the sound name enum
 static IDirectSoundBuffer8* _secondaryBuffer[10]; //Stores the loaded sounds
 
 enum SOUND_NAMES
@@ -61,4 +64,4 @@ enum SOUND_NAMES
 	SHOT_SOUND
 };
 
-#endif // !_SOUND_H_
+#endif

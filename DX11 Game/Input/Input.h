@@ -2,15 +2,14 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-/// <summary>
-/// Handles user input by update keyboard and mouse events.
-/// Contains functions to update game state on successful keyboard/mouse event registers.
-/// </summary>
-
 #include "Graphics.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
 
+/// <summary>
+/// Handles user input by update keyboard and mouse events.
+/// Contains functions to update game state on successful keyboard/mouse event registers.
+/// </summary>
 class Input : public WindowContainer
 {
 public:

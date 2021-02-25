@@ -2,14 +2,13 @@
 #ifndef SHADERS_H
 #define SHADERS_H
 
+class VertexShader;
+class PixelShader;
+
 /// <summary>
 /// Handles the loading of vertex and pixel shaders from file.
 /// Call "Shaders::BindShaders( vertexShader, pixelShader )" to bind appropriate shaders to the pipeline.
 /// </summary>
-
-class VertexShader;
-class PixelShader;
-
 class Shaders
 {
 public:
@@ -22,6 +21,10 @@ protected:
 		ID3DBlob** ppBlobOut );
 };
 
+/// <summary>
+/// Initialize a vertex shader given a filepath and input layout.
+/// Can be bound to the pipeline using the Shaders class.
+/// </summary>
 class VertexShader : Shaders
 {
 public:
@@ -40,6 +43,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D10Blob> shaderBuffer;
 };
 
+/// <summary>
+/// Initialize a pixel shader given a filepath.
+/// Can be bound to the pipeline using the Shaders class.
+/// </summary>
 class PixelShader : Shaders
 {
 public:

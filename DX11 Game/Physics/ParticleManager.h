@@ -2,13 +2,12 @@
 #ifndef PARTICLEMANAGER_H
 #define PARTICLEMANAGER_H
 
+#include "ParticleSystem.h"
+
 /// <summary>
 /// Manages the created particle systems.
 /// Contains functions to enable/disable systems individually.
 /// </summary>
-
-#include "ParticleSystem.h"
-
 class ParticleManager
 {
 public:

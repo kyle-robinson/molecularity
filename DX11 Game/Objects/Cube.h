@@ -2,15 +2,14 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-/// <summary>
-/// Create a simple cube object.
-/// Inherits from RenderableGameObject which allows for the individual setting of position/rotation/scale data.
-/// </summary>
-
 #include "RenderableGameObject.h"
 #include "CubeProperties.h"
 #include "PhysicsModel.h"
 
+/// <summary>
+/// Create a simple cube object.
+/// Inherits from RenderableGameObject which allows for the individual setting of position/rotation/scale data.
+/// </summary>
 class Cube : public RenderableGameObject
 {
 public:

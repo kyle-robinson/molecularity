@@ -2,13 +2,12 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include "Model.h"
+
 /// <summary>
 /// Container for all game objects.
 /// Provides functions to get/set/update position/rotation/scale data.
 /// </summary>
-
-#include "Model.h"
-
 class GameObject
 {
 public:
