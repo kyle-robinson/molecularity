@@ -49,11 +49,11 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 		DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 		static std::wstring sizeType;
-		switch ( gfx.GetCube().GetEditableProperties()->GetBoxSize() )
+		switch ( gfx.GetCube().GetEditableProperties()->GetSizeID() )
 		{
-		case BoxSize::Small: sizeType = L"Shrink Ray"; break;
-		case BoxSize::Normal: sizeType = L"Reset Ray"; break;
-		case BoxSize::Large: sizeType = L"Growth Ray"; break;
+		case 0: sizeType = L"Shrink Ray"; break;
+		case 1: sizeType = L"Reset Ray"; break;
+		case 2: sizeType = L"Growth Ray"; break;
 		}
 
 		DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),

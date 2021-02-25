@@ -213,7 +213,7 @@ void Graphics::Update( const float dt )
 
 	// update cube scale multiplier
 	if ( cube.GetEditableProperties()->GetToolType() == ToolType::Resize )
-		cube.SetScale( static_cast<float>( cube.GetEditableProperties()->GetBoxSize() ) );
+		cube.SetScale( static_cast<float>( cube.GetEditableProperties()->GetSizeMultiplier() ) );
 
 	// cube range collision check
 	cube.SetIsInRange( Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f ) );

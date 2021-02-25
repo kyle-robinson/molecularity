@@ -144,44 +144,38 @@ void Input::UpdateMouse( const float dt )
 		}
 		else if ( graphics->GetCube().GetEditableProperties()->GetToolType() == ToolType::Resize )
 		{
-			static int sizeToUse = 1;
-
+			// set size multiplier to be applied to the box
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
-				graphics->GetCube().GetEditableProperties()->GetBoxSize() < static_cast<BoxSize>( 2 ) )
+				graphics->GetCube().GetEditableProperties()->GetSizeID() < 2 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetBoxSize( static_cast<BoxSize>( sizeToUse++ ) );
+				graphics->GetCube().GetEditableProperties()->SetSizeID(
+					graphics->GetCube().GetEditableProperties()->GetSizeID() + 1
+				);
 			}
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
-				graphics->GetCube().GetEditableProperties()->GetBoxSize() > static_cast<BoxSize>( 0 ) )
+				graphics->GetCube().GetEditableProperties()->GetSizeID() > 0 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetBoxSize( static_cast<BoxSize>( sizeToUse-- ) );
+				graphics->GetCube().GetEditableProperties()->SetSizeID(
+					graphics->GetCube().GetEditableProperties()->GetSizeID() - 1
+				);
 			}
-
-			// change size amount to change box to
-			//if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp && graphics->GetCube().GetSizeAmount() < 2 )
-			//	graphics->GetCube().SetSizeAmount( graphics->GetCube().GetSizeAmount() + 1 );
-			//else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown && graphics->GetCube().GetSizeAmount() > 0 )
-			//	graphics->GetCube().SetSizeAmount( graphics->GetCube().GetSizeAmount() - 1 );
 
 			// set the box scale to use based on the option previously selected
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube().GetIsHovering() )
 			{
-				switch ( sizeToUse )
+				switch ( graphics->GetCube().GetEditableProperties()->GetSizeID() )
 				{
-				//case 0: graphics->GetCube().SetSizeToUse( 0.25f ); break;
-				//case 1: graphics->GetCube().SetSizeToUse( 1.0f ); break;
-				//case 2: graphics->GetCube().SetSizeToUse( 2.0f ); break;
 				case 0:
+					graphics->GetCube().GetEditableProperties()->SetSizeMultiplier( 0.5f );
 					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Small );
-					graphics->GetCube().GetEditableProperties()->SetSizeMultiplier( 0.25f );
 					break;
 				case 1:
-					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Normal );
 					graphics->GetCube().GetEditableProperties()->SetSizeMultiplier( 1.0f );
+					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Normal );
 					break;
 				case 2:
-					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Large );
 					graphics->GetCube().GetEditableProperties()->SetSizeMultiplier( 2.0f );
+					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Large );
 					break;
 				}
 			}
