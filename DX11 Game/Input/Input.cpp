@@ -120,17 +120,17 @@ void Input::UpdateMouse( const float dt )
 		{
 			// change current id of texture to be used on box
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
-				graphics->GetCube().GetEditableProperties()->GetBoxMaterialID() < 3 )
+				graphics->GetCube().GetEditableProperties()->GetMaterialID() < 3 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetBoxMaterialID(
-					graphics->GetCube().GetEditableProperties()->GetBoxMaterialID() + 1
+				graphics->GetCube().GetEditableProperties()->SetMaterialID(
+					graphics->GetCube().GetEditableProperties()->GetMaterialID() + 1
 				);
 			}
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
-				graphics->GetCube().GetEditableProperties()->GetBoxMaterialID() > 0 )
+				graphics->GetCube().GetEditableProperties()->GetMaterialID() > 0 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetBoxMaterialID(
-					graphics->GetCube().GetEditableProperties()->GetBoxMaterialID() - 1
+				graphics->GetCube().GetEditableProperties()->SetMaterialID(
+					graphics->GetCube().GetEditableProperties()->GetMaterialID() - 1
 				);
 			}
 
@@ -138,7 +138,7 @@ void Input::UpdateMouse( const float dt )
 			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube().GetIsHovering() )
 			{
 				graphics->GetCube().GetEditableProperties()->SetBoxType(
-					static_cast<BoxType>( graphics->GetCube().GetEditableProperties()->GetBoxMaterialID() )
+					static_cast<BoxType>( graphics->GetCube().GetEditableProperties()->GetMaterialID() )
 				);
 			}
 		}

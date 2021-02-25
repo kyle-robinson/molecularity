@@ -34,7 +34,7 @@ public:
 	ToolType GetToolType() const noexcept { return toolType; }
 	BoxType GetBoxType() const noexcept { return boxType; }
 	BoxSize GetBoxSize() const noexcept { return boxSize; }
-	int GetBoxMaterialID() const noexcept { return boxMaterialID; }
+	int GetMaterialID() const noexcept { return materialID; }
 
 	bool GetBurnable() const noexcept { return isBurnable; }
 	bool GetReflective() const noexcept { return isReflective; }
@@ -44,14 +44,14 @@ public:
 	void SetToolType( ToolType type ) { toolType = type; }
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
 	void SetBoxSize( BoxSize size ) noexcept { boxSize = size; }
-	void SetBoxMaterialID( int boxID ) noexcept { boxMaterialID = boxID; }
+	void SetMaterialID( int id ) noexcept { materialID = id; }
 
 	void SetBurnable( bool burnable ) noexcept { isBurnable = burnable; }
 	void SetReflective( bool reflective ) noexcept { isReflective = reflective; }
 	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier; }
 
 private:
-	int boxMaterialID = 0;
+	int materialID = 0;
 	bool isBurnable = false;
 	bool isReflective = false;
 	float sizeMultiplier = 1.0f;

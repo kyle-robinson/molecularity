@@ -33,12 +33,12 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 		DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 		static std::wstring boxType;
-		switch ( gfx.GetCube().GetEditableProperties()->GetBoxType() )
+		switch ( gfx.GetCube().GetEditableProperties()->GetMaterialID() )
 		{
-		case BoxType::Default: boxType = L"Default Box"; break;
-		case BoxType::Bounce: boxType = L"Bounce Box"; break;
-		case BoxType::Arrow: boxType = L"Jump Box"; break;
-		case BoxType::TNT: boxType = L"TNT Box"; break;
+		case 0: boxType = L"Default Box"; break;
+		case 1: boxType = L"Bounce Box"; break;
+		case 2: boxType = L"Jump Box"; break;
+		case 3: boxType = L"TNT Box"; break;
 		}
 
 		DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
