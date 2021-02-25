@@ -10,6 +10,7 @@
 
 #include "Input.h"
 #include "Timer.h"
+#include "CameraController.h"
 
 class Application : public WindowContainer
 {
@@ -28,6 +29,7 @@ private:
 	Input input;
 	Timer timer;
 	Graphics gfx;
+	CameraController cameras;
 };
 
 #endif

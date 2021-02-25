@@ -9,9 +9,10 @@ bool Application::Initialize(
 	int height )
 {
 	timer.Start();
+	cameras.Initialize(width, height);
 	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
-	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) ) return false;
-	input.Initialize( &gfx, renderWindow, width, height);
+	if ( !gfx.Initialize( renderWindow.GetHWND(),&cameras, width, height ) ) return false;
+	input.Initialize( &gfx, renderWindow,&cameras, width, height);
 
 	return true;
 }
