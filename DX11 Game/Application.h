@@ -8,10 +8,8 @@
 /// Responsible for calling main render/update functions in Graphics.h
 /// </summary>
 
+#include "Input.h"
 #include "Timer.h"
-#include "Graphics.h"
-#include "MousePicking.h"
-#include "WindowContainer.h"
 #include "Sound.h"
 
 class Application : public WindowContainer
@@ -28,10 +26,10 @@ public:
 	void Update();
 	void Render();
 private:
+	Input input;
 	Timer timer;
-	Graphics graphics;
-	MousePicking mousePick;
 	Sound sound;
+	Graphics gfx;
 };
 
 #endif

@@ -39,10 +39,10 @@ bool Graphics::InitializeScene()
 
 			// primitives
 			if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
-			cube.SetInitialPosition( 0.0f, 5.0f, 5.0f );
+			cube.SetInitialPosition( 0.0f, 10.0f, -6.0f );
 
 			if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
-			simpleQuad.SetInitialPosition( 0.0f, 5.0f, -5.0f );
+			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
 			// sprites
@@ -53,9 +53,9 @@ bool Graphics::InitializeScene()
 		// CAMERAS
 		{
 			XMFLOAT2 aspectRatio = { static_cast<float>( GetWidth() ), static_cast<float>( GetHeight() ) };
-			cameras.emplace( "Default", std::make_unique<Camera>( 0.0f, 9.0f, -15.0f ) );
-			cameras.emplace( "Static", std::make_unique<Camera>( 0.0f, 9.0f, 0.0f ) );
-			cameras.emplace( "Debug", std::make_unique<Camera>( 0.0f, 9.0f, -10.0f ) );
+			cameras.emplace( JSON::CameraType::Default, std::make_unique<Camera>( 0.0f, 9.0f, -15.0f ) );
+			cameras.emplace( JSON::CameraType::Static, std::make_unique<Camera>( 0.0f, 9.0f, 0.0f ) );
+			cameras.emplace( JSON::CameraType::Debug, std::make_unique<Camera>( 0.0f, 9.0f, -10.0f ) );
 			for ( const auto& cam : cameras )
 				cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 			camera2D.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
@@ -112,7 +112,7 @@ void Graphics::BeginFrame()
 
 	pointLight.UpdateConstantBuffer( *this );
 	directionalLight.UpdateConstantBuffer( *this );
-	spotLight.UpdateConstantBuffer( *this, cameras["Default"] );
+	spotLight.UpdateConstantBuffer( *this, cameras[JSON::CameraType::Default] );
 
 	// bind camera matrices
 	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras[cameraToUse] );
@@ -169,7 +169,7 @@ void Graphics::EndFrame()
 	textRenderer->RenderMultiToolText( *this );
 	textRenderer->RenderCameraText( *this );
 
-	if ( cameraToUse == "Debug" )
+	if ( cameraToUse == JSON::CameraType::Debug )
 	{
 		imgui.BeginRender();
 		imgui.SpawnInstructionWindow();
@@ -185,34 +185,35 @@ void Graphics::EndFrame()
 	PresentScene();
 }
 
-void Graphics::Update( float dt )
+void Graphics::Update( const float dt )
 {
-	UNREFERENCED_PARAMETER( dt );
-
 	// update lights/skysphere
 	pointLight.SetPosition( pointLight.GetLightPosition() );
 	directionalLight.SetPosition( directionalLight.GetLightPosition() );
 	skysphere.SetPosition( cameras[cameraToUse]->GetPositionFloat3() );
 
 	// camera world collisions
-	bool wallCollision = Collisions::CheckCollisionCircle( cameras["Default"], hubRoom, 25.0f );
+	bool wallCollision = Collisions::CheckCollisionCircle( cameras[JSON::CameraType::Default], hubRoom, 25.0f );
 	if ( !wallCollision )
 	{
-		float dx = hubRoom.GetPositionFloat3().x - cameras["Default"]->GetPositionFloat3().x;
-		float dz = hubRoom.GetPositionFloat3().z - cameras["Default"]->GetPositionFloat3().z;
+		float dx = hubRoom.GetPositionFloat3().x - cameras[JSON::CameraType::Default]->GetPositionFloat3().x;
+		float dz = hubRoom.GetPositionFloat3().z - cameras[JSON::CameraType::Default]->GetPositionFloat3().z;
 		float length = std::sqrtf( dx * dx + dz * dz );
 		dx /= length;
 		dz /= length;
-		dx *= cameras["Default"]->GetCameraSpeed() * 10.0f;
-		dz *= cameras["Default"]->GetCameraSpeed() * 10.0f;
-		cameras["Default"]->AdjustPosition( dx, 0.0f, dz );
+		dx *= cameras[JSON::CameraType::Default]->GetCameraSpeed() * 10.0f;
+		dz *= cameras[JSON::CameraType::Default]->GetCameraSpeed() * 10.0f;
+		cameras[JSON::CameraType::Default]->AdjustPosition( dx, 0.0f, dz );
 	}
-	
+
 	// cube range collision check
 	if ( cube.GetEditableProperties()->GetType() == ToolType::RESIZE )
 		cube.SetScale( sizeToUse, sizeToUse, sizeToUse );
 	cubeInRange = Collisions::CheckCollisionSphere( cameras[cameraToUse], cube, 5.0f );
 
 	// set position of spot light model
-	spotLight.UpdateModelPosition( cameras["Default"] );
+	spotLight.UpdateModelPosition( cameras[JSON::CameraType::Default] );
+
+	//update object physics
+	cube.UpdatePhysics( dt );
 }

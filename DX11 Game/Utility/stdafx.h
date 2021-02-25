@@ -27,6 +27,8 @@
 #include <directxmath.h>
 #include <directxcolors.h>
 
+using namespace DirectX;
+
 // Classes
 #include "Timer.h"
 #include "ErrorLogger.h"

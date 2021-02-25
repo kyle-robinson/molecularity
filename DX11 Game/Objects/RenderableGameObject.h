@@ -22,6 +22,7 @@ public:
 protected:
 	Model model;
 	void UpdateMatrix() override;
+	
 	XMMATRIX worldMatrix = XMMatrixIdentity();
 };
 

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "TextRenderer.h"
 #include "Graphics.h"
 
@@ -18,7 +19,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 
 void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 {
-	if ( gfx.cubeInRange && gfx.cubeHover && !gfx.holdingCube )
+	if ( gfx.cubeInRange && gfx.cubeHover && !gfx.GetCube().GetIsHolding() )
 	{
 		DrawString( L"Press 'E' to pick up cube.",
 			XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
@@ -62,6 +63,16 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 
 void TextRenderer::RenderCameraText( Graphics& gfx )
 {
-	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( gfx.cameraToUse ) ).c_str(),
+	std::string displayText;
+
+	switch ( gfx.cameraToUse )
+	{
+	case JSON::CameraType::Default: displayText = "Default"; break;
+	case JSON::CameraType::Static: displayText = "Static"; break;
+	case JSON::CameraType::Debug: displayText = "Debug"; break;
+	default: displayText = "Camera name needed in TextRenderer.h"; break;
+	}
+
+	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( displayText ) ).c_str(),
 		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
 }

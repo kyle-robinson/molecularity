@@ -16,6 +16,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <vector>
+
 using namespace DirectX;
 
 class Mesh
