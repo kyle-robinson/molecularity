@@ -32,9 +32,6 @@ class Graphics : public GraphicsContainer
 {
 	friend class Application;
 public:
-	//might move this. It doenst do anything at the moment so left it incase.
-	enum ResizeScale { SMALL, NORMAL, LARGE } resizeScale = LARGE;
-
 	// Functions
 	virtual ~Graphics( void ) = default;
 	bool Initialize( HWND hWnd,CameraController* camera ,int width, int height );
@@ -50,16 +47,9 @@ public:
 
 private:
 	bool InitializeScene();
-
 public:
 	// Variables - to be moved to a cameraController (and changed by input class)
-	int boxToUse = 0;
-	int sizeAmount = 2;
-	bool cubeHover = false;
-	bool cubeInRange = false;
-
-	std::string selectedBox = "Basic"; // box needs to know what type of box it is, this will need to be moved possibly
-	float sizeToUse = 1.0f; // box should know what size it will be
+	JSON::CameraType cameraToUse = JSON::CameraType::Default;
 private:
 	Cube cube;
 	Quad simpleQuad;
@@ -82,7 +72,7 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
-	std::map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+	std::map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
 	CameraController* cameras;
 };

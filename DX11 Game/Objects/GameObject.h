@@ -38,8 +38,12 @@ public:
 	void AdjustRotation( float xRot, float yRot, float zRot ) noexcept;
 	void ResetRotation() noexcept;
 
+	void SetInitialScale( const XMFLOAT3& newScale ) noexcept;
 	void SetInitialScale( float xScale, float yScale, float zScale = 1.0f ) noexcept;
+	void SetScale( const XMFLOAT3& newScale ) noexcept;
 	void SetScale( float xScale, float yScale, float zScale = 1.0f ) noexcept;
+	void SetScale( float scaleMultiplier ) noexcept;
+	void AdjustScale( const XMFLOAT3& newScale ) noexcept;
 	void AdjustScale( float xScale, float yScale, float zScale = 1.0f ) noexcept;
 	void ResetScale() noexcept;
 protected:

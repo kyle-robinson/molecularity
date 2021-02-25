@@ -19,7 +19,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 
 void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 {
-	if ( gfx.cubeInRange && gfx.cubeHover && !gfx.GetCube().GetIsHolding() )
+	if ( gfx.GetCube().GetIsInRange() && gfx.GetCube().GetIsHovering() && !gfx.GetCube().GetIsHolding() )
 	{
 		DrawString( L"Press 'E' to pick up cube.",
 			XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
@@ -28,12 +28,12 @@ void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 
 void TextRenderer::RenderMultiToolText( Graphics& gfx )
 {
-	if ( gfx.GetCube().GetEditableProperties()->GetType() == ToolType::CONVERT )
+	if ( gfx.GetCube().GetEditableProperties()->GetToolType() == ToolType::Convert )
 	{
 		DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 		static std::wstring boxType;
-		switch ( gfx.boxToUse )
+		switch ( gfx.GetCube().GetEditableProperties()->GetMaterialID() )
 		{
 		case 0: boxType = L"Default Box"; break;
 		case 1: boxType = L"Bounce Box"; break;
@@ -44,12 +44,12 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 		DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
 			XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
 	}
-	else if ( gfx.GetCube().GetEditableProperties()->GetType() == ToolType::RESIZE )
+	else if ( gfx.GetCube().GetEditableProperties()->GetToolType() == ToolType::Resize )
 	{
 		DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 		static std::wstring sizeType;
-		switch ( gfx.sizeAmount )
+		switch ( gfx.GetCube().GetEditableProperties()->GetSizeID() )
 		{
 		case 0: sizeType = L"Shrink Ray"; break;
 		case 1: sizeType = L"Reset Ray"; break;

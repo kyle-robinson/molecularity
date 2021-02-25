@@ -149,15 +149,35 @@ void GameObject::ResetRotation() noexcept
 }
 
 /// SCALE
+void GameObject::SetInitialScale( const XMFLOAT3& newScale ) noexcept
+{
+	SetScale( newScale );
+}
+
 void GameObject::SetInitialScale( float xScale, float yScale, float zScale ) noexcept
 {
-	initialScale = { xScale, yScale, zScale };
-	SetScale( xScale, yScale, zScale );
+	SetInitialScale( XMFLOAT3( xScale, yScale, zScale ) );
+}
+
+void GameObject::SetScale( const XMFLOAT3& newScale ) noexcept
+{
+	scale = newScale;
+	UpdateMatrix();
 }
 
 void GameObject::SetScale( float xScale, float yScale, float zScale ) noexcept
 {
-	scale = { xScale, yScale, zScale };
+	SetScale( XMFLOAT3( xScale, yScale, zScale ) );
+}
+
+void GameObject::SetScale( float scaleMultiplier ) noexcept
+{
+	SetScale( scaleMultiplier, scaleMultiplier, scaleMultiplier );
+}
+
+void GameObject::AdjustScale( const XMFLOAT3& newScale ) noexcept
+{
+	scale = newScale;
 	UpdateMatrix();
 }
 
