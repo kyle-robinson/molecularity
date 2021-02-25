@@ -52,8 +52,8 @@ private:
 	IDirectSound8* _directSound;
 	IDirectSoundBuffer* _primaryBuffer;
 };
-
-static IDirectSoundBuffer8* _secondaryBuffer[10];
+//Make sure the size of the array keeps up with the sound name enum
+static IDirectSoundBuffer8* _secondaryBuffer[10]; //Stores the loaded sounds
 
 enum SOUND_NAMES
 {
