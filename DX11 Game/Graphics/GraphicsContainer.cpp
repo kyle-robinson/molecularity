@@ -20,7 +20,6 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 		swapChain = std::make_shared<Bind::SwapChain>( *this, context.GetAddressOf(), device.GetAddressOf(), hWnd );
 		renderTarget = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
-		viewport = std::make_shared<Bind::Viewport>( *this );
 		blender = std::make_shared<Bind::Blender>( *this );
 
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
@@ -34,6 +33,9 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
         samplers.emplace( "Anisotropic", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Anisotropic ) );
         samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
         samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
+
+		viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
+		viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
 
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	}

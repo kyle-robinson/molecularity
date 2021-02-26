@@ -36,12 +36,14 @@ void Input::UpdateKeyboard( const float dt )
 	}
 
 	// camera movement
-	if ( cameras->GetCurrentCamera() == JSON::CameraType::Static )
-	{
-		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
-			cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3() );
-	}
-	else
+	cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
+		cameras->GetCamera( JSON::CameraType::Debug )->GetPositionFloat3() );
+	//if ( cameras->GetCurrentCamera() == JSON::CameraType::Static )
+	//{
+	//	cameras->SetCurrentCamera( JSON::CameraType::Debug );
+	//}
+	//else
+	//if ( cameras->GetCurrentCamera() == JSON::CameraType::Static )
 	{
 		// update mode to ignore y-movement when not in debug mode. Will be changed in the future likely when player can move around the environment with physics/collisions.
 		// will also need to be changed to the player object when player becomes its own class. Unknown how that will work currently
@@ -64,9 +66,7 @@ void Input::UpdateKeyboard( const float dt )
 	if ( keyboard.KeyIsPressed( '2' ) ) graphics->GetCube().GetEditableProperties()->SetToolType( ToolType::Resize );
 
 	// pick-up cube - set position relative to camera.
-	if ( keyboard.KeyIsPressed( 'E' ) &&
-		graphics->GetCameraController()->GetCurrentCamera() != JSON::CameraType::Static &&
-		graphics->GetCube().GetIsInRange() &&
+	if ( keyboard.KeyIsPressed( 'E' ) && graphics->GetCube().GetIsInRange() &&
 		( graphics->GetCube().GetIsHovering() || graphics->GetCube().GetIsHolding() ) )
 	{
 		graphics->GetCube().SetIsHolding( true );

@@ -3,25 +3,43 @@
 #define VIEWPORT_H
 
 #include "GraphicsResource.h"
-class Graphics;
 
-/// <summary>
-/// Create a viewport on which to project the current scene.
-/// Can be modified to allow for split-screen functionality.
-/// </summary>
 namespace Bind
 {
+	/// <summary>
+	/// Create a viewport on which to project the current scene.
+	/// Can be modified to allow for split-screen functionality.
+	/// </summary>
 	class Viewport : public GraphicsResource
 	{
 	public:
-		Viewport( GraphicsContainer& gfx ) : Viewport( gfx, gfx.GetWidth(), gfx.GetHeight() ) { }
-		Viewport( GraphicsContainer& gfx, UINT width, UINT height )
+		static enum class Type
 		{
-			viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, static_cast<FLOAT>( width ), static_cast<FLOAT>( height ) );
+			Main,
+			Sub
+		};
+		Viewport( GraphicsContainer& gfx, Type type ) : type( type )
+		{
+			// get render target dimensions
+			FLOAT width = static_cast<FLOAT>( gfx.GetWidth() );
+			FLOAT height = static_cast<FLOAT>( gfx.GetHeight() );
+			
+			// create viewport
+			viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, width, height );
+			if ( type == Type::Sub )
+			{
+				viewportDesc.TopLeftX = width / 1.333f;
+				viewportDesc.Width = width / 4.0f;
+				viewportDesc.Height = height / 4.0f;
+			}
+		}
+		void Bind( GraphicsContainer& gfx ) noexcept override
+		{
 			GetContext( gfx )->RSSetViewports( 1u, &viewportDesc );
 		}
 	private:
-		CD3D11_VIEWPORT viewportDesc = {};
+		Type type;
+		CD3D11_VIEWPORT viewportDesc = { };
 	};
 }
 
