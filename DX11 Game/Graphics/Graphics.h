@@ -4,7 +4,6 @@
 
 #include "Fog.h"
 #include "Cube.h"
-#include "Quad.h"
 #include "Camera.h"
 #include "Sprite.h"
 #include "Camera2D.h"
@@ -56,7 +55,6 @@ private:
 
 	ImGuiManager imgui;
 	CameraController* cameras;
-	QuadFullscreen fullscreen;
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<StencilOutline> stencilOutline;
@@ -64,7 +62,6 @@ private:
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
-	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;

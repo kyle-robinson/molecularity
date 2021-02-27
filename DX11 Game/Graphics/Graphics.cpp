@@ -49,8 +49,6 @@ bool Graphics::InitializeScene()
 			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
-			if ( !fullscreen.Initialize( device.Get() ) ) return false;
-
 			// sprites
 			if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
 			crosshair.SetInitialPosition( GetWidth() / 2 - crosshair.GetWidth() / 2, GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
@@ -77,7 +75,6 @@ bool Graphics::InitializeScene()
 		// CONSTANT BUFFERS
 		{
 			HRESULT hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
-			hr = cb_vs_fullscreen.Initialize( device.Get(), context.Get() );
 			hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 			hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
 			COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
@@ -167,14 +164,7 @@ void Graphics::RenderFrame()
 void Graphics::EndFrame()
 {
 	// set and clear back buffer
-	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    backBuffer->BindAsBuffer( *this, clearColor );
-
-    // render to fullscreen texture
-	Shaders::BindShaders( context.Get(), vertexShader_full, pixelShader_full );
-    fullscreen.SetupBuffers( context.Get(), cb_vs_fullscreen, TRUE );
-    context->PSSetShaderResources( 0u, 1u, renderTarget->GetShaderResourceViewPtr() );
-    Bind::Rasterizer::DrawSolid( *this, fullscreen.ib_full.IndexCount() ); // always draw as solid
+	RenderSceneToTexture();
 
 	textRenderer->RenderCubeMoveText( *this );
 	textRenderer->RenderMultiToolText( *this );

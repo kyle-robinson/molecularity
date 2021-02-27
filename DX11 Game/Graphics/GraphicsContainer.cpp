@@ -9,6 +9,7 @@ bool GraphicsContainer::InitializeGraphics( HWND hWnd, int width, int height )
 
 	if ( !InitializeDirectX( hWnd ) ) return false;
 	if ( !InitializeShaders() ) return false;
+	if ( !InitializeRTT() ) return false;
 
 	return true;
 }
@@ -81,10 +82,27 @@ bool GraphicsContainer::InitializeShaders()
 	return true;
 }
 
+bool GraphicsContainer::InitializeRTT()
+{
+	if ( !fullscreen.Initialize( device.Get() ) ) return false;
+
+	try
+	{
+		HRESULT hr = cb_vs_fullscreen.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize RTT quad!" );
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
+	}
+
+	return true;
+}
+
 void GraphicsContainer::ClearScene()
 {
 	// clear render target/depth stencil
-	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	renderTarget->BindAsTexture( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
 }
@@ -94,6 +112,18 @@ void GraphicsContainer::UpdateRenderState()
 	samplers[samplerToUse]->Bind( *this );
 	stencils["Off"]->Bind( *this );
 	blender->Bind( *this );
+}
+
+void GraphicsContainer::RenderSceneToTexture()
+{
+	// bind new render target
+	backBuffer->BindAsBuffer( *this, clearColor );
+
+	// render fullscreen texture to new render target
+	Shaders::BindShaders( context.Get(), vertexShader_full, pixelShader_full );
+	fullscreen.SetupBuffers( context.Get(), cb_vs_fullscreen, TRUE );
+	context->PSSetShaderResources( 0u, 1u, renderTarget->GetShaderResourceViewPtr() );
+	Bind::Rasterizer::DrawSolid( *this, fullscreen.ib_full.IndexCount() ); // always draw as solid
 }
 
 void GraphicsContainer::PresentScene()

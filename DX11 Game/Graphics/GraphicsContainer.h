@@ -9,6 +9,7 @@
 #include <d3d11_1.h>
 #include <wrl/client.h>
 #include "Shaders.h"
+#include "Quad.h"
 
 namespace Bind
 {
@@ -39,10 +40,12 @@ protected:
 	bool InitializeGraphics( HWND hWnd, int width, int height );
 	void ClearScene();
 	void UpdateRenderState();
+	void RenderSceneToTexture();
 	void PresentScene();
 private:
 	bool InitializeDirectX( HWND hWnd );
 	bool InitializeShaders();
+	bool InitializeRTT();
 public:
 	// Variables
 	VertexShader vertexShader_light;
@@ -69,10 +72,13 @@ protected:
 	BOOL useTexture = TRUE;
 	float alphaFactor = 1.0f;
 	bool rasterizerSolid = true;
+	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
 private:
 	UINT windowWidth;
 	UINT windowHeight;
+	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
+	QuadFullscreen fullscreen;
 	std::shared_ptr<Bind::Blender> blender;
 	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;
