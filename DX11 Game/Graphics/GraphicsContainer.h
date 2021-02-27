@@ -51,12 +51,18 @@ public:
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+	
+	std::shared_ptr<Bind::RenderTarget> backBuffer;
+	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
-	std::map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
+	//std::map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
 	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 		
 	VertexShader vertexShader_2D;
+	VertexShader vertexShader_full;
+
 	PixelShader pixelShader_2D;
+	PixelShader pixelShader_full;
 	PixelShader pixelShader_noLight;
 	PixelShader pixelShader_2D_discard;
 
@@ -68,8 +74,8 @@ private:
 	UINT windowHeight;
 
 	std::shared_ptr<Bind::Blender> blender;
+	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;
-	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
 	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 };

@@ -19,6 +19,9 @@
     <FxCompile Include="Resources\Shaders\Sprite_Discard.fx">
       <Filter>Resources\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\Fullscreen.fx">
+      <Filter>Resources\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">

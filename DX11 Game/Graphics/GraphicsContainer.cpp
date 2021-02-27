@@ -18,7 +18,8 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 	try
 	{
 		swapChain = std::make_shared<Bind::SwapChain>( *this, context.GetAddressOf(), device.GetAddressOf(), hWnd );
-		renderTarget = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
+		backBuffer = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
+		renderTarget = std::make_shared<Bind::RenderTarget>( *this );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
 		blender = std::make_shared<Bind::Blender>( *this );
 
@@ -34,8 +35,9 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
         samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
         samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
 
-		viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
-		viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
+		//viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
+		//viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
+		viewport = std::make_shared<Bind::Viewport>( *this );
 
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	}
@@ -63,7 +65,13 @@ bool GraphicsContainer::InitializeShaders()
 			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
 		hr = pixelShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx" );
 		hr = pixelShader_2D_discard.Initialize( device, L"Resources\\Shaders\\Sprite_Discard.fx" );
-        COM_ERROR_IF_FAILED( hr, "Failed to create sprite 'Sprite' shaders!" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create 'Sprite' shaders!" );
+
+		// Post-Processing
+		hr = vertexShader_full.Initialize( device, L"Resources\\Shaders\\Fullscreen.fx",
+			Layout::layoutPos, ARRAYSIZE( Layout::layoutPos ) );
+		hr = pixelShader_full.Initialize( device, L"Resources\\Shaders\\Fullscreen.fx" );
+		COM_ERROR_IF_FAILED( hr, "Failed to create 'Fullscreen' shaders!" );
 	}
 	catch ( COMException& exception )
 	{
@@ -77,7 +85,7 @@ void GraphicsContainer::ClearScene()
 {
 	// clear render target/depth stencil
 	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	renderTarget->BindAsBuffer( *this, depthStencil.get(), clearColor );
+	renderTarget->BindAsTexture( *this, depthStencil.get(), clearColor );
     depthStencil->ClearDepthStencil( *this );
 }
 
@@ -92,6 +100,7 @@ void GraphicsContainer::PresentScene()
 {
 	// unbind render target
 	renderTarget->BindAsNull( *this );
+	backBuffer->BindAsNull( *this );
 
 	// display frame
 	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );

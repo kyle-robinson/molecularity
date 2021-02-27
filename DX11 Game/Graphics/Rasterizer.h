@@ -55,6 +55,12 @@ namespace Bind
 		{
 			GetContext( gfx )->RSSetState( pRasterizer.Get() );
 		}
+		static void DrawSolid( GraphicsContainer& gfx, UINT indexCount ) noexcept
+		{
+			Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer_Solid;
+			GetContext( gfx )->RSSetState( pRasterizer_Solid.Get() );
+			GetContext( gfx )->DrawIndexed( indexCount, 0, 0 );
+		}
 	private:
 		bool isSolid;
 		bool isTwoSided;

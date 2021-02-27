@@ -1,7 +1,8 @@
 #include "Graphics.h"
-#include "Viewport.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
+#include "DepthStencil.h"
+#include "RenderTarget.h"
 #include "TextRenderer.h"
 #include "StencilOutline.h"
 
@@ -48,6 +49,8 @@ bool Graphics::InitializeScene()
 			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
+			if ( !fullscreen.Initialize( device.Get() ) ) return false;
+
 			// sprites
 			if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
 			crosshair.SetInitialPosition( GetWidth() / 2 - crosshair.GetWidth() / 2, GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
@@ -74,6 +77,7 @@ bool Graphics::InitializeScene()
 		// CONSTANT BUFFERS
 		{
 			HRESULT hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
+			hr = cb_vs_fullscreen.Initialize( device.Get(), context.Get() );
 			hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
 			hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
 			COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
@@ -90,35 +94,8 @@ bool Graphics::InitializeScene()
 // RENDER PIPELINE
 void Graphics::BeginFrame()
 {
-	if ( useViewportSubWrite ) ClearScene();
+	ClearScene();
 	UpdateRenderState();
-
-	if ( useViewportMain )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Default );
-		viewports["Main"]->Bind( *this );
-		useViewportMain = false;
-	}
-	if ( useViewportDebug )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Debug );
-		viewports["Main"]->Bind( *this );
-		useViewportDebug = false;
-	}
-	if ( useViewportSubWrite )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Static );
-		viewports["Sub"]->Bind( *this );
-		stencils["Mask"]->Bind( *this );
-		useViewportSubWrite = false;
-	}
-	if ( useViewportSubDraw )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Static );
-		viewports["Sub"]->Bind( *this );
-		stencils["Write"]->Bind( *this );
-		useViewportSubDraw = false;
-	}
 
 	// update constant buffers
 	fogSystem->UpdateConstantBuffer( *this );
@@ -189,6 +166,16 @@ void Graphics::RenderFrame()
 
 void Graphics::EndFrame()
 {
+	// set and clear back buffer
+	static float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    backBuffer->BindAsBuffer( *this, clearColor );
+
+    // render to fullscreen texture
+	Shaders::BindShaders( context.Get(), vertexShader_full, pixelShader_full );
+    fullscreen.SetupBuffers( context.Get(), cb_vs_fullscreen, TRUE );
+    context->PSSetShaderResources( 0u, 1u, renderTarget->GetShaderResourceViewPtr() );
+    Bind::Rasterizer::DrawSolid( *this, fullscreen.ib_full.IndexCount() ); // always draw as solid
+
 	textRenderer->RenderCubeMoveText( *this );
 	textRenderer->RenderMultiToolText( *this );
 	textRenderer->RenderCameraText( *this );

@@ -48,6 +48,12 @@ namespace Idx
         0, 1, 2,
         0, 2, 3
     };
+
+    static WORD indicesFullscreen[] =
+    {
+        0, 1, 2,
+        1, 3, 2
+    };
 }
 
 #endif

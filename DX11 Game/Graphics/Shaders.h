@@ -5,6 +5,14 @@
 class VertexShader;
 class PixelShader;
 
+#include <string>
+#include <Windows.h>
+#include <d3d11_1.h>
+#include <wrl/client.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
+#include <directxcolors.h>
+
 /// <summary>
 /// Handles the loading of vertex and pixel shaders from file.
 /// Call "Shaders::BindShaders( vertexShader, pixelShader )" to bind appropriate shaders to the pipeline.

@@ -105,6 +105,14 @@ namespace Vtx
         { {  0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 0.0f, 1.0f } },
         { {  0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } }
     };
+
+    static Vertex_Pos verticesFullscreen[] =
+    {
+        { { -1.0f,  1.0f } },
+        { {  1.0f,  1.0f } },
+        { { -1.0f, -1.0f } },
+        { {  1.0f, -1.0f } },
+    };
 }
 
 #endif

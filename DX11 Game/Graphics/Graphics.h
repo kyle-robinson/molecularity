@@ -44,11 +44,6 @@ private:
 	bool InitializeScene();
 	
 	// Variables
-	bool useViewportDebug;
-	bool useViewportMain;
-	bool useViewportSubWrite;
-	bool useViewportSubDraw;
-
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;
@@ -61,6 +56,7 @@ private:
 
 	ImGuiManager imgui;
 	CameraController* cameras;
+	QuadFullscreen fullscreen;
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<StencilOutline> stencilOutline;
@@ -68,6 +64,7 @@ private:
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
+	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
 
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;

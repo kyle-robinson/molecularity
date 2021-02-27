@@ -2,6 +2,7 @@
 #include "Indices.h"
 #include "Vertices.h"
 
+// NORMAL QUAD
 bool Quad::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
 {
     this->context = context;
@@ -50,4 +51,34 @@ void Quad::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ConstantBuffer<CB_P
     cb_ps_scene.data.useNormalMap = FALSE;
 	if ( !cb_ps_scene.ApplyChanges() ) return;
 	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+}
+
+// FULLSCREEN QUAD
+bool QuadFullscreen::Initialize( ID3D11Device* device )
+{
+    try
+    {
+        HRESULT hr = vb_full.Initialize( device, Vtx::verticesFullscreen, ARRAYSIZE( Vtx::verticesFullscreen ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create fullscreen quad vertex buffer!" );
+        hr = ib_full.Initialize( device, Idx::indicesFullscreen, ARRAYSIZE( Idx::indicesFullscreen ) );
+        COM_ERROR_IF_FAILED( hr, "Failed to create fullscreen quad index buffer!" );
+    }
+    catch ( COMException& exception )
+    {
+        ErrorLogger::Log( exception );
+        return false;
+    }
+
+    return true;
+}
+
+void QuadFullscreen::SetupBuffers( ID3D11DeviceContext* context,
+    ConstantBuffer<CB_VS_fullscreen>& cb_vs_full, BOOL multiView ) noexcept
+{
+    UINT offset = 0u;
+    context->IASetVertexBuffers( 0u, 1u, vb_full.GetAddressOf(), vb_full.StridePtr(), &offset );
+    context->IASetIndexBuffer( ib_full.Get(), DXGI_FORMAT_R16_UINT, 0u );
+    cb_vs_full.data.multiView = multiView;
+    if ( !cb_vs_full.ApplyChanges() ) return;
+    context->VSSetConstantBuffers( 0u, 1u, cb_vs_full.GetAddressOf() );
 }
