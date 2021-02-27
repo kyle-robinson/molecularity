@@ -130,6 +130,13 @@ void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
             ImGui::EndCombo();
         }
 
+        // update render target
+        bool multiViewBool = static_cast<bool>( gfx.multiView );
+        ImGui::Text( "Enable Multi-View: " );
+        ImGui::SameLine();
+        ImGui::Checkbox( "", &multiViewBool );
+        gfx.multiView = static_cast<BOOL>( multiViewBool );
+
 		// update blending
 		ImGui::SliderFloat( "Alpha", &gfx.alphaFactor, 0.0f, 1.0f, "%.1f" );
 	}

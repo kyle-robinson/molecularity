@@ -50,11 +50,12 @@ public:
 	// Variables
 	VertexShader vertexShader_light;
 	PixelShader pixelShader_light;
+	BOOL multiView = FALSE;
 	std::string samplerToUse = "Anisotropic";
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
-	
+
 	std::shared_ptr<Bind::RenderTarget> backBuffer;
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
@@ -72,13 +73,14 @@ protected:
 	BOOL useTexture = TRUE;
 	float alphaFactor = 1.0f;
 	bool rasterizerSolid = true;
-	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
 private:
 	UINT windowWidth;
 	UINT windowHeight;
-	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	QuadFullscreen fullscreen;
+	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
+
 	std::shared_ptr<Bind::Blender> blender;
 	std::shared_ptr<Bind::Viewport> viewport;
 	std::shared_ptr<Bind::SwapChain> swapChain;

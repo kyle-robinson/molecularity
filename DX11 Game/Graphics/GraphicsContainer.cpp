@@ -121,7 +121,7 @@ void GraphicsContainer::RenderSceneToTexture()
 
 	// render fullscreen texture to new render target
 	Shaders::BindShaders( context.Get(), vertexShader_full, pixelShader_full );
-	fullscreen.SetupBuffers( context.Get(), cb_vs_fullscreen, TRUE );
+	fullscreen.SetupBuffers( context.Get(), cb_vs_fullscreen, multiView );
 	context->PSSetShaderResources( 0u, 1u, renderTarget->GetShaderResourceViewPtr() );
 	Bind::Rasterizer::DrawSolid( *this, fullscreen.ib_full.IndexCount() ); // always draw as solid
 }
