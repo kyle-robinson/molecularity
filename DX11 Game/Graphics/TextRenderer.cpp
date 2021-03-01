@@ -68,7 +68,6 @@ void TextRenderer::RenderCameraText( Graphics& gfx )
 	switch ( gfx.GetCameraController()->GetCurrentCamera() )
 	{
 	case JSON::CameraType::Default: displayText = "Default"; break;
-	case JSON::CameraType::Static: displayText = "Static"; break;
 	case JSON::CameraType::Debug: displayText = "Debug"; break;
 	default: displayText = "Camera name needed in TextRenderer.h"; break;
 	}

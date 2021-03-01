@@ -20,6 +20,8 @@ public:
 
 	// Sets active camera
 	void SetCurrentCamera( JSON::CameraType cam ) noexcept { cameraToUse = cam; }
+	void SetIsUsingMain( bool cam ) noexcept { usingMainCamera = cam; }
+	bool GetIsUsingMain() const noexcept { return usingMainCamera; }
 
 	// Gets current active camera
 	JSON::CameraType GetCurrentCamera() const noexcept { return cameraToUse; }
@@ -27,6 +29,7 @@ public:
 	Camera2D GetUICamera() const noexcept { return UICamera; }
 private:
 	Camera2D UICamera;
+	bool usingMainCamera = true;
 	JSON::CameraType cameraToUse = JSON::CameraType::Default;
 	std::map<JSON::CameraType, std::unique_ptr<Camera>> cameras;
 };

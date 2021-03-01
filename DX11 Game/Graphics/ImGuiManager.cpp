@@ -48,8 +48,7 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
 			ImGui::Text( "D                 Right" );
             ImGui::Separator();
             ImGui::Text( "F1                Default Camera" );
-            ImGui::Text( "F2                Static Camera" );
-            ImGui::Text( "F3                Debug Camera" );
+            ImGui::Text( "F2                Debug Camera" );
 		}
 		if ( ImGui::CollapsingHeader( "Multi-Tool Controls", ImGuiTreeNodeFlags_DefaultOpen ) )
 		{
@@ -83,7 +82,14 @@ void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
 {
 	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
-		// update texture usage
+        // update render target
+        bool multiViewBool = static_cast< bool >( gfx.multiView );
+        ImGui::Text( "Enable Multi-View: " );
+        ImGui::SameLine();
+        ImGui::Checkbox( "", &multiViewBool );
+        gfx.multiView = static_cast< BOOL >( multiViewBool );
+        
+        // update texture usage
 		ImGui::Text( "Texture Usage: " );
 		ImGui::SameLine();
 		static int textureGroup = 0;

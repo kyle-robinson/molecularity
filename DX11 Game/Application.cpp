@@ -37,7 +37,16 @@ void Application::Update()
 
 void Application::Render()
 {
+	// Render to sub viewport first using static camera
+	gfx.GetMultiViewport()->SetUsingSub( true );
 	gfx.BeginFrame();
 	gfx.RenderFrame();
+
+	// Render main scene next with main/debug camera
+	gfx.GetMultiViewport()->SetUsingMain( true );
+	gfx.BeginFrame();
+	gfx.RenderFrame();
+
+	// Render UI and present the complete frame
 	gfx.EndFrame();
 }

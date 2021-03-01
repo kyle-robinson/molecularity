@@ -13,7 +13,6 @@ void CameraController::Initialize( int width, int height )
 			cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 		UICamera.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
 	}
-
 }
 
 void CameraController::Update()

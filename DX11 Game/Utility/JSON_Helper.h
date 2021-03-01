@@ -45,7 +45,7 @@ namespace JSON
 		// Add more data here e.g. position
 	};
 
-	static enum class CameraType
+	enum class CameraType
 	{
 		Default,
 		Static,

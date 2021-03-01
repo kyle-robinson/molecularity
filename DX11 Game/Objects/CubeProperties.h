@@ -2,13 +2,13 @@
 #ifndef CUBEPROPERTIES_H
 #define CUBEPROPERTIES_H
 
-static enum class ToolType
+enum class ToolType
 {
 	Convert,
 	Resize
 };
 
-static enum class BoxType
+enum class BoxType
 {
 	Default,
 	Bounce,
@@ -16,7 +16,7 @@ static enum class BoxType
 	TNT
 };
 
-static enum class BoxSize
+enum class BoxSize
 {
 	Small,
 	Normal,

@@ -31,6 +31,11 @@ struct CB_VS_fog
 	BOOL fogEnable;
 };
 
+struct CB_VS_fullscreen
+{
+	BOOL multiView;
+};
+
 struct CB_PS_outline
 {
 	XMFLOAT3 outlineColor;

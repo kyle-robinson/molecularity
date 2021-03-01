@@ -1,7 +1,10 @@
 #include "Graphics.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
+#include "DepthStencil.h"
+#include "RenderTarget.h"
 #include "TextRenderer.h"
+#include "MultiViewport.h"
 #include "StencilOutline.h"
 
 bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int height )
@@ -56,6 +59,7 @@ bool Graphics::InitializeScene()
 		{
 			stencilOutline = std::make_shared<StencilOutline>( *this );
 			textRenderer = std::make_shared<TextRenderer>( *this );
+			multiViewport = std::make_shared<MultiViewport>();
 			fogSystem = std::make_shared<Fog>( *this );
 		}
 
@@ -89,8 +93,11 @@ bool Graphics::InitializeScene()
 // RENDER PIPELINE
 void Graphics::BeginFrame()
 {
-	ClearScene();
+	// setup viewports and pipeline state
+	if ( multiViewport->IsUsingSub() )
+		ClearScene();
 	UpdateRenderState();
+	multiViewport->Update( *this );
 
 	// update constant buffers
 	fogSystem->UpdateConstantBuffer( *this );
@@ -114,9 +121,9 @@ void Graphics::RenderFrame()
 	// SKYSPHERE
 	{
 		Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-		rasterizers["Skybox"]->Bind( *this );
+		GetRasterizer( "Skybox" )->Bind( *this );
 		skysphere.Draw();
-		rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
+		GetRasterizer( rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *this );
 	}
 
 	// LIGHTS
@@ -124,7 +131,7 @@ void Graphics::RenderFrame()
 		// w/out normals
 		pointLight.Draw();
 		directionalLight.Draw();
-	
+
 		// w/ normals
 		context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
 		spotLight.Draw();
@@ -151,16 +158,22 @@ void Graphics::RenderFrame()
 
 	// SPRITES
 	{
-		Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
-		cb_ps_scene.data.useTexture = TRUE;
-		if ( !cb_ps_scene.ApplyChanges() ) return;
-		context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-		crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
+		{
+			Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
+			cb_ps_scene.data.useTexture = TRUE;
+			if ( !cb_ps_scene.ApplyChanges() ) return;
+			context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+			crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+		}
 	}
 }
 
 void Graphics::EndFrame()
 {
+	// set and clear back buffer
+	RenderSceneToTexture();
+
 	textRenderer->RenderCubeMoveText( *this );
 	textRenderer->RenderMultiToolText( *this );
 	textRenderer->RenderCameraText( *this );

@@ -35,4 +35,9 @@ struct Vertex_Pos_Tex
 	XMFLOAT2 texcoord;
 };
 
+struct Vertex_Pos
+{
+	XMFLOAT2 position;
+};
+
 #endif

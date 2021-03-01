@@ -2,12 +2,12 @@
 #include "Input.h"
 #include "CameraMovement.h"
 
-void Input::Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height )
+void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
 {
 	DisableCursor();
 	this->graphics = gfx;
-	this->renderWindow = window;
 	this->cameras = camera;
+	this->renderWindow = window;
 	mousePick.Initialize( width, height );
 }
 
@@ -20,9 +20,8 @@ void Input::Update( const float dt )
 void Input::UpdateKeyboard( const float dt )
 {
 	// set camera to use
-	if ( keyboard.KeyIsPressed( VK_F1 ) ) cameras->SetCurrentCamera( JSON::CameraType::Default );
-	if ( keyboard.KeyIsPressed( VK_F2 ) ) cameras->SetCurrentCamera( JSON::CameraType::Static );
-	if ( keyboard.KeyIsPressed( VK_F3 ) ) cameras->SetCurrentCamera( JSON::CameraType::Debug );
+	if ( keyboard.KeyIsPressed( VK_F1 ) ) graphics->GetCameraController()->SetIsUsingMain( true );
+	if ( keyboard.KeyIsPressed( VK_F2 ) ) graphics->GetCameraController()->SetIsUsingMain( false );
 
 	// set cursor enabled/disabled
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
@@ -35,38 +34,31 @@ void Input::UpdateKeyboard( const float dt )
 		DisableCursor();
 	}
 
-	// camera movement
-	if ( cameras->GetCurrentCamera() == JSON::CameraType::Static )
+	// set which camera for the static camera to look at
+	cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
+		cameras->GetCamera( graphics->GetCameraController()->GetCurrentCamera() )->GetPositionFloat3() );
+
+	// update mode to ignore y-movement when not in debug mode. Will be changed in the future likely when player can move around the environment with physics/collisions.
+	// will also need to be changed to the player object when player becomes its own class. Unknown how that will work currently
+	bool playMode = true;
+	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
-		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
-			cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3() );
+		playMode = false;
+		if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( cameras->GetCamera( JSON::CameraType::Debug ), dt );
+		if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( cameras->GetCamera( JSON::CameraType::Debug ), dt );
 	}
-	else
-	{
-		// update mode to ignore y-movement when not in debug mode. Will be changed in the future likely when player can move around the environment with physics/collisions.
-		// will also need to be changed to the player object when player becomes its own class. Unknown how that will work currently
-		bool playMode = true;
-		if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
-		{
-			playMode = false;
-			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( cameras->GetCamera( JSON::CameraType::Debug ), dt );
-			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( cameras->GetCamera( JSON::CameraType::Debug ), dt );
-		}
-		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
-		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-	}
+	cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
+	if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 
 	// set multi-tool type
 	if ( keyboard.KeyIsPressed( '1' ) ) graphics->GetCube().GetEditableProperties()->SetToolType( ToolType::Convert );
 	if ( keyboard.KeyIsPressed( '2' ) ) graphics->GetCube().GetEditableProperties()->SetToolType( ToolType::Resize );
 
 	// pick-up cube - set position relative to camera.
-	if ( keyboard.KeyIsPressed( 'E' ) &&
-		graphics->GetCameraController()->GetCurrentCamera() != JSON::CameraType::Static &&
-		graphics->GetCube().GetIsInRange() &&
+	if ( keyboard.KeyIsPressed( 'E' ) && graphics->GetCube().GetIsInRange() &&
 		( graphics->GetCube().GetIsHovering() || graphics->GetCube().GetIsHolding() ) )
 	{
 		graphics->GetCube().SetIsHolding( true );
@@ -91,21 +83,18 @@ void Input::UpdateMouse( const float dt )
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
+		if ( mouse.IsRightDown() || !cursorEnabled )
 		{
-			if ( mouse.IsRightDown() || !cursorEnabled )
+			// update raw camera movement
+			if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
 			{
-				// update raw camera movement
-				if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
-				{
-					cameras->GetCamera( cameras->GetCurrentCamera() )->AdjustRotation(
-						XMFLOAT3(
-							static_cast<float>( me.GetPosY() ) * 0.005f,
-							static_cast<float>( me.GetPosX() ) * 0.005f,
-							0.0f
-						)
-					);
-				}
+				cameras->GetCamera( cameras->GetCurrentCamera() )->AdjustRotation(
+					XMFLOAT3(
+						static_cast<float>( me.GetPosY() ) * 0.005f,
+						static_cast<float>( me.GetPosX() ) * 0.005f,
+						0.0f
+					)
+				);
 			}
 		}
 
