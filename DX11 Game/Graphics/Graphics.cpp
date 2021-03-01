@@ -170,11 +170,14 @@ void Graphics::RenderFrame()
 
 	// SPRITES
 	{
-		Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
-		cb_ps_scene.data.useTexture = TRUE;
-		if ( !cb_ps_scene.ApplyChanges() ) return;
-		context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-		crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
+		{
+			Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
+			cb_ps_scene.data.useTexture = TRUE;
+			if ( !cb_ps_scene.ApplyChanges() ) return;
+			context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+			crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+		}
 	}
 }
 
