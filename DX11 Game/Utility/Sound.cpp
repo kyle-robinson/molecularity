@@ -23,7 +23,8 @@ bool Sound::Initialize( HWND hwnd )
 void Sound::Close()
 {
 	// Frees the secondary buffer
-	CloseWavFile( &_secondaryBuffer[0] );
+	for (int i = 0; i < (sizeof(&_secondaryBuffer)/sizeof(&_secondaryBuffer[0])); i++)
+		CloseWavFile( &_secondaryBuffer[i] );
 	CloseDirectSound();
 }
 
