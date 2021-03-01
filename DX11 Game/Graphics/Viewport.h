@@ -13,17 +13,32 @@ namespace Bind
 	class Viewport : public GraphicsResource
 	{
 	public:
-		Viewport( GraphicsContainer& gfx )
+		static enum class Type
+		{
+			Main,
+			Sub
+		};
+		Viewport( GraphicsContainer& gfx, Type type ) : type( type )
 		{
 			// get render target dimensions
-			FLOAT width = static_cast<FLOAT>( gfx.GetWidth() );
-			FLOAT height = static_cast<FLOAT>( gfx.GetHeight() );
-			
+			FLOAT width = static_cast< FLOAT >( gfx.GetWidth() );
+			FLOAT height = static_cast< FLOAT >( gfx.GetHeight() );
+
 			// create viewport
 			viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, width, height );
+			if ( type == Type::Sub )
+			{
+				viewportDesc.TopLeftX = width / 1.333f;
+				viewportDesc.Width = width / 4.0f;
+				viewportDesc.Height = height / 4.0f;
+			}
+		}
+		void Bind( GraphicsContainer& gfx ) noexcept override
+		{
 			GetContext( gfx )->RSSetViewports( 1u, &viewportDesc );
 		}
 	private:
+		Type type;
 		CD3D11_VIEWPORT viewportDesc = { };
 	};
 }

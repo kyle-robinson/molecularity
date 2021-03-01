@@ -36,9 +36,9 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
         samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
         samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
 
-		//viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
-		//viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
-		viewport = std::make_shared<Bind::Viewport>( *this );
+		viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
+		viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
+		//viewport = std::make_shared<Bind::Viewport>( *this );
 
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	}

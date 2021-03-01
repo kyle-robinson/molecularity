@@ -1,4 +1,5 @@
 #include "Graphics.h"
+#include "Viewport.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
 #include "DepthStencil.h"
@@ -91,8 +92,35 @@ bool Graphics::InitializeScene()
 // RENDER PIPELINE
 void Graphics::BeginFrame()
 {
-	ClearScene();
+	if ( useViewportSubWrite ) ClearScene();
 	UpdateRenderState();
+
+	if ( useViewportMain )
+	{
+		cameras->SetCurrentCamera( JSON::CameraType::Default );
+		viewports["Main"]->Bind( *this );
+		useViewportMain = false;
+	}
+	if ( useViewportDebug )
+	{
+		cameras->SetCurrentCamera( JSON::CameraType::Debug );
+		viewports["Main"]->Bind( *this );
+		useViewportDebug = false;
+	}
+	if ( useViewportSubWrite )
+	{
+		cameras->SetCurrentCamera( JSON::CameraType::Static );
+		viewports["Sub"]->Bind( *this );
+		stencils["Mask"]->Bind( *this );
+		useViewportSubWrite = false;
+	}
+	if ( useViewportSubDraw )
+	{
+		cameras->SetCurrentCamera( JSON::CameraType::Static );
+		viewports["Sub"]->Bind( *this );
+		stencils["Write"]->Bind( *this );
+		useViewportSubDraw = false;
+	}
 
 	// update constant buffers
 	fogSystem->UpdateConstantBuffer( *this );

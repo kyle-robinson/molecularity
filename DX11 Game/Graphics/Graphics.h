@@ -43,6 +43,11 @@ private:
 	bool InitializeScene();
 	
 	// Variables
+	bool useViewportDebug;
+	bool useViewportMain;
+	bool useViewportSubWrite;
+	bool useViewportSubDraw;
+
 	Cube cube;
 	Quad simpleQuad;
 	Sprite crosshair;

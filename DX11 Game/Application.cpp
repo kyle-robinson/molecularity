@@ -37,7 +37,17 @@ void Application::Update()
 
 void Application::Render()
 {
+	gfx.useViewportSubWrite = true;
 	gfx.BeginFrame();
 	gfx.RenderFrame();
+
+	gfx.useViewportSubDraw = true;
+	gfx.BeginFrame();
+	gfx.RenderFrame();
+
+	gfx.useViewportMain = true;
+	gfx.BeginFrame();
+	gfx.RenderFrame();
+
 	gfx.EndFrame();
 }
