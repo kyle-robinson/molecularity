@@ -174,6 +174,9 @@
     <ClCompile Include="WinMain.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\MultiViewport.cpp">
+      <Filter>Source\Graphics\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -403,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Viewport.h">
       <Filter>Headers\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MultiViewport.h">
+      <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

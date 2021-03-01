@@ -20,16 +20,8 @@ void Input::Update( const float dt )
 void Input::UpdateKeyboard( const float dt )
 {
 	// set camera to use
-	if ( keyboard.KeyIsPressed( VK_F1 ) )
-	{
-		graphics->useDefault = true;
-		graphics->useDebug = false;
-	}
-	if ( keyboard.KeyIsPressed( VK_F2 ) )
-	{
-		graphics->useDebug = true;
-		graphics->useDefault = false;
-	}
+	if ( keyboard.KeyIsPressed( VK_F1 ) ) graphics->GetCameraController()->SetIsUsingMain( true );
+	if ( keyboard.KeyIsPressed( VK_F2 ) ) graphics->GetCameraController()->SetIsUsingMain( false );
 
 	// set cursor enabled/disabled
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
@@ -43,16 +35,8 @@ void Input::UpdateKeyboard( const float dt )
 	}
 
 	// set which camera for the static camera to look at
-	if ( graphics->useDefault )
-	{
-		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
-			cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3() );
-	}
-	else if ( graphics->useDebug )
-	{
-		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
-			cameras->GetCamera( JSON::CameraType::Debug )->GetPositionFloat3() );
-	}
+	cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
+		cameras->GetCamera( graphics->GetCameraController()->GetCurrentCamera() )->GetPositionFloat3() );
 
 	// update mode to ignore y-movement when not in debug mode. Will be changed in the future likely when player can move around the environment with physics/collisions.
 	// will also need to be changed to the player object when player becomes its own class. Unknown how that will work currently

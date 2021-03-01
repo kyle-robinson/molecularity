@@ -38,7 +38,6 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 
 		viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
 		viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
-		//viewport = std::make_shared<Bind::Viewport>( *this );
 
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	}

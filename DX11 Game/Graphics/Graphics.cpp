@@ -1,10 +1,10 @@
 #include "Graphics.h"
-#include "Viewport.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
 #include "TextRenderer.h"
+#include "MultiViewport.h"
 #include "StencilOutline.h"
 
 bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int height )
@@ -59,6 +59,7 @@ bool Graphics::InitializeScene()
 		{
 			stencilOutline = std::make_shared<StencilOutline>( *this );
 			textRenderer = std::make_shared<TextRenderer>( *this );
+			multiViewport = std::make_shared<MultiViewport>();
 			fogSystem = std::make_shared<Fog>( *this );
 		}
 
@@ -92,24 +93,11 @@ bool Graphics::InitializeScene()
 // RENDER PIPELINE
 void Graphics::BeginFrame()
 {
-	if ( useViewportSub ) ClearScene();
+	// setup viewports and pipeline state
+	if ( multiViewport->IsUsingSub() )
+		ClearScene();
 	UpdateRenderState();
-
-	if ( useViewportSub )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Static );
-		viewports["Sub"]->Bind( *this );
-		useViewportSub = false;
-	}
-	if ( useViewportMain )
-	{
-		if ( useDefault )
-			cameras->SetCurrentCamera( JSON::CameraType::Default );
-		else if ( useDebug )
-			cameras->SetCurrentCamera( JSON::CameraType::Debug );
-		viewports["Main"]->Bind( *this );
-		useViewportMain = false;
-	}
+	multiViewport->Update( *this );
 
 	// update constant buffers
 	fogSystem->UpdateConstantBuffer( *this );
@@ -133,9 +121,9 @@ void Graphics::RenderFrame()
 	// SKYSPHERE
 	{
 		Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-		rasterizers["Skybox"]->Bind( *this );
+		GetRasterizer( "Skybox" )->Bind( *this );
 		skysphere.Draw();
-		rasterizers[rasterizerSolid ? "Solid" : "Wireframe"]->Bind( *this );
+		GetRasterizer( rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *this );
 	}
 
 	// LIGHTS
