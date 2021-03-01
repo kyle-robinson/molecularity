@@ -39,14 +39,15 @@ public:
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	CameraController* GetCameraController() const noexcept { return cameras; }
 	Cube& GetCube() noexcept { return cube; }
+
+	bool useDefault = true;
+	bool useDebug = false;
 private:
 	bool InitializeScene();
 	
 	// Variables
-	bool useViewportDebug;
 	bool useViewportMain;
-	bool useViewportSubWrite;
-	bool useViewportSubDraw;
+	bool useViewportSub;
 
 	Cube cube;
 	Quad simpleQuad;

@@ -92,34 +92,23 @@ bool Graphics::InitializeScene()
 // RENDER PIPELINE
 void Graphics::BeginFrame()
 {
-	if ( useViewportSubWrite ) ClearScene();
+	if ( useViewportSub ) ClearScene();
 	UpdateRenderState();
 
+	if ( useViewportSub )
+	{
+		cameras->SetCurrentCamera( JSON::CameraType::Static );
+		viewports["Sub"]->Bind( *this );
+		useViewportSub = false;
+	}
 	if ( useViewportMain )
 	{
-		cameras->SetCurrentCamera( JSON::CameraType::Default );
+		if ( useDefault )
+			cameras->SetCurrentCamera( JSON::CameraType::Default );
+		else if ( useDebug )
+			cameras->SetCurrentCamera( JSON::CameraType::Debug );
 		viewports["Main"]->Bind( *this );
 		useViewportMain = false;
-	}
-	if ( useViewportDebug )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Debug );
-		viewports["Main"]->Bind( *this );
-		useViewportDebug = false;
-	}
-	if ( useViewportSubWrite )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Static );
-		viewports["Sub"]->Bind( *this );
-		stencils["Mask"]->Bind( *this );
-		useViewportSubWrite = false;
-	}
-	if ( useViewportSubDraw )
-	{
-		cameras->SetCurrentCamera( JSON::CameraType::Static );
-		viewports["Sub"]->Bind( *this );
-		stencils["Write"]->Bind( *this );
-		useViewportSubDraw = false;
 	}
 
 	// update constant buffers

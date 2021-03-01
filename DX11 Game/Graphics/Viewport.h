@@ -31,6 +31,8 @@ namespace Bind
 				viewportDesc.TopLeftX = width / 1.333f;
 				viewportDesc.Width = width / 4.0f;
 				viewportDesc.Height = height / 4.0f;
+				viewportDesc.MaxDepth = 0.1f;
+				viewportDesc.MinDepth = 0.0f;
 			}
 		}
 		void Bind( GraphicsContainer& gfx ) noexcept override
