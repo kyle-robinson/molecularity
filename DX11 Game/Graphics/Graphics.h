@@ -12,9 +12,9 @@
 #include "JSON_Helper.h"
 #include "ImGuiManager.h"
 #include "MultiViewport.h"
+#include "CameraController.h"
 #include "DirectionalLight.h"
 #include "GraphicsContainer.h"
-#include "CameraController.h"
 #include <dxtk/WICTextureLoader.h>
 
 class StencilOutline;

@@ -210,9 +210,9 @@ void Graphics::Update( const float dt )
 		float length = std::sqrtf( dx * dx + dz * dz );
 		dx /= length;
 		dz /= length;
-		dx *= cameras->GetCamera( JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
-		dz *= cameras->GetCamera( JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
-		cameras->GetCamera( JSON::CameraType::Default)->AdjustPosition( dx, 0.0f, dz );
+		dx *= cameras->GetCamera( JSON::CameraType::Default )->GetCameraSpeed() * dt;
+		dz *= cameras->GetCamera( JSON::CameraType::Default )->GetCameraSpeed() * dt;
+		cameras->GetCamera( JSON::CameraType::Default )->AdjustPosition( dx, 0.0f, dz );
 	}
 
 	// update cube scale multiplier
