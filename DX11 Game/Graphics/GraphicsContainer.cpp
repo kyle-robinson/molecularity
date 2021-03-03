@@ -27,11 +27,6 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 		backBuffer = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
 		renderTarget = std::make_shared<Bind::RenderTarget>( *this );
 
-		// post-processing - different types allow for more effects
-		postProcessDual = std::make_unique<DualPostProcess>( device.Get() );
-		postProcessBasic = std::make_unique<BasicPostProcess>( device.Get() );
-		postProcessToneMap = std::make_unique<ToneMapPostProcess>( device.Get() );
-
 		// stencils - for outlining models
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
         stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
@@ -135,13 +130,6 @@ void GraphicsContainer::RenderSceneToTexture()
 	fullscreen.SetupBuffers( context.Get(), cb_vs_fullscreen, multiView );
 	context->PSSetShaderResources( 0u, 1u, renderTarget->GetShaderResourceViewPtr() );
 	Bind::Rasterizer::DrawSolid( *this, fullscreen.ib_full.IndexCount() ); // always draw as solid
-}
-
-void GraphicsContainer::ApplyPostProcessing()
-{
-	postProcessBasic->SetEffect( BasicPostProcess::Monochrome );
-	postProcessBasic->SetSourceTexture( renderTarget->GetShaderResourceView() );
-	postProcessBasic->Process( context.Get() );
 }
 
 void GraphicsContainer::PresentScene()

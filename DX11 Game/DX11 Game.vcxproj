@@ -224,6 +224,7 @@
     </ClCompile>
     <ClCompile Include="Graphics\ImGuiManager.cpp" />
     <ClCompile Include="Graphics\MultiViewport.cpp" />
+    <ClCompile Include="Graphics\PostProcessing.cpp" />
     <ClCompile Include="Graphics\Shaders.cpp" />
     <ClCompile Include="Graphics\StencilOutline.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -343,6 +344,7 @@
     </ClInclude>
     <ClInclude Include="Graphics\InputLayout.h" />
     <ClInclude Include="Graphics\MultiViewport.h" />
+    <ClInclude Include="Graphics\PostProcessing.h" />
     <ClInclude Include="Graphics\Rasterizer.h" />
     <ClInclude Include="Graphics\RenderTarget.h" />
     <ClInclude Include="Graphics\Sampler.h" />

@@ -8,7 +8,7 @@
 #include <Windows.h>
 #include <d3d11_1.h>
 #include <wrl/client.h>
-#include <dxtk/PostProcess.h>
+
 #include "Shaders.h"
 #include "Quad.h"
 
@@ -44,7 +44,6 @@ protected:
 	void ClearScene();
 	void UpdateRenderState();
 	void RenderSceneToTexture();
-	void ApplyPostProcessing();
 	void PresentScene();
 private:
 	// Initialization Functions
@@ -55,6 +54,7 @@ public:
 	// Pipeline Getters
 	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }
 	std::shared_ptr<Bind::Viewport> GetViewport( const std::string& vp ) noexcept { return viewports[vp]; }
+	std::shared_ptr<Bind::RenderTarget> GetRenderTarget() noexcept { return renderTarget; }
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
@@ -85,11 +85,6 @@ private:
 	QuadFullscreen fullscreen;
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
-
-	// Post-Processing
-	std::unique_ptr<DualPostProcess> postProcessDual;
-	std::unique_ptr<BasicPostProcess> postProcessBasic;
-	std::unique_ptr<ToneMapPostProcess> postProcessToneMap;
 
 	// DirectX Pipeline Components
 	std::shared_ptr<Bind::Blender> blender;

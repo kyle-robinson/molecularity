@@ -1,10 +1,15 @@
 #include "Graphics.h"
 #include "Collisions.h"
+
+// bindables
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
+
+// systems
+#include "Fog.h"
 #include "TextRenderer.h"
-#include "MultiViewport.h"
+#include "PostProcessing.h"
 #include "StencilOutline.h"
 
 bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int height )
@@ -57,6 +62,7 @@ bool Graphics::InitializeScene()
 
 		// SYSTEMS
 		{
+			postProcessing = std::make_shared<PostProcessing>( *this );
 			stencilOutline = std::make_shared<StencilOutline>( *this );
 			textRenderer = std::make_shared<TextRenderer>( *this );
 			multiViewport = std::make_shared<MultiViewport>();
@@ -171,14 +177,16 @@ void Graphics::RenderFrame()
 
 void Graphics::EndFrame()
 {
-	// set and clear back buffer
+	// setup RTT and update post-processing
 	RenderSceneToTexture();
-	ApplyPostProcessing();
+	postProcessing->Bind( *this );
 
+	// update text rendering
 	textRenderer->RenderCubeMoveText( *this );
 	textRenderer->RenderMultiToolText( *this );
 	textRenderer->RenderCameraText( *this );
 
+	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
 		imgui.BeginRender();
@@ -189,6 +197,7 @@ void Graphics::EndFrame()
 		spotLight.SpawnControlWindow();
 		fogSystem->SpawnControlWindow();
 		stencilOutline->SpawnControlWindow();
+		postProcessing->SpawnControlWindow();
 		imgui.EndRender();
 	}
 
