@@ -9,6 +9,12 @@ PostProcessing::PostProcessing( GraphicsContainer& gfx )
 	postProcessBasic = std::make_shared<BasicPostProcess>( GetDevice( gfx ) );
 	postProcessToneMap = std::make_shared<ToneMapPostProcess>( GetDevice( gfx ) );
 
+	bloomBlurHorizontal = true;
+	bloomBlurBrightness = 1.0f;
+	bloomBlurSize = 1.0f;
+	bloomThreshold = 1.0f;
+	gaussianMultiplier = 1.0f;
+
 	useBasicPostProcess = true;
 	basicEffect = BasicPostProcess::Effect::Copy;
 	toneMapOperator = ToneMapPostProcess::Operator::None;
@@ -20,14 +26,28 @@ void PostProcessing::Bind( GraphicsContainer& gfx ) noexcept
 	// BASIC POST-PROCESS
 	if ( useBasicPostProcess )
 	{
+		// set main post-processing effect
 		postProcessBasic->SetEffect( basicEffect );
 
-		// set additional effect if using bloom effect
+		// update bloom extract threshold
 		if ( basicEffect == BasicPostProcess::Effect::BloomExtract )
-			postProcessBasic->SetEffect( BasicPostProcess::BloomBlur );
+			postProcessBasic->SetBloomExtractParameter( bloomThreshold );
 
+		// update gaussian blur effect multiplier
+		if ( basicEffect == BasicPostProcess::Effect::GaussianBlur_5x5 )
+			postProcessBasic->SetGaussianParameter( gaussianMultiplier );
+
+		// render post-processing effect to scene texture
 		postProcessBasic->SetSourceTexture( gfx.GetRenderTarget()->GetShaderResourceView() );
 		postProcessBasic->Process( GetContext( gfx ) );
+
+		// set and render additional effect if using bloom effect
+		if ( basicEffect == BasicPostProcess::Effect::BloomExtract )
+		{
+			postProcessBasic->SetBloomBlurParameters( bloomBlurHorizontal, bloomBlurSize, bloomBlurBrightness );
+			postProcessBasic->SetEffect( BasicPostProcess::BloomBlur );
+			postProcessBasic->Process( GetContext( gfx ) );
+		}
 	}
 	// TONE MAP POST-PROCESS
 	else
@@ -84,6 +104,27 @@ void PostProcessing::SpawnControlWindow()
 
 				ImGui::EndCombo();
 			}
+
+			// allow modification of additional parameters when bloom blur is enabled
+			if ( basicEffect == BasicPostProcess::Effect::BloomExtract )
+			{
+				ImGui::Text( "Blur Pass Type:" );
+				ImGui::SameLine();
+				static int bloomBlurGroup = 0;
+				if ( ImGui::RadioButton( "Horizontal", &bloomBlurGroup, 0 ) )
+					bloomBlurHorizontal = true;
+				ImGui::SameLine();
+				if ( ImGui::RadioButton( "Vertical", &bloomBlurGroup, 1 ) )
+					bloomBlurHorizontal = false;
+
+				ImGui::SliderFloat( "Bloom Threshold", &bloomThreshold, 0.0f, 5.0f, "%.1f" );
+				ImGui::SliderFloat( "Bloom Blur Size", &bloomBlurSize, 0.0f, 5.0f, "%.1f" );
+				ImGui::SliderFloat( "Bloom Blur Brightness", &bloomBlurBrightness, 0.0f, 5.0f, "%.1f" );
+			}
+
+			// allow modification of additional parameters when gaussian blur is enabled
+			if ( basicEffect == BasicPostProcess::Effect::GaussianBlur_5x5 )
+				ImGui::SliderFloat( "Gaussian Multiplier", &gaussianMultiplier, 0.0f, 5.0f, "%.1f" );
 		}
 		else
 		{
