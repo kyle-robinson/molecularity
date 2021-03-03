@@ -2,7 +2,6 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include "Fog.h"
 #include "Cube.h"
 #include "Camera.h"
 #include "Sprite.h"
@@ -12,13 +11,15 @@
 #include "JSON_Helper.h"
 #include "ImGuiManager.h"
 #include "MultiViewport.h"
+#include "CameraController.h"
 #include "DirectionalLight.h"
 #include "GraphicsContainer.h"
-#include "CameraController.h"
 #include <dxtk/WICTextureLoader.h>
 
-class StencilOutline;
+class Fog;
 class TextRenderer;
+class PostProcessing;
+class StencilOutline;
 
 /// <summary>
 /// Loads and renders/updates all the components and models for the current scene/level.
@@ -62,6 +63,7 @@ private:
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<MultiViewport> multiViewport;
+	std::shared_ptr<PostProcessing> postProcessing;
 	std::shared_ptr<StencilOutline> stencilOutline;
 
 	// Constant Buffers

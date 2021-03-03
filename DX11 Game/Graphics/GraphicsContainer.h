@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include <d3d11_1.h>
 #include <wrl/client.h>
+
 #include "Shaders.h"
 #include "Quad.h"
 
@@ -53,6 +54,7 @@ public:
 	// Pipeline Getters
 	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }
 	std::shared_ptr<Bind::Viewport> GetViewport( const std::string& vp ) noexcept { return viewports[vp]; }
+	std::shared_ptr<Bind::RenderTarget> GetRenderTarget() noexcept { return renderTarget; }
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;

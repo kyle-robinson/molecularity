@@ -18,24 +18,31 @@ bool GraphicsContainer::InitializeDirectX( HWND hWnd )
 {
 	try
 	{
+		// pipeline - main components
 		swapChain = std::make_shared<Bind::SwapChain>( *this, context.GetAddressOf(), device.GetAddressOf(), hWnd );
-		backBuffer = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
-		renderTarget = std::make_shared<Bind::RenderTarget>( *this );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
 		blender = std::make_shared<Bind::Blender>( *this );
+		
+		// render target - two in use to allow for RTT
+		backBuffer = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
+		renderTarget = std::make_shared<Bind::RenderTarget>( *this );
 
+		// stencils - for outlining models
 		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
         stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
         stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
 
+		// rasterizers - solid/wireframe && skysphere specific options
 		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
         rasterizers.emplace( "Skybox", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
         rasterizers.emplace( "Wireframe", std::make_shared<Bind::Rasterizer>( *this, false, true ) );
 
+		// samplers - point (low quality) && anisotropic (high quality)
         samplers.emplace( "Anisotropic", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Anisotropic ) );
         samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
         samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
 
+		// viewports - main (default camera) && sub (static camera)
 		viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
 		viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
 
