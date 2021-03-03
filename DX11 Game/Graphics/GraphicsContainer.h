@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include <d3d11_1.h>
 #include <wrl/client.h>
+#include <dxtk/PostProcess.h>
 #include "Shaders.h"
 #include "Quad.h"
 
@@ -43,6 +44,7 @@ protected:
 	void ClearScene();
 	void UpdateRenderState();
 	void RenderSceneToTexture();
+	void ApplyPostProcessing();
 	void PresentScene();
 private:
 	// Initialization Functions
@@ -83,6 +85,11 @@ private:
 	QuadFullscreen fullscreen;
 	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
+
+	// Post-Processing
+	std::unique_ptr<DualPostProcess> postProcessDual;
+	std::unique_ptr<BasicPostProcess> postProcessBasic;
+	std::unique_ptr<ToneMapPostProcess> postProcessToneMap;
 
 	// DirectX Pipeline Components
 	std::shared_ptr<Bind::Blender> blender;

@@ -173,6 +173,7 @@ void Graphics::EndFrame()
 {
 	// set and clear back buffer
 	RenderSceneToTexture();
+	ApplyPostProcessing();
 
 	textRenderer->RenderCubeMoveText( *this );
 	textRenderer->RenderMultiToolText( *this );
