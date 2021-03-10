@@ -35,6 +35,10 @@ bool Graphics::InitializeScene()
 			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
 
+			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 15.0f );
+			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
+
 			// lights
 			if ( !directionalLight.Initialize( *this, cb_vs_matrix ) ) return false;
 			directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
@@ -146,6 +150,7 @@ void Graphics::RenderFrame()
 	// DRAWABLES
 	{
 		hubRoom.Draw();
+		pressurePlate.Draw();
 
 		// w/ normal maps
 		simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
@@ -235,6 +240,11 @@ void Graphics::Update( const float dt )
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
 
-	//update object physics
-	cube.UpdatePhysics( dt );
+	// update objects
+	cube.Update( dt );
+	static bool collision = false;
+	if ( cube.CheckCollisionAABB( pressurePlate ) )
+		collision = true;
+	if ( collision )
+		OutputDebugString( L"Collision occurred!\n" );
 }

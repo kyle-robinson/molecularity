@@ -42,8 +42,30 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
     context->DrawIndexed( ib_cube.IndexCount(), 0, 0 );
 }
 
-void Cube::UpdatePhysics( const float deltaTime ) noexcept
+void Cube::Update( const float deltaTime ) noexcept
 {
-    if ( !isHeld )
-        physicsModel->Update( deltaTime / 1000.0f );
+    if ( !isHeld ) physicsModel->Update( deltaTime / 1000.0f );
+}
+
+bool Cube::CheckCollisionAABB( RenderableGameObject& object ) noexcept
+{
+    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x && // x collision
+           position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x ) &&
+         ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y && // y collision
+           position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y ) &&
+         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z && // z collision
+           position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z )
+        )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Cube::CollisionResolution( RenderableGameObject& object ) noexcept
+{
+    
 }

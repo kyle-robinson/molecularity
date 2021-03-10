@@ -19,9 +19,9 @@ public:
 		ConstantBuffer<CB_VS_matrix>& cb_vs_vertexshader );
 	void Draw();
 protected:
-	Model model;
 	void UpdateMatrix() override;
-	
+
+	Model model;
 	XMMATRIX worldMatrix = XMMatrixIdentity();
 };
 

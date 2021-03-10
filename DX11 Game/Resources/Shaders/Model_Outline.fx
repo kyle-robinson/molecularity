@@ -31,7 +31,7 @@ VS_OUTPUT VS( VS_INPUT input )
 }
 
 // PIXEL SHADER
-cbuffer ColorBuffer : register( b1 )
+cbuffer ColorBuffer : register( b6 )
 {
     float3 outlineColor;
 }

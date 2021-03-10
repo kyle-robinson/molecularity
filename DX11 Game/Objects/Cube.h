@@ -16,6 +16,10 @@ public:
 	bool Initialize( ID3D11DeviceContext* context, ID3D11Device* device );
 	void Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept;
 	
+	// Collisions
+	bool CheckCollisionAABB( RenderableGameObject& object ) noexcept;
+	void CollisionResolution( RenderableGameObject& object ) noexcept;
+	
 	// Getters
 	bool GetIsHolding() const noexcept { return isHeld; }
 	bool GetIsHovering() const noexcept { return cubeHover; }
@@ -26,7 +30,7 @@ public:
 	void SetIsHovering( bool hover ) noexcept { cubeHover = hover; }
 	void SetIsInRange( bool range ) noexcept { cubeInRange = range; }
 
-	void UpdatePhysics( const float deltaTime ) noexcept;
+	void Update( const float deltaTime ) noexcept;
 	std::shared_ptr<CubeProperties> GetEditableProperties() const noexcept { return editableProperties; }
 private:
 	std::shared_ptr<CubeProperties> editableProperties;
