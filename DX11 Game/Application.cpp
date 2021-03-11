@@ -17,7 +17,7 @@ bool Application::Initialize(
 	input.Initialize( &gfx, renderWindow, &cameras, width, height);
 
 	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
-	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f ) ) return false;
+	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f , 0.0f, 0.0f, 0.0f ) ) return false;
 
 	return true;
 }

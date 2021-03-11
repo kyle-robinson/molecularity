@@ -39,7 +39,7 @@ public:
 	virtual ~Sound( void ) = default;
 
 	bool Initialize( HWND );
-	bool PlayWavFile( int, float );
+	bool PlayWavFile( int, float, float, float, float );
 	void Close();
 
 private:
@@ -48,15 +48,18 @@ private:
 
 	bool InitialiseSoundFiles();
 
-	bool LoadWavFile( const char*, IDirectSoundBuffer8** );
-	void CloseWavFile( IDirectSoundBuffer8** );
+	bool LoadWavFile( const char*, IDirectSoundBuffer8**, IDirectSound3DBuffer8** );
+	void CloseWavFile( IDirectSoundBuffer8**, IDirectSound3DBuffer8** );
 
 	IDirectSound8* _directSound;
 	IDirectSoundBuffer* _primaryBuffer;
+
+	IDirectSound3DListener8* _listener;
 };
 
-// Make sure the size of the array keeps up with the sound name enum
+// Make sure the size of the array keeps up with the sound names enum
 static IDirectSoundBuffer8* _secondaryBuffer[10]; //Stores the loaded sounds
+static IDirectSound3DBuffer8* _secondary3DBuffer[10]; //Stores the 3D info for loaded sounds
 
 enum SOUND_NAMES
 {
