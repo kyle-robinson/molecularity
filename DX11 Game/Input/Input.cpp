@@ -29,10 +29,6 @@ void Input::UpdateKeyboard( const float dt )
 		if ( keyboard.KeyIsPressed( VK_HOME ) && !cursorEnabled ) EnableCursor();
 		else if ( keyboard.KeyIsPressed( VK_END ) && cursorEnabled ) DisableCursor();
 	}
-	else
-	{
-		DisableCursor();
-	}
 
 	// set which camera for the static camera to look at
 	cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(

@@ -52,6 +52,7 @@ private:
 	CameraController* cameras;
 	RenderableGameObject hubRoom;
 	RenderableGameObject skysphere;
+	RenderableGameObject pressurePlate;
 
 	// Lights
 	SpotLight spotLight;

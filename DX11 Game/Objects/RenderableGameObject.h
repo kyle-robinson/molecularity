@@ -3,6 +3,7 @@
 #define RENDERABLEGAMEOBJECT_H
 
 class Camera;
+class PhysicsModel;
 #include "GameObject3D.h"
 
 /// <summary>
@@ -18,11 +19,13 @@ public:
 		ID3D11DeviceContext* context,
 		ConstantBuffer<CB_VS_matrix>& cb_vs_vertexshader );
 	void Draw();
+	std::shared_ptr<PhysicsModel> GetPhysicsModel() const noexcept { return physicsModel; }
 protected:
-	Model model;
 	void UpdateMatrix() override;
-	
+
+	Model model;
 	XMMATRIX worldMatrix = XMMatrixIdentity();
+	std::shared_ptr<PhysicsModel> physicsModel;
 };
 
 #endif

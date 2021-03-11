@@ -32,10 +32,10 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, Cube& cube, Consta
 	cube.Draw( cb_vs_matrix, texture );
 
 	// scale the cube and draw the stencil outline, ignoring the pixels previously written to the buffer
+	Shaders::BindShaders( GetContext( gfx ), vertexShader_outline, pixelShader_outline );
 	cb_ps_outline.data.outlineColor = color;
 	if ( !cb_ps_outline.ApplyChanges() ) return;
-	GetContext( gfx )->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
-	Shaders::BindShaders( GetContext( gfx ), vertexShader_outline, pixelShader_outline );
+	GetContext( gfx )->PSSetConstantBuffers( 6u, 1u, cb_ps_outline.GetAddressOf() );
 	GetStencil( gfx, "Mask" )->Bind( gfx );
 	cube.SetScale(
 		cube.GetScaleFloat3().x + scale,
@@ -45,9 +45,9 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, Cube& cube, Consta
 	cube.Draw( cb_vs_matrix, texture );
 
 	// rescale the cube and draw using the appropriate shaders and textures
+	Shaders::BindShaders( GetContext( gfx ), gfx.vertexShader_light, gfx.pixelShader_light );
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	GetContext( gfx )->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-	Shaders::BindShaders( GetContext( gfx ), gfx.vertexShader_light, gfx.pixelShader_light );
 	cube.SetScale(
 		cube.GetScaleFloat3().x - scale,
 		cube.GetScaleFloat3().y - scale,
@@ -64,18 +64,18 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, RenderableGameObje
 	object.Draw();
 
 	// scale the model and draw the stencil outline, ignoring the pixels previously written to the buffer
+	Shaders::BindShaders( GetContext( gfx ), vertexShader_outline, pixelShader_outline );
 	cb_ps_outline.data.outlineColor = color;
 	if ( !cb_ps_outline.ApplyChanges() ) return;
-	GetContext( gfx )->PSSetConstantBuffers( 1u, 1u, cb_ps_outline.GetAddressOf() );
-	Shaders::BindShaders( GetContext( gfx ), vertexShader_outline, pixelShader_outline );
+	GetContext( gfx )->PSSetConstantBuffers( 6u, 1u, cb_ps_outline.GetAddressOf() );
 	GetStencil( gfx, "Mask" )->Bind( gfx );
 	object.SetScale( object.GetScaleFloat3().x + scale, 1.0f, object.GetScaleFloat3().z + scale );
 	object.Draw();
 
 	// rescale the model and draw using the appropriate shaders and textures
+	Shaders::BindShaders( GetContext( gfx ), gfx.vertexShader_light, gfx.pixelShader_light );
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	GetContext( gfx )->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-	Shaders::BindShaders( GetContext( gfx ), gfx.vertexShader_light, gfx.pixelShader_light );
 	object.SetScale( object.GetScaleFloat3().x - scale, 1.0f, object.GetScaleFloat3().z - scale );
 	GetStencil( gfx, "Off" )->Bind( gfx );
 	object.Draw();

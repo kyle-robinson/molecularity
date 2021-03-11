@@ -15,6 +15,7 @@ class Cube : public RenderableGameObject
 public:
 	bool Initialize( ID3D11DeviceContext* context, ID3D11Device* device );
 	void Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept;
+	void CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept;
 	
 	// Getters
 	bool GetIsHolding() const noexcept { return isHeld; }
@@ -26,9 +27,11 @@ public:
 	void SetIsHovering( bool hover ) noexcept { cubeHover = hover; }
 	void SetIsInRange( bool range ) noexcept { cubeInRange = range; }
 
-	void UpdatePhysics( const float deltaTime ) noexcept;
+	void Update( const float deltaTime ) noexcept;
 	std::shared_ptr<CubeProperties> GetEditableProperties() const noexcept { return editableProperties; }
 private:
+	void CollisionResolution( RenderableGameObject& object, const float dt ) noexcept;
+
 	std::shared_ptr<CubeProperties> editableProperties;
 	std::shared_ptr<PhysicsModel> physicsModel;
 	ID3D11DeviceContext* context;
