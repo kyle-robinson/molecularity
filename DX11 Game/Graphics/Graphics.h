@@ -41,7 +41,7 @@ public:
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<MultiViewport> GetMultiViewport() const noexcept { return multiViewport; }
 	CameraController* GetCameraController() const noexcept { return cameras; }
-	Cube& GetCube() noexcept { return *cubes[0]; }
+	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
 private:
 	bool InitializeScene();
 

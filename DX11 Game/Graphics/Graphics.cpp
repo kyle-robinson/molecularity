@@ -56,7 +56,11 @@ bool Graphics::InitializeScene()
 			{
 				std::shared_ptr<Cube> cube = std::make_shared<Cube>();
 				if ( !cube->Initialize( context.Get(), device.Get() ) ) return false;
-				cube->SetInitialPosition( 0.0f, 10.0f, -6.0f );
+				
+				float xPos = 2.5f;
+				if ( i % 2 == 0 ) xPos = -xPos;
+				cube->SetInitialPosition( xPos, 0.0f, -6.0f );
+
 				cubes.push_back( std::move( cube ) );
 			}
 
