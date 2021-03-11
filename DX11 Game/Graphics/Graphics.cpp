@@ -217,18 +217,8 @@ void Graphics::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );
 
 	// camera world collisions. Will be player object collisions in the future and ideally not here
-	bool wallCollision = Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f );
-	if ( !wallCollision )
-	{
-		float dx = hubRoom.GetPositionFloat3().x - cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3().x;
-		float dz = hubRoom.GetPositionFloat3().z - cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3().z;
-		float length = std::sqrtf( dx * dx + dz * dz );
-		dx /= length;
-		dz /= length;
-		dx *= cameras->GetCamera( JSON::CameraType::Default )->GetCameraSpeed() * dt;
-		dz *= cameras->GetCamera( JSON::CameraType::Default )->GetCameraSpeed() * dt;
-		cameras->GetCamera( JSON::CameraType::Default )->AdjustPosition( dx, 0.0f, dz );
-	}
+	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
+		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
 
 	// update cube scale multiplier
 	if ( cube.GetEditableProperties()->GetToolType() == ToolType::Resize )
