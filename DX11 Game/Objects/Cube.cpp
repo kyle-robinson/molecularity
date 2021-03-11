@@ -48,17 +48,33 @@ void Cube::Update( const float deltaTime ) noexcept
 }
 
 #pragma region Collisions
-void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept
+void Cube::CheckCollisionAABB( GameObject& object, const float dt ) noexcept
 {
-    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + 2.0f && // x collision
-           position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - 2.0f ) &&
-           position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y && // y collision
-         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + 2.0f && // z collision
-           position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - 2.0f )
+    // adjust x/z collision scaling for pressure plate
+    float collisionScale = 2.0f;
+    if ( typeid( object ) == typeid( Cube ) )
+        collisionScale = 0.0f;
+
+    // test collision between cube and given object
+    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + collisionScale && // x collision
+           position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - collisionScale ) &&
+         ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y && // y collision
+           position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y ) &&
+         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + collisionScale && // z collision
+           position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - collisionScale )
         )
     {
+        // collsion with another cube
+        if ( typeid( object ) == typeid( Cube ) )
+        {
+            CollisionResolution( dynamic_cast<Cube&>( object ), dt );
+        }
+        // collision with pressure plate
+        else
+        {
+            position.y = object.GetPositionFloat3().y + object.GetScaleFloat3().y + 1.0f;
+        }
         physicsModel->SetActivated( true );
-        position.y = object.GetPositionFloat3().y + object.GetScaleFloat3().y + 1.0f;
     }
     else
     {
@@ -66,12 +82,35 @@ void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) no
     }
 }
 
-void Cube::CollisionResolution( RenderableGameObject& object, const float dt ) noexcept
+void Cube::CollisionResolution( Cube& object, const float dt ) noexcept
 {
-    physicsModel->SetVelocity( {
-        physicsModel->GetVelocity().x,
-        -physicsModel->GetVelocity().y,
-        physicsModel->GetVelocity().x
-    } );
+    XMVECTOR v1 = XMVectorSet(
+        physicsModel->GetNetForce().x,
+        physicsModel->GetNetForce().y,
+        physicsModel->GetNetForce().z, 1.0f
+    );
+
+    XMVECTOR v2 = XMVectorSet(
+        object.GetPhysicsModel()->GetNetForce().x,
+        object.GetPhysicsModel()->GetNetForce().y,
+        object.GetPhysicsModel()->GetNetForce().z, 1.0f
+    );
+    
+    float velocityOne = std::max( XMVectorGetX( XMVector3Length( v1 ) ), 1.0f );
+    float velocityTwo = std::max( XMVectorGetX( XMVector3Length( v2 ) ), 1.0f );
+
+    float forceMagnitude = ( physicsModel->GetMass() * velocityOne + object.GetPhysicsModel()->GetMass() * velocityTwo ) / dt;
+    XMVECTOR force = XMVector3Normalize( object.GetPositionVector() - GetPositionVector() ) * forceMagnitude * 0.15f;
+
+    XMFLOAT3 forceF = {
+        XMVectorGetX( force ),
+        XMVectorGetY( force ),
+        XMVectorGetZ( force )
+    };
+
+    XMFLOAT3 forceF_Inv = { -forceF.x, -forceF.y, -forceF.z };
+    
+    physicsModel->AddForce( forceF_Inv );
+    object.GetPhysicsModel()->AddForce( forceF );
 }
 #pragma endregion

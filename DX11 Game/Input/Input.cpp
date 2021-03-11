@@ -4,7 +4,6 @@
 
 void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
 {
-	DisableCursor();
 	this->graphics = gfx;
 	this->cameras = camera;
 	this->renderWindow = window;

@@ -244,6 +244,9 @@ void Graphics::Update( const float dt )
 		// update objects
 		cubes[i]->Update( dt );
 		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
+		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
+			if ( i != j )
+				cubes[i]->CheckCollisionAABB( *cubes[j], dt );
 	}
 
 	// set position of spot light model

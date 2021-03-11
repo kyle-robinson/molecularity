@@ -3,12 +3,11 @@
 
 PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 {
-	mMass = 100.0f;
+	mMass = 50.0f;
 	mActivated = false;
-	mUseLaminar = false;
+	mUseLaminar = true;
 	mPosition = mTransform->GetPositionFloat3();
 
-	mDrag = { 0.0f, 0.0f, 0.0f };
 	mFriction = { 0.0f, 0.0f, 0.0f };
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 	mVelocity = { 0.0f, 0.0f, 0.0f };
@@ -100,21 +99,20 @@ void PhysicsModel::Drag()
 
 void PhysicsModel::LaminarDrag()
 {
-	mDrag.x = mDragFactor * mVelocity.x;
-	mDrag.y = mDragFactor * mVelocity.y;
-	mDrag.z = mDragFactor * mVelocity.z;
+	mNetForce.x -= mDragFactor * mVelocity.x;
+	mNetForce.y -= mDragFactor * mVelocity.y;
+	mNetForce.z -= mDragFactor * mVelocity.z;
 }
 
 void PhysicsModel::TurbulentDrag()
 {
 	float magVelocity = Magnitude( mVelocity );
 	XMFLOAT3 unitVelocity = Normalization( mVelocity );
-
 	float dragMagnitude = mDragFactor * magVelocity * magVelocity;
 
-	mDrag.x = -dragMagnitude * mDragFactor * unitVelocity.x;
-	mDrag.y = -dragMagnitude * mDragFactor * unitVelocity.y;
-	mDrag.z = -dragMagnitude * mDragFactor * unitVelocity.z;
+	mNetForce.x -= -dragMagnitude * mDragFactor * unitVelocity.x;
+	mNetForce.y -= -dragMagnitude * mDragFactor * unitVelocity.y;
+	mNetForce.z -= -dragMagnitude * mDragFactor * unitVelocity.z;
 }
 
 void PhysicsModel::ComputePosition( const float dt )
@@ -136,7 +134,7 @@ void PhysicsModel::CheckFloorCollisions()
 
 	if ( mPosition.y < 0.5f )
 	{
-		mVelocity = { mVelocity.x, 0.0f, mVelocity.z };
+		mVelocity.y = 0.0f;
 		mPosition.y = 0.5f;
 		mTransform->SetPosition( mPosition );
 	}
@@ -167,12 +165,11 @@ float PhysicsModel::Magnitude( XMFLOAT3 vec ) const noexcept
 
 XMFLOAT3 PhysicsModel::Normalization( XMFLOAT3 vec ) const noexcept
 {
-	XMFLOAT3 temp = vec;
-	float unitVector = sqrt( ( temp.x * temp.x ) + ( temp.y * temp.y ) + ( temp.z * temp.z ) );
+	float unitVector = sqrt( ( vec.x * vec.x ) + ( vec.y * vec.y ) + ( vec.z * vec.z ) );
 
-	temp.x = temp.x / unitVector;
-	temp.y = temp.y / unitVector;
-	temp.z = temp.z / unitVector;
+	vec.x = vec.x / unitVector;
+	vec.y = vec.y / unitVector;
+	vec.z = vec.z / unitVector;
 
-	return temp;
+	return vec;
 }
