@@ -58,6 +58,7 @@ void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) no
         )
     {
         physicsModel->SetActivated( true );
+        position.y = object.GetPositionFloat3().y + object.GetScaleFloat3().y + 1.0f;
     }
     else
     {
