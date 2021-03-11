@@ -52,8 +52,13 @@ bool Graphics::InitializeScene()
 			spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
 			// primitives
-			if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
-			cube.SetInitialPosition( 0.0f, 10.0f, -6.0f );
+			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+			{
+				std::shared_ptr<Cube> cube = std::make_shared<Cube>();
+				if ( !cube->Initialize( context.Get(), device.Get() ) ) return false;
+				cube->SetInitialPosition( 0.0f, 10.0f, -6.0f );
+				cubes.push_back( std::move( cube ) );
+			}
 
 			if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
 			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
@@ -156,14 +161,17 @@ void Graphics::RenderFrame()
 		simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
 
 		// w/ stencils
-		if ( cube.GetIsHovering() )
+		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 		{
-			stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix,
-				pointLight.GetConstantBuffer(), boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
-		}
-		else
-		{
-			cube.Draw( cb_vs_matrix, boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
+			if ( cubes[i]->GetIsHovering() )
+			{
+				stencilOutline->DrawWithOutline( *this, *cubes[i], cb_vs_matrix,
+					pointLight.GetConstantBuffer(), boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
+			}
+			else
+			{
+				cubes[i]->Draw( cb_vs_matrix, boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
+			}
 		}
 	}
 
@@ -220,17 +228,20 @@ void Graphics::Update( const float dt )
 	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
 		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
 
-	// update cube scale multiplier
-	if ( cube.GetEditableProperties()->GetToolType() == ToolType::Resize )
-		cube.SetScale( static_cast<float>( cube.GetEditableProperties()->GetSizeMultiplier() ) );
+	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	{
+		// update cube scale multiplier
+		if ( cubes[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
+			cubes[i]->SetScale( static_cast<float>( cubes[i]->GetEditableProperties()->GetSizeMultiplier() ) );
 
-	// cube range collision check
-	cube.SetIsInRange( Collisions::CheckCollisionSphere( cameras->GetCamera( cameras->GetCurrentCamera() ), cube, 5.0f ) );
+		// cube range collision check
+		cubes[i]->SetIsInRange( Collisions::CheckCollisionSphere( cameras->GetCamera( cameras->GetCurrentCamera() ), *cubes[i], 5.0f ) );
+
+		// update objects
+		cubes[i]->Update( dt );
+		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
+	}
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
-
-	// update objects
-	cube.Update( dt );
-	cube.CheckCollisionAABB( pressurePlate, dt );
 }
