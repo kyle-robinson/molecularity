@@ -2,7 +2,7 @@
 #ifndef PHYSICSMODEL_H
 #define PHYSICSMODEL_H
 
-#include "RenderableGameObject.h"
+#include "GameObject.h"
 
 /// <summary>
 /// Managers the generic physics calculations for a given object.
@@ -10,42 +10,45 @@
 class PhysicsModel
 {
 public:
-	PhysicsModel( RenderableGameObject* transform );
+	PhysicsModel( GameObject* transform );
 	virtual ~PhysicsModel() = default;
 
-	//get/set forces
-	XMFLOAT3 GetVelocity() const noexcept { return mVelocity; }
-	void SetVelocity( XMFLOAT3 velocity ) noexcept { mVelocity = velocity; }
+	// Update Forces
+	virtual void Update( const float dt );
+	void AddForce( XMFLOAT3 force ) noexcept;
+	void ResetForces() noexcept;
 
+	// Get Forces
+	float GetMass() const noexcept { return mMass; }
+	XMFLOAT3 GetNetForce() const noexcept { return mNetForce; }
+	XMFLOAT3 GetVelocity() const noexcept { return mVelocity; }
 	XMFLOAT3 GetAcceleration() const noexcept { return mAcceleration; }
+
+	// Set Forces
+	void SetMass( float mass ) noexcept { mMass = mass; }
+	void SetNetForce( XMFLOAT3 netForce ) noexcept { mNetForce = netForce; }
+	void SetVelocity( XMFLOAT3 velocity ) noexcept { mVelocity = velocity; }
 	void SetAcceleration( XMFLOAT3 acceleration ) noexcept { mAcceleration = acceleration; }
 
-	//functions for updating forces and object position
-	virtual void Update( const float dt );
-	void AddWeight();
-	void CalculateAcceleration();
-	void CalculateVelocity( const float dt );
-	void AddFriction( const float dt );
-	void AddDrag();
-	void LaminarDrag();
-	void TurbulentDrag();
-	void CalculatePosition( const float dt );
-	void AddGravity();
-
-	float Magnitude( XMFLOAT3 vec ) const noexcept
-	{
-		return ( sqrtf(
-			powf( vec.x, 2 ) +
-			powf( vec.y, 2 ) +
-			powf( vec.z, 2 ) )
-		);
-	}
+	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
 private:
+	// Update Forces
+	void Weight();
+	void Acceleration();
+	void Velocity( const float dt );
+	void Friction( const float dt );
+	void Drag();
+	void LaminarDrag();
+	void TurbulentDrag();
+	void ComputePosition( const float dt );
+	void CheckFloorCollisions();
+
 	// Constants
 	static constexpr float mGravity = 9.81f;
 	static constexpr float mDragFactor = 0.75f;
 	static constexpr float mFrictionFactor = 0.0002f;
+
 	// Local Variables
 	float mMass;
 	float mWeight;
@@ -56,7 +59,7 @@ private:
 	XMFLOAT3 mNetForce;
 	XMFLOAT3 mVelocity;
 	XMFLOAT3 mAcceleration;
-	RenderableGameObject* mTransform;
+	GameObject* mTransform;
 };
 
 #endif

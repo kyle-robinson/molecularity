@@ -242,9 +242,5 @@ void Graphics::Update( const float dt )
 
 	// update objects
 	cube.Update( dt );
-	static bool collision = false;
-	if ( cube.CheckCollisionAABB( pressurePlate ) )
-		collision = true;
-	if ( collision )
-		OutputDebugString( L"Collision occurred!\n" );
+	cube.CheckCollisionAABB( pressurePlate, dt );
 }

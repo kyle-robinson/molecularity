@@ -47,7 +47,8 @@ void Cube::Update( const float deltaTime ) noexcept
     if ( !isHeld ) physicsModel->Update( deltaTime / 1000.0f );
 }
 
-bool Cube::CheckCollisionAABB( RenderableGameObject& object ) noexcept
+#pragma region Collisions
+void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept
 {
     if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x && // x collision
            position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x ) &&
@@ -57,15 +58,32 @@ bool Cube::CheckCollisionAABB( RenderableGameObject& object ) noexcept
            position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z )
         )
     {
-        return true;
-    }
-    else
-    {
-        return false;
+        CollisionResolution( object, dt );
     }
 }
 
-void Cube::CollisionResolution( RenderableGameObject& object ) noexcept
-{
+void Cube::CollisionResolution( RenderableGameObject& object, const float dt ) noexcept
+{    
+    XMVECTOR netForceCube = XMVectorSet(
+        physicsModel->GetNetForce().x,
+        physicsModel->GetNetForce().y,
+        physicsModel->GetNetForce().z, 1.0f
+    );
+    XMVECTOR netForceObject = XMVectorSet(
+        object.GetPhysicsModel()->GetNetForce().x,
+        object.GetPhysicsModel()->GetNetForce().y,
+        object.GetPhysicsModel()->GetNetForce().z, 1.0f
+    );
     
+    float velocityOne = std::max( XMVectorGetX( XMVector3Length( netForceCube ) ), 1.0f );
+    float velocityTwo = std::max( XMVectorGetX( XMVector3Length( netForceObject ) ), 1.0f );
+
+    float forceMagnitude = ( physicsModel->GetMass() * velocityOne + object.GetPhysicsModel()->GetMass() * velocityTwo ) / dt;
+    XMVECTOR force = XMVector3Normalize( object.GetPositionVector() - GetPositionVector() ) * forceMagnitude * 0.15f;
+    XMFLOAT3 forceFloat = { XMVectorGetX( force ), XMVectorGetY( force ), XMVectorGetZ( force ) };
+    XMFLOAT3 forceFloatInverse = { -forceFloat.x, -forceFloat.y, -forceFloat.z };
+
+    physicsModel->AddForce( forceFloatInverse );
+    object.GetPhysicsModel()->AddForce( forceFloat );
 }
+#pragma endregion
