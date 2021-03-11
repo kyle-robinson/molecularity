@@ -1,10 +1,15 @@
 #include "Graphics.h"
 #include "Collisions.h"
+
+// bindables
 #include "Rasterizer.h"
 #include "DepthStencil.h"
 #include "RenderTarget.h"
+
+// systems
+#include "Fog.h"
 #include "TextRenderer.h"
-#include "MultiViewport.h"
+#include "PostProcessing.h"
 #include "StencilOutline.h"
 
 bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int height )
@@ -29,6 +34,10 @@ bool Graphics::InitializeScene()
 
 			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
+
+			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 15.0f );
+			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
 
 			// lights
 			if ( !directionalLight.Initialize( *this, cb_vs_matrix ) ) return false;
@@ -57,6 +66,7 @@ bool Graphics::InitializeScene()
 
 		// SYSTEMS
 		{
+			postProcessing = std::make_shared<PostProcessing>( *this );
 			stencilOutline = std::make_shared<StencilOutline>( *this );
 			textRenderer = std::make_shared<TextRenderer>( *this );
 			multiViewport = std::make_shared<MultiViewport>();
@@ -140,6 +150,7 @@ void Graphics::RenderFrame()
 	// DRAWABLES
 	{
 		hubRoom.Draw();
+		pressurePlate.Draw();
 
 		// w/ normal maps
 		simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
@@ -171,13 +182,16 @@ void Graphics::RenderFrame()
 
 void Graphics::EndFrame()
 {
-	// set and clear back buffer
+	// setup RTT and update post-processing
 	RenderSceneToTexture();
+	postProcessing->Bind( *this );
 
+	// update text rendering
 	textRenderer->RenderCubeMoveText( *this );
 	textRenderer->RenderMultiToolText( *this );
 	textRenderer->RenderCameraText( *this );
 
+	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
 		imgui.BeginRender();
@@ -188,6 +202,7 @@ void Graphics::EndFrame()
 		spotLight.SpawnControlWindow();
 		fogSystem->SpawnControlWindow();
 		stencilOutline->SpawnControlWindow();
+		postProcessing->SpawnControlWindow();
 		imgui.EndRender();
 	}
 
@@ -202,18 +217,8 @@ void Graphics::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );
 
 	// camera world collisions. Will be player object collisions in the future and ideally not here
-	bool wallCollision = Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f );
-	if ( !wallCollision )
-	{
-		float dx = hubRoom.GetPositionFloat3().x - cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3().x;
-		float dz = hubRoom.GetPositionFloat3().z - cameras->GetCamera( JSON::CameraType::Default )->GetPositionFloat3().z;
-		float length = std::sqrtf( dx * dx + dz * dz );
-		dx /= length;
-		dz /= length;
-		dx *= cameras->GetCamera( JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
-		dz *= cameras->GetCamera( JSON::CameraType::Default)->GetCameraSpeed() * 10.0f;
-		cameras->GetCamera( JSON::CameraType::Default)->AdjustPosition( dx, 0.0f, dz );
-	}
+	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
+		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
 
 	// update cube scale multiplier
 	if ( cube.GetEditableProperties()->GetToolType() == ToolType::Resize )
@@ -225,6 +230,7 @@ void Graphics::Update( const float dt )
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
 
-	//update object physics
-	cube.UpdatePhysics( dt );
+	// update objects
+	cube.Update( dt );
+	cube.CheckCollisionAABB( pressurePlate, dt );
 }

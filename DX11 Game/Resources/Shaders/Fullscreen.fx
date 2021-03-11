@@ -45,5 +45,5 @@ SamplerState samplerState : SAMPLER : register( s0 );
 
 float4 PS( PS_INPUT input ) : SV_TARGET
 {
-    return quadTexture.Sample( samplerState, input.inTex ).rgba;
+    return saturate( quadTexture.Sample( samplerState, input.inTex ).rgba );
 }

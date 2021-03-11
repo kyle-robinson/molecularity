@@ -2,6 +2,7 @@
 #ifndef COLLISIONS_H
 #define COLLISIONS_H
 
+class Cube;
 class Camera;
 class GameObject3D;
 #include <memory>

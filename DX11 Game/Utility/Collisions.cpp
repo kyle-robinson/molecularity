@@ -1,5 +1,6 @@
 #include "Collisions.h"
 #include "Camera.h"
+#include "Cube.h"
 
 bool Collisions::CheckCollisionCircle( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept
 {

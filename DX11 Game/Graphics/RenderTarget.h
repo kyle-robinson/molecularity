@@ -77,20 +77,20 @@ namespace Bind
 		}
 		void BindAsBuffer( GraphicsContainer& gfx, float clearColor[4] ) noexcept
 		{
-			GetContext( gfx )->OMSetRenderTargets( 1, backBuffer.GetAddressOf(), nullptr );
+			GetContext( gfx )->OMSetRenderTargets( 1u, backBuffer.GetAddressOf(), nullptr );
 			GetContext( gfx )->ClearRenderTargetView( backBuffer.Get(), clearColor );
 		}
 		void BindAsTexture( GraphicsContainer& gfx, DepthStencil* depthStencil, float clearColor[4] ) noexcept
 		{
-			GetContext( gfx )->OMSetRenderTargets( 1, renderTargetView.GetAddressOf(), depthStencil->GetDepthStencilView() );
+			GetContext( gfx )->OMSetRenderTargets( 1u, renderTargetView.GetAddressOf(), depthStencil->GetDepthStencilView() );
 			GetContext( gfx )->ClearRenderTargetView( renderTargetView.Get(), clearColor );
 		}
 		void BindAsNull( GraphicsContainer& gfx ) noexcept
 		{
 			Microsoft::WRL::ComPtr<ID3D11RenderTargetView> nullRenderTarget = nullptr;
-			GetContext( gfx )->OMSetRenderTargets( 1, nullRenderTarget.GetAddressOf(), nullptr );
+			GetContext( gfx )->OMSetRenderTargets( 1u, nullRenderTarget.GetAddressOf(), nullptr );
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> nullShaderResourceView = nullptr;
-			GetContext( gfx )->PSSetShaderResources( 0, 1, nullShaderResourceView.GetAddressOf() );
+			GetContext( gfx )->PSSetShaderResources( 0u, 1u, nullShaderResourceView.GetAddressOf() );
 		}
 		ID3D11ShaderResourceView* GetShaderResourceView() noexcept
 		{

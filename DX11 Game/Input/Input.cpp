@@ -29,10 +29,6 @@ void Input::UpdateKeyboard( const float dt )
 		if ( keyboard.KeyIsPressed( VK_HOME ) && !cursorEnabled ) EnableCursor();
 		else if ( keyboard.KeyIsPressed( VK_END ) && cursorEnabled ) DisableCursor();
 	}
-	else
-	{
-		DisableCursor();
-	}
 
 	// set which camera for the static camera to look at
 	cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
@@ -47,11 +43,21 @@ void Input::UpdateKeyboard( const float dt )
 		if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( cameras->GetCamera( JSON::CameraType::Debug ), dt );
 		if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( cameras->GetCamera( JSON::CameraType::Debug ), dt );
 	}
-	cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
+	
+	// normalize diagonal movement speed
+	if ( keyboard.KeyIsPressed( 'W' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
+		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
+	if ( keyboard.KeyIsPressed( 'S' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
+		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
+
+	// update camera movement
 	if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+
+	// set camera speed
+	cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
 
 	// set multi-tool type
 	if ( keyboard.KeyIsPressed( '1' ) ) graphics->GetCube().GetEditableProperties()->SetToolType( ToolType::Convert );
