@@ -27,6 +27,11 @@ void PhysicsModel::Update( const float dt )
 		ComputePosition( dt );
 		CheckFloorCollisions();
 	}
+	else
+	{
+		mVelocity = { 0.0f, 0.0f, 0.0f };
+		mAcceleration = { 0.0f, 0.0f, 0.0f };
+	}
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 }
