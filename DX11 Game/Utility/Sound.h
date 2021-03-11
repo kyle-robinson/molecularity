@@ -39,8 +39,10 @@ public:
 	virtual ~Sound( void ) = default;
 
 	bool Initialize( HWND );
-	bool PlayWavFile( int, float, float, float, float );
+	bool PlayWavFile( int, float, XMFLOAT3 );
 	void Close();
+
+	void UpdateListenerPos(XMFLOAT3 pos) { camPosX = pos.x; camPosY = pos.y; camPosZ = pos.z; }
 
 private:
 	bool InitializeDirectSound( HWND );
@@ -55,6 +57,8 @@ private:
 	IDirectSoundBuffer* _primaryBuffer;
 
 	IDirectSound3DListener8* _listener;
+
+	float camPosX, camPosY, camPosZ;
 };
 
 // Make sure the size of the array keeps up with the sound names enum
@@ -64,7 +68,8 @@ static IDirectSound3DBuffer8* _secondary3DBuffer[10]; //Stores the 3D info for l
 enum SOUND_NAMES
 {
 	MAIN_MUSIC = 0,
-	SHOT_SOUND
+	SHOT_SOUND,
+	COLLISION_SOUND
 };
 
 #endif
