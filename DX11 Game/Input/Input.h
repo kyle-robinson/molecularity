@@ -14,7 +14,7 @@ class Input : public WindowContainer
 {
 public:
 	void Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height );
-	void Update( const float dt );
+	void Update( const float dt, Sound sound );
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
