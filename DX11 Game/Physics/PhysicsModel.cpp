@@ -4,6 +4,7 @@
 PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 {
 	mMass = 100.0f;
+	mActivated = false;
 	mUseLaminar = false;
 	mPosition = mTransform->GetPositionFloat3();
 
@@ -16,13 +17,16 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 
 void PhysicsModel::Update( const float dt )
 {
-	Weight();
-	Acceleration();
-	Friction( dt );
-	Velocity( dt );
-	Drag();
-	ComputePosition( dt );
-	CheckFloorCollisions();
+	if ( !mActivated )
+	{
+		Weight();
+		Acceleration();
+		Friction( dt );
+		Velocity( dt );
+		Drag();
+		ComputePosition( dt );
+		CheckFloorCollisions();
+	}
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 }
@@ -130,10 +134,6 @@ void PhysicsModel::CheckFloorCollisions()
 		mVelocity = { mVelocity.x, 0.0f, mVelocity.z };
 		mPosition.y = 0.5f;
 		mTransform->SetPosition( mPosition );
-	}
-	else if ( mPosition.y > 0.5f )
-	{
-		mVelocity.y -= 0.01f;
 	}
 }
 
