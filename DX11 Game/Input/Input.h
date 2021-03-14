@@ -3,7 +3,6 @@
 #define INPUT_H
 
 #include "Graphics.h"
-#include<Graphics/UI.h>
 #include "MousePicking.h"
 #include "WindowContainer.h"
 
@@ -14,8 +13,8 @@
 class Input : public WindowContainer
 {
 public:
-	void Initialize( Graphics* gfx, UI* Ui, RenderWindow& window,CameraController* camera, int width, int height );
-	void Update( const float dt );
+	void Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height );
+	void Update( const float dt);
 
 private:
 	void UpdateKeyboard( const float dt );
@@ -24,7 +23,7 @@ private:
 	MousePicking mousePick;
 	Graphics* graphics;
 	CameraController* cameras;
-	UI* Ui;
+	
 };
 
 #endif

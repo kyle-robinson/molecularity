@@ -221,7 +221,6 @@
     <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp" />
     <ClCompile Include="UI\Wigets\ColourBlock.cpp" />
     <ClCompile Include="Graphics\Custom_UI.cpp" />
-    <ClCompile Include="Graphics\DIMGUI_UI.cpp" />
     <ClCompile Include="Graphics\Fog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -352,7 +351,6 @@
     <ClInclude Include="Graphics\ConstantBufferTypes.h" />
     <ClInclude Include="Graphics\Custom_UI.h" />
     <ClInclude Include="Graphics\DepthStencil.h" />
-    <ClInclude Include="Graphics\DIMGUI_UI.h" />
     <ClInclude Include="Graphics\Fog.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsContainer.h" />

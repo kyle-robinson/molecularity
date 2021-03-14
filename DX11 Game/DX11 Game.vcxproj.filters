@@ -195,9 +195,6 @@
     <ClCompile Include="Graphics\Custom_UI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\DIMGUI_UI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\UI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -468,9 +465,6 @@
       <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Custom_UI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\DIMGUI_UI.h">
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\UI.h">

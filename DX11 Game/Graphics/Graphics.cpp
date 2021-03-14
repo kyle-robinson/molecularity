@@ -19,7 +19,9 @@ bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int h
 	if ( !InitializeScene() ) return false;
 	this->cameras = camera;
 
-	
+	UI_Controllor.Initialize(device.Get(), context.Get());
+	UI_Controllor.getCustomUi()->setcb_ps_scene(cb_ps_scene);
+	UI_Controllor.getCustomUi()->setcb_vs_matrix_2d(cb_vs_matrix_2d);
 	return true;
 }
 
@@ -93,6 +95,7 @@ bool Graphics::InitializeScene()
 			hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
 			COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
 		}
+		
 	}
 	catch ( COMException& exception )
 	{
@@ -181,6 +184,7 @@ void Graphics::RenderFrame()
 void Graphics::EndFrame()
 {
 	
+	UI_Controllor.Draw(this, vertexShader_2D, pixelShader_2D);
 	// setup RTT and update post-processing
 	RenderSceneToTexture();
 	postProcessing->Bind( *this );

@@ -7,33 +7,34 @@ UI::UI()
 {
 }
 
-void UI::Initialize(HWND hWnd, ID3D11Device* device, ID3D11DeviceContext* context, Graphics* level)
+void UI::Initialize(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-	CustomUiManger = make_shared<Custom_UI>();
-	CustomUiManger->Inizalize(level);
+	UiList["All"]=make_shared<Custom_UI>();
+	UiList["All"]->Inizalize(device, context);
 }
 
 UI::~UI()
 {
 }
 
-void UI::Draw(Graphics* level)
+void UI::Draw(Graphics* level, VertexShader& vert, PixelShader& pix)
 {
-	if (IsToDraw) {
+	
 		
-		if (CustomUiManger != nullptr) {
+		if (!UiList.empty()) {
 			
-			
-			CustomUiManger->GameHUD(level);
+			if (IsToDraw) {
+				UiList["All"]->GameHUD(level);
+			}
 
-			if (CustomUiManger->isPaused) {
-				CustomUiManger->Pause(level);
+			if (UiList["All"]->isPaused) {
+				UiList["All"]->Pause(level);
 			}
 
 			//end draw
-			CustomUiManger->BeginDraw(level);
+			UiList["All"]->BeginDraw(level,vert, pix);
 		}
 
-	}
+	
 
 }

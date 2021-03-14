@@ -13,41 +13,42 @@ void Custom_UI::LoadTextures()
 
 }
 
-void Custom_UI::INITWigets(Graphics* gfx)
+void Custom_UI::INITWigets()
 {
 	//HUD
-	HUDenergyWidget.INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
-	HUDHealthWidget.INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
+	HUDenergyWidget.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
+	HUDHealthWidget.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 2; i++)
 	{
-		HUDImages[i].INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
+		HUDImages[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	}
 
 	//puase
-	PuaseBakgtound.INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
+	PuaseBakgtound.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 4; i++) {
-		PuaseButtions[i].INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
+		PuaseButtions[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	}
 
 
 	//settings
 
-	SettingsBakgtound.INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
-	SettingsScrollBar.INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
+	SettingsBakgtound.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
+	SettingsScrollBar.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 10; i++) {
-		SettingsDropdowns[i].INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
-		SettingsSliders[i].INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
-		SettingsButtions[i].INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
+		SettingsDropdowns[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
+		SettingsSliders[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
+		SettingsButtions[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 		
 	}
 	for (unsigned int i = 0; i < 20; i++) {
-		ControllInput[i].INITSprite(gfx->context.Get(), gfx->device.Get(), gfx->cb_vs_matrix_2d);
+		ControllInput[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	}
 
 }
 
 void Custom_UI::INITTexRender(Graphics* gfx)
 {
+	HUDTextRenderer = make_shared<TextRenderer>("",_Device.Get(),_Contex.Get());
 }
 
 Custom_UI::Custom_UI()
@@ -56,66 +57,66 @@ Custom_UI::Custom_UI()
 Custom_UI::~Custom_UI()
 {
 }
-void Custom_UI::Inizalize( Graphics* gfx)
+void Custom_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex)
 {
 	
-	/*Device = device;
-	Contex = contex;
-	_cb_vs_matrix_2d = cb_vs_matrix_2d;
-	_cb_ps_scene = cb_ps_scene;*/
+	_Device = device;
+	_Contex = contex;
 	
 	
 	LoadTextures();
-	INITWigets(gfx);
-	INITTexRender(gfx);
+	/*INITWigets();*/
+	INITTexRender(nullptr);
 }
 
 //draw Objects
-void Custom_UI::BeginDraw(Graphics* gfx)
+void Custom_UI::BeginDraw(Graphics* gfx, VertexShader& vert,PixelShader& pix)
 {
-	Shaders::BindShaders(gfx->context.Get(), gfx->vertexShader_2D, gfx->pixelShader_2D);
+	Shaders::BindShaders(_Contex.Get(), vert, pix);
 	//Hud
 
 	if (!isSettings) {
-		HUDenergyWidget.Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix());
-		HUDHealthWidget.Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix());
+		HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
+		HUDHealthWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
+		HUDImages[0].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
+	
 		for (unsigned int i = 0; i < 2; i++)
 		{
-			HUDImages[i].Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix());
+			HUDImages[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
 		}
 	}
 	if (!isSettings&& isPaused) {
-		PuaseBakgtound.Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix());
+		PuaseBakgtound.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
 		for (unsigned int i = 0; i < 4; i++) {
-			PuaseButtions[i].Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix(), gfx->textRenderer.get());
-			Shaders::BindShaders(gfx->context.Get(), gfx->vertexShader_2D, gfx->pixelShader_2D);
+			PuaseButtions[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix(), HUDTextRenderer.get());
+			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
 	}
 	if (isSettings) {
-		SettingsBakgtound.Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix());
-		SettingsScrollBar.Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix());
+		SettingsBakgtound.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
+		SettingsScrollBar.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
 
 		for (UINT i = 0; i < SettingSliderCount; i++) {
-			SettingsSliders[i].Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix());
+			SettingsSliders[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
 		}
 		for (UINT i = 0; i < SettingsButtionCount; i++) {
-			SettingsButtions[i].Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix(), gfx->textRenderer.get());
-			Shaders::BindShaders(gfx->context.Get(), gfx->vertexShader_2D, gfx->pixelShader_2D);
+			SettingsButtions[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix(), HUDTextRenderer.get());
+			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
 		
 		for (UINT i = 0; i < SettingsDropCount; i++) {
-			SettingsDropdowns[i].Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix(),gfx->textRenderer.get());
-			Shaders::BindShaders(gfx->context.Get(), gfx->vertexShader_2D, gfx->pixelShader_2D);
+			SettingsDropdowns[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix(), HUDTextRenderer.get());
+			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
 		
 		for (UINT i = 0; i < SettingsInputCount; i++) {
-			ControllInput[i].Draw(gfx->context.Get(), gfx->device.Get(), gfx->cb_ps_scene, gfx->cb_vs_matrix_2d, gfx->cameras->GetUICamera().GetWorldOrthoMatrix(), gfx->textRenderer.get());
-			Shaders::BindShaders(gfx->context.Get(), gfx->vertexShader_2D, gfx->pixelShader_2D);
+			ControllInput[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix(), HUDTextRenderer.get());
+			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
 		
 		for (UINT i = 0; i < SettingsText.size(); i++)
 		{
-			gfx->textRenderer->RenderString(SettingsText[i].text, SettingsText[i].position, SettingsText[i].colour);
+			HUDTextRenderer->RenderString(SettingsText[i].text, SettingsText[i].position, SettingsText[i].colour);
 		}
 
 		SettingsText.clear();
@@ -147,20 +148,20 @@ void Custom_UI::GameHUD(Graphics* gfx)
 	switch (gfx->GetCube().GetEditableProperties()->GetToolType())
 	{
 	case ToolType::Convert: {
-		TextFile = "Resources\\Textures\\HUD\\Convert.png";
+		TextFile = "HUD\\Convert.png";
 	}
 	break;
 	case ToolType::Resize: {
-		TextFile = "Resources\\Textures\\HUD\\Resize.png";
+		TextFile = "HUD\\Resize.png";
 	}
 	break;
 	default:
 		TextFile = "";
 		break;
 	}
-
+	//move next to retical
 	HUDImages[0].Function(TextFile, { 50,50 }, { 200, (float)gfx->GetHeight() - 50 });
-	HUDImages[1].Function("Resources\\Textures\\HUD\\crosshair.png", { 16,16 }, { (float)gfx->GetWidth() / 2 - 16 / 2, (float)gfx->GetHeight() / 2 - 16 / 2 });
+	HUDImages[1].Function("HUD\\crosshair.png", { 16,16 }, { (float)gfx->GetWidth() / 2 - 16 / 2, (float)gfx->GetHeight() / 2 - 16 / 2 });
 	HUDHealthWidget.Function(Colour{ 0,0,0 }, Colour{ 255, 0, 0,100 }, "Resources\\Textures\\HUD\\Border_Top.png", { 160,50 }, XMFLOAT2{ 0,(float)gfx->GetHeight() - 100 }, 100);
 	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.png", { 200,50 }, XMFLOAT2{ 0,(float)gfx->GetHeight() - 50 }, energy);
 
@@ -501,7 +502,6 @@ void Custom_UI::PreMenuItems(Graphics* gfx)
 }
 
 
-//TODO Screen Resize 
 
-//TODO MAKE Memory mangment better;
-//TODO Take out draw functions;
+
+

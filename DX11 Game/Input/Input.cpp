@@ -2,13 +2,13 @@
 #include "Input.h"
 #include "CameraMovement.h"
 
-void Input::Initialize( Graphics* gfx, UI* Ui, RenderWindow& window, CameraController* camera, int width, int height )
+void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
 {
 	DisableCursor();
 	this->graphics = gfx;
 	this->cameras = camera;
 	this->renderWindow = window;
-	this->Ui = Ui;
+	
 	mousePick.Initialize( width, height );
 }
 
@@ -35,7 +35,7 @@ void Input::UpdateKeyboard( const float dt )
 	}
 	else
 	{
-		if (!Ui->getCustomUi()->isPaused) {
+		if (!graphics->getUi().getCustomUi()->isPaused) {
 			DisableCursor();
 		}
 		
@@ -68,7 +68,7 @@ void Input::UpdateKeyboard( const float dt )
 	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 	if (keyboard.KeyIsPressed('P')) {
-		Ui->getCustomUi()->isPaused = true;
+		graphics->getUi().getCustomUi()->isPaused = true;
 		EnableCursor();
 	}
 
@@ -100,7 +100,7 @@ void Input::UpdateKeyboard( const float dt )
 
 
 	//ui
-	Ui->getCustomUi()->KeyInput(keyboard.ReadChar());
+	graphics->getUi().getCustomUi()->KeyInput(keyboard.ReadChar());
 	
 }
 
@@ -110,8 +110,7 @@ void Input::UpdateMouse( const float dt )
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
-		graphics->MoucePosX = me.GetPosX();
-		graphics->MoucePosY = me.GetPosY();
+		
 		if ( mouse.IsRightDown() || !cursorEnabled )
 		{
 			// update raw camera movement
@@ -207,11 +206,11 @@ void Input::UpdateMouse( const float dt )
 			//item hits
 			if (mouse.IsLeftDown() && cursorEnabled) {
 
-				Ui->getCustomUi()->MouseInput(me.GetPosX(), me.GetPosY(),true);
+				graphics->getUi().getCustomUi()->MouseInput(me.GetPosX(), me.GetPosY(),true);
 
 			}
 			else {
-				Ui->getCustomUi()->MouseInput(me.GetPosX(), me.GetPosY(),false);
+				graphics->getUi().getCustomUi()->MouseInput(me.GetPosX(), me.GetPosY(),false);
 			}
 			//scroll
 			if (me.GetType() == Mouse::MouseEvent::EventType::WheelUp) {

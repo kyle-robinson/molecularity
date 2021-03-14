@@ -45,11 +45,12 @@ public:
 	CameraController* GetCameraController() const noexcept { return cameras; }
 	Cube& GetCube() noexcept { return cube; }
 
+	UI getUi() const noexcept { return UI_Controllor; }
 
 private:
 	bool InitializeScene();
 	
-	bool IsPuased;
+	UI UI_Controllor;
 
 	// Scene Objects
 	Cube cube;

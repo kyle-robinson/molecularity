@@ -9,26 +9,11 @@ using namespace DirectX;
 using namespace std;
 
 
-enum TabStae {
-	Active,
-	NotActive
-};
-
 typedef enum Tabs {
 	GrapicsTab,
 	GenralTab,
 	SoundTab,
 	ControlsTab
-};
-
-struct ToDraw
-{
-	string Name;
-	XMFLOAT2 pos;
-	XMFLOAT2 size;
-	Colour colour;
-	string texFile;
-
 };
 
 struct textToDraw {
@@ -49,10 +34,10 @@ public:
 	
 	~Custom_UI();
 
-	void Inizalize(Graphics* gfx);
+	void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex);
 
 	//Draw
-	void BeginDraw(Graphics* gfx);
+	void BeginDraw(Graphics* gfx, VertexShader& vert, PixelShader& pix);
 
 	//PreSet UI
 	void MainMenu(Graphics* gfx);
@@ -70,14 +55,23 @@ public:
 		_MouseData.LPress = press;
 	}
 
+
+	void setScreenSize(XMFLOAT2 size) { _SizeOfScreen = size; }
+
+	void setcb_ps_scene(ConstantBuffer<CB_PS_scene>& cb_ps_scene) { _cb_ps_scene = cb_ps_scene; }
+	void setcb_vs_matrix_2d(ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d) {
+		_cb_vs_matrix_2d = cb_vs_matrix_2d;
+		INITWigets();
+	}
+
 	bool isPaused = false;
 	bool isSettings = false;
 
 private:
-	
+	void CleanUp();
 	//pre load
 	void LoadTextures();
-	void INITWigets(Graphics* gfx);
+	void INITWigets();
 	void INITTexRender(Graphics* gfx);
 //vars
 private:
@@ -101,7 +95,7 @@ private:
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
 	Energy_Bar_Widget<Colour, Colour, string> HUDHealthWidget;
 	vector<string> HUDText;
-	TextRenderer HUDTextRenderer;
+	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 
 	//Puase
 	Buttion_Widget PuaseButtions[4];
@@ -134,10 +128,18 @@ private:
 	ColourBlock PreBakgtound;
 	Immage_Widget PremenuImmages[2];
 
-	TextRenderer HeadderTextRenderer;
-	TextRenderer PGTextRenderer;
-	TextRenderer GameTextRenderer;
+	std::shared_ptr<TextRenderer>  HeadderTextRenderer;
+	std::shared_ptr<TextRenderer>  PGTextRenderer;
+	std::shared_ptr<TextRenderer>  GameTextRenderer;
 	
+
+
+	//Grapics Infromation
+	Microsoft::WRL::ComPtr < ID3D11Device>_Device;
+	Microsoft::WRL::ComPtr < ID3D11DeviceContext> _Contex;
+	ConstantBuffer<CB_PS_scene> _cb_ps_scene;
+	ConstantBuffer<CB_VS_matrix_2D> _cb_vs_matrix_2d;
+	XMFLOAT2 _SizeOfScreen;
 };
 
 
