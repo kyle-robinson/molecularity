@@ -249,7 +249,7 @@ void Graphics::Update( const float dt )
 	// update collisions
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		//cubes[i]->CheckCollisionAABB( pressurePlate, dt );
+		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
 		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
 			if ( i != j )
 				cubes[i]->CheckCollisionAABB( cubes[j], dt );

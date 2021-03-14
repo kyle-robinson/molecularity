@@ -48,6 +48,29 @@ void Cube::Update( const float deltaTime ) noexcept
 }
 
 #pragma region Collisions
+void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept
+{
+    static float offset = 2.0f;
+
+    // test collision between cube and given object
+    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + offset && // x collision
+           position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - offset ) &&
+         ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y && // y collision
+           position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y ) &&
+         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + offset && // z collision
+           position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - offset )
+        )
+    {
+        // collision with pressure plate
+        position.y = object.GetPositionFloat3().y + object.GetScaleFloat3().y + 1.0f;
+        physicsModel->SetActivated( true );
+    }
+    else
+    {
+        physicsModel->SetActivated( false );
+    }
+}
+
 void Cube::CheckCollisionAABB( std::shared_ptr<Cube>& object, const float dt ) noexcept
 {
     // adjust x/z collision scaling for pressure plate
