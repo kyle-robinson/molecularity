@@ -16,9 +16,13 @@ class TextRenderer : public GraphicsResource
 {
 public:
 	TextRenderer( GraphicsContainer& gfx );
+	TextRenderer(std::string Font, ID3D11Device* device, ID3D11DeviceContext* contex);
 	void RenderCubeMoveText( Graphics& gfx );
 	void RenderMultiToolText( Graphics& gfx );
 	void RenderCameraText( Graphics& gfx );
+
+	void RenderString(std::string text, XMFLOAT2 position, XMVECTORF32 color);
+
 private:
 	void DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color );
 private:

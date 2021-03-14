@@ -2,12 +2,13 @@
 #include "Input.h"
 #include "CameraMovement.h"
 
-void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
+void Input::Initialize( Graphics* gfx, UI* Ui, RenderWindow& window, CameraController* camera, int width, int height )
 {
 	DisableCursor();
 	this->graphics = gfx;
 	this->cameras = camera;
 	this->renderWindow = window;
+	this->Ui = Ui;
 	mousePick.Initialize( width, height );
 }
 
@@ -21,18 +22,25 @@ void Input::UpdateKeyboard( const float dt )
 {
 	// set camera to use
 	if ( keyboard.KeyIsPressed( VK_F1 ) ) graphics->GetCameraController()->SetIsUsingMain( true );
-	if ( keyboard.KeyIsPressed( VK_F2 ) ) graphics->GetCameraController()->SetIsUsingMain( false );
+	if ( keyboard.KeyIsPressed( VK_F2 ) ) graphics->GetCameraController()->SetIsUsingMain( false);
+
+	
 
 	// set cursor enabled/disabled
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
+		
 		if ( keyboard.KeyIsPressed( VK_HOME ) && !cursorEnabled ) EnableCursor();
 		else if ( keyboard.KeyIsPressed( VK_END ) && cursorEnabled ) DisableCursor();
 	}
 	else
 	{
-		DisableCursor();
+		if (!Ui->getCustomUi()->isPaused) {
+			DisableCursor();
+		}
+		
 	}
+	
 
 	// set which camera for the static camera to look at
 	cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
@@ -59,6 +67,10 @@ void Input::UpdateKeyboard( const float dt )
 	if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 	if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 	if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+	if (keyboard.KeyIsPressed('P')) {
+		Ui->getCustomUi()->isPaused = true;
+		EnableCursor();
+	}
 
 	// set camera speed
 	cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
@@ -85,6 +97,11 @@ void Input::UpdateKeyboard( const float dt )
 	{
 		graphics->GetCube().SetIsHolding( false );
 	}
+
+
+	//ui
+	Ui->getCustomUi()->KeyInput(keyboard.ReadChar());
+	
 }
 
 void Input::UpdateMouse( const float dt )
@@ -93,6 +110,8 @@ void Input::UpdateMouse( const float dt )
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
+		graphics->MoucePosX = me.GetPosX();
+		graphics->MoucePosY = me.GetPosY();
 		if ( mouse.IsRightDown() || !cursorEnabled )
 		{
 			// update raw camera movement
@@ -107,7 +126,7 @@ void Input::UpdateMouse( const float dt )
 				);
 			}
 		}
-
+		
 		// mouse picking
 		mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 
@@ -181,5 +200,28 @@ void Input::UpdateMouse( const float dt )
 				}
 			}
 		}
+
+
+		//UI input
+		
+			//item hits
+			if (mouse.IsLeftDown() && cursorEnabled) {
+
+				Ui->getCustomUi()->MouseInput(me.GetPosX(), me.GetPosY(),true);
+
+			}
+			else {
+				Ui->getCustomUi()->MouseInput(me.GetPosX(), me.GetPosY(),false);
+			}
+			//scroll
+			if (me.GetType() == Mouse::MouseEvent::EventType::WheelUp) {
+				//move up elments
+			}
+			if (me.GetType() == Mouse::MouseEvent::EventType::WheelDown) {
+				//move down elemnts
+			}
+		
+
 	}
+
 }

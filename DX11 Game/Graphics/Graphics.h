@@ -16,6 +16,8 @@
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
 
+#include"UI.h"
+
 class Fog;
 class TextRenderer;
 class PostProcessing;
@@ -42,8 +44,12 @@ public:
 	std::shared_ptr<MultiViewport> GetMultiViewport() const noexcept { return multiViewport; }
 	CameraController* GetCameraController() const noexcept { return cameras; }
 	Cube& GetCube() noexcept { return cube; }
+
+
 private:
 	bool InitializeScene();
+	
+	bool IsPuased;
 
 	// Scene Objects
 	Cube cube;

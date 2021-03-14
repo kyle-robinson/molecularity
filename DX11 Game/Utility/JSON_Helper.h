@@ -22,6 +22,14 @@ namespace JSON
 {
 	typedef std::variant<int, std::string, bool, float, double> DataFromFile;
 	
+	enum SettingType {
+		GenType,
+		SoundType,
+		ControllType,
+		GrapicType,
+		Invalid
+	};
+
 	// Structs to store loaded object data
 	struct ModelData
 	{
@@ -36,6 +44,8 @@ namespace JSON
 	{
 		std::string Name;
 		DataFromFile Setting;
+		SettingType Type;
+
 		// Get Data: get<type>(array_name[Position_in_Array].Setting);
 	};
 
@@ -112,33 +122,33 @@ namespace JSON
 		return document.HasMember( objectName.c_str() );;
 	}
 	// Set string data 
-	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, const std::string& data )
+	template <typename DataFormat> void AddObject(  DataFormat& document, const std::string& a, const std::string& data )
 	{
-		Document document;
-		document[a.c_str()].SetString( data.c_str(), document.GetAllocator() );
+		Document Document;
+		document[a.c_str()].SetString( data.c_str(), Document.GetAllocator() );
 	}
 	// Set int data 
-	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, int data )
+	template <typename DataFormat> void AddObject(  DataFormat& document, const std::string& a, int data )
 	{
-		Document document;
+		Document Document;
 		document[a.c_str()].SetInt( data );
 	}
 	// Set double data 
-	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, double data )
+	template <typename DataFormat> void AddObject(  DataFormat& document, const std::string& a, double data )
 	{
-		Document document;
+		Document Document;
 		document[a.c_str()].SetDouble( data );
 	}
 	// Set float data 
-	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, float data )
+	template <typename DataFormat> void AddObject(  DataFormat& document, const std::string& a, float data )
 	{
-		Document document;
+		Document Document;
 		document[a.c_str()].SetFloat( data );
 	}
 	// Set bool data 
-	template <typename DataFormat> void AddObject( const DataFormat& document, const std::string& a, bool data )
+	template <typename DataFormat> void AddObject(  DataFormat& document, const std::string& a, bool data )
 	{
-		Document document;
+		Document Document;
 		document[a.c_str()].SetBool( data );
 	}
 
@@ -155,7 +165,7 @@ namespace JSON
 			if ( document[node.c_str()].IsArray() )
 			{
 				//load from file
-				for ( Value& Object : document[node.c_str()].GetArray() )
+				for (rapidjson:: Value& Object : document[node.c_str()].GetArray() )
 				{
 					if ( dataNode != "" )
 					{
@@ -166,12 +176,12 @@ namespace JSON
 								if ( Object["Name"].GetString() == dataName )
 								{
 									//chack type
-									AddObject<Value>( Object, dataNode, autoData );
+									AddObject<rapidjson::Value>( Object, dataNode, autoData );
 								}
 							}
 							else
 							{
-								AddObject<Value>( Object, dataNode, autoData );
+								AddObject<rapidjson::Value>( Object, dataNode, autoData );
 							}
 						}
 					}

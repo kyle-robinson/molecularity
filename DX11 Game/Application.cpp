@@ -13,11 +13,15 @@ bool Application::Initialize(
 	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
 	if ( !gfx.Initialize( renderWindow.GetHWND(), &cameras, width, height ) ) return false;
 
+	UiControll.Initialize(renderWindow.GetHWND(),gfx.device.Get() , gfx.context.Get(),&gfx);
+
 	cameras.Initialize( width, height );
-	input.Initialize( &gfx, renderWindow, &cameras, width, height);
+	input.Initialize( &gfx, &UiControll, renderWindow, &cameras, width, height);
 
 	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
 	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f ) ) return false;
+
+
 
 	return true;
 }
@@ -47,6 +51,8 @@ void Application::Render()
 	gfx.BeginFrame();
 	gfx.RenderFrame();
 
+	
 	// Render UI and present the complete frame
+	UiControll.Draw(&gfx);
 	gfx.EndFrame();
 }

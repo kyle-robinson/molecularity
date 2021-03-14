@@ -157,6 +157,7 @@ std::vector<JSON::TextData> JSON::LoadTextDataItems( const std::string& fileName
 std::vector<JSON::SettingData> JSON::LoadSettings()
 {		
 	std::string p;
+	SettingType type;
 	std::vector<SettingData> Settings;
 	Document document = ParseFile( "Settings.json" );
 
@@ -164,6 +165,23 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 	for ( Value::ConstMemberIterator Object = document.MemberBegin();
 		Object != document.MemberEnd(); ++Object ) 
 	{
+		std::string objectName = Object->name.GetString();
+	
+		if (objectName == "Genral") {
+			type = SettingType::GenType;
+		}
+		else if (objectName == "Controlls") {
+			type = SettingType::ControllType;
+		}
+		else if (objectName == "Sound") {
+			type = SettingType::SoundType;
+		}
+		else
+		{
+			type = SettingType::Invalid;
+		}
+		
+
 		if ( Object->value.IsArray() )
 		{
 			for ( Value& GameObject : document[Object->name.GetString()].GetArray() )
@@ -176,6 +194,7 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 					std::string c = itr->name.GetString();
 					Setting.Name = c;
 					Setting.Setting = GetDataAny( itr );
+					Setting.Type =type;
 					Settings.push_back( std::move( Setting ) );
 				}
 			}
@@ -185,6 +204,7 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 			SettingData Setting;
 			Setting.Name = Object->name.GetString();
 			Setting.Setting = GetDataAny(Object);
+			Setting.Type = type;
 			Settings.push_back(Setting);
 		}
 	}
@@ -294,7 +314,10 @@ JSON::DataFromFile JSON::GetDataAny( Value::ConstMemberIterator itr )
 	switch ( itr->value.GetType() )
 	{
 	case( kStringType ):
-		data = itr->value.GetString();
+	{
+		std::string boo = itr->value.GetString();
+		data = boo;
+	}
 		break;
 	case(kNumberType):
 		if ( itr->value.IsInt() )

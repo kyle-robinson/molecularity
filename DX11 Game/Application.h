@@ -6,7 +6,7 @@
 #include "Timer.h"
 #include "Sound.h"
 #include "CameraController.h"
-
+#include"Graphics/UI.h"
 /// <summary>
 /// Calls functions which initialize the window and main graphics components.
 /// Responsible for calling main render/update functions in Graphics.h
@@ -30,6 +30,7 @@ private:
 	Sound sound;
 	Graphics gfx;
 	CameraController cameras;
+	 UI UiControll;
 };
 
 #endif

@@ -31,6 +31,7 @@ namespace Bind
 class GraphicsContainer
 {
 	friend class ImGuiManager;
+
 	friend class StencilOutline;
 	friend class GraphicsResource;
 public:
@@ -38,6 +39,10 @@ public:
 	virtual ~GraphicsContainer( void ) = default;
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
+
+
+	int GetMousePosX() const noexcept { return MoucePosX; }
+	int GetMousePosY() const noexcept { return MoucePosY; }
 protected:
 	// Pipeline Functions
 	bool InitializeGraphics( HWND hWnd, int width, int height );
@@ -55,7 +60,7 @@ public:
 	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }
 	std::shared_ptr<Bind::Viewport> GetViewport( const std::string& vp ) noexcept { return viewports[vp]; }
 	std::shared_ptr<Bind::RenderTarget> GetRenderTarget() noexcept { return renderTarget; }
-protected:
+//protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 
@@ -77,9 +82,12 @@ protected:
 	float alphaFactor = 1.0f;
 	bool rasterizerSolid = true;
 	std::string samplerToUse = "Anisotropic";
+	int MoucePosX, MoucePosY;
 private:
 	UINT windowWidth;
 	UINT windowHeight;
+
+	
 
 	// Viewport/RTT Components
 	QuadFullscreen fullscreen;

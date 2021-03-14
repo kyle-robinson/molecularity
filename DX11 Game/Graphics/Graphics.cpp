@@ -19,6 +19,7 @@ bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int h
 	if ( !InitializeScene() ) return false;
 	this->cameras = camera;
 
+	
 	return true;
 }
 
@@ -56,8 +57,9 @@ bool Graphics::InitializeScene()
 			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
 			// sprites
-			if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
-			crosshair.SetInitialPosition( GetWidth() / 2 - crosshair.GetWidth() / 2, GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
+			//Moved To ui
+			/*if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
+			crosshair.SetInitialPosition( GetWidth() / 2 - crosshair.GetWidth() / 2, GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );*/
 		}
 
 		// SYSTEMS
@@ -166,30 +168,26 @@ void Graphics::RenderFrame()
 	{
 		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
 		{
-			Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
-			cb_ps_scene.data.useTexture = TRUE;
-			if ( !cb_ps_scene.ApplyChanges() ) return;
-			context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-			crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+			
 		}
 	}
 }
 
 void Graphics::EndFrame()
 {
+	
 	// setup RTT and update post-processing
 	RenderSceneToTexture();
 	postProcessing->Bind( *this );
 
-	// update text rendering
-	textRenderer->RenderCubeMoveText( *this );
-	textRenderer->RenderMultiToolText( *this );
-	textRenderer->RenderCameraText( *this );
+	
 
 	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
+		
 		imgui.BeginRender();
+		
 		imgui.SpawnInstructionWindow();
 		imgui.SpawnGraphicsWindow( *this );
 		directionalLight.SpawnControlWindow();
@@ -200,6 +198,8 @@ void Graphics::EndFrame()
 		postProcessing->SpawnControlWindow();
 		imgui.EndRender();
 	}
+
+	
 
 	PresentScene();
 }

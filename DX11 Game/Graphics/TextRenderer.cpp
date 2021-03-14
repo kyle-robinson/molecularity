@@ -9,6 +9,15 @@ TextRenderer::TextRenderer( GraphicsContainer& gfx ) : fileName( L"open_sans_ms_
 		std::wstring( L"Resources\\Fonts\\" ).append( fileName ).c_str() );
 }
 
+TextRenderer::TextRenderer(std::string Font, ID3D11Device* device, ID3D11DeviceContext* contex)
+{
+	fileName = L"open_sans_ms_16.spritefont";
+	spriteBatch = std::make_unique<SpriteBatch>(contex);
+	spriteFont = std::make_unique<SpriteFont>(device,
+		std::wstring(L"Resources\\Fonts\\").append(fileName).c_str());
+}
+
+
 void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color )
 {
 	spriteBatch->Begin();
@@ -25,6 +34,8 @@ void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 			XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
 	}
 }
+
+
 
 void TextRenderer::RenderMultiToolText( Graphics& gfx )
 {
@@ -75,3 +86,11 @@ void TextRenderer::RenderCameraText( Graphics& gfx )
 	DrawString( std::wstring( L"Camera: " ).append( StringConverter::StringToWide( displayText ) ).c_str(),
 		XMFLOAT2( 20.0f, 0.0f ), Colors::IndianRed );
 }
+
+void TextRenderer::RenderString(string text, XMFLOAT2 position, XMVECTORF32 color)
+{
+	wstring String = wstring(text.begin(), text.end());
+	DrawString(String, position, color);
+}
+
+

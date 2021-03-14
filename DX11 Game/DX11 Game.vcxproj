@@ -213,6 +213,15 @@
     <ClCompile Include="Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI\Wigets\Input_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\DropDown_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\Buttion_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\ColourBlock.cpp" />
+    <ClCompile Include="Graphics\Custom_UI.cpp" />
+    <ClCompile Include="Graphics\DIMGUI_UI.cpp" />
     <ClCompile Include="Graphics\Fog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -232,6 +241,8 @@
     <ClCompile Include="Graphics\TextRenderer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Graphics\UI.cpp" />
+    <ClCompile Include="UI\Wigets\Immage_Widget.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
@@ -307,6 +318,7 @@
     </ClCompile>
     <ClCompile Include="Utility\StringConverter.cpp" />
     <ClCompile Include="Utility\Timer.cpp" />
+    <ClCompile Include="UI\Wigets\widget.cpp" />
     <ClCompile Include="Window\RenderWindow.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -327,11 +339,20 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="UI\Wigets\Input_Widget.h" />
+    <ClInclude Include="UI\Wigets\DataSlider_Widget.h" />
+    <ClInclude Include="UI\Wigets\DropDown_Widget.h" />
+    <ClInclude Include="UI\Wigets\PageSlider_Widget.h" />
+    <ClInclude Include="UI\Wigets\Buttion_Widget.h" />
+    <ClInclude Include="UI\Wigets\Energy_Bar_Widget.h" />
+    <ClInclude Include="UI\Wigets\ColourBlock.h" />
     <ClInclude Include="Graphics\Bindables.h" />
     <ClInclude Include="Graphics\Blender.h" />
     <ClInclude Include="Graphics\ConstantBuffer.h" />
     <ClInclude Include="Graphics\ConstantBufferTypes.h" />
+    <ClInclude Include="Graphics\Custom_UI.h" />
     <ClInclude Include="Graphics\DepthStencil.h" />
+    <ClInclude Include="Graphics\DIMGUI_UI.h" />
     <ClInclude Include="Graphics\Fog.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsContainer.h" />
@@ -353,6 +374,7 @@
     <ClInclude Include="Graphics\StencilOutline.h" />
     <ClInclude Include="Graphics\SwapChain.h" />
     <ClInclude Include="Graphics\TextRenderer.h" />
+    <ClInclude Include="Graphics\UI.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\VertexType.h" />
     <ClInclude Include="Graphics\Vertices.h">
@@ -360,6 +382,7 @@
       </ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Graphics\Viewport.h" />
+    <ClInclude Include="UI\Wigets\Immage_Widget.h" />
     <ClInclude Include="Input\CameraMovement.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\Keyboard.h" />
@@ -400,6 +423,8 @@
     <ClInclude Include="Utility\stdafx.h" />
     <ClInclude Include="Utility\StringConverter.h" />
     <ClInclude Include="Utility\Timer.h" />
+    <ClInclude Include="UI\Wigets\widget.h" />
+    <ClInclude Include="UI\WidgetIncludes.h" />
     <ClInclude Include="Window\RenderWindow.h" />
     <ClInclude Include="Window\WindowContainer.h" />
   </ItemGroup>
@@ -494,6 +519,7 @@
     <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
     <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
     <None Include="Resources\JSON\Objects.json" />
+    <None Include="Resources\JSON\Settings.json" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Audio\Music.wav" />

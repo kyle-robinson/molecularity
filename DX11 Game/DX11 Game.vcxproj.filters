@@ -180,6 +180,42 @@
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="UI\Wigets\ColourBlock.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Immage_Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Custom_UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\DIMGUI_UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Buttion_Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Input_Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\DropDown_Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -416,6 +452,45 @@
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="UI\WidgetIncludes.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\ColourBlock.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Energy_Bar_Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Immage_Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Custom_UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\DIMGUI_UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Buttion_Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Input_Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\DataSlider_Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\DropDown_Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\PageSlider_Widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">
@@ -530,6 +605,9 @@
     </None>
     <None Include="Resources\Cursors\NightDiamond\Precision Select.ani">
       <Filter>Resources\Cursors</Filter>
+    </None>
+    <None Include="Resources\JSON\Settings.json">
+      <Filter>Resources\JSON</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -673,6 +751,12 @@
     </Filter>
     <Filter Include="Headers\Physics">
       <UniqueIdentifier>{628a7f71-123c-461e-a692-c582039feecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{b0ade593-24b7-4e39-b726-87b9c102a1be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Widgets">
+      <UniqueIdentifier>{7471133b-23fa-464f-baae-b6d680f9e5f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

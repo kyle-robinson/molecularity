@@ -27,10 +27,12 @@ VS_OUPUT VS( VS_INPUT input )
 
 // pixel shader
 cbuffer ColorBuffer : register( b1 )
-{
+{  
+   
     bool useTexture;
-    float alphaFactor;
+    float alphaFactor; 
     bool useNormalMap;
+   
 }
 
 struct PS_INPUT
@@ -42,10 +44,13 @@ struct PS_INPUT
 Texture2D objTexture : TEXTURE : register( t0 );
 SamplerState samplerState : SAMPLER : register( s0 );
 
-float4 PS( PS_INPUT input ) : SV_TARGET
+float4 PS(PS_INPUT input) : SV_TARGET
 {
-    float4 finalColor = objTexture.Sample( samplerState, input.inTexCoord );
-    if ( useTexture )
-        clip( finalColor.a < 0.6f ? -1 : 1 );
-    return float4( saturate( (float3)finalColor ), alphaFactor );
+    float4 finalColor=objTexture.Sample(samplerState, input.inTexCoord);
+    if (useTexture) {
+ 
+        clip(finalColor.a < 0.6f ? -1 : 1);
+    }
+   
+    return float4( saturate( (float3)finalColor ), alphaFactor);
 }
