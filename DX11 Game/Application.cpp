@@ -19,7 +19,7 @@ bool Application::Initialize(
 	input.Initialize( &gfx, &UiControll, renderWindow, &cameras, width, height);
 
 	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
-	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f ) ) return false;
+	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f , XMFLOAT3(0.0f, 0.0f, 0.0f)) ) return false;
 
 
 
@@ -35,7 +35,8 @@ void Application::Update()
 {
 	float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
 	timer.Restart();
-	input.Update( dt );
+	sound.UpdateListenerPos(cameras.GetCamera(cameras.GetCurrentCamera())->GetPositionFloat3());
+	input.Update( dt , sound);
 	gfx.Update( dt );
 }
 

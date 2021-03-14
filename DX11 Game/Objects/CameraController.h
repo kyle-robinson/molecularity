@@ -27,6 +27,8 @@ public:
 	JSON::CameraType GetCurrentCamera() const noexcept { return cameraToUse; }
 
 	Camera2D GetUICamera() const noexcept { return UICamera; }
+
+	void CollisionResolution( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept;
 private:
 	Camera2D UICamera;
 	bool usingMainCamera = true;

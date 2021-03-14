@@ -1,4 +1,5 @@
 #include "RenderableGameObject.h"
+#include "PhysicsModel.h"
 #include "Camera.h"
 
 bool RenderableGameObject::Initialize(
@@ -9,6 +10,8 @@ bool RenderableGameObject::Initialize(
 {
 	if ( !model.Initialize( filePath, device, context, cb_vs_vertexshader ) )
 		return false;
+
+	physicsModel = std::make_shared<PhysicsModel>( this );
 
 	SetPosition( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
 	SetRotation( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );

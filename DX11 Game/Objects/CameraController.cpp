@@ -20,3 +20,15 @@ void CameraController::Update()
 	//Currently forms nothing of value since cameras arent doing anything by themselves. 
 	//In the future will need cameras to passively connect themselves to the player (default) which can be done here / in the player
 }
+
+void CameraController::CollisionResolution( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept
+{
+	float dx = world.GetPositionFloat3().x - camera->GetPositionFloat3().x;
+	float dz = world.GetPositionFloat3().z - camera->GetPositionFloat3().z;
+	float length = std::sqrtf( dx * dx + dz * dz );
+	dx /= length;
+	dz /= length;
+	dx *= camera->GetCameraSpeed() * dt;
+	dz *= camera->GetCameraSpeed() * dt;
+	camera->AdjustPosition( dx, 0.0f, dz );
+}
