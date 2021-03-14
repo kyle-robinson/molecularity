@@ -40,6 +40,30 @@ public:
 	{
 		cam->AdjustPosition( cam->GetUpVector() * -cam->GetCameraSpeed() * dt );
 	}
+
+	static void Jump( std::unique_ptr<Camera>& cam, bool& jumping, const float dt )
+	{
+		static int maxValue = 25;
+		static int counter = maxValue;
+		jumping = true;
+
+		if ( counter > 0 )
+		{
+			cam->AdjustPosition( cam->GetUpVector() * cam->GetCameraSpeed() * dt );
+		}
+		else if ( counter < 0 && counter > -maxValue )
+		{
+			cam->AdjustPosition( cam->GetUpVector() * -cam->GetCameraSpeed() * dt );
+		}
+
+		if ( counter < -maxValue )
+		{
+			jumping = false;
+			counter = maxValue;
+		}
+
+		counter--;
+	}
 };
 
 #endif
