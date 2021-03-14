@@ -83,6 +83,11 @@ void Input::UpdateKeyboard( const float dt )
 			graphics->GetCube()[i]->SetIsHolding( false );
 		}
 	}
+
+	if ( keyboard.KeyIsPressed( VK_RIGHT ) )
+		graphics->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
+	if ( keyboard.KeyIsPressed( VK_LEFT ) )
+		graphics->GetCube()[0]->GetPhysicsModel()->AddForce( { -0.1f, 0.0f, 0.0f } );
 }
 
 void Input::UpdateMouse( const float dt )

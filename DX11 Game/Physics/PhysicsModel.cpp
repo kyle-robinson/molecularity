@@ -16,21 +16,21 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 
 void PhysicsModel::Update( const float dt )
 {
-	if ( !mActivated )
+	/*if ( !mActivated )
 	{
-		Weight();
-		Acceleration();
-		Friction( dt );
-		Velocity( dt );
-		Drag();
-		ComputePosition( dt );
-		CheckFloorCollisions();
 	}
 	else
 	{
 		mVelocity = { 0.0f, 0.0f, 0.0f };
 		mAcceleration = { 0.0f, 0.0f, 0.0f };
-	}
+	}*/
+	Weight();
+	Acceleration();
+	Friction( dt );
+	Velocity( dt );
+	Drag();
+	ComputePosition( dt );
+	CheckFloorCollisions();
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 }
@@ -38,7 +38,7 @@ void PhysicsModel::Update( const float dt )
 void PhysicsModel::Weight()
 {
 	mWeight = mMass * mGravity;
-	mNetForce.y -= mWeight;
+	mNetForce.y -= mWeight * 0.001f;
 }
 
 void PhysicsModel::Acceleration()

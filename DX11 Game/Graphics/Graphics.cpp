@@ -232,6 +232,7 @@ void Graphics::Update( const float dt )
 	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
 		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
 
+	// update cubes
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
 		// update cube scale multiplier
@@ -243,10 +244,15 @@ void Graphics::Update( const float dt )
 
 		// update objects
 		cubes[i]->Update( dt );
-		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
+	}
+
+	// update collisions
+	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	{
+		//cubes[i]->CheckCollisionAABB( pressurePlate, dt );
 		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
 			if ( i != j )
-				cubes[i]->CheckCollisionAABB( *cubes[j], dt );
+				cubes[i]->CheckCollisionAABB( cubes[j], dt );
 	}
 
 	// set position of spot light model
