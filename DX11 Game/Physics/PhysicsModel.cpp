@@ -3,7 +3,7 @@
 
 PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 {
-	mMass = 50.0f;
+	mMass = 25.0f;
 	mActivated = false;
 	mUseLaminar = true;
 	mPosition = mTransform->GetPositionFloat3();

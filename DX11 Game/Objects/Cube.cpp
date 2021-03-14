@@ -101,7 +101,7 @@ void Cube::CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) 
     force.z = object->GetPositionFloat3().z - GetPositionFloat3().z;
 
     force.x = physicsModel->Normalization( force ).x * forceMagnitude * 0.015f;
-    force.y = physicsModel->Normalization( force ).y * forceMagnitude * 0.015f;
+    force.y = physicsModel->Normalization( force ).y * forceMagnitude * 0.175f;
     force.z = physicsModel->Normalization( force ).z * forceMagnitude * 0.015f;
 
     XMFLOAT3 force2 = {

@@ -39,7 +39,8 @@ namespace JSON
 		// Get Data: get<type>(array_name[Position_in_Array].Setting);
 	};
 
-	struct TextData {
+	struct TextData
+	{
 		std::string Name;
 		std::string Text;
 		// Add more data here e.g. position
@@ -52,7 +53,8 @@ namespace JSON
 		Debug
 	};
 
-	struct CameraData {
+	struct CameraData
+	{
 		std::string Name;
 		std::string type;
 		XMFLOAT3 Position;
@@ -70,20 +72,20 @@ namespace JSON
 		std::string Name;
 	};
 	
-	//load GameObjects get all data
+	// load GameObjects get all data
 	std::vector<ModelData> LoadGameObjects( const std::string& fileName );
 
-	//need to implment ligte data loading
+	// need to implement light data loading
 	//vector<LightData> LoadGameLights( const std::string& fileName );
 
-	//load text data get all data
+	// load text data get all data
 	std::vector<TextData> LoadTextDataItems( const std::string& fileName );
 	
-	//Load Setting Files get all data
+	// Load Setting Files get all data
 	std::vector<SettingData> LoadSettings();
 	
 
-	// Load one Node as string to be reworeked
+	// Load one Node as string to be reworked
 	// vector<string> LoadJSONNode( const std::string& jsonFile, const std::string& node, const std::string& dataNode = "" );
 
 	// Load all Nodes
