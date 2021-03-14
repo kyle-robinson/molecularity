@@ -64,9 +64,17 @@ void Input::UpdateKeyboard( const float dt )
 		if ( keyboard.KeyIsPressed( '1' ) ) graphics->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
 		if ( keyboard.KeyIsPressed( '2' ) ) graphics->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
 
+		// ensure another cube is not already being held
+		float alreadyHeld = false;
+		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
+			if ( i != j && graphics->GetCube()[j]->GetIsHolding() == true )
+				alreadyHeld = true;
+
 		// pick-up cube - set position relative to camera.
-		if ( keyboard.KeyIsPressed( 'E' ) && graphics->GetCube()[i]->GetIsInRange() &&
-			( graphics->GetCube()[i]->GetIsHovering() || graphics->GetCube()[i]->GetIsHolding() ) )
+		if ( keyboard.KeyIsPressed( 'E' ) && !alreadyHeld &&
+			 graphics->GetCube()[i]->GetIsInRange() &&
+			( graphics->GetCube()[i]->GetIsHovering() ||
+			  graphics->GetCube()[i]->GetIsHolding() ) )
 		{
 			graphics->GetCube()[i]->SetIsHolding( true );
 			XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
