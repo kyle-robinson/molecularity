@@ -38,7 +38,7 @@ void SpotLight::SpawnControlWindow()
 		ImGui::ColorEdit3( "Colour", &color.x );
 		ImGui::SliderFloat( "Cone", &cone, 5.0f, 40.0f, "%1.f" );
 		ImGui::SliderFloat( "Range", &range, 500.0f, 10000.0f, "%10.f" );
-		ImGui::SliderFloat( "Intensity", &strength, 0.1f, 1.0f, "%.1f" );
+		ImGui::SliderFloat( "Intensity", &strength, 0.1f, 2.0f, "%.1f" );
 	}
 	ImGui::End();
 }

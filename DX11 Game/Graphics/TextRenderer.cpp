@@ -28,10 +28,13 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 
 void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 {
-	if ( gfx.GetCube().GetIsInRange() && gfx.GetCube().GetIsHovering() && !gfx.GetCube().GetIsHolding() )
+	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		DrawString( L"Press 'E' to pick up cube.",
-			XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
+		if ( gfx.GetCube()[i]->GetIsInRange() && gfx.GetCube()[i]->GetIsHovering() && !gfx.GetCube()[i]->GetIsHolding() )
+		{
+			DrawString( L"Press 'E' to pick up cube.",
+				XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
+		}
 	}
 }
 
@@ -39,36 +42,39 @@ void TextRenderer::RenderCubeMoveText( Graphics& gfx )
 
 void TextRenderer::RenderMultiToolText( Graphics& gfx )
 {
-	if ( gfx.GetCube().GetEditableProperties()->GetToolType() == ToolType::Convert )
+	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-		static std::wstring boxType;
-		switch ( gfx.GetCube().GetEditableProperties()->GetMaterialID() )
+		if ( gfx.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
 		{
-		case 0: boxType = L"Default Box"; break;
-		case 1: boxType = L"Bounce Box"; break;
-		case 2: boxType = L"Jump Box"; break;
-		case 3: boxType = L"TNT Box"; break;
+			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
+
+			static std::wstring boxType;
+			switch ( gfx.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
+			{
+			case 0: boxType = L"Default Box"; break;
+			case 1: boxType = L"Bounce Box"; break;
+			case 2: boxType = L"Jump Box"; break;
+			case 3: boxType = L"TNT Box"; break;
+			}
+
+			DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
+				XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
 		}
-
-		DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-			XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
-	}
-	else if ( gfx.GetCube().GetEditableProperties()->GetToolType() == ToolType::Resize )
-	{
-		DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-		static std::wstring sizeType;
-		switch ( gfx.GetCube().GetEditableProperties()->GetSizeID() )
+		else if ( gfx.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
 		{
-		case 0: sizeType = L"Shrink Ray"; break;
-		case 1: sizeType = L"Reset Ray"; break;
-		case 2: sizeType = L"Growth Ray"; break;
-		}
+			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
-		DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-			XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
+			static std::wstring sizeType;
+			switch ( gfx.GetCube()[i]->GetEditableProperties()->GetSizeID() )
+			{
+			case 0: sizeType = L"Shrink Ray"; break;
+			case 1: sizeType = L"Reset Ray"; break;
+			case 2: sizeType = L"Growth Ray"; break;
+			}
+
+			DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
+				XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
+		}
 	}
 }
 

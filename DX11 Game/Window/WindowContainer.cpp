@@ -32,33 +32,24 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 
 	switch ( uMsg )
 	{
+#pragma region Default
 	case WM_ACTIVATE:
 		if ( !cursorEnabled )
 		{
 			if ( wParam & WA_ACTIVE )
-			{
-				ConfineCursor();
-				HideCursor();
-			}
+				DisableCursor();
 			else
-			{
-				FreeCursor();
-				ShowCursor();
-			}
+				EnableCursor();
 		}
 		return 0;
-	case WM_PAINT:
-		HDC hdc;
-		PAINTSTRUCT ps;
-        hdc = BeginPaint( hWnd, &ps );
-        EndPaint( hWnd, &ps );
-		return 0;
+
     case WM_DESTROY:
 		DestroyWindow( hWnd );
 		PostQuitMessage( 0 );
 		exit( -1 );
+#pragma endregion
 
-	// Keyboard Events
+#pragma region Keyboard
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	{
@@ -76,14 +67,13 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		switch ( wParam )
 		{
 		case VK_ESCAPE:
-			
-				DestroyWindow(renderWindow.GetHWND());
-				PostQuitMessage(0);
-			
+			DestroyWindow( renderWindow.GetHWND() );
+			PostQuitMessage( 0 );
 			return 0;
 		}
 		return 0;
 	}
+
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 	{
@@ -93,6 +83,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		keyboard.OnKeyReleased( keycode );
 		return 0;
 	}
+
 	case WM_CHAR:
 	{
 		if ( imio.WantCaptureKeyboard )
@@ -108,7 +99,9 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return 0;
 	}
-	// Mouse Events
+#pragma endregion
+
+#pragma region Mouse
 	case WM_MOUSEMOVE:
 	{
 		int x = LOWORD( lParam );
@@ -149,6 +142,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return 0;
 	}
+
 	case WM_LBUTTONDOWN:
 	{
 		SetForegroundWindow( renderWindow.GetHWND() );
@@ -167,6 +161,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return 0;
 	}
+
 	case WM_LBUTTONUP:
 	{
 		SetCursor( renderWindow.hCursorNightNormal );
@@ -185,6 +180,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return 0;
 	}
+
 	case WM_RBUTTONDOWN:
 	{
 		if ( imio.WantCaptureMouse )
@@ -195,6 +191,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		mouse.OnRightPressed( x, y );
 		return 0;
 	}
+
 	case WM_RBUTTONUP:
 	{		
 		if ( imio.WantCaptureMouse )
@@ -212,6 +209,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return 0;
 	}
+
 	case WM_MBUTTONDOWN:
 	{
 		if ( imio.WantCaptureMouse )
@@ -221,6 +219,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		mouse.OnMiddlePressed( x, y );
 		return 0;
 	}
+
 	case WM_MBUTTONUP:
 	{
 		if ( imio.WantCaptureMouse )
@@ -230,6 +229,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		mouse.OnMiddleReleased( x, y );
 		return 0;
 	}
+
 	case WM_MOUSEWHEEL:
 	{
 		if ( imio.WantCaptureMouse )
@@ -246,6 +246,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return 0;
 	}
+
 	case WM_INPUT:
 	{
 		UINT dataSize = 0u;
@@ -264,11 +265,13 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return DefWindowProc( hWnd, uMsg, wParam, lParam );
 	}
+#pragma endregion
 	default:
 		return DefWindowProc( hWnd, uMsg, wParam, lParam );
 	}
 }
 
+#pragma region Cursor
 void WindowContainer::EnableCursor() noexcept
 {
 	cursorEnabled = true;
@@ -317,3 +320,4 @@ void WindowContainer::DisableImGuiMouse() noexcept
 {
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
+#pragma endregion
