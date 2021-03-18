@@ -44,7 +44,7 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 
 void Cube::Update( const float deltaTime ) noexcept
 {
-    if ( !isHeld ) physicsModel->Update( deltaTime / 10.0f );
+    if ( !isHeld ) physicsModel->Update( deltaTime / 20.0f );
 }
 
 #pragma region Collisions
