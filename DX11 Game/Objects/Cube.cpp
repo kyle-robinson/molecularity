@@ -44,21 +44,26 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 
 void Cube::Update( const float deltaTime ) noexcept
 {
-    if ( !isHeld ) physicsModel->Update( deltaTime / 1000.0f );
+    if ( !isHeld ) physicsModel->Update( deltaTime / 20.0f );
 }
 
 #pragma region Collisions
 void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept
 {
-    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + 2.0f && // x collision
-           position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - 2.0f ) &&
-           position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y && // y collision
-         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + 2.0f && // z collision
-           position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - 2.0f )
+    static float offset = 2.0f;
+
+    // test collision between cube and given object
+    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + offset && // x collision
+           position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - offset ) &&
+         ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y && // y collision
+           position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y ) &&
+         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + offset && // z collision
+           position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - offset )
         )
     {
-        physicsModel->SetActivated( true );
+        // collision with pressure plate
         position.y = object.GetPositionFloat3().y + object.GetScaleFloat3().y + 1.0f;
+        physicsModel->SetActivated( true );
     }
     else
     {
@@ -66,12 +71,46 @@ void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) no
     }
 }
 
-void Cube::CollisionResolution( RenderableGameObject& object, const float dt ) noexcept
+void Cube::CheckCollisionAABB( std::shared_ptr<Cube>& object, const float dt ) noexcept
 {
-    physicsModel->SetVelocity( {
-        physicsModel->GetVelocity().x,
-        -physicsModel->GetVelocity().y,
-        physicsModel->GetVelocity().x
-    } );
+    // adjust x/z collision scaling for pressure plate
+    static float offset = 0.5f;
+
+    // test collision between cube and given object
+    if ( ( position.x - offset <= object->GetPositionFloat3().x + offset && // x collision
+           position.x + offset >= object->GetPositionFloat3().x - offset ) &&
+         ( position.y - offset <= object->GetPositionFloat3().y + offset && // y collision
+           position.y + offset >= object->GetPositionFloat3().y - offset ) &&
+         ( position.z - offset <= object->GetPositionFloat3().z + offset && // z collision
+           position.z + offset >= object->GetPositionFloat3().z - offset )
+        )
+    {
+        CollisionResolution( object, dt );
+    }
+}
+
+void Cube::CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) noexcept
+{
+    float velocityOne = std::max( physicsModel->Magnitude( physicsModel->GetNetForce() ), 1.0f );
+    float velocityTwo = std::max( object->GetPhysicsModel()->Magnitude( object->GetPhysicsModel()->GetNetForce() ), 1.0f );
+
+    float forceMagnitude = ( physicsModel->GetMass() * velocityOne + object->GetPhysicsModel()->GetMass() * velocityTwo ) / dt;
+    XMFLOAT3 force;
+    force.x = object->GetPositionFloat3().x - GetPositionFloat3().x;
+    force.y = object->GetPositionFloat3().y - GetPositionFloat3().y;
+    force.z = object->GetPositionFloat3().z - GetPositionFloat3().z;
+
+    force.x = physicsModel->Normalization( force ).x * forceMagnitude * 0.015f;
+    force.y = physicsModel->Normalization( force ).y * forceMagnitude * 0.175f;
+    force.z = physicsModel->Normalization( force ).z * forceMagnitude * 0.015f;
+
+    XMFLOAT3 force2 = {
+        -force.x,
+        -force.y,
+        -force.z,
+    };
+
+    physicsModel->AddForce( force2 );
+    object->GetPhysicsModel()->AddForce( force );
 }
 #pragma endregion

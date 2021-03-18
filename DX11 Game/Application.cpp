@@ -10,12 +10,15 @@ bool Application::Initialize(
 {
 	timer.Start();
 
+	// graphics
 	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
 	if ( !gfx.Initialize( renderWindow.GetHWND(), &cameras, width, height ) ) return false;
 
+	// input
 	cameras.Initialize( width, height );
-	input.Initialize( &gfx, renderWindow, &cameras, width, height);
+	input.Initialize( &gfx, renderWindow, &cameras, width, height );
 
+	// sound
 	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
 	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f , XMFLOAT3(0.0f, 0.0f, 0.0f)) ) return false;
 
