@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Input.h"
+#include "Sound.h"
 #include "CameraMovement.h"
 
 void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
@@ -15,11 +16,9 @@ void Input::Update( const float dt, Sound sound )
 {
 	UpdateKeyboard( dt );
 	UpdateMouse( dt );
-	
-	if (keyboard.KeyIsPressed('B'))
-	{
-		sound.PlayWavFile(COLLISION_SOUND, 1.0f, graphics->GetCube().GetPositionFloat3());
-	}
+
+	if ( keyboard.KeyIsPressed( 'B' ) )
+		sound.PlayWavFile( COLLISION_SOUND, 1.0f, graphics->GetCube()[0]->GetPositionFloat3() );
 }
 
 void Input::UpdateKeyboard( const float dt )
@@ -42,11 +41,6 @@ void Input::UpdateKeyboard( const float dt )
 				// set cursor enabled/disabled
 				if ( keycode == VK_HOME && !cursorEnabled ) EnableCursor();
 				else if ( keycode == VK_END && cursorEnabled ) DisableCursor();
-			}
-			// set options for default camera
-			else
-			{
-				
 			}
 		}
 

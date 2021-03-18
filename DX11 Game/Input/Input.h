@@ -5,6 +5,7 @@
 #include "Graphics.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
+class Sound;
 
 /// <summary>
 /// Handles user input by update keyboard and mouse events.
