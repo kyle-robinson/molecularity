@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Sound.h"
+#include "..//Input//CameraMovement.h"
 
 Sound::Sound()
 {
@@ -117,6 +118,8 @@ bool Sound::InitialiseSoundFiles()
 	result = LoadWavFile( "Resources\\Audio\\MonoShot.wav", &_secondaryBuffer[SHOT_SOUND], &_secondary3DBuffer[SHOT_SOUND] );
 	if ( !result ) return false;
 
+	result = LoadWavFile( "Resources\\Audio\\Collision.wav", &_secondaryBuffer[COLLISION_SOUND], &_secondary3DBuffer[COLLISION_SOUND] );
+	if ( !result ) return false;
 
 	return true;
 }
@@ -263,7 +266,7 @@ void Sound::CloseWavFile(IDirectSoundBuffer8** secondaryBuffer, IDirectSound3DBu
 /// <param name="positionX">- X position for 3D sound clip -</param>
 /// <param name="positionY">- Y position for 3D sound clip -</param>
 /// <param name="position|">- Z position for 3D sound clip -</param>
-bool Sound::PlayWavFile(int num, float volume, float posX, float posY, float posZ)
+bool Sound::PlayWavFile(int num, float volume, XMFLOAT3 soundPos)
 {
 	HRESULT result;
 
@@ -275,8 +278,15 @@ bool Sound::PlayWavFile(int num, float volume, float posX, float posY, float pos
 		result = _secondaryBuffer[num]->SetVolume(DSBVOLUME_MIN + (10000 * volume));
 		COM_ERROR_IF_FAILED(result, "Failed to set the volume!");
 
-		result = _secondary3DBuffer[num]->SetPosition(posX, posY, posZ, DS3D_IMMEDIATE);
+		result = _secondary3DBuffer[num]->SetPosition(soundPos.x - camPosX, soundPos.y - camPosY, soundPos.z - camPosZ, DS3D_IMMEDIATE);
 		COM_ERROR_IF_FAILED(result, "Failed to set the position of the 3D secondary buffer!");
+
+		std::string tempMessage = std::to_string(camPosX);
+		char sz[1024] = { 0 };
+		tempMessage = tempMessage + "\n";
+		const char* c = tempMessage.c_str();
+		sprintf_s(sz, c);
+		OutputDebugStringA(sz);
 
 		result = _secondaryBuffer[num]->Play(0, 0, 0);
 		COM_ERROR_IF_FAILED(result, "Failed to play the sound from the secondary buffer!");

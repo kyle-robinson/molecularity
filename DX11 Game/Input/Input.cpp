@@ -11,10 +11,15 @@ void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* c
 	mousePick.Initialize( width, height );
 }
 
-void Input::Update( const float dt )
+void Input::Update( const float dt, Sound sound )
 {
 	UpdateKeyboard( dt );
 	UpdateMouse( dt );
+	
+	if (keyboard.KeyIsPressed('B'))
+	{
+		sound.PlayWavFile(COLLISION_SOUND, 1.0f, graphics->GetCube().GetPositionFloat3());
+	}
 }
 
 void Input::UpdateKeyboard( const float dt )
