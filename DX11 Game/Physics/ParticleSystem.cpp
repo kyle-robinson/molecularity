@@ -1,30 +1,52 @@
 #include "stdafx.h"
 #include "ParticleSystem.h"
 
-ParticleSystem::ParticleSystem( std::shared_ptr<RenderableGameObject> parent, int maxParticles, float particleSize )
-	: mParent( parent )
+ParticleSystem::ParticleSystem(GameObject* parent, int maxParticles) : mParent(parent), mMaxParticles(maxParticles)
 {
-	for ( unsigned int i = 0; i < maxParticles; i++ )
-		mParticles.push_back( std::make_shared<Particle>( this ) );
+	
 }
 
-ParticleSystem::ParticleSystem( XMMATRIX position, int maxParticles, float particleSize )
-	: mPosition( position )
+ParticleSystem::ParticleSystem(int maxParticles) : mMaxParticles(maxParticles)
 {
 	mParent = nullptr;
+}
 
-	for ( unsigned int i = 0; i < maxParticles; i++ )
-		mParticles.push_back( std::make_shared<Particle>( this ) );
+ParticleSystem::~ParticleSystem()
+{
+	
 }
 
 void ParticleSystem::Draw()
 {
-	for( const auto &particle : mParticles )
-		particle->Draw();
+	for(auto &particle : mParticles)
+	{
+		particle.Draw();
+	}
 }
 
-void ParticleSystem::Update( const float dt )
+void ParticleSystem::Update(float t)
 {
-	for ( const auto &particle : mParticles )
-		particle->Update( dt );
+	for (auto &particle : mParticles)
+	{
+		particle.Update(t);
+	}
+}
+
+void ParticleSystem::CreateParticles(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix> cb, int num, std::string filePath, XMFLOAT3 rotation, XMFLOAT3 scale, XMFLOAT3 color, float mass, float lifeSpan)
+{
+	for (int i = 0; i < num; i++)
+	{
+		if (mParticles.size() >= mMaxParticles)
+		{
+			return;
+		}
+
+		Particle particle = Particle(this, color, mass, lifeSpan);
+		particle.Initialize(filePath, device, context, cb);
+		particle.SetInitialPosition(this->GetPositionFloat3());
+		particle.SetInitialRotation(rotation);
+		particle.SetInitialScale(scale);
+
+		mParticles.push_back(particle);
+	}
 }

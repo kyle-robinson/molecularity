@@ -2,25 +2,23 @@
 #ifndef PARTICLEMANAGER_H
 #define PARTICLEMANAGER_H
 
+#include <vector>
 #include "ParticleSystem.h"
 
-/// <summary>
-/// Manages the created particle systems.
-/// Contains functions to enable/disable systems individually.
-/// </summary>
 class ParticleManager
 {
 public:
 	ParticleManager();
-	virtual ~ParticleManager() = default;
+	~ParticleManager();
 
-	void CreateParticleSystem();
+	void CreateParticleSystem(GameObject* parent, int maxParticles);
+	void CreateParticleSystem(int maxParticles);
 	void RemoveParticleSystem();
 
 	void EnableParticleSystem();
 	void DisableParticleSystem();
 
-	std::vector<std::shared_ptr<ParticleSystem>> GetParticleSystems() const noexcept { return mParticleSystems; }
+	std::vector<std::shared_ptr<ParticleSystem>> GetParticleSystems() const { return mParticleSystems; }
 private:
 	std::vector<std::shared_ptr<ParticleSystem>> mParticleSystems;
 };

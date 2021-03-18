@@ -2,27 +2,34 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
+#include "RenderableGameObject.h"
+#include "Timer.h"
 #include "ParticleSystem.h"
-class ParticleSystem;
 
-/// <summary>
-/// Create, modify and render a particle.
-/// Positions are derived from given particle system.
-/// </summary>
-class Particle
+using namespace DirectX;
+
+class Particle : public RenderableGameObject
 {
 public:
-	Particle( ParticleSystem* system );
-	virtual ~Particle() = default;
+	Particle(ParticleSystem* parentSystem, XMFLOAT3 color, float mass, float lifeSpan);
+	~Particle();
 
 	void Draw();
-	void Update( const float dt );
+	void Update(float t);
 
-	XMMATRIX GetPosition() const noexcept { return mPosition; }
-	void SetPosition( XMMATRIX pos ) noexcept { mPosition = pos;  }
+	void EnableParticle() { mIsDisabled = false; }
+	void DisableParticle() { mIsDisabled = true; }
+	void ResetParticlePosition();
+
 private:
-	std::shared_ptr<ParticleSystem> mParentSystem;
-	XMMATRIX mPosition = XMMatrixIdentity();
+	//components
+	std::shared_ptr<GameObject> mParent;
+
+	//properties
+	XMFLOAT3 mColor;
+	float mLifeSpan;
+	Timer mCurrentLife;
+	bool mIsDisabled = false;
 };
 
 #endif

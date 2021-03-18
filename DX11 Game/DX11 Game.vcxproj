@@ -148,6 +148,7 @@
       <OpenMPSupport>false</OpenMPSupport>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\Github\directx-game\DX11 Game\Window;D:\Github\directx-game\DX11 Game\Utility;D:\Github\directx-game\DX11 Game\Physics;D:\Github\directx-game\DX11 Game\Objects;D:\Github\directx-game\DX11 Game\Model;D:\Github\directx-game\DX11 Game\Input;D:\Github\directx-game\DX11 Game\Graphics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -293,7 +294,6 @@
     <ClCompile Include="Physics\Particle.cpp" />
     <ClCompile Include="Physics\ParticleManager.cpp" />
     <ClCompile Include="Physics\ParticleSystem.cpp" />
-    <ClCompile Include="Physics\ParticleTransform.cpp" />
     <ClCompile Include="Physics\PhysicsModel.cpp" />
     <ClCompile Include="Utility\Collisions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -388,7 +388,6 @@
     <ClInclude Include="Physics\Particle.h" />
     <ClInclude Include="Physics\ParticleManager.h" />
     <ClInclude Include="Physics\ParticleSystem.h" />
-    <ClInclude Include="Physics\ParticleTransform.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Utility\Billboard.h" />
