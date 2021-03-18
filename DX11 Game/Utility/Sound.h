@@ -40,9 +40,17 @@ public:
 
 	bool Initialize( HWND );
 	bool PlayWavFile( int, float, XMFLOAT3 );
+	bool PlayWavFile( int, float );
 	void Close();
 
 	void UpdateListenerPos(XMFLOAT3 pos) { camPosX = pos.x; camPosY = pos.y; camPosZ = pos.z; }
+
+	enum SOUND_NAMES
+	{
+		MAIN_MUSIC = 0,
+		SHOT_SOUND,
+		COLLISION_SOUND
+	};
 
 private:
 	bool InitializeDirectSound( HWND );
@@ -50,7 +58,9 @@ private:
 
 	bool InitialiseSoundFiles();
 
-	bool LoadWavFile( const char*, IDirectSoundBuffer8**, IDirectSound3DBuffer8** );
+	bool Load2DWavFile(const char*, IDirectSoundBuffer8**);
+	bool Load3DWavFile( const char*, IDirectSoundBuffer8**, IDirectSound3DBuffer8** );
+
 	void CloseWavFile( IDirectSoundBuffer8**, IDirectSound3DBuffer8** );
 
 	IDirectSound8* _directSound;
@@ -58,18 +68,11 @@ private:
 
 	IDirectSound3DListener8* _listener;
 
+	// Make sure the size of the array keeps up with the sound names enum
+	IDirectSoundBuffer8* _secondaryBuffer[10]; //Stores the loaded sounds
+	IDirectSound3DBuffer8* _secondary3DBuffer[10]; //Stores the 3D info for loaded sounds
+
 	float camPosX, camPosY, camPosZ;
-};
-
-// Make sure the size of the array keeps up with the sound names enum
-static IDirectSoundBuffer8* _secondaryBuffer[10]; //Stores the loaded sounds
-static IDirectSound3DBuffer8* _secondary3DBuffer[10]; //Stores the 3D info for loaded sounds
-
-enum SOUND_NAMES
-{
-	MAIN_MUSIC = 0,
-	SHOT_SOUND,
-	COLLISION_SOUND
 };
 
 #endif
