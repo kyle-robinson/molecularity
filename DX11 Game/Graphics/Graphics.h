@@ -15,6 +15,7 @@
 #include "DirectionalLight.h"
 #include "GraphicsContainer.h"
 #include <dxtk/WICTextureLoader.h>
+#include "ObjectManager.h"
 
 class Fog;
 class TextRenderer;
@@ -30,7 +31,7 @@ class Graphics : public GraphicsContainer
 	friend class Application;
 public:
 	virtual ~Graphics( void ) = default;
-	bool Initialize( HWND hWnd, CameraController* camera, int width, int height );
+	bool Initialize( HWND hWnd, CameraController* cameraController, ObjectManager* objectManager, int width, int height );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -41,15 +42,18 @@ public:
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<MultiViewport> GetMultiViewport() const noexcept { return multiViewport; }
 	CameraController* GetCameraController() const noexcept { return cameras; }
-	Cube& GetCube() noexcept { return cube; }
+	ObjectManager* GetObjects() const noexcept { return objects; }
+	//Cube& GetCube() noexcept { return cube; }
 private:
 	bool InitializeScene();
 
 	// Scene Objects
-	Cube cube;
-	Quad simpleQuad;
+	//Cube cube;
+	//Quad simpleQuad;
 	Sprite crosshair;
 	CameraController* cameras;
+
+	ObjectManager* objects;
 	RenderableGameObject hubRoom;
 	RenderableGameObject skysphere;
 

@@ -11,10 +11,10 @@ bool Application::Initialize(
 	timer.Start();
 
 	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
-	if ( !gfx.Initialize( renderWindow.GetHWND(), &cameras, width, height ) ) return false;
+	if ( !gfx.Initialize( renderWindow.GetHWND(), &cameras,&objects, width, height ) ) return false;
 
 	cameras.Initialize( width, height );
-	input.Initialize( &gfx, renderWindow, &cameras, width, height);
+	input.Initialize( &gfx, renderWindow, &cameras,&objects, width, height);
 
 	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
 	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f ) ) return false;
@@ -33,6 +33,7 @@ void Application::Update()
 	timer.Restart();
 	input.Update( dt );
 	gfx.Update( dt );
+	objects.Update(dt);
 }
 
 void Application::Render()

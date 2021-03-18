@@ -13,7 +13,7 @@
 class Input : public WindowContainer
 {
 public:
-	void Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height );
+	void Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, ObjectManager* objects, int width, int height );
 	void Update( const float dt );
 private:
 	void UpdateKeyboard( const float dt );
@@ -22,6 +22,7 @@ private:
 	MousePicking mousePick;
 	Graphics* graphics;
 	CameraController* cameras;
+	ObjectManager* objects;
 };
 
 #endif

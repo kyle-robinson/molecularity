@@ -12,12 +12,13 @@
 #include "PostProcessing.h"
 #include "StencilOutline.h"
 
-bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int height )
+bool Graphics::Initialize( HWND hWnd, CameraController* cameraController,ObjectManager* objectManager, int width, int height )
 {
 	if ( !InitializeGraphics( hWnd, width, height ) ) return false;
 	imgui.Initialize( hWnd, device.Get(), context.Get() );
 	if ( !InitializeScene() ) return false;
-	this->cameras = camera;
+	this->cameras = cameraController;
+	this->objects = objectManager;
 
 	return true;
 }
@@ -28,7 +29,13 @@ bool Graphics::InitializeScene()
 	{
 		// DRAWABLES
 		{
+
+
+			objects->LoadScene(device.Get(), context.Get(), cb_vs_matrix);
+
+
 			// models
+
 			if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
 			hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 
@@ -47,13 +54,13 @@ bool Graphics::InitializeScene()
 			if ( !spotLight.Initialize( *this, cb_vs_matrix ) ) return false;
 			spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
-			// primitives
-			if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
-			cube.SetInitialPosition( 0.0f, 10.0f, -6.0f );
+			//// primitives
+			//if ( !cube.Initialize( context.Get(), device.Get() ) ) return false;
+			//cube.SetInitialPosition( 0.0f, 10.0f, -6.0f );
 
-			if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
-			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
-			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
+			//if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
+			//simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
+			//simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
 			// sprites
 			if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
@@ -145,21 +152,23 @@ void Graphics::RenderFrame()
 
 	// DRAWABLES
 	{
-		hubRoom.Draw();
+		objects->Draw(cb_vs_matrix);
+
+		//hubRoom.Draw();
 
 		// w/ normal maps
-		simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
+		//simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
 
 		// w/ stencils
-		if ( cube.GetIsHovering() )
-		{
-			stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix,
-				pointLight.GetConstantBuffer(), boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
-		}
-		else
-		{
-			cube.Draw( cb_vs_matrix, boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
-		}
+		//if ( cube.GetIsHovering() )
+		//{
+		//	stencilOutline->DrawWithOutline( *this, cube, cb_vs_matrix,
+		//		pointLight.GetConstantBuffer(), boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
+		//}
+		//else
+		//{
+		//	cube.Draw( cb_vs_matrix, boxTextures[cube.GetEditableProperties()->GetBoxType()].Get() );
+		//}
 	}
 
 	// SPRITES
@@ -225,16 +234,14 @@ void Graphics::Update( const float dt )
 		cameras->GetCamera( JSON::CameraType::Default )->AdjustPosition( dx, 0.0f, dz );
 	}
 
-	// update cube scale multiplier
-	if ( cube.GetEditableProperties()->GetToolType() == ToolType::Resize )
-		cube.SetScale( static_cast<float>( cube.GetEditableProperties()->GetSizeMultiplier() ) );
-
-	// cube range collision check
-	cube.SetIsInRange( Collisions::CheckCollisionSphere( cameras->GetCamera( cameras->GetCurrentCamera() ), cube, 5.0f ) );
+	for (auto cube : objects->GetCubes())
+	{
+		// cube range collision check. Will have to be changed in the future probably.
+		cube->SetIsInRange(Collisions::CheckCollisionSphere(cameras->GetCamera(cameras->GetCurrentCamera()),*cube, 5.0f));
+	}
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
 
-	//update object physics
-	cube.UpdatePhysics( dt );
+
 }

@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "Sound.h"
 #include "CameraController.h"
+#include "ObjectManager.h"
 
 /// <summary>
 /// Calls functions which initialize the window and main graphics components.
@@ -30,6 +31,7 @@ private:
 	Sound sound;
 	Graphics gfx;
 	CameraController cameras;
+	ObjectManager objects;
 };
 
 #endif

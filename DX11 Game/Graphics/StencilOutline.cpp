@@ -29,7 +29,7 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, Cube& cube, Consta
 {
 	// write pixels to the buffer, which will act as the stencil mask
 	GetStencil( gfx, "Write" )->Bind( gfx );
-	cube.Draw( cb_vs_matrix, texture );
+	cube.Draw( cb_vs_matrix );
 
 	// scale the cube and draw the stencil outline, ignoring the pixels previously written to the buffer
 	cb_ps_outline.data.outlineColor = color;
@@ -42,7 +42,7 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, Cube& cube, Consta
 		cube.GetScaleFloat3().y + scale,
 		cube.GetScaleFloat3().z + scale
 	);
-	cube.Draw( cb_vs_matrix, texture );
+	cube.Draw( cb_vs_matrix );
 
 	// rescale the cube and draw using the appropriate shaders and textures
 	if ( !cb_ps_point.ApplyChanges() ) return;
@@ -54,7 +54,7 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, Cube& cube, Consta
 		cube.GetScaleFloat3().z - scale
 	);
 	GetStencil( gfx, "Off" )->Bind( gfx );
-	cube.Draw( cb_vs_matrix, texture );
+	cube.Draw( cb_vs_matrix );
 }
 
 void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point )

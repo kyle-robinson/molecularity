@@ -5,6 +5,9 @@
 #include "RenderableGameObject.h"
 #include "CubeProperties.h"
 #include "PhysicsModel.h"
+#include "JSON_Helper.h"
+#include <map>
+#include "Texture.h"
 
 /// <summary>
 /// Create a simple cube object.
@@ -14,7 +17,7 @@ class Cube : public RenderableGameObject
 {
 public:
 	bool Initialize( ID3D11DeviceContext* context, ID3D11Device* device );
-	void Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept;
+	void Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix ) noexcept;
 	
 	// Getters
 	bool GetIsHolding() const noexcept { return isHeld; }
@@ -25,7 +28,8 @@ public:
 	void SetIsHolding( bool isHolding ) noexcept { isHeld = isHolding; }
 	void SetIsHovering( bool hover ) noexcept { cubeHover = hover; }
 	void SetIsInRange( bool range ) noexcept { cubeInRange = range; }
-
+	void AddNewTexture(BoxType type, std::wstring path, ID3D11Device* device);
+	
 	void UpdatePhysics( const float deltaTime ) noexcept;
 	std::shared_ptr<CubeProperties> GetEditableProperties() const noexcept { return editableProperties; }
 private:
@@ -38,6 +42,8 @@ private:
 	bool isHeld = false;
 	bool cubeHover = false;
 	bool cubeInRange = false;
+
+	std::map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> textures; //MAKE TEXTURES OWNED BY OBJECTS NEXT
 };
 
 #endif

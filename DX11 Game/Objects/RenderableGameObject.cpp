@@ -1,6 +1,11 @@
 #include "RenderableGameObject.h"
 #include "Camera.h"
 
+RenderableGameObject::RenderableGameObject()
+{
+
+}
+
 bool RenderableGameObject::Initialize(
 	const std::string& filePath,
 	ID3D11Device* device,

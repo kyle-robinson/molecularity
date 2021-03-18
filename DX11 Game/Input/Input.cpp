@@ -2,7 +2,7 @@
 #include "Input.h"
 #include "CameraMovement.h"
 
-void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
+void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera,ObjectManager* objects, int width, int height )
 {
 	DisableCursor();
 	this->graphics = gfx;
@@ -63,27 +63,33 @@ void Input::UpdateKeyboard( const float dt )
 	// set camera speed
 	cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
 
-	// set multi-tool type
-	if ( keyboard.KeyIsPressed( '1' ) ) graphics->GetCube().GetEditableProperties()->SetToolType( ToolType::Convert );
-	if ( keyboard.KeyIsPressed( '2' ) ) graphics->GetCube().GetEditableProperties()->SetToolType( ToolType::Resize );
+	//Also super messy because dont want to confuse the system using multiple cubes for now
+	Cube* cubez = objects->GetCubes()[0];
 
-	// pick-up cube - set position relative to camera.
-	if ( keyboard.KeyIsPressed( 'E' ) && graphics->GetCube().GetIsInRange() &&
-		( graphics->GetCube().GetIsHovering() || graphics->GetCube().GetIsHolding() ) )
+	// set multi-tool type
+	if ( keyboard.KeyIsPressed( '1' ) ) cubez->GetEditableProperties()->SetToolType( ToolType::Convert );
+	if ( keyboard.KeyIsPressed( '2' ) ) cubez->GetEditableProperties()->SetToolType( ToolType::Resize );
+
+	for (auto cube : objects->GetCubes())
 	{
-		graphics->GetCube().SetIsHolding( true );
-		XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
-		cubePosition += cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() * 2;
-		graphics->GetCube().SetPosition( cubePosition );
-		graphics->GetCube().SetRotation(
-			graphics->GetCube().GetRotationFloat3().x,
-			cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y,
-			graphics->GetCube().GetRotationFloat3().z
-		);
-	}
-	else
-	{
-		graphics->GetCube().SetIsHolding( false );
+		// pick-up cube - set position relative to camera.
+		if (keyboard.KeyIsPressed('E') && cube->GetIsInRange() &&
+			(cube->GetIsHovering() || cube->GetIsHolding()))
+		{
+			cube->SetIsHolding(true);
+			XMVECTOR cubePosition = cameras->GetCamera(cameras->GetCurrentCamera())->GetPositionVector();
+			cubePosition += cameras->GetCamera(cameras->GetCurrentCamera())->GetForwardVector() * 2;
+			cube->SetPosition(cubePosition);
+			cube->SetRotation(
+				cube->GetRotationFloat3().x,
+				cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().y,
+				cube->GetRotationFloat3().z
+			);
+		}
+		else
+		{
+			cube->SetIsHolding(false);
+		}
 	}
 }
 
@@ -111,72 +117,81 @@ void Input::UpdateMouse( const float dt )
 		// mouse picking
 		mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 
-		if ( mousePick.TestIntersection( graphics->GetWidth() / 2, graphics->GetHeight() / 2, graphics->GetCube() ) )
-			graphics->GetCube().SetIsHovering( true );
-		else
-			graphics->GetCube().SetIsHovering( false );
+		//Super messy because dont want to confuse the system using multiple cubes for now
+		Cube* cubez = objects->GetCubes()[0];
+
+
+		for (auto cube : objects->GetCubes())
+		{
+			if (mousePick.TestIntersection(graphics->GetWidth() / 2, graphics->GetHeight() / 2, *cube))
+				cube->SetIsHovering(true);
+			else
+				cube->SetIsHovering(false);
+		}
+
+
 
 		// manage multi-tool options
-		if ( graphics->GetCube().GetEditableProperties()->GetToolType() == ToolType::Convert )
+		if ( cubez->GetEditableProperties()->GetToolType() == ToolType::Convert )
 		{
 			// change current id of texture to be used on box
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
-				graphics->GetCube().GetEditableProperties()->GetMaterialID() < 3 )
+				cubez->GetEditableProperties()->GetMaterialID() < 3 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetMaterialID(
-					graphics->GetCube().GetEditableProperties()->GetMaterialID() + 1
+				cubez->GetEditableProperties()->SetMaterialID(
+					cubez->GetEditableProperties()->GetMaterialID() + 1
 				);
 			}
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
-				graphics->GetCube().GetEditableProperties()->GetMaterialID() > 0 )
+				cubez->GetEditableProperties()->GetMaterialID() > 0 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetMaterialID(
-					graphics->GetCube().GetEditableProperties()->GetMaterialID() - 1
+				cubez->GetEditableProperties()->SetMaterialID(
+					cubez->GetEditableProperties()->GetMaterialID() - 1
 				);
 			}
 
 			// update box texture on click while hovering
-			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube().GetIsHovering() )
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && cubez->GetIsHovering() )
 			{
-				graphics->GetCube().GetEditableProperties()->SetBoxType(
-					static_cast<BoxType>( graphics->GetCube().GetEditableProperties()->GetMaterialID() )
+				cubez->GetEditableProperties()->SetBoxType(
+					static_cast<BoxType>(cubez->GetEditableProperties()->GetMaterialID() )
 				);
 			}
 		}
-		else if ( graphics->GetCube().GetEditableProperties()->GetToolType() == ToolType::Resize )
+		else if (cubez->GetEditableProperties()->GetToolType() == ToolType::Resize )
 		{
 			// set size multiplier to be applied to the box
 			if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
-				graphics->GetCube().GetEditableProperties()->GetSizeID() < 2 )
+				cubez->GetEditableProperties()->GetSizeID() < 2 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetSizeID(
-					graphics->GetCube().GetEditableProperties()->GetSizeID() + 1
+				cubez->GetEditableProperties()->SetSizeID(
+					cubez->GetEditableProperties()->GetSizeID() + 1
 				);
 			}
 			else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
-				graphics->GetCube().GetEditableProperties()->GetSizeID() > 0 )
+				cubez->GetEditableProperties()->GetSizeID() > 0 )
 			{
-				graphics->GetCube().GetEditableProperties()->SetSizeID(
-					graphics->GetCube().GetEditableProperties()->GetSizeID() - 1
+				cubez->GetEditableProperties()->SetSizeID(
+					cubez->GetEditableProperties()->GetSizeID() - 1
 				);
 			}
 
 			// set the box scale to use based on the option previously selected
-			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube().GetIsHovering() )
+			if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && cubez->GetIsHovering() )
 			{
-				switch ( graphics->GetCube().GetEditableProperties()->GetSizeID() )
+				switch (cubez->GetEditableProperties()->GetSizeID() )
 				{
 				case 0:
-					graphics->GetCube().GetEditableProperties()->SetSizeMultiplier( 0.5f );
-					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Small );
+					cubez->GetEditableProperties()->SetSizeMultiplier( 0.5f );
+					cubez->GetEditableProperties()->SetBoxSize( BoxSize::Small );
 					break;
 				case 1:
-					graphics->GetCube().GetEditableProperties()->SetSizeMultiplier( 1.0f );
-					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Normal );
+					cubez->GetEditableProperties()->SetSizeMultiplier( 1.0f );
+					cubez->GetEditableProperties()->SetBoxSize( BoxSize::Normal );
 					break;
 				case 2:
-					graphics->GetCube().GetEditableProperties()->SetSizeMultiplier( 2.0f );
-					graphics->GetCube().GetEditableProperties()->SetBoxSize( BoxSize::Large );
+					cubez->GetEditableProperties()->SetSizeMultiplier( 2.0f );
+					cubez->GetEditableProperties()->SetBoxSize( BoxSize::Large );
 					break;
 				}
 			}

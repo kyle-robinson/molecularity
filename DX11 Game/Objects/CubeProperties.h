@@ -2,7 +2,7 @@
 #ifndef CUBEPROPERTIES_H
 #define CUBEPROPERTIES_H
 
-enum class ToolType
+enum class ToolType //this is a horrible place for this. The tool is its own entity and will be moving as soon we have a 3d model for the tool
 {
 	Convert,
 	Resize

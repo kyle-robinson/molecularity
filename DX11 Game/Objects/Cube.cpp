@@ -1,6 +1,8 @@
 #include "Cube.h"
 #include "Indices.h"
 #include "Vertices.h"
+#include <dxtk/WICTextureLoader.h>
+#include <dxtk/DDSTextureLoader.h>
 
 bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
 {
@@ -15,6 +17,7 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
         
         editableProperties = std::make_shared<CubeProperties>();
         physicsModel = std::make_shared<PhysicsModel>( this );
+        type = objectType::EditableCube;
 
         SetPosition( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
 	    SetRotation( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
@@ -26,16 +29,17 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
         ErrorLogger::Log( exception );
         return false;
     }
-    
+
     return true;
 }
 
-void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept
+void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix) noexcept
 {
 	UINT offset = 0;
     context->IASetVertexBuffers( 0, 1, vb_cube.GetAddressOf(), vb_cube.StridePtr(), &offset );
     context->IASetIndexBuffer( ib_cube.Get(), DXGI_FORMAT_R16_UINT, 0 );
-    context->PSSetShaderResources( 0, 1, &texture );
+  
+    context->PSSetShaderResources( 0, 1, &textures[editableProperties->GetBoxType()]);
     cb_vs_matrix.data.worldMatrix = XMMatrixIdentity() * worldMatrix;
     if ( !cb_vs_matrix.ApplyChanges() ) return;
     context->VSSetConstantBuffers( 0, 1, cb_vs_matrix.GetAddressOf() );
@@ -46,4 +50,10 @@ void Cube::UpdatePhysics( const float deltaTime ) noexcept
 {
     if ( !isHeld )
         physicsModel->Update( deltaTime / 1000.0f );
+}
+
+void Cube::AddNewTexture(BoxType type, std::wstring path, ID3D11Device* device)
+{
+    const wchar_t* temp = path.c_str();
+    HRESULT hr = CreateWICTextureFromFile(device, temp, nullptr, textures[type].GetAddressOf());
 }

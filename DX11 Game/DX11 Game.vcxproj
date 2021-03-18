@@ -275,6 +275,7 @@
     <ClCompile Include="Objects\Light.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Objects\ObjectManager.cpp" />
     <ClCompile Include="Objects\PointLight.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -380,6 +381,7 @@
     <ClInclude Include="Objects\GameObject2D.h" />
     <ClInclude Include="Objects\GameObject3D.h" />
     <ClInclude Include="Objects\Light.h" />
+    <ClInclude Include="Objects\ObjectManager.h" />
     <ClInclude Include="Objects\PointLight.h" />
     <ClInclude Include="Objects\Quad.h" />
     <ClInclude Include="Objects\RenderableGameObject.h" />
