@@ -20,7 +20,7 @@ bool Application::Initialize(
 
 	// sound
 	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
-	if ( !sound.PlayWavFile( MAIN_MUSIC, 0.75f, { 0.0f, 0.0f, 0.0f } ) ) return false;
+	if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.75f ) ) return false;
 
 	return true;
 }
