@@ -18,7 +18,7 @@ void Input::Update( const float dt, Sound sound )
 	UpdateMouse( dt );
 
 	if ( keyboard.KeyIsPressed( 'B' ) )
-		sound.PlayWavFile( COLLISION_SOUND, 1.0f, graphics->GetCube()[0]->GetPositionFloat3() );
+		sound.PlayWavFile( sound.COLLISION_SOUND, 1.0f, graphics->GetCube()[0]->GetPositionFloat3() );
 }
 
 void Input::UpdateKeyboard( const float dt )
