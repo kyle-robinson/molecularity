@@ -52,6 +52,19 @@ void Input::UpdateKeyboard( const float dt )
 				if ( keycode == '2' ) graphics->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
 			}
 		}
+		//UI
+		{
+			graphics->GetUi().getCustomUi()->KeyInput(keyboard.ReadChar());
+			if (keycode == 'P') {
+				graphics->GetUi().getCustomUi()->isPaused = true;
+				EnableCursor();
+			}
+			if (!graphics->GetUi().getCustomUi()->isPaused&& cameras->GetCurrentCamera() != JSON::CameraType::Debug) {
+				DisableCursor();
+			}
+
+		}
+
 	}
 #pragma endregion
 
@@ -170,6 +183,7 @@ void Input::UpdateMouse( const float dt )
 		{
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
+			mousePick.SetWidthHight(renderWindow.GetWidth(), renderWindow.GetHeight());
 
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
@@ -250,6 +264,19 @@ void Input::UpdateMouse( const float dt )
 				}
 #pragma endregion
 			}
+		}
+		//UI input
+		{
+			bool Rpress=false;
+			bool Lpress = false;
+			if (mouse.IsRightDown()&& cursorEnabled) {
+				Rpress = true;
+			}
+			if (mouse.IsLeftDown()&& cursorEnabled) {
+				Lpress = true;
+			}
+			graphics->GetUi().getCustomUi()->MouseInput(me.GetPosX(),me.GetPosY(), Lpress);
+
 		}
 	}
 }

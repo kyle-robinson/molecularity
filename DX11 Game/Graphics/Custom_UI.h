@@ -64,6 +64,9 @@ public:
 		INITWigets();
 	}
 
+	bool GetIsPaused() { return isPaused; }
+	void SetIsPuased(bool pause) { isPaused = pause; }
+
 	bool isPaused = false;
 	bool isSettings = false;
 
@@ -91,10 +94,10 @@ private:
 	//Set Up Widgets
 
 	//HUD
-	Immage_Widget HUDImages[2];
+	Immage_Widget HUDImages[3];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
 	Energy_Bar_Widget<Colour, Colour, string> HUDHealthWidget;
-	vector<string> HUDText;
+	vector<textToDraw> HUDText;
 	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 
 	//Puase

@@ -40,6 +40,12 @@ public:
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
 	
+	void UpdateWidthHight(UINT Width, UINT Hight) { 
+		windowWidth = Width;
+		windowHeight = Hight;
+	}
+
+
 protected:
 	// Pipeline Functions
 	bool InitializeGraphics( HWND hWnd, int width, int height );
@@ -79,12 +85,10 @@ protected:
 	float alphaFactor = 1.0f;
 	bool rasterizerSolid = true;
 	std::string samplerToUse = "Anisotropic";
-	int MoucePosX, MoucePosY;
+	
 private:
 	UINT windowWidth;
 	UINT windowHeight;
-
-	
 
 	// Viewport/RTT Components
 	QuadFullscreen fullscreen;

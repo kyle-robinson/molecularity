@@ -4,6 +4,7 @@
 #include <DirectXCollision.h>
 
 
+
 //load all textures here
 void Custom_UI::LoadTextures()
 {
@@ -18,7 +19,7 @@ void Custom_UI::INITWigets()
 	//HUD
 	HUDenergyWidget.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	HUDHealthWidget.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
-	for (unsigned int i = 0; i < 2; i++)
+	for (unsigned int i = 0; i < 3; i++)
 	{
 		HUDImages[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	}
@@ -48,7 +49,7 @@ void Custom_UI::INITWigets()
 
 void Custom_UI::INITTexRender(Graphics* gfx)
 {
-	HUDTextRenderer = make_shared<TextRenderer>("",_Device.Get(),_Contex.Get());
+	HUDTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont",_Device.Get(),_Contex.Get());
 }
 
 Custom_UI::Custom_UI()
@@ -76,14 +77,23 @@ void Custom_UI::BeginDraw(Graphics* gfx, VertexShader& vert,PixelShader& pix)
 	//Hud
 
 	if (!isSettings) {
-		HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
-		HUDHealthWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
-		HUDImages[0].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
+
+		HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
+		HUDHealthWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
+		HUDImages[0].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
 	
-		for (unsigned int i = 0; i < 2; i++)
+		for (unsigned int i = 0; i < 3; i++)
 		{
-			HUDImages[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
+			HUDImages[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
 		}
+		for (UINT i = 0; i < HUDText.size(); i++)
+		{
+			HUDTextRenderer->RenderString(HUDText[i].text, HUDText[i].position, HUDText[i].colour);
+			Shaders::BindShaders(_Contex.Get(), vert, pix);
+		}
+		HUDTextRenderer->RenderCubeMoveText(*gfx);
+		Shaders::BindShaders(_Contex.Get(), vert, pix);
+		HUDText.clear();
 	}
 	if (!isSettings&& isPaused) {
 		PuaseBakgtound.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
@@ -138,33 +148,54 @@ void Custom_UI::MainMenu(Graphics* gfx)
 	
 }
 //test values
-static int energy = 25;
-
+static int energy = 100;
+//game Hud
 void Custom_UI::GameHUD(Graphics* gfx)
 {
 	
-	//tool type
+	//tool type ui change
 	string TextFile;
-	switch (gfx->GetCube().GetEditableProperties()->GetToolType())
+	string ToolInformationTexture="";
+	switch (gfx->GetCube()[0]->GetEditableProperties()->GetToolType())
 	{
 	case ToolType::Convert: {
 		TextFile = "HUD\\Convert.png";
+		switch (gfx->GetCube()[0]->GetEditableProperties()->GetMaterialID())
+		{
+			case 0: ToolInformationTexture = "crates\\basic_crate.png"; break;
+			case 1: ToolInformationTexture = "crates\\bounce_crate.png"; break;
+			case 2: ToolInformationTexture = "crates\\arrow_crate.png"; break;
+			case 3: ToolInformationTexture = "crates\\tnt_crate.png"; break;
+		}
 	}
 	break;
 	case ToolType::Resize: {
 		TextFile = "HUD\\Resize.png";
+		switch (gfx->GetCube()[0]->GetEditableProperties()->GetSizeID())
+		{
+			case 0: ToolInformationTexture = "HUD\\ResizeTool_Down.png"; break;
+			case 1: ToolInformationTexture = "HUD\\ResizeTool_Reset.png"; break;
+			case 2: ToolInformationTexture = "HUD\\ResizeTool_UP.png"; break;
+		}
 	}
 	break;
 	default:
 		TextFile = "";
 		break;
 	}
-	//move next to retical
-	HUDImages[0].Function(TextFile, { 50,50 }, { 200, (float)gfx->GetHeight() - 50 });
-	HUDImages[1].Function("HUD\\crosshair.png", { 16,16 }, { (float)gfx->GetWidth() / 2 - 16 / 2, (float)gfx->GetHeight() / 2 - 16 / 2 });
+
+	HUDImages[2].Function(ToolInformationTexture, { 100,100 }, { (float)gfx->GetWidth() - 200, (float)gfx->GetHeight()  - 100 });
+	HUDImages[0].Function(TextFile, { 100,100 }, { (float)gfx->GetWidth()-100, (float)gfx->GetHeight()-100 });
+	//crosshair
+	HUDImages[1].Function("HUD\\Cosshair_V2_60x60.png", { 60,60 }, { (float)gfx->GetWidth() / 2 - 60 / 2, (float)gfx->GetHeight() / 2 - 60 / 2 });
+	//bar data
 	HUDHealthWidget.Function(Colour{ 0,0,0 }, Colour{ 255, 0, 0,100 }, "Resources\\Textures\\HUD\\Border_Top.png", { 160,50 }, XMFLOAT2{ 0,(float)gfx->GetHeight() - 100 }, 100);
 	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.png", { 200,50 }, XMFLOAT2{ 0,(float)gfx->GetHeight() - 50 }, energy);
-
+	textToDraw hudtext;
+	hudtext.text = to_string(HUDenergyWidget.GetCurrentPercent()) + "%";
+	hudtext.colour = DirectX::Colors::Black;
+	hudtext.position = { (float)gfx->GetWidth() / 2 - 22 , (float)gfx->GetHeight() / 2 +7};
+	HUDText.push_back(hudtext);
 	
 }
 
@@ -255,8 +286,32 @@ void Custom_UI::Settings(Graphics* gfx)
 						TextToDraw.text = to_string(*input);
 						SettingsText.push_back(TextToDraw);
 					}
+					else if (bool* input = std::get_if<bool>(&_SettingsData[i].Setting)) {
+						if (!*input) {
+							SettingsDropdowns[SettingsDropCount].setCurrent(1);
+						}
+						SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
+						if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
+							_SettingsData[i].Setting = false;
+						}
+						else
+						{
+							_SettingsData[i].Setting = true;
 
+						}
+						SettingsDropCount++;
 
+					}
+					else if (string* input = std::get_if<string>(&_SettingsData[i].Setting)) {
+
+						vector<string>Language = { "Eng", "Fr","" };
+						SettingsDropdowns[SettingsDropCount].Function(Language, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
+						_SettingsData[i].Setting = SettingsDropdowns[SettingsDropCount].getSelected();
+						
+						
+						SettingsDropCount++;
+
+					}
 
 					currentY += 50;
 				}
@@ -273,24 +328,11 @@ void Custom_UI::Settings(Graphics* gfx)
 			SettingsText.push_back(TextToDraw);
 
 			float currentY = 200;
-			bool colou = true;
+			
 
 			for (int i = 0; i < _SettingsData.size(); i++) {
 				if (_SettingsData[i].Type == JSON::SettingType::SoundType) {
-					Colour a;
-					XMVECTORF32 b;
-					if (colou) {
-						a = { 255,255,255 };
-						b = Colors::Black;
-						colou = false;
-					}
-					else
-					{
-						a = { 0,0,0 };
-						b = Colors::White;
-						colou = true;
-					}
-
+					
 					TextToDraw.colour = Colors::Black;
 					TextToDraw.position = { 10,currentY };
 					TextToDraw.text = _SettingsData[i].Name;
@@ -367,8 +409,11 @@ void Custom_UI::Settings(Graphics* gfx)
 							string controll = get<string>(_SettingsData[i].Setting);
 							ControllInput[SettingsInputCount].setCurrentText(controll);
 							ControllInput[SettingsInputCount].Function({ 100, 30 }, { 200,currentY }, { 0,0,0 }, Key, _MouseData);
-							_SettingsData[i].Setting = ControllInput[SettingsInputCount].getCurrentText();
-
+							string output = ControllInput[SettingsInputCount].getCurrentText();
+							
+								output=toupper(output[0]);
+							
+							_SettingsData[i].Setting = output;
 							SettingsInputCount++;
 						}
 						currentY += 40;
@@ -459,7 +504,7 @@ void Custom_UI::Pause(Graphics* gfx)
 		PuaseBakgtound.Function({ 0,0,0 }, { (float)gfx->GetWidth(),(float)gfx->GetHeight() }, { 0,0 }, 0.7f);
 
 		//Buttions
-		PuaseButtions[0].Function("Play", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0,  100 }, _MouseData);
+		PuaseButtions[0].Function("Play", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0, 100 }, _MouseData);
 		PuaseButtions[1].Function("Reset", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0,  200 }, _MouseData);
 		PuaseButtions[2].Function("Settings", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0,  300 }, _MouseData);
 		PuaseButtions[3].Function("Exit", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0,  400 }, _MouseData);

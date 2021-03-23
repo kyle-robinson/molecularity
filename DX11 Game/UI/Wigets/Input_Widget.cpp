@@ -51,6 +51,7 @@ void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colou
 		MData.Pos.y <= (pos.y + size.y)) {
 		if (MData.LPress) {
 			Selcted = true;
+			CurrentText = "";
 		}
 		
 	}

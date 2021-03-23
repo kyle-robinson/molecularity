@@ -11,10 +11,13 @@ TextRenderer::TextRenderer( GraphicsContainer& gfx ) : fileName( L"open_sans_ms_
 
 TextRenderer::TextRenderer(std::string Font, ID3D11Device* device, ID3D11DeviceContext* contex)
 {
-	fileName = L"open_sans_ms_16.spritefont";
+	
+	fileName = wstring(Font.begin(),Font.end());
 	spriteBatch = std::make_unique<SpriteBatch>(contex);
 	spriteFont = std::make_unique<SpriteFont>(device,
 		std::wstring(L"Resources\\Fonts\\").append(fileName).c_str());
+
+	
 }
 
 

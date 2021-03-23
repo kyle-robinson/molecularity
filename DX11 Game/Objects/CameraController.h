@@ -29,6 +29,12 @@ public:
 	Camera2D GetUICamera() const noexcept { return UICamera; }
 
 	void CollisionResolution( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept;
+
+	//fix to update ui cam
+	void UpDateUICamValues(float width, float height, float nearZ, float farZ) {
+		UICamera.SetProjectionValues(width, height, nearZ, farZ);
+	}
+
 private:
 	Camera2D UICamera;
 	bool usingMainCamera = true;

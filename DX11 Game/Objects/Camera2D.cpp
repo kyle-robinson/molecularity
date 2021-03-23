@@ -11,7 +11,9 @@ Camera2D::Camera2D()
 
 void Camera2D::SetProjectionValues( float width, float height, float nearZ, float farZ )
 {
+
 	orthoMatrix = XMMatrixOrthographicOffCenterLH( 0.0f, width, height, 0.0f, nearZ, farZ );
+	
 }
 
 const XMMATRIX& Camera2D::GetOrthoMatrix() const noexcept

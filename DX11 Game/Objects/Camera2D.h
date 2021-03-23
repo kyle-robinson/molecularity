@@ -16,10 +16,15 @@ public:
 	const XMMATRIX& GetOrthoMatrix() const noexcept;
 	const XMMATRIX& GetWorldMatrix() const noexcept;
 	const XMMATRIX& GetWorldOrthoMatrix() const noexcept;
+
+	
+
 private:
 	void UpdateMatrix() override;
 	XMMATRIX orthoMatrix;
 	XMMATRIX worldMatrix;
+
+	
 };
 
 #endif

@@ -261,4 +261,5 @@ void Graphics::Update( const float dt )
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
+	
 }

@@ -27,6 +27,9 @@ public:
 	UINT GetWidth() const noexcept { return static_cast<UINT>( width ); };
 	UINT GetHeight() const noexcept { return static_cast<UINT>( height ); };
 
+	void SetWidthHight(UINT Width, UINT Hight) { width = Width; height = Hight; }
+
+
 	HCURSOR hCursorNormal = NULL;
 	HCURSOR hCursorNightNormal = NULL;
 	HCURSOR hCursorNightSelect = NULL;

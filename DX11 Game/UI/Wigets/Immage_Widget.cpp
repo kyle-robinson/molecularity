@@ -28,7 +28,7 @@ bool Immage_Widget::Function(string texture, DirectX::XMFLOAT2 size, DirectX::XM
 
 bool Immage_Widget::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
-	_Immage.Initialize(Device, Contex, _Size.x, _Size.y, "Resources\\Textures\\HUD\\crosshair.png", cb_vs_matrix_2d);
+	_Immage.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
 	return true;
 }
 
