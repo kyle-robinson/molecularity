@@ -120,19 +120,7 @@
     <ClCompile Include="Input\MousePicking.cpp">
       <Filter>Source\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\Particle.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\PhysicsModel.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\ParticleManager.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\ParticleSystem.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\ParticleTransform.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Objects\PointLight.cpp">
@@ -179,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\External\imgui\imgui_plot.cpp">
+      <Filter>Resources\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -332,18 +323,6 @@
     <ClInclude Include="Input\MousePicking.h">
       <Filter>Headers\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\Particle.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\ParticleManager.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\ParticleSystem.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\ParticleTransform.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\PhysicsModel.h">
       <Filter>Headers\Physics</Filter>
     </ClInclude>
@@ -415,6 +394,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\imgui\imgui_plot.h">
+      <Filter>Resources\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
