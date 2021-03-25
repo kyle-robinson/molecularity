@@ -4,6 +4,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
+#include "imgui/imgui_plot.h"
 
 ImGuiManager::ImGuiManager()
 {
@@ -140,6 +141,53 @@ void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
 		ImGui::SliderFloat( "Alpha", &gfx.alphaFactor, 0.0f, 1.0f, "%.1f" );
 	}
 	ImGui::End();
+}
+
+void ImGuiManager::SpawnPerformanceWindow() noexcept
+{
+    if (frameBuffer > 5)
+    {
+        frameBuffer = 0;
+    }
+
+    if (ImGui::Begin("Performance Monitor", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+    {
+        //Set Monitor Position
+        ImGui::SetWindowPos(ImVec2(0, 720 - ImGui::GetWindowHeight()));
+
+        //calculate fps
+        float fps = 1.0f / (deltaTime / 1000.0f);
+
+        //add fps value to vector
+        if (dtHistory.size() >= 70)
+            dtHistory.erase(dtHistory.begin());
+
+        dtHistory.push_back(fps);
+
+        if (frameBuffer == 0)
+        {
+            fpsBuffer = fps;
+        }
+
+        float* y_data = dtHistory.data();
+        
+        ImGui::PlotConfig config;
+        config.values.ys = y_data;
+        config.values.count = 70;
+        config.scale.min = 20;
+        config.scale.max = 100;
+        config.grid_x.show = false;
+        config.grid_y.show = false;
+        config.frame_size = ImVec2(400, 200);
+        config.line_thickness = 2.0f;
+
+        ImGui::Plot("plot", config);
+
+        ImGui::Text((std::to_string((int)std::round(fpsBuffer)) + " FPS").c_str());
+    }
+    ImGui::End();
+
+    frameBuffer++;
 }
 
 void ImGuiManager::SetBlackGoldStyle()

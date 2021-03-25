@@ -1,4 +1,7 @@
 #pragma once
+#include <vector>
+#include <iostream>
+
 #ifndef IMGUIMANAGER_H
 #define IMGUIMANAGER_H
 
@@ -19,8 +22,16 @@ public:
 	void EndRender() const noexcept;
 	void SpawnInstructionWindow() const noexcept;
 	void SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept;
+	void SpawnPerformanceWindow() noexcept;
+
+	void PassDeltaTime(float dt) { deltaTime = dt; }
 private:
 	void SetBlackGoldStyle();
+
+	std::vector<float> dtHistory = std::vector<float>(70, 0);
+	float fpsBuffer;
+	int frameBuffer;
+	float deltaTime;
 };
 
 #endif

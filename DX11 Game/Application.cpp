@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "CameraMovement.h"
+#include "Utility/EventSystem/EventSystem.h"
 
 bool Application::Initialize(
 	HINSTANCE hInstance,
@@ -40,6 +41,7 @@ void Application::Update()
 	sound.UpdateListenerRot( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetRotationFloat3() ) );
 	input.Update( dt );
 	gfx.Update( dt );
+	EventSystem::Instance()->ProcessEvents();
 }
 
 void Application::Render()

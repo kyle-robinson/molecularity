@@ -204,6 +204,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\External\imgui\imgui_plot.cpp" />
     <ClCompile Include="..\External\imgui\imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -290,16 +291,13 @@
     <ClCompile Include="Objects\Sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Physics\Particle.cpp" />
-    <ClCompile Include="Physics\ParticleManager.cpp" />
-    <ClCompile Include="Physics\ParticleSystem.cpp" />
-    <ClCompile Include="Physics\ParticleTransform.cpp" />
     <ClCompile Include="Physics\PhysicsModel.cpp" />
     <ClCompile Include="Sound2.cpp" />
     <ClCompile Include="Utility\Collisions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Utility\ErrorLogger.cpp" />
+    <ClCompile Include="Utility\EventSystem\EventSystem.cpp" />
     <ClCompile Include="Utility\JSON_Helper.cpp" />
     <ClCompile Include="Utility\Sound.cpp" />
     <ClCompile Include="Utility\stdafx.cpp">
@@ -324,6 +322,7 @@
     <ClInclude Include="..\External\imgui\imgui_impl_dx11.h" />
     <ClInclude Include="..\External\imgui\imgui_impl_win32.h" />
     <ClInclude Include="..\External\imgui\imgui_internal.h" />
+    <ClInclude Include="..\External\imgui\imgui_plot.h" />
     <ClInclude Include="..\External\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
@@ -386,10 +385,6 @@
     <ClInclude Include="Objects\RenderableGameObject.h" />
     <ClInclude Include="Objects\SpotLight.h" />
     <ClInclude Include="Objects\Sprite.h" />
-    <ClInclude Include="Physics\Particle.h" />
-    <ClInclude Include="Physics\ParticleManager.h" />
-    <ClInclude Include="Physics\ParticleSystem.h" />
-    <ClInclude Include="Physics\ParticleTransform.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
     <ClInclude Include="Sound2.h" />
@@ -397,6 +392,9 @@
     <ClInclude Include="Utility\Collisions.h" />
     <ClInclude Include="Utility\COMException.h" />
     <ClInclude Include="Utility\ErrorLogger.h" />
+    <ClInclude Include="Utility\EventSystem\Event.h" />
+    <ClInclude Include="Utility\EventSystem\EventSystem.h" />
+    <ClInclude Include="Utility\EventSystem\Listener.h" />
     <ClInclude Include="Utility\JSON_Helper.h" />
     <ClInclude Include="Utility\Sound.h" />
     <ClInclude Include="Utility\stdafx.h" />
