@@ -6,7 +6,14 @@ enum class EVENTID {
 	Event2,
 	Event3,
 	Event4,
-	UpdateSettingsEvent
+	UpdateSettingsEvent,
+	ToolUpdateEvent,
+	EnergyUpdateEvent,
+	UIMouseInput,
+	UIKeyInput,
+	WindowSizeChangeEvent,
+	QuitGame
+	
 };
 
 class Event {

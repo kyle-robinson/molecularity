@@ -28,7 +28,7 @@ void UI::Draw(Graphics* level, VertexShader& vert, PixelShader& pix)
 			}
 
 			if (UiList["All"]->isPaused) {
-				UiList["All"]->Pause(level);
+				UiList["All"]->Pause();
 			}
 
 			//end draw

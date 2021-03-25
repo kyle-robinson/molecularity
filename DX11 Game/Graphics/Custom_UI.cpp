@@ -18,7 +18,6 @@ void Custom_UI::INITWigets()
 {
 	//HUD
 	HUDenergyWidget.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
-	HUDHealthWidget.INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		HUDImages[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
@@ -29,7 +28,7 @@ void Custom_UI::INITWigets()
 	for (unsigned int i = 0; i < 4; i++) {
 		PuaseButtions[i].INITSprite(_Contex.Get(), _Device.Get(), _cb_vs_matrix_2d);
 	}
-
+	ToolSetting = ToolType::Convert;
 
 	//settings
 
@@ -47,14 +46,18 @@ void Custom_UI::INITWigets()
 
 }
 
-void Custom_UI::INITTexRender(Graphics* gfx)
+void Custom_UI::INITTexRender()
 {
 	HUDTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont",_Device.Get(),_Contex.Get());
 }
 
 Custom_UI::Custom_UI()
 {
-	EventSystem::Instance()->AddClient(EVENTID::Event1, this);
+	EventSystem::Instance()->AddClient(EVENTID::EnergyUpdateEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::ToolUpdateEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
 }
 Custom_UI::~Custom_UI()
 {
@@ -68,7 +71,7 @@ void Custom_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex)
 	
 	LoadTextures();
 	/*INITWigets();*/
-	INITTexRender(nullptr);
+	INITTexRender();
 }
 
 //draw Objects
@@ -80,21 +83,16 @@ void Custom_UI::BeginDraw(Graphics* gfx, VertexShader& vert,PixelShader& pix)
 	if (!isSettings) {
 
 		HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
-		HUDHealthWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
 		HUDImages[0].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
 	
 		for (unsigned int i = 0; i < 3; i++)
 		{
 			HUDImages[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
 		}
-		for (UINT i = 0; i < HUDText.size(); i++)
-		{
-			HUDTextRenderer->RenderString(HUDText[i].text, HUDText[i].position, HUDText[i].colour);
-			Shaders::BindShaders(_Contex.Get(), vert, pix);
-		}
+		
 		HUDTextRenderer->RenderCubeMoveText(*gfx);
 		Shaders::BindShaders(_Contex.Get(), vert, pix);
-		HUDText.clear();
+	
 	}
 	if (!isSettings&& isPaused) {
 		PuaseBakgtound.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
@@ -149,7 +147,7 @@ void Custom_UI::MainMenu(Graphics* gfx)
 	
 }
 //test values
-static int energy = 100;
+
 //game Hud
 void Custom_UI::GameHUD(Graphics* gfx)
 {
@@ -159,7 +157,7 @@ void Custom_UI::GameHUD(Graphics* gfx)
 	string ToolInformationTexture="";
 
 	//TODO add background and borders
-	switch (gfx->GetCube()[0]->GetEditableProperties()->GetToolType())
+	switch (ToolSetting)
 	{
 	case ToolType::Convert: {
 		TextFile = "HUD\\Tool_Assets\\ConvertSelect_500x500.dds";
@@ -176,9 +174,9 @@ void Custom_UI::GameHUD(Graphics* gfx)
 		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
 		switch (gfx->GetCube()[0]->GetEditableProperties()->GetSizeID())
 		{
-			case 0: ToolInformationTexture = "HUD\\ResizeTool_Down.png"; break;
-			case 1: ToolInformationTexture = "HUD\\ResizeTool_Reset.png"; break;
-			case 2: ToolInformationTexture = "HUD\\ResizeTool_UP.png"; break;
+			case 0: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Down.png"; break;
+			case 1: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Reset.png"; break;
+			case 2: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_UP.png"; break;
 		}
 	}
 	break;
@@ -187,35 +185,34 @@ void Custom_UI::GameHUD(Graphics* gfx)
 		break;
 	}
 	//set hud scale
-	float hudScale=1;
+
 	for (auto& setting : _SettingsData)
 	{
 		if (setting.Name == "Hud_Scale") {
 			hudScale = (float)get<int>(setting.Setting) / 100;
 		}
 	}
-	HUDImages[2].Function(ToolInformationTexture, { 500 * hudScale,500 * hudScale }, { (float)gfx->GetWidth() - (1000 * hudScale), (float)gfx->GetHeight()  - (500 * hudScale) });
-	HUDImages[0].Function(TextFile, { 500 * hudScale,500 * hudScale }, { (float)gfx->GetWidth()-(500 * hudScale), (float)gfx->GetHeight()- (500 * hudScale) });
+	HUDImages[2].Function(ToolInformationTexture, { 500 * hudScale,500 * hudScale }, { _SizeOfScreen.x - (1000 * hudScale),  _SizeOfScreen.y - (500 * hudScale) });
+	HUDImages[0].Function(TextFile, { 500 * hudScale,500 * hudScale }, { _SizeOfScreen.x -(500 * hudScale),  _SizeOfScreen.y - (500 * hudScale) });
 	//crosshair
-	HUDImages[1].Function("HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200* hudScale,200* hudScale }, { (float)gfx->GetWidth() / 2 - (200 * hudScale) / 2, (float)gfx->GetHeight() / 2 - (200 * hudScale) / 2 });
+	HUDImages[1].Function("HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200* hudScale,200* hudScale }, { _SizeOfScreen.x / 2 - (200 * hudScale) / 2,  _SizeOfScreen.y / 2 - (200 * hudScale) / 2 });
 	//bar data
-	HUDHealthWidget.Function(Colour{ 0,0,0 }, Colour{ 255, 0, 0,100 }, "Resources\\Textures\\HUD\\Border_Top.png", { 900 * hudScale,240 * hudScale }, XMFLOAT2{ 0,(float)gfx->GetHeight() - (500 * hudScale) }, 100);
-	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.png", { 1000* hudScale,250* hudScale }, XMFLOAT2{ 0,(float)gfx->GetHeight() - (250 * hudScale) }, energy);
+	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.png", { 1000* hudScale,250* hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - (250 * hudScale) }, energy);
 	
 	
 }
 
-void Custom_UI::Settings(Graphics* gfx)
+void Custom_UI::Settings()
 {
 	textToDraw TextToDraw;
 	//Bakground
-	SettingsBakgtound.Function({ 255,255,255 }, { (float)gfx->GetWidth(),(float)gfx->GetHeight() }, { 0,0 }, 1.0f);
+	SettingsBakgtound.Function({ 255,255,255 }, { _SizeOfScreen.x ,_SizeOfScreen.y }, { 0,0 }, 1.0f);
 	//Tab Buttions
 	float PosXBut = 10;
-	string Names[4] = { "Genral","Grapics","Sound","Controls" };
+	string TabNames[4] = { "Genral","Grapics","Sound","Controls" };
 	for (UINT i = 0; i < 4; i++)
 	{
-		SettingsButtions[i].Function(Names[i], vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ PosXBut ,  100 }, _MouseData);
+		SettingsButtions[i].Function(TabNames[i], vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ PosXBut ,  100 }, _MouseData);
 		PosXBut += 100;
 		SettingsButtionCount++;
 	}
@@ -243,7 +240,7 @@ void Custom_UI::Settings(Graphics* gfx)
 		
 	//box
 	XMFLOAT2 boxPos = { 0,180 };
-	XMFLOAT2 boxSize = { (float)gfx->GetWidth(), (float)gfx->GetHeight() - 116 };
+	XMFLOAT2 boxSize = { _SizeOfScreen.x, _SizeOfScreen.y - 116 };
 
 	//swich settings tabs
 	switch (CurrentTab)
@@ -420,7 +417,8 @@ void Custom_UI::Settings(Graphics* gfx)
 			TextToDraw.position = { 10,150 };
 			TextToDraw.text = "Controlls";
 			SettingsText.push_back(TextToDraw);
-			SettingsScrollBar.Function({ 30,(float)gfx->GetHeight()-100 }, { (float)gfx->GetWidth() - 30 ,150 }, 0, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
+			SettingsScrollBar.Function({ 30,_SizeOfScreen.y-100 }, { _SizeOfScreen.x - 30 ,150 }, 0, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
+
 			float currentY = 180- SettingsScrollBar.getPY();
 			for (auto & setting : _SettingsData)
 			{
@@ -460,7 +458,7 @@ void Custom_UI::Settings(Graphics* gfx)
 	}
 	
 				 //update file
-				 SettingsButtions[4].Function("Acccept", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ (float)gfx->GetWidth() - 100 ,  0 }, _MouseData);
+				 SettingsButtions[4].Function("Acccept", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ _SizeOfScreen.x - 100 ,  0 }, _MouseData);
 				 SettingsButtionCount++;
 
 				 if (SettingsButtions[4].GetIsPressed())
@@ -515,7 +513,7 @@ void Custom_UI::Settings(Graphics* gfx)
 
 
 					 //Notify relvent areas that settings has changed
-					 EventSystem::Instance()->AddEvent(EVENTID::UpdateSettingsEvent)
+					 EventSystem::Instance()->AddEvent(EVENTID::UpdateSettingsEvent);
 
 					 
 					 isSettings = false;
@@ -532,12 +530,12 @@ void Custom_UI::Settings(Graphics* gfx)
 	
 }
 
-void Custom_UI::Pause(Graphics* gfx)
+void Custom_UI::Pause()
 {
 	
 	if (!isSettings) {
 		//bakground
-		PuaseBakgtound.Function({ 0,0,0 }, { (float)gfx->GetWidth(),(float)gfx->GetHeight() }, { 0,0 }, 0.7f);
+		PuaseBakgtound.Function({ 0,0,0 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 
 		//Buttions
 		PuaseButtions[0].Function("Play", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0, 100 }, _MouseData);
@@ -549,7 +547,7 @@ void Custom_UI::Pause(Graphics* gfx)
 			isPaused = false;
 		}
 		else if (PuaseButtions[1].GetIsPressed()) {
-			
+			//reset level
 		}
 		else if (PuaseButtions[2].GetIsPressed()) {
 			isSettings = true;
@@ -558,6 +556,8 @@ void Custom_UI::Pause(Graphics* gfx)
 		}
 		else if (PuaseButtions[3].GetIsPressed()) {
 			//exit
+			EventSystem::Instance()->AddEvent(EVENTID::QuitGame);
+				
 			
 		}
 		
@@ -572,7 +572,7 @@ void Custom_UI::Pause(Graphics* gfx)
 
 	}
 	else{
-		Settings(gfx);
+		Settings();
 	}
 }
 
@@ -580,6 +580,47 @@ void Custom_UI::PreMenuItems(Graphics* gfx)
 {
 	
 	
+}
+
+void Custom_UI::HandleEvent(Event* event)
+{
+	//reciveData
+
+	switch (event->GetEventID())
+	{
+		case EVENTID::EnergyUpdateEvent:
+		{
+			energy = (int)event->GetData();
+		}
+		break;
+		case EVENTID::ToolUpdateEvent:
+		{
+			ToolSetting = *(ToolType*)event->GetData();
+		}
+		break;
+		case EVENTID::WindowSizeChangeEvent:
+		{
+			_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
+
+		}
+		break;
+		case EVENTID::UIKeyInput:
+		{
+			Key= *(unsigned char*)event->GetData();
+		}
+		break;
+		case EVENTID::UIMouseInput:
+		{	
+			_MouseData= *(MouseData*)event->GetData();
+		}
+		break;
+	default:
+		break;
+	}
+
+
+
+
 }
 
 

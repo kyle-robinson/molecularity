@@ -24,7 +24,8 @@ private:
 	MousePicking mousePick;
 	Graphics* graphics;
 	CameraController* cameras;
-	
+	unsigned char UIChar;
+	MouseData UiMouseData;
 };
 
 #endif

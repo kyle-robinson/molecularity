@@ -1,4 +1,5 @@
 #pragma once
+#include<Utility/stdafx.h>
 #ifndef CUBEPROPERTIES_H
 #define CUBEPROPERTIES_H
 
@@ -42,7 +43,9 @@ public:
 	float GetSizeMultiplier() const noexcept { return sizeMultiplier; }
 
 	// Setters
-	void SetToolType( ToolType type ) { toolType = type; }
+	void SetToolType( ToolType type ) { toolType = type;
+	EventSystem::Instance()->AddEvent(EVENTID::ToolUpdateEvent, &toolType);
+	}
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
 	void SetBoxSize( BoxSize size ) noexcept { boxSize = size; }
 	

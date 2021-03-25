@@ -38,6 +38,18 @@ void Application::Update()
 	sound.UpdateListenerPos( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3() ) );
 	input.Update( dt, sound );
 	gfx.Update( dt );
+	//update screen size
+	RECT windowRect;
+	if (GetClientRect(renderWindow.GetHWND(), &windowRect)) {
+
+		XMFLOAT2 windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
+
+		EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
+		cameras.UpDateUICamValues(windowsize.x, windowsize.y, 0.0f, 1.0f);
+		cameras.GetCamera(cameras.GetCurrentCamera())->SetProjectionValues(70.0f, windowsize.x / windowsize.y, 0.1f, 1000.0f);
+		renderWindow.SetWidthHight(windowsize.x, windowsize.y);
+	}
+
 	EventSystem::Instance()->ProcessEvents();
 }
 

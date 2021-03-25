@@ -27,6 +27,7 @@ void Input::UpdateKeyboard( const float dt )
 	// handle input for single key presses
 	while ( !keyboard.KeyBufferIsEmpty() )
 	{
+		
 		unsigned char keycode = keyboard.ReadKey().GetKeyCode();
 
 		// CAMERA INPUT
@@ -46,15 +47,26 @@ void Input::UpdateKeyboard( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
+			
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
-				if ( keycode == '1' ) graphics->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
-				if ( keycode == '2' ) graphics->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
+				if (keycode == '1') {
+					graphics->GetCube()[i]->GetEditableProperties()->SetToolType(ToolType::Convert);
+				
+					
+				}
+				if (keycode == '2') {
+					graphics->GetCube()[i]->GetEditableProperties()->SetToolType(ToolType::Resize);
+				}
 			}
+			
 		}
 		//UI
 		{
-			graphics->GetUi().getCustomUi()->KeyInput(keyboard.ReadChar());
+			 UIChar = keyboard.ReadChar();
+			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
+
+			
 			if (keycode == 'P') {
 				graphics->GetUi().getCustomUi()->isPaused = true;
 				EnableCursor();
@@ -265,17 +277,32 @@ void Input::UpdateMouse( const float dt )
 #pragma endregion
 			}
 		}
-		//UI input
+		//UI mouse input
 		{
-			bool Rpress=false;
-			bool Lpress = false;
+			UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
 			if (mouse.IsRightDown()&& cursorEnabled) {
-				Rpress = true;
+				UiMouseData.RPress = true;
+			}
+			else
+			{
+				UiMouseData.RPress = false;
 			}
 			if (mouse.IsLeftDown()&& cursorEnabled) {
-				Lpress = true;
+				UiMouseData.LPress= true;
 			}
-			graphics->GetUi().getCustomUi()->MouseInput(me.GetPosX(),me.GetPosY(), Lpress);
+			else
+			{
+				UiMouseData.LPress = false;
+			}
+			if (mouse.IsMiddleDown() && cursorEnabled) {
+				UiMouseData.MPress = true;
+			}
+			else
+			{
+				UiMouseData.MPress = false;
+			}
+
+			EventSystem::Instance()->AddEvent(EVENTID::UIMouseInput, &UiMouseData);
 
 		}
 	}

@@ -4,6 +4,10 @@
 #include <Utility/JSON_Helper.h>
 #include<UI/WidgetIncludes.h>
 #include"TextRenderer.h"
+#include<Utility/EventSystem/Listener.h>
+
+
+#include<Objects/CubeProperties.h>
 
 using namespace DirectX;
 using namespace std;
@@ -42,8 +46,8 @@ public:
 	//PreSet UI
 	void MainMenu(Graphics* gfx);
 	void GameHUD(Graphics* gfx);
-	void Settings(Graphics* gfx);
-	void Pause(Graphics* gfx);
+	void Settings();
+	void Pause();
 	void PreMenuItems(Graphics* gfx);
 
 	//input
@@ -55,7 +59,7 @@ public:
 		_MouseData.LPress = press;
 	}
 
-
+	void HandleEvent(Event* event);
 	void setScreenSize(XMFLOAT2 size) { _SizeOfScreen = size; }
 
 	void setcb_ps_scene(ConstantBuffer<CB_PS_scene>& cb_ps_scene) { _cb_ps_scene = cb_ps_scene; }
@@ -75,7 +79,7 @@ private:
 	//pre load
 	void LoadTextures();
 	void INITWigets();
-	void INITTexRender(Graphics* gfx);
+	void INITTexRender();
 //vars
 private:
 
@@ -94,12 +98,12 @@ private:
 	//Set Up Widgets
 
 	//HUD
+	float hudScale = 1;
 	Immage_Widget HUDImages[3];
 	ColourBlock HudBakgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
-	Energy_Bar_Widget<Colour, Colour, string> HUDHealthWidget;
-	vector<textToDraw> HUDText;
-	
+	int energy = 100;
+	ToolType ToolSetting;
 	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 
 	//Puase
