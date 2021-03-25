@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "CameraMovement.h"
+#include "Utility/EventSystem/EventSystem.h"
 
 bool Application::Initialize(
 	HINSTANCE hInstance,
@@ -37,24 +38,8 @@ void Application::Update()
 	sound.UpdateListenerPos( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3() ) );
 	input.Update( dt, sound );
 	gfx.Update( dt );
-	
-	//update width/hight items for when window size changes
-	RECT rect;
-	if (GetClientRect(renderWindow.GetHWND(), &rect))
-	{
-		
-		float width = rect.right - rect.left;
-		float height = rect.bottom - rect.top;
-
-		renderWindow.SetWidthHight(width, height);
-		gfx.UpdateWidthHight(width, height);
-		cameras.GetCamera(cameras.GetCurrentCamera())->SetProjectionValues(70.0f, width / height, 0.1f, 1000.0f);
-		cameras.UpDateUICamValues(width, height, 0.0f, 1.0f);
-		
-	}
-	}
-	
-
+	EventSystem::Instance()->ProcessEvents();
+}
 
 void Application::Render()
 {

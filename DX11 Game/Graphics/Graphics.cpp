@@ -211,6 +211,7 @@ void Graphics::EndFrame()
 		
 		imgui.SpawnInstructionWindow();
 		imgui.SpawnGraphicsWindow( *this );
+		imgui.SpawnPerformanceWindow();
 		directionalLight.SpawnControlWindow();
 		pointLight.SpawnControlWindow();
 		spotLight.SpawnControlWindow();
@@ -227,6 +228,9 @@ void Graphics::EndFrame()
 
 void Graphics::Update( const float dt )
 {
+	//pass dt
+	imgui.PassDeltaTime(dt);
+	
 	// update lights/skysphere
 	pointLight.SetPosition( pointLight.GetLightPosition() );
 	directionalLight.SetPosition( directionalLight.GetLightPosition() );

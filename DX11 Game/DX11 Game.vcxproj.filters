@@ -120,19 +120,7 @@
     <ClCompile Include="Input\MousePicking.cpp">
       <Filter>Source\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\Particle.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\PhysicsModel.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\ParticleManager.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\ParticleSystem.cpp">
-      <Filter>Source\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\ParticleTransform.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
     <ClCompile Include="Objects\PointLight.cpp">
@@ -171,47 +159,20 @@
     <ClCompile Include="Window\WindowContainer.cpp">
       <Filter>Source\Window</Filter>
     </ClCompile>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\MultiViewport.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\ColourBlock.cpp">
-      <Filter>UI\Widgets</Filter>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
+    <ClCompile Include="Utility\EventSystem\EventSystem.cpp">
+      <Filter>Headers\Utility\EventSystem</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\Immage_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Custom_UI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\UI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\Buttion_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\Input_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\DropDown_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
+    <ClCompile Include="..\External\imgui\imgui_plot.cpp">
+      <Filter>Resources\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,18 +326,6 @@
     <ClInclude Include="Input\MousePicking.h">
       <Filter>Headers\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\Particle.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\ParticleManager.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\ParticleSystem.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\ParticleTransform.h">
-      <Filter>Headers\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\PhysicsModel.h">
       <Filter>Headers\Physics</Filter>
     </ClInclude>
@@ -449,41 +398,17 @@
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="UI\WidgetIncludes.h">
-      <Filter>UI</Filter>
+    <ClInclude Include="Utility\EventSystem\Event.h">
+      <Filter>Headers\Utility\EventSystem</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\ColourBlock.h">
-      <Filter>UI\Widgets</Filter>
+    <ClInclude Include="Utility\EventSystem\Listener.h">
+      <Filter>Headers\Utility\EventSystem\Listeners</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\Energy_Bar_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\Immage_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Custom_UI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\UI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\Buttion_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\Input_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\DataSlider_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\DropDown_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\PageSlider_Widget.h">
-      <Filter>UI\Widgets</Filter>
+    <ClInclude Include="Utility\EventSystem\EventSystem.h">
+      <Filter>Headers\Utility\EventSystem</Filter>
+    </ClCompile>
+    <ClInclude Include="..\External\imgui\imgui_plot.h">
+      <Filter>Resources\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -599,9 +524,6 @@
     </None>
     <None Include="Resources\Cursors\NightDiamond\Precision Select.ani">
       <Filter>Resources\Cursors</Filter>
-    </None>
-    <None Include="Resources\JSON\Settings.json">
-      <Filter>Resources\JSON</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -746,11 +668,17 @@
     <Filter Include="Headers\Physics">
       <UniqueIdentifier>{628a7f71-123c-461e-a692-c582039feecc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{b0ade593-24b7-4e39-b726-87b9c102a1be}</UniqueIdentifier>
+    <Filter Include="Headers\Utility\EventSystem">
+      <UniqueIdentifier>{e9346ea4-6134-4a1a-b67b-d49927c11470}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Widgets">
-      <UniqueIdentifier>{7471133b-23fa-464f-baae-b6d680f9e5f0}</UniqueIdentifier>
+    <Filter Include="Headers\Utility\EventSystem\Listeners">
+      <UniqueIdentifier>{abe35aae-69a4-4c42-bc99-8b1ebc70590e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\EventSystem">
+      <UniqueIdentifier>{56fe880a-bba3-4c89-b061-dca56cd06b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\EventSystem\Listeners">
+      <UniqueIdentifier>{b9ece522-4701-4a74-9594-2dcf30712862}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
