@@ -29,6 +29,8 @@ private:
 	void SetBlackGoldStyle();
 
 	std::vector<float> dtHistory = std::vector<float>(70, 0);
+	float fpsBuffer;
+	int frameBuffer;
 	float deltaTime;
 };
 
