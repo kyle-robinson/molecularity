@@ -19,8 +19,10 @@ bool Application::Initialize(
 	input.Initialize( &gfx, renderWindow, &cameras, width, height );
 
 	// sound
-	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
-	if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.75f ) ) return false;
+	//if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
+	//if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.0f ) ) return false;
+	if (FAILED(sound2.Initialise())) return false;
+	if (FAILED(sound2.PlayAudio(sound2.MAIN_MUSIC, 0.1f)));
 
 	return true;
 }
@@ -35,7 +37,8 @@ void Application::Update()
 	float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
 	timer.Restart();
 	sound.UpdateListenerPos( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3() ) );
-	input.Update( dt, sound );
+	sound.UpdateListenerRot( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetRotationFloat3() ) );
+	input.Update( dt );
 	gfx.Update( dt );
 }
 

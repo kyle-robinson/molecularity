@@ -180,6 +180,9 @@
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sound2.cpp">
+      <Filter>Source\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -415,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound2.h">
+      <Filter>Headers\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

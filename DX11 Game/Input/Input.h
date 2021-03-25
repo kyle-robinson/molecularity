@@ -5,7 +5,6 @@
 #include "Graphics.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
-class Sound;
 
 /// <summary>
 /// Handles user input by update keyboard and mouse events.
@@ -15,7 +14,7 @@ class Input : public WindowContainer
 {
 public:
 	void Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height );
-	void Update( const float dt, Sound sound );
+	void Update( const float dt );
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );

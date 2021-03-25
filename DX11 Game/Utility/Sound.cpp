@@ -48,7 +48,7 @@ bool Sound::InitializeDirectSound(HWND hwnd)
 
 		// How we access the primary buffer
 		bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-		bufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRL3D;
+		bufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRL3D | DSBCAPS_MUTE3DATMAXDISTANCE;
 		bufferDesc.dwBufferBytes = 0;
 		bufferDesc.dwReserved = 0;
 		bufferDesc.lpwfxFormat = NULL;
@@ -311,7 +311,7 @@ bool Sound::Load3DWavFile(const char* fileName, IDirectSoundBuffer8** secondaryB
 		waveFormat.cbSize = 0;
 
 		bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-		bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_CTRL3D;
+		bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_CTRL3D | DSBCAPS_MUTE3DATMAXDISTANCE;
 		bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
 		bufferDesc.dwReserved = 0;
 		bufferDesc.lpwfxFormat = &waveFormat;
@@ -392,18 +392,21 @@ bool Sound::PlayWavFile(int num, float volume, XMFLOAT3 soundPos)
 		result = _secondaryBuffer[num]->SetCurrentPosition(0);
 		COM_ERROR_IF_FAILED(result, "Failed to set position of secondary buffer!");
 
+		result = _secondary3DBuffer[num]->SetMaxDistance(30.0f, DS3D_IMMEDIATE);
+		COM_ERROR_IF_FAILED(result, "Failed to set max distance for the sound!");
+
 		result = _secondaryBuffer[num]->SetVolume(DSBVOLUME_MIN + (10000 * volume));
 		COM_ERROR_IF_FAILED(result, "Failed to set the volume!");
 
 		result = _secondary3DBuffer[num]->SetPosition(soundPos.x - camPosX, soundPos.y - camPosY, soundPos.z - camPosZ, DS3D_IMMEDIATE);
 		COM_ERROR_IF_FAILED(result, "Failed to set the position of the 3D secondary buffer!");
 
-		std::string tempMessage = std::to_string(camPosX);
-		char sz[1024] = { 0 };
-		tempMessage = tempMessage + "\n";
-		const char* c = tempMessage.c_str();
-		sprintf_s(sz, c);
-		OutputDebugStringA(sz);
+		//std::string tempMessage = ();
+		//char sz[1024] = { 0 };
+		//tempMessage = tempMessage + "\n";
+		//const char* c = tempMessage.c_str();
+		//sprintf_s(sz, c);
+		//OutputDebugStringA(sz);
 
 		result = _secondaryBuffer[num]->Play(0, 0, 0);
 		COM_ERROR_IF_FAILED(result, "Failed to play the sound from the secondary buffer!");

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Input.h"
-#include "Sound.h"
 #include "CameraMovement.h"
 
 void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
@@ -12,13 +11,10 @@ void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* c
 	mousePick.Initialize( width, height );
 }
 
-void Input::Update( const float dt, Sound sound )
+void Input::Update( const float dt )
 {
 	UpdateKeyboard( dt );
 	UpdateMouse( dt );
-
-	if ( keyboard.KeyIsPressed( 'B' ) )
-		sound.PlayWavFile( sound.COLLISION_SOUND, 1.0f, graphics->GetCube()[0]->GetPositionFloat3() );
 }
 
 void Input::UpdateKeyboard( const float dt )

@@ -295,6 +295,7 @@
     <ClCompile Include="Physics\ParticleSystem.cpp" />
     <ClCompile Include="Physics\ParticleTransform.cpp" />
     <ClCompile Include="Physics\PhysicsModel.cpp" />
+    <ClCompile Include="Sound2.cpp" />
     <ClCompile Include="Utility\Collisions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -391,6 +392,7 @@
     <ClInclude Include="Physics\ParticleTransform.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
+    <ClInclude Include="Sound2.h" />
     <ClInclude Include="Utility\Billboard.h" />
     <ClInclude Include="Utility\Collisions.h" />
     <ClInclude Include="Utility\COMException.h" />
