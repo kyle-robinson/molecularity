@@ -54,6 +54,7 @@ void Custom_UI::INITTexRender(Graphics* gfx)
 
 Custom_UI::Custom_UI()
 {
+	EventSystem::Instance()->AddClient(EVENTID::Event1, this);
 }
 Custom_UI::~Custom_UI()
 {
@@ -514,7 +515,7 @@ void Custom_UI::Settings(Graphics* gfx)
 
 
 					 //Notify relvent areas that settings has changed
-
+					 EventSystem::Instance()->AddEvent(EVENTID::UpdateSettingsEvent)
 
 					 
 					 isSettings = false;

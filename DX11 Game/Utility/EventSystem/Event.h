@@ -6,6 +6,7 @@ enum class EVENTID {
 	Event2,
 	Event3,
 	Event4,
+	UpdateSettingsEvent
 };
 
 class Event {

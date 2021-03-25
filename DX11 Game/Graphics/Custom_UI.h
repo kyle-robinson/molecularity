@@ -25,7 +25,7 @@ struct textToDraw {
 
 
 class Grapics;
-class Custom_UI
+class Custom_UI: public Listener
 {
 
 public:
