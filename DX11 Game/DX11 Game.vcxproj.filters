@@ -165,6 +165,9 @@
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Sound2.cpp">
+      <Filter>Source\Utility</Filter>
+    </ClCompile>
     <ClCompile Include="WinMain.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -397,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound2.h">
+      <Filter>Headers\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Utility\EventSystem\Event.h">
       <Filter>Headers\Utility\EventSystem</Filter>

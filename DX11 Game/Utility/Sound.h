@@ -44,6 +44,7 @@ public:
 	void Close();
 
 	void UpdateListenerPos(XMFLOAT3 pos) { camPosX = pos.x; camPosY = pos.y; camPosZ = pos.z; }
+	void UpdateListenerRot(XMFLOAT3 rot) { camRotX = rot.x; camRotY = rot.y; camRotZ = rot.z; }
 
 	enum SOUND_NAMES
 	{
@@ -73,6 +74,7 @@ private:
 	IDirectSound3DBuffer8* _secondary3DBuffer[10]; //Stores the 3D info for loaded sounds
 
 	float camPosX, camPosY, camPosZ;
+	float camRotX, camRotY, camRotZ;
 };
 
 #endif
