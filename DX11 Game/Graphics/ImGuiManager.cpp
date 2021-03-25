@@ -158,8 +158,8 @@ void ImGuiManager::SpawnPerformanceWindow() noexcept
         ImGui::PlotConfig config;
         config.values.ys = y_data;
         config.values.count = 70;
-        config.scale.min = 40;
-        config.scale.max = 80;
+        config.scale.min = 20;
+        config.scale.max = 100;
         config.grid_x.show = false;
         config.grid_y.show = false;
         config.frame_size = ImVec2(400, 200);
