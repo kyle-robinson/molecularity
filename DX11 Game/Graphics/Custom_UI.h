@@ -81,7 +81,7 @@ private:
 
 	//Json Data
 	string JsonFile;
-	vector<JSON::SettingData> _SettingsData;
+	std::vector<JSON::SettingData> _SettingsData;
 
 
 	//inputs
@@ -95,9 +95,11 @@ private:
 
 	//HUD
 	Immage_Widget HUDImages[3];
+	ColourBlock HudBakgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
 	Energy_Bar_Widget<Colour, Colour, string> HUDHealthWidget;
 	vector<textToDraw> HUDText;
+	
 	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 
 	//Puase

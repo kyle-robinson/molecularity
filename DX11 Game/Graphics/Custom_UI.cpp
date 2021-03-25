@@ -60,7 +60,7 @@ Custom_UI::~Custom_UI()
 }
 void Custom_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex)
 {
-	
+	_SettingsData = JSON::LoadSettings();
 	_Device = device;
 	_Contex = contex;
 	
@@ -156,10 +156,12 @@ void Custom_UI::GameHUD(Graphics* gfx)
 	//tool type ui change
 	string TextFile;
 	string ToolInformationTexture="";
+
+	//TODO add background and borders
 	switch (gfx->GetCube()[0]->GetEditableProperties()->GetToolType())
 	{
 	case ToolType::Convert: {
-		TextFile = "HUD\\Convert.png";
+		TextFile = "HUD\\Tool_Assets\\ConvertSelect_500x500.dds";
 		switch (gfx->GetCube()[0]->GetEditableProperties()->GetMaterialID())
 		{
 			case 0: ToolInformationTexture = "crates\\basic_crate.png"; break;
@@ -170,7 +172,7 @@ void Custom_UI::GameHUD(Graphics* gfx)
 	}
 	break;
 	case ToolType::Resize: {
-		TextFile = "HUD\\Resize.png";
+		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
 		switch (gfx->GetCube()[0]->GetEditableProperties()->GetSizeID())
 		{
 			case 0: ToolInformationTexture = "HUD\\ResizeTool_Down.png"; break;
@@ -183,19 +185,22 @@ void Custom_UI::GameHUD(Graphics* gfx)
 		TextFile = "";
 		break;
 	}
-
-	HUDImages[2].Function(ToolInformationTexture, { 100,100 }, { (float)gfx->GetWidth() - 200, (float)gfx->GetHeight()  - 100 });
-	HUDImages[0].Function(TextFile, { 100,100 }, { (float)gfx->GetWidth()-100, (float)gfx->GetHeight()-100 });
+	//set hud scale
+	float hudScale=1;
+	for (auto& setting : _SettingsData)
+	{
+		if (setting.Name == "Hud_Scale") {
+			hudScale = (float)get<int>(setting.Setting) / 100;
+		}
+	}
+	HUDImages[2].Function(ToolInformationTexture, { 500 * hudScale,500 * hudScale }, { (float)gfx->GetWidth() - (1000 * hudScale), (float)gfx->GetHeight()  - (500 * hudScale) });
+	HUDImages[0].Function(TextFile, { 500 * hudScale,500 * hudScale }, { (float)gfx->GetWidth()-(500 * hudScale), (float)gfx->GetHeight()- (500 * hudScale) });
 	//crosshair
-	HUDImages[1].Function("HUD\\Cosshair_V2_60x60.png", { 60,60 }, { (float)gfx->GetWidth() / 2 - 60 / 2, (float)gfx->GetHeight() / 2 - 60 / 2 });
+	HUDImages[1].Function("HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200* hudScale,200* hudScale }, { (float)gfx->GetWidth() / 2 - (200 * hudScale) / 2, (float)gfx->GetHeight() / 2 - (200 * hudScale) / 2 });
 	//bar data
-	HUDHealthWidget.Function(Colour{ 0,0,0 }, Colour{ 255, 0, 0,100 }, "Resources\\Textures\\HUD\\Border_Top.png", { 160,50 }, XMFLOAT2{ 0,(float)gfx->GetHeight() - 100 }, 100);
-	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.png", { 200,50 }, XMFLOAT2{ 0,(float)gfx->GetHeight() - 50 }, energy);
-	textToDraw hudtext;
-	hudtext.text = to_string(HUDenergyWidget.GetCurrentPercent()) + "%";
-	hudtext.colour = DirectX::Colors::Black;
-	hudtext.position = { (float)gfx->GetWidth() / 2 - 22 , (float)gfx->GetHeight() / 2 +7};
-	HUDText.push_back(hudtext);
+	HUDHealthWidget.Function(Colour{ 0,0,0 }, Colour{ 255, 0, 0,100 }, "Resources\\Textures\\HUD\\Border_Top.png", { 900 * hudScale,240 * hudScale }, XMFLOAT2{ 0,(float)gfx->GetHeight() - (500 * hudScale) }, 100);
+	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.png", { 1000* hudScale,250* hudScale }, XMFLOAT2{ 0,(float)gfx->GetHeight() - (250 * hudScale) }, energy);
+	
 	
 }
 
@@ -248,6 +253,30 @@ void Custom_UI::Settings(Graphics* gfx)
 			TextToDraw.position = { 10,150 };
 			TextToDraw.text = "Grapics";
 			SettingsText.push_back(TextToDraw);
+			float currentY = 200;
+			for (auto & setting : _SettingsData)
+			{
+				if (setting.Type == JSON::SettingType::GraphicType)
+				{
+					TextToDraw.colour = Colors::Black;
+					TextToDraw.position = { 10,currentY };
+					TextToDraw.text = setting.Name;
+					SettingsText.push_back(TextToDraw);
+					if (int* input = std::get_if<int>(&setting.Setting)) {
+
+						SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
+						setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
+						SettingSliderCount++;
+
+
+						TextToDraw.colour = Colors::Black;
+						TextToDraw.position = { 750,currentY };
+						TextToDraw.text = to_string(*input);
+						SettingsText.push_back(TextToDraw);
+					}
+					currentY += 50;
+				}
+			}
 
 			
 			break;
@@ -265,19 +294,19 @@ void Custom_UI::Settings(Graphics* gfx)
 
 		
 
-			for (int i = 0; i < _SettingsData.size(); i++)
+			for (auto & setting : _SettingsData)
 			{
-				if (_SettingsData[i].Type == JSON::SettingType::GenType)
+				if (setting.Type == JSON::SettingType::GeneralType)
 				{
 
 					TextToDraw.colour = Colors::Black;
 					TextToDraw.position = { 10,currentY };
-					TextToDraw.text = _SettingsData[i].Name;
+					TextToDraw.text = setting.Name;
 					SettingsText.push_back(TextToDraw);
-					if (int* input = std::get_if<int>(&_SettingsData[i].Setting)) {
+					if (int* input = std::get_if<int>(&setting.Setting)) {
 
 						SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
-						_SettingsData[i].Setting = (int)SettingsSliders[SettingSliderCount].getData();
+						setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
 						SettingSliderCount++;
 
 
@@ -286,27 +315,27 @@ void Custom_UI::Settings(Graphics* gfx)
 						TextToDraw.text = to_string(*input);
 						SettingsText.push_back(TextToDraw);
 					}
-					else if (bool* input = std::get_if<bool>(&_SettingsData[i].Setting)) {
+					else if (bool* input = std::get_if<bool>(&setting.Setting)) {
 						if (!*input) {
 							SettingsDropdowns[SettingsDropCount].setCurrent(1);
 						}
 						SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
 						if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
-							_SettingsData[i].Setting = false;
+							setting.Setting = false;
 						}
 						else
 						{
-							_SettingsData[i].Setting = true;
+							setting.Setting = true;
 
 						}
 						SettingsDropCount++;
 
 					}
-					else if (string* input = std::get_if<string>(&_SettingsData[i].Setting)) {
+					else if (string* input = std::get_if<string>(&setting.Setting)) {
 
 						vector<string>Language = { "Eng", "Fr","" };
 						SettingsDropdowns[SettingsDropCount].Function(Language, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
-						_SettingsData[i].Setting = SettingsDropdowns[SettingsDropCount].getSelected();
+						setting.Setting = SettingsDropdowns[SettingsDropCount].getSelected();
 						
 						
 						SettingsDropCount++;
@@ -330,19 +359,20 @@ void Custom_UI::Settings(Graphics* gfx)
 			float currentY = 200;
 			
 
-			for (int i = 0; i < _SettingsData.size(); i++) {
-				if (_SettingsData[i].Type == JSON::SettingType::SoundType) {
+			for (auto & setting : _SettingsData)
+			{
+				if (setting.Type == JSON::SettingType::SoundType) {
 					
 					TextToDraw.colour = Colors::Black;
 					TextToDraw.position = { 10,currentY };
-					TextToDraw.text = _SettingsData[i].Name;
+					TextToDraw.text = setting.Name;
 					SettingsText.push_back(TextToDraw);
 
 
-					if (int* input = std::get_if<int>(&_SettingsData[i].Setting)) {
+					if (int* input = std::get_if<int>(&setting.Setting)) {
 
 						SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
-						_SettingsData[i].Setting = (int)SettingsSliders[SettingSliderCount].getData();
+						setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
 						SettingSliderCount++;
 
 
@@ -352,7 +382,7 @@ void Custom_UI::Settings(Graphics* gfx)
 						SettingsText.push_back(TextToDraw);
 
 					}
-					else if (bool* input = std::get_if<bool>(&_SettingsData[i].Setting)) {
+					else if (bool* input = std::get_if<bool>(&setting.Setting)) {
 						if (!*input) {
 							SettingsDropdowns[SettingsDropCount].setCurrent(1);
 						}
@@ -361,11 +391,11 @@ void Custom_UI::Settings(Graphics* gfx)
 						
 
 						if (SettingsDropdowns[SettingsDropCount].getSelected() == "false" ) {
-							_SettingsData[i].Setting = false;
+							setting.Setting = false;
 						}
 						else
 						{
-							_SettingsData[i].Setting = true;
+							setting.Setting = true;
 							
 						}
 
@@ -391,29 +421,31 @@ void Custom_UI::Settings(Graphics* gfx)
 			SettingsText.push_back(TextToDraw);
 			SettingsScrollBar.Function({ 30,(float)gfx->GetHeight()-100 }, { (float)gfx->GetWidth() - 30 ,150 }, 0, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
 			float currentY = 180- SettingsScrollBar.getPY();
-			for (int i = 0; i < _SettingsData.size(); i++) {
+			for (auto & setting : _SettingsData)
+			{
 
-				
-
-					if (_SettingsData[i].Type == JSON::SettingType::ControllType)
+					if (setting.Type == JSON::SettingType::ControllType)
 					{
 						if (currentY >= boxPos.y &&
 							currentY <= (boxPos.y + boxSize.y)) {
 
 							TextToDraw.colour = Colors::Black;
 							TextToDraw.position = { 10,currentY };
-							TextToDraw.text = _SettingsData[i].Name;
+							TextToDraw.text = setting.Name;
 							SettingsText.push_back(TextToDraw);
 
 
-							string controll = get<string>(_SettingsData[i].Setting);
+							string controll = get<string>(setting.Setting);
 							ControllInput[SettingsInputCount].setCurrentText(controll);
 							ControllInput[SettingsInputCount].Function({ 100, 30 }, { 200,currentY }, { 0,0,0 }, Key, _MouseData);
 							string output = ControllInput[SettingsInputCount].getCurrentText();
-							
-								output=toupper(output[0]);
-							
-							_SettingsData[i].Setting = output;
+
+							string UpperOut;
+							for (UINT i = 0; i < output.size();i++) {
+								UpperOut += toupper(output[i]);
+							}
+
+							setting.Setting = UpperOut;
 							SettingsInputCount++;
 						}
 						currentY += 40;
@@ -435,19 +467,22 @@ void Custom_UI::Settings(Graphics* gfx)
 
 
 					 //update settings file
-					 for (JSON::SettingData setting : _SettingsData)
+					 for (auto & setting : _SettingsData)
 					 {
 						 string type;
 						 switch (setting.Type)
 						 {
-						 case JSON::SettingType::GenType:
-							 type = "Genral";
+						 case JSON::SettingType::GeneralType:
+							 type = "General";
 							 break;
 						 case JSON::SettingType::ControllType:
 							 type = "Controlls";
 							 break;
 						 case JSON::SettingType::SoundType:
 							 type = "Sound";
+							 break;
+						 case JSON::SettingType::GraphicType:
+							 type = "Graphics";
 							 break;
 						 default:
 							 type = "Invalid";

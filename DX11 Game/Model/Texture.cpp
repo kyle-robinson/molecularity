@@ -66,7 +66,7 @@ void Texture::UpdateTexture(ID3D11Device* device, std::string file)
 
 	if(texture)texture->Release();
 	if(textureView)textureView->Release();
-	if (StringConverter::GetFileExtension(file) == ".dds")
+	if (StringConverter::GetFileExtension(file) == "dds")
 	{
 		HRESULT hr = DirectX::CreateDDSTextureFromFile(device,
 			StringConverter::StringToWide(file).c_str(),

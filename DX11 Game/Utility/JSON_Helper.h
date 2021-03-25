@@ -12,6 +12,7 @@
 /// </summary>
 
 #include <variant>
+#include<unordered_map>
 #include <rapidjson/writer.h>
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
@@ -23,10 +24,10 @@ namespace JSON
 	typedef std::variant<int, std::string, bool, float, double> DataFromFile;
 	
 	enum SettingType {
-		GenType,
+		GeneralType,
 		SoundType,
 		ControllType,
-		GrapicType,
+		GraphicType,
 		Invalid
 	};
 
@@ -92,7 +93,7 @@ namespace JSON
 	std::vector<TextData> LoadTextDataItems( const std::string& fileName );
 	
 	// Load Setting Files get all data
-	std::vector<SettingData> LoadSettings();
+	std::vector<JSON::SettingData> LoadSettings();
 	
 
 	// Load one Node as string to be reworked

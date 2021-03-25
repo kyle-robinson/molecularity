@@ -1,4 +1,5 @@
 {
+  "description": "The Settings File",
   "Genral": [
     {
       "Vsync": true,
@@ -7,8 +8,6 @@
       "WindowWidth": 10,
       "WindowHight": 2,
       "FPS": 60,
-      "HUD_ON": true,
-      "Hud_Scale": 50,
       "Language": "English"
     }
   ],
@@ -18,9 +17,9 @@
       "Right": "D",
       "Forward": "W",
       "Back": "S",
-      "Jump": "S",
-      "Action": "R",
-      "Pick_Up": "I",
+      "Jump": "SPACE",
+      "Action": "RMB",
+      "Pick_Up": "E",
       "Change_Gun_State": "1",
       "Gun_State_One": "1",
       "Gun_State_Two": "2",
@@ -34,10 +33,16 @@
     {
       "SoundOn": true,
       "SoundVolume": 50,
-      "MusicOn": true,
+      "MusicOn": false,
       "MusicVolume": 50,
-      "BackgroundSoundsOn": true,
+      "BackgroundSoundsOn": false,
       "BackgroundSoundsVolume": 50
+    }
+  ],
+  "Graphics": [
+    {
+      "HUD_ON": true,
+      "Hud_Scale": 50
     }
   ],
   "Verson": 1.5

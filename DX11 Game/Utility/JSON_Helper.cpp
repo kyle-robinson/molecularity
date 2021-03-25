@@ -158,17 +158,18 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 {		
 	std::string p;
 	SettingType type;
-	std::vector<SettingData> Settings;
+	std::vector< JSON::SettingData> Settings;
 	Document document = ParseFile( "Settings.json" );
 
 	// Parse data from file
 	for ( Value::ConstMemberIterator Object = document.MemberBegin();
 		Object != document.MemberEnd(); ++Object ) 
 	{
+		//set setting type
 		std::string objectName = Object->name.GetString();
 	
 		if (objectName == "Genral") {
-			type = SettingType::GenType;
+			type = SettingType::GeneralType;
 		}
 		else if (objectName == "Controlls") {
 			type = SettingType::ControllType;
@@ -176,12 +177,16 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 		else if (objectName == "Sound") {
 			type = SettingType::SoundType;
 		}
+		else if(objectName=="Graphics")
+		{
+			type = SettingType::GraphicType;
+		}
 		else
 		{
 			type = SettingType::Invalid;
 		}
 		
-
+		//load data
 		if ( Object->value.IsArray() )
 		{
 			for ( Value& GameObject : document[Object->name.GetString()].GetArray() )
@@ -195,7 +200,8 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 					Setting.Name = c;
 					Setting.Setting = GetDataAny( itr );
 					Setting.Type =type;
-					Settings.push_back( std::move( Setting ) );
+					
+					Settings.push_back( Setting );
 				}
 			}
 		}
