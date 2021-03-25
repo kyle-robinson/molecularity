@@ -171,14 +171,17 @@
     <ClCompile Include="Window\WindowContainer.cpp">
       <Filter>Source\Window</Filter>
     </ClCompile>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\MultiViewport.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\EventSystem\EventSystem.cpp">
+      <Filter>Headers\Utility\EventSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +418,15 @@
     </ClInclude>
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\EventSystem\Event.h">
+      <Filter>Headers\Utility\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\EventSystem\Listener.h">
+      <Filter>Headers\Utility\EventSystem\Listeners</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\EventSystem\EventSystem.h">
+      <Filter>Headers\Utility\EventSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -673,6 +685,18 @@
     </Filter>
     <Filter Include="Headers\Physics">
       <UniqueIdentifier>{628a7f71-123c-461e-a692-c582039feecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Utility\EventSystem">
+      <UniqueIdentifier>{e9346ea4-6134-4a1a-b67b-d49927c11470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Utility\EventSystem\Listeners">
+      <UniqueIdentifier>{abe35aae-69a4-4c42-bc99-8b1ebc70590e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\EventSystem">
+      <UniqueIdentifier>{56fe880a-bba3-4c89-b061-dca56cd06b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utility\EventSystem\Listeners">
+      <UniqueIdentifier>{b9ece522-4701-4a74-9594-2dcf30712862}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

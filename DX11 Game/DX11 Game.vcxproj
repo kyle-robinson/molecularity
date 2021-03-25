@@ -299,6 +299,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Utility\ErrorLogger.cpp" />
+    <ClCompile Include="Utility\EventSystem\EventSystem.cpp" />
     <ClCompile Include="Utility\JSON_Helper.cpp" />
     <ClCompile Include="Utility\Sound.cpp" />
     <ClCompile Include="Utility\stdafx.cpp">
@@ -395,6 +396,9 @@
     <ClInclude Include="Utility\Collisions.h" />
     <ClInclude Include="Utility\COMException.h" />
     <ClInclude Include="Utility\ErrorLogger.h" />
+    <ClInclude Include="Utility\EventSystem\Event.h" />
+    <ClInclude Include="Utility\EventSystem\EventSystem.h" />
+    <ClInclude Include="Utility\EventSystem\Listener.h" />
     <ClInclude Include="Utility\JSON_Helper.h" />
     <ClInclude Include="Utility\Sound.h" />
     <ClInclude Include="Utility\stdafx.h" />
