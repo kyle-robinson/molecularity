@@ -406,7 +406,7 @@
     </ClInclude>
     <ClInclude Include="Utility\EventSystem\EventSystem.h">
       <Filter>Headers\Utility\EventSystem</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_plot.h">
       <Filter>Resources\ImGui</Filter>
     </ClInclude>
