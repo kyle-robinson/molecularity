@@ -145,21 +145,37 @@ void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
 
 void ImGuiManager::SpawnPerformanceWindow() noexcept
 {
-    if (ImGui::Begin("Performance Monitor", FALSE, ImGuiWindowFlags_AlwaysAutoResize))
+    if (frameBuffer > 5)
     {
+        frameBuffer = 0;
+    }
+
+    if (ImGui::Begin("Performance Monitor", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+    {
+        //Set Monitor Position
+        ImGui::SetWindowPos(ImVec2(0, 720 - ImGui::GetWindowHeight()));
+
+        //calculate fps
         float fps = 1.0f / (deltaTime / 1000.0f);
+
+        //add fps value to vector
         if (dtHistory.size() >= 70)
             dtHistory.erase(dtHistory.begin());
 
         dtHistory.push_back(fps);
+
+        if (frameBuffer == 0)
+        {
+            fpsBuffer = fps;
+        }
 
         float* y_data = dtHistory.data();
         
         ImGui::PlotConfig config;
         config.values.ys = y_data;
         config.values.count = 70;
-        config.scale.min = 40;
-        config.scale.max = 80;
+        config.scale.min = 20;
+        config.scale.max = 100;
         config.grid_x.show = false;
         config.grid_y.show = false;
         config.frame_size = ImVec2(400, 200);
@@ -167,9 +183,11 @@ void ImGuiManager::SpawnPerformanceWindow() noexcept
 
         ImGui::Plot("plot", config);
 
-        ImGui::Text((std::to_string(fps) + " FPS").c_str());
+        ImGui::Text((std::to_string((int)std::round(fpsBuffer)) + " FPS").c_str());
     }
     ImGui::End();
+
+    frameBuffer++;
 }
 
 void ImGuiManager::SetBlackGoldStyle()
