@@ -14,7 +14,7 @@
 #include "CameraController.h"
 #include "DirectionalLight.h"
 #include "GraphicsContainer.h"
-#include"UI.h"
+#include"UI_Manager.h"
 #include <dxtk/WICTextureLoader.h>
 
 class Fog;
@@ -43,12 +43,9 @@ public:
 	std::shared_ptr<MultiViewport> GetMultiViewport() const noexcept { return multiViewport; }
 	CameraController* GetCameraController() const noexcept { return cameras; }
 	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
-
-	UI GetUi() { return UI_Controllor; }
-
 private:
 	bool InitializeScene();
-	UI UI_Controllor;
+	UI_Manager UI_Controllor;
 	// Scene Objects
 	Quad simpleQuad;
 	Sprite crosshair;

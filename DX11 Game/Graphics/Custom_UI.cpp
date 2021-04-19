@@ -49,6 +49,7 @@ void Custom_UI::INITWigets()
 void Custom_UI::INITTexRender()
 {
 	HUDTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont",_Device.Get(),_Contex.Get());
+	HeadderTextRenderer= make_shared<TextRenderer>("OpenSans_50.spritefont", _Device.Get(), _Contex.Get());
 }
 
 Custom_UI::Custom_UI()
@@ -100,6 +101,12 @@ void Custom_UI::BeginDraw(Graphics* gfx, VertexShader& vert,PixelShader& pix)
 			PuaseButtions[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix(), HUDTextRenderer.get());
 			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
+
+		for (UINT i = 0; i < PuaseText.size(); i++)
+		{
+			HeadderTextRenderer->RenderString(PuaseText[i].text, PuaseText[i].position, PuaseText[i].colour);
+		}
+		PuaseText.clear();
 	}
 	if (isSettings) {
 		SettingsBakgtound.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetWorldOrthoMatrix());
@@ -135,15 +142,13 @@ void Custom_UI::BeginDraw(Graphics* gfx, VertexShader& vert,PixelShader& pix)
 		SettingsInputCount = 0;
 	}
 
-	
-
-	
 }
 
 //pre set Ui emements
 void Custom_UI::MainMenu(Graphics* gfx)
 {
-
+	//title card 
+	//buttions 
 	
 }
 //test values
@@ -334,10 +339,7 @@ void Custom_UI::Settings()
 						vector<string>Language = { "Eng", "Fr","" };
 						SettingsDropdowns[SettingsDropCount].Function(Language, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
 						setting.Setting = SettingsDropdowns[SettingsDropCount].getSelected();
-						
-						
 						SettingsDropCount++;
-
 					}
 
 					currentY += 50;
@@ -436,7 +438,7 @@ void Custom_UI::Settings()
 
 							string controll = get<string>(setting.Setting);
 							ControllInput[SettingsInputCount].setCurrentText(controll);
-							ControllInput[SettingsInputCount].Function({ 100, 30 }, { 200,currentY }, { 0,0,0 }, Key, _MouseData);
+							ControllInput[SettingsInputCount].Function({ 300, 30 }, { 200,currentY }, { 0,0,0 }, Key, _MouseData);
 							string output = ControllInput[SettingsInputCount].getCurrentText();
 
 							string UpperOut;
@@ -562,13 +564,21 @@ void Custom_UI::Pause()
 		}
 		
 		//text
+		textToDraw puaseText;
+		puaseText.colour = Colors::LightGreen;
+		puaseText.position = { 50,0 };
+		puaseText.text = "Puase";
+		PuaseText.push_back(puaseText);
+		
+		puaseText.colour = Colors::LightGreen;
+		puaseText.position = { _SizeOfScreen.x / 2,_SizeOfScreen.y / 3 };
+		puaseText.text = "Tip";
+		PuaseText.push_back(puaseText);
 
-		////title
-		//Text("Puase", { 100,0 }, Colors::LightGreen);
-		//
-		////tip
-		//Text("Tip", { (float)gfx->GetWidth() / 2,(float)gfx->GetHeight() / 3 }, Colors::LightGreen);
-		//Text("Tip Text", { (float)gfx->GetWidth() / 2,(float)gfx->GetHeight() / 2 }, Colors::LightGreen);
+		puaseText.colour = Colors::LightGreen;
+		puaseText.position = { _SizeOfScreen.x / 2,_SizeOfScreen.y / 2 };
+		puaseText.text = "Tip Text";
+		PuaseText.push_back(puaseText);
 
 	}
 	else{
@@ -578,7 +588,7 @@ void Custom_UI::Pause()
 
 void Custom_UI::PreMenuItems(Graphics* gfx)
 {
-	
+	//logo
 	
 }
 

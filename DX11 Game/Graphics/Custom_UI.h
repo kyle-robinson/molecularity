@@ -109,7 +109,7 @@ private:
 	//Puase
 	Buttion_Widget PuaseButtions[4];
 	ColourBlock PuaseBakgtound;
-	vector<string> PuaseText;
+	vector<textToDraw> PuaseText;
 
 	//Settings
 	ColourBlock SettingsBakgtound;
@@ -144,18 +144,14 @@ private:
 
 
 	//Grapics Infromation
-	Microsoft::WRL::ComPtr < ID3D11Device>_Device;
-	Microsoft::WRL::ComPtr < ID3D11DeviceContext> _Contex;
+	Microsoft::WRL::ComPtr <ID3D11Device>_Device;
+	Microsoft::WRL::ComPtr <ID3D11DeviceContext> _Contex;
 	ConstantBuffer<CB_PS_scene> _cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix_2D> _cb_vs_matrix_2d;
 	XMFLOAT2 _SizeOfScreen;
 };
 
 
-//TODO
-//Creat Child Class
-//main Menu
-//Game UI - puase,HUD
-//Pre Game
+
 
 

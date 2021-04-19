@@ -20,8 +20,8 @@ bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int h
 	this->cameras = camera;
 
 	UI_Controllor.Initialize(device.Get(), context.Get());
-	UI_Controllor.getCustomUi()->setcb_ps_scene(cb_ps_scene);
-	UI_Controllor.getCustomUi()->setcb_vs_matrix_2d(cb_vs_matrix_2d);
+	UI_Controllor.GetCustomUi("")->setcb_ps_scene(cb_ps_scene);
+	UI_Controllor.GetCustomUi("")->setcb_vs_matrix_2d(cb_vs_matrix_2d);
 	return true;
 }
 

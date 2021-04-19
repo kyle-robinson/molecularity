@@ -214,6 +214,8 @@
     <ClCompile Include="Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="HUD_UI.cpp" />
+    <ClCompile Include="UI.cpp" />
     <ClCompile Include="UI\Wigets\Input_Widget.cpp" />
     <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp" />
     <ClCompile Include="UI\Wigets\DropDown_Widget.cpp" />
@@ -241,7 +243,7 @@
     <ClCompile Include="Graphics\TextRenderer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Graphics\UI.cpp" />
+    <ClCompile Include="Graphics\UI_Manager.cpp" />
     <ClCompile Include="UI\Wigets\Immage_Widget.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
@@ -337,6 +339,8 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="HUD_UI.h" />
+    <ClInclude Include="UI.h" />
     <ClInclude Include="UI\Wigets\Input_Widget.h" />
     <ClInclude Include="UI\Wigets\DataSlider_Widget.h" />
     <ClInclude Include="UI\Wigets\DropDown_Widget.h" />
@@ -371,7 +375,7 @@
     <ClInclude Include="Graphics\StencilOutline.h" />
     <ClInclude Include="Graphics\SwapChain.h" />
     <ClInclude Include="Graphics\TextRenderer.h" />
-    <ClInclude Include="Graphics\UI.h" />
+    <ClInclude Include="Graphics\UI_Manager.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\VertexType.h" />
     <ClInclude Include="Graphics\Vertices.h">

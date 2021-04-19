@@ -43,7 +43,7 @@ void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colou
 	BackgoundColour = colour;
 
 
-
+	//get if user hit
 	if (
 		MData.Pos.x >= pos.x &&
 		MData.Pos.x <= (pos.x + size.x) &&
@@ -55,7 +55,7 @@ void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colou
 		}
 		
 	}
-
+	//get text to display
 	if (Selcted) {
 		switch (key)
 		{
@@ -88,14 +88,17 @@ void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colou
 			CurrentText = "Right_Arrow";
 			Selcted = false;
 			break;
-		case 0:
+		case VK_MBUTTON:
+			CurrentText = "Middle mouse";
+			Selcted = false;
 			break;
-		
+		case VK_SCROLL:
+			CurrentText = "Scroll Wheel";
+			Selcted = false;
+			break;
 		default:
-			
+
 			CurrentText = key;
-				
-			
 			Selcted = false;
 			break;
 		}
