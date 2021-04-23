@@ -215,6 +215,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="HUD_UI.cpp" />
+    <ClCompile Include="Main_Menu_UI.cpp" />
+    <ClCompile Include="Pause.cpp" />
+    <ClCompile Include="Settings_Menu_UI.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UI\Wigets\Input_Widget.cpp" />
     <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp" />
@@ -223,7 +226,6 @@
     <ClCompile Include="UI\Wigets\Buttion_Widget.cpp" />
     <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp" />
     <ClCompile Include="UI\Wigets\ColourBlock.cpp" />
-    <ClCompile Include="Graphics\Custom_UI.cpp" />
     <ClCompile Include="Graphics\Fog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -340,6 +342,9 @@
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="HUD_UI.h" />
+    <ClInclude Include="Main_Menu_UI.h" />
+    <ClInclude Include="Pause.h" />
+    <ClInclude Include="Settings_Menu_UI.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UI\Wigets\Input_Widget.h" />
     <ClInclude Include="UI\Wigets\DataSlider_Widget.h" />
@@ -352,7 +357,6 @@
     <ClInclude Include="Graphics\Blender.h" />
     <ClInclude Include="Graphics\ConstantBuffer.h" />
     <ClInclude Include="Graphics\ConstantBufferTypes.h" />
-    <ClInclude Include="Graphics\Custom_UI.h" />
     <ClInclude Include="Graphics\DepthStencil.h" />
     <ClInclude Include="Graphics\Fog.h" />
     <ClInclude Include="Graphics\Graphics.h" />

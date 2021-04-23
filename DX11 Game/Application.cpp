@@ -37,6 +37,7 @@ void Application::Update()
 	timer.Restart();
 	sound.UpdateListenerPos( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3() ) );
 	input.Update( dt, sound );
+	cameras.Update();
 	gfx.Update( dt );
 	//update screen size
 	RECT windowRect;

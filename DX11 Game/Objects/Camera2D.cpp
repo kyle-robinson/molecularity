@@ -1,5 +1,5 @@
 #include "Camera2D.h"
-
+#include<EventSystem/EventSystem.h>
 Camera2D::Camera2D()
 {
 	position = XMFLOAT3( 0.0f, 0.0f, 0.0f );
@@ -27,8 +27,16 @@ const XMMATRIX& Camera2D::GetWorldMatrix() const noexcept
 }
 
 const XMMATRIX& Camera2D::GetWorldOrthoMatrix() const noexcept
-{
+{	
+
 	return worldMatrix * orthoMatrix;
+}
+
+void Camera2D::SendWorldOrthoMatrix()
+{
+	//worldOrthoMatrix Output
+	XMStoreFloat4x4(&WorldOrthoMatrix, worldMatrix * orthoMatrix);
+	EventSystem::Instance()->AddEvent(EVENTID::WorldOrthMatrixEvent, &WorldOrthoMatrix);
 }
 
 void Camera2D::UpdateMatrix()
@@ -36,4 +44,5 @@ void Camera2D::UpdateMatrix()
 	XMMATRIX translationOffsetMatrix = XMMatrixTranslation( -position.x, -position.y, 0.0f );
 	XMMATRIX cameraRotationMatrix = XMMatrixRotationRollPitchYaw( rotation.x, rotation.y, rotation.z );
 	worldMatrix = cameraRotationMatrix * translationOffsetMatrix;
+
 }

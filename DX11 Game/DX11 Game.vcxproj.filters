@@ -198,17 +198,27 @@
     <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp">
       <Filter>UI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Custom_UI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\widget.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\UI_Manager.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="UI.cpp" />
-    <ClCompile Include="HUD_UI.cpp" />
+    <ClCompile Include="UI\Wigets\widget.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD_UI.cpp">
+      <Filter>UI\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Main_Menu_UI.cpp">
+      <Filter>UI\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Pause.cpp">
+      <Filter>UI\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings_Menu_UI.cpp">
+      <Filter>UI\UIClass</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>UI\UIClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -469,20 +479,30 @@
     <ClInclude Include="UI\Wigets\PageSlider_Widget.h">
       <Filter>UI\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Custom_UI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\widget.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="UI\WidgetIncludes.h">
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\UI_Manager.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="UI.h" />
-    <ClInclude Include="HUD_UI.h" />
+    <ClInclude Include="UI\Wigets\widget.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD_UI.h">
+      <Filter>UI\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Main_Menu_UI.h">
+      <Filter>UI\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
+      <Filter>UI\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings_Menu_UI.h">
+      <Filter>UI\UIClass</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>UI\UIClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">
@@ -761,6 +781,9 @@
     </Filter>
     <Filter Include="UI\Widgets">
       <UniqueIdentifier>{c0b137f6-c49f-4f83-ad61-2e83b7a5e3a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIClass">
+      <UniqueIdentifier>{e5e58d2e-2873-4eac-ae8d-7ea7171163df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

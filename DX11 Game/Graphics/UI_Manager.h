@@ -1,45 +1,40 @@
 #pragma once
-#include "Graphics/Custom_UI.h"
+#include<EventSystem/Listener.h>
+#include<UI.h>
 #include<map>;
 
 class Input;
 class Graphics;
 //ui driver code
-class UI_Manager
+class UI_Manager: public Listener
 {
 public:
 	UI_Manager();
 	
 
-	void Initialize( ID3D11Device* device, ID3D11DeviceContext* context);
+	void Initialize( ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d);
 	~UI_Manager();
 
-
-	void Draw(Graphics* level,VertexShader& vert, PixelShader& pix);
+	void Update();
+	void Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
 	
 	
 	//turn off ui
 	bool GetToDraw()const { return IsToDraw; }
 	void SetToDraw(bool ToDraw) { IsToDraw = ToDraw; }
 
-	std::shared_ptr <Custom_UI> GetCustomUi(string UIName){
-		return UiList["All"];
-	}
+	std::shared_ptr <UI> GetCustomUi(string UIName){return UiList[UIName];}
 
+	void HandleEvent(Event* event);
 
-private:
 
 private:
 	//draw all
 	bool IsToDraw = true;
 
-	bool GetIsPaused() { return isPaused; }
-	void SetIsPuased(bool pause) { isPaused = pause; }
+	XMFLOAT4X4 WorldOrthMatrix;
 
-	bool isPaused = false;
-	bool isSettings = false;
-
-	std::map<string, std::shared_ptr <Custom_UI>> UiList;
+	std::map<string, std::shared_ptr <UI>> UiList;
 
 };
 

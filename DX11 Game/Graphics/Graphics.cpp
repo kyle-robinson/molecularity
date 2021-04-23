@@ -19,9 +19,8 @@ bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int h
 	if ( !InitializeScene() ) return false;
 	this->cameras = camera;
 
-	UI_Controllor.Initialize(device.Get(), context.Get());
-	UI_Controllor.GetCustomUi("")->setcb_ps_scene(cb_ps_scene);
-	UI_Controllor.GetCustomUi("")->setcb_vs_matrix_2d(cb_vs_matrix_2d);
+	UI_Controllor.Initialize(device.Get(), context.Get(), &cb_vs_matrix_2d);
+
 	return true;
 }
 
@@ -71,10 +70,6 @@ bool Graphics::InitializeScene()
 			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
 			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
 
-			// sprites
-			//Moved To ui
-			/*if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
-			crosshair.SetInitialPosition( GetWidth() / 2 - crosshair.GetWidth() / 2, GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );*/
 		}
 
 		// SYSTEMS
@@ -196,7 +191,7 @@ void Graphics::RenderFrame()
 void Graphics::EndFrame()
 {
 	
-	UI_Controllor.Draw(this, vertexShader_2D, pixelShader_2D);
+	UI_Controllor.Draw(vertexShader_2D, pixelShader_2D, &cb_ps_scene);
 	// setup RTT and update post-processing
 	RenderSceneToTexture();
 	postProcessing->Bind( *this );
@@ -266,4 +261,5 @@ void Graphics::Update( const float dt )
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
 	
+	UI_Controllor.Update();
 }

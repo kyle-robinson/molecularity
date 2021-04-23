@@ -43,18 +43,16 @@ public:
 	float GetSizeMultiplier() const noexcept { return sizeMultiplier; }
 
 	// Setters
-	void SetToolType( ToolType type ) { toolType = type;
-	EventSystem::Instance()->AddEvent(EVENTID::ToolUpdateEvent, &toolType);
-	}
+	void SetToolType( ToolType type ) { toolType = type;}
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
-	void SetBoxSize( BoxSize size ) noexcept { boxSize = size; }
+	void SetBoxSize( BoxSize size ) noexcept { boxSize = size;}
 	
 	void SetSizeID( int id ) noexcept { sizeID = id; }
 	void SetMaterialID( int id ) noexcept { materialID = id; }
 
 	void SetBurnable( bool burnable ) noexcept { isBurnable = burnable; }
 	void SetReflective( bool reflective ) noexcept { isReflective = reflective; }
-	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier; }
+	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier; EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);}
 
 private:
 	int sizeID = 1;

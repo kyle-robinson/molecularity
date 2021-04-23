@@ -52,8 +52,6 @@ void Input::UpdateKeyboard( const float dt )
 			{
 				if (keycode == '1') {
 					graphics->GetCube()[i]->GetEditableProperties()->SetToolType(ToolType::Convert);
-				
-					
 				}
 				if (keycode == '2') {
 					graphics->GetCube()[i]->GetEditableProperties()->SetToolType(ToolType::Resize);
@@ -66,12 +64,15 @@ void Input::UpdateKeyboard( const float dt )
 			 UIChar = keyboard.ReadChar();
 			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
 
-			
+		
 			if (keycode == 'P') {
-				graphics->GetUi().getCustomUi()->isPaused = true;
+				//puase game
+				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 				EnableCursor();
 			}
-			if (!graphics->GetUi().getCustomUi()->isPaused&& cameras->GetCurrentCamera() != JSON::CameraType::Debug) {
+
+			//for ui when exit pause: to be remove when decoupling is complet
+			if (keycode == 'L') {
 				DisableCursor();
 			}
 

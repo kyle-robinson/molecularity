@@ -11,7 +11,7 @@ Input_Widget::~Input_Widget()
 
 bool Input_Widget::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
-
+	Selcted = false;
 	Background.Initialize(Device, Contex, _Size.x, _Size.y, Colour{ 0,0,0 } , cb_vs_matrix_2d);
 	return true;
 }
@@ -55,6 +55,7 @@ void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colou
 		}
 		
 	}
+
 	//get text to display
 	if (Selcted) {
 		switch (key)
@@ -88,20 +89,23 @@ void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colou
 			CurrentText = "Right_Arrow";
 			Selcted = false;
 			break;
-		case VK_MBUTTON:
-			CurrentText = "Middle mouse";
-			Selcted = false;
-			break;
-		case VK_SCROLL:
-			CurrentText = "Scroll Wheel";
-			Selcted = false;
-			break;
 		default:
-
-			CurrentText = key;
-			Selcted = false;
+			if (key != 0) {
+				CurrentText = key;
+				Selcted = false;
+			}
+			else if(MData.MPress)
+			{
+				CurrentText = "Scroll Wheel";
+				Selcted = false;
+			}
+			else if (MData.RPress)
+			{
+				CurrentText = "Right Mouse";
+				Selcted = false;
+			}
 			break;
 		}
-
+		
 	}
 }

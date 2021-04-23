@@ -33,9 +33,6 @@ public:
 	void SetAlfaFactor(float AF) { _AlfaFactor = AF; }
 	float GetAlfaFactor() { return _AlfaFactor; }
 
-private:
-
-
 	//vars
 protected:
 	XMFLOAT2 _Size;

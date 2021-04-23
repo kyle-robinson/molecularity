@@ -5,7 +5,7 @@
 bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
 {
     this->context = context;
-
+   
     try
     {
         HRESULT hr = vb_cube.Initialize( device, Vtx::verticesCube, ARRAYSIZE( Vtx::verticesCube ) );
@@ -15,7 +15,9 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
         
         editableProperties = std::make_shared<CubeProperties>();
         physicsModel = std::make_shared<PhysicsModel>( this );
-
+        //send out editable properties to hud for data
+        EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, editableProperties.get());
+        
         SetPosition( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
 	    SetRotation( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
         SetScale( 1.0f, 1.0f, 1.0f );

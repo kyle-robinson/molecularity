@@ -3,19 +3,33 @@
 
 HUD_UI::HUD_UI()
 {
+	EventSystem::Instance()->AddClient(EVENTID::EnergyUpdateEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::ToolModeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
 }
 
 HUD_UI::~HUD_UI()
 {
 }
 
-void HUD_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d)
+void HUD_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
 {
-	EventSystem::Instance()->AddClient(EVENTID::EnergyUpdateEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::ToolUpdateEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->ProcessEvents();
+	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
 
-	
+	for (auto& setting : SettingsData)
+	{
+		if (setting.Name == "Hud_Scale") {
+			hudScale = (float)get<int>(setting.Setting) / 100;
+		}
+	}
+
+
+	_Device = device;
+	_Contex = contex;
+	_cb_vs_matrix_2d = cb_vs_matrix_2d;
+	HudBakgrounds[0].INITSprite(contex, device, *_cb_vs_matrix_2d);
 	HUDenergyWidget.INITSprite(contex, device, *_cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 3; i++)
 	{
@@ -33,27 +47,27 @@ void HUD_UI::Update()
 	string ToolInformationTexture = "";
 
 	//TODO add background and borders
-	switch (ToolSetting)
+	switch (Mode->GetToolType())
 	{
 	case ToolType::Convert: {
 		TextFile = "HUD\\Tool_Assets\\ConvertSelect_500x500.dds";
-		/*switch (gfx->GetCube()[0]->GetEditableProperties()->GetMaterialID())
+		switch (Mode->GetMaterialID())
 		{
 		case 0: ToolInformationTexture = "crates\\basic_crate.png"; break;
 		case 1: ToolInformationTexture = "crates\\bounce_crate.png"; break;
 		case 2: ToolInformationTexture = "crates\\arrow_crate.png"; break;
 		case 3: ToolInformationTexture = "crates\\tnt_crate.png"; break;
-		}*/
+		}
 	}
 						  break;
 	case ToolType::Resize: {
 		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
-		/*switch (gfx->GetCube()[0]->GetEditableProperties()->GetSizeID())
+		switch (Mode->GetSizeID())
 		{
 		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Down.png"; break;
 		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Reset.png"; break;
 		case 2: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_UP.png"; break;
-		}*/
+		}
 	}
 						 break;
 	default:
@@ -63,27 +77,26 @@ void HUD_UI::Update()
 
 	HUDImages[2].Function(ToolInformationTexture, { 500 * hudScale,500 * hudScale }, { _SizeOfScreen.x - (1000 * hudScale),  _SizeOfScreen.y - (500 * hudScale) });
 	HUDImages[0].Function(TextFile, { 500 * hudScale,500 * hudScale }, { _SizeOfScreen.x - (500 * hudScale),  _SizeOfScreen.y - (500 * hudScale) });
+	HudBakgrounds[0].Function(Colour{ 0, 0, 0,100 }, { 1000 * hudScale,500 * hudScale }, { _SizeOfScreen.x - (1000 * hudScale),  _SizeOfScreen.y - (500 * hudScale) }, 0.7);
 	//crosshair
 	HUDImages[1].Function("HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200 * hudScale,200 * hudScale }, { _SizeOfScreen.x / 2 - (200 * hudScale) / 2,  _SizeOfScreen.y / 2 - (200 * hudScale) / 2 });
 	//bar data
-	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.png", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - (250 * hudScale) }, energy);
+	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.dds", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - (250 * hudScale) }, energy);
 
 
 }
 
-void HUD_UI::BeginDraw(VertexShader& vert, PixelShader& pix)
+void HUD_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
-
-	HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
-	HUDImages[0].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
-
+	Shaders::BindShaders(_Contex.Get(), vert, pix);
+	HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+	HUDImages[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+	HudBakgrounds[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		HUDImages[i].Draw(_Contex.Get(), _Device.Get(), _cb_ps_scene, _cb_vs_matrix_2d, gfx->GetCameraController()->GetUICamera().GetOrthoMatrix());
+		HUDImages[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 	}
 
-	HUDTextRenderer->RenderCubeMoveText(*gfx);
-	Shaders::BindShaders(_Contex.Get(), vert, pix);
 }
 
 void HUD_UI::HandleEvent(Event* event)
@@ -95,9 +108,9 @@ void HUD_UI::HandleEvent(Event* event)
 		energy = (int)event->GetData();
 	}
 	break;
-	case EVENTID::ToolUpdateEvent:
+	case EVENTID::ToolModeEvent:
 	{
-		ToolSetting = *(ToolType*)event->GetData();
+		Mode = (CubeProperties*)event->GetData();
 	}
 	break;
 	case EVENTID::WindowSizeChangeEvent:
@@ -107,17 +120,14 @@ void HUD_UI::HandleEvent(Event* event)
 	}
 	break;
 	case EVENTID::UpdateSettingsEvent:
-
-		for (auto& setting : *static_cast<std::vector<JSON::SettingData>*>(event->GetData()))
+		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		for (auto& setting : a)
 		{
 			if (setting.Name == "Hud_Scale") {
 				hudScale = (float)get<int>(setting.Setting) / 100;
 			}
 		}
 
-
-	default:
-		break;
 	}
 
 }

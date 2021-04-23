@@ -17,7 +17,7 @@ public:
     DropDown_Widget(vector<ListData>DropDownList,DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos,Colour colour,MouseData MData);
    
 	bool INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d);
-	void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix,TextRenderer* textrender);
+	void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix,TextRenderer* textrender, VertexShader& vert, PixelShader& pix);
     ListData getSelected() { return DataSelected; }
 
 
@@ -66,7 +66,7 @@ inline bool DropDown_Widget<ListData>::INITSprite(ID3D11DeviceContext* Contex, I
 }
 
 template<typename ListData>
-inline void DropDown_Widget<ListData>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender)
+inline void DropDown_Widget<ListData>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender, VertexShader& vert, PixelShader& pix)
 {
 	_Bakground.UpdateTex(Device, BakgroungColour);
 	_Bakground.SetScale(_Size.x, _Size.y);
@@ -82,7 +82,7 @@ inline void DropDown_Widget<ListData>::Draw(ID3D11DeviceContext* Contex, ID3D11D
 	
 
 	ButtionDrop.Draw(Contex, Device, cb_ps_scene, cb_vs_matrix_2d, WorldOrthoMatrix, textrender);
-
+	Shaders::BindShaders(Contex, vert, pix);
 	if (DropState==Down)
 	{
 		
@@ -91,7 +91,7 @@ inline void DropDown_Widget<ListData>::Draw(ID3D11DeviceContext* Contex, ID3D11D
 
 
 			ListButtions[i].Draw(Contex, Device, cb_ps_scene, cb_vs_matrix_2d, WorldOrthoMatrix, textrender);
-		
+			Shaders::BindShaders(Contex, vert, pix);
 		}
 		
 	}

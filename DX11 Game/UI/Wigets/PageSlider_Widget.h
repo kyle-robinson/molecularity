@@ -14,6 +14,7 @@ public:
     
 	int getPagePos() { return PagePos; }
 	float getPY() { return PY; }
+	void setPY(float py) { PY = py; }
 private:
 	Sprite Bar;
     BarTex _BarColour;
