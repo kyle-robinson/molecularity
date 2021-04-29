@@ -1,8 +1,10 @@
 #pragma once
 #pragma comment(lib, "xaudio2")
+//#pragma comment(lib, "irrKlang.lib") // link with irrKlang.dll
 #include <xaudio2.h>
 #include <x3daudio.h>
 #include <winnt.h>
+#include <irrklang/irrKlang.h>
 
 // Little-Endian
 #define fourccRIFF 'FFIR'	//RIFF
