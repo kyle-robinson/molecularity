@@ -22,7 +22,7 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 	
 	HeadderTextRenderer = make_shared<TextRenderer>("OpenSans_50.spritefont", _Device.Get(), _Contex.Get());
 	PGTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont", _Device.Get(), _Contex.Get());
-
+	_TitleCard.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	PuaseBakgtound.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 4; i++) {
 		PuaseButtions[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
@@ -35,37 +35,37 @@ void Pause::Update()
 	if (_isPuased) {
 		//bakground
 		PuaseBakgtound.Function({ 0,0,0 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
-
+		_TitleCard.Function("Title_Card\\TitleCard.dds", { 500,100 }, { 0,0 });
 		//Buttions
-		if (PuaseButtions[0].Function("Play", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0, 100 },DirectX::Colors::White, _MouseData)) {
+		if (PuaseButtions[0].Function("Play", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>( _SizeOfScreen.y*0.25) },DirectX::Colors::Black, _MouseData)) {
 			//back to game
 			_isPuased = false;
 		}
-		else if (PuaseButtions[1].Function("Reset", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0,  200 }, DirectX::Colors::White, _MouseData)) {
+		else if (PuaseButtions[1].Function("Reset", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 			//reset level
 		}
-		else if (PuaseButtions[2].Function("Settings", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0,  300 }, DirectX::Colors::White, _MouseData)) {
+		else if (PuaseButtions[2].Function("Settings", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 			//settings
 			EventSystem::Instance()->AddEvent(EVENTID::GAmeSettingsEvent);
 		}
-		else if (PuaseButtions[3].Function("Exit", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ 0,  400 }, DirectX::Colors::White, _MouseData)) {
+		else if (PuaseButtions[3].Function("Exit", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 			//exit
 			EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
 		}
 
 		//text
 		TextToDraw puaseText;
-		puaseText._Colour = Colors::LightGreen;
-		puaseText._Position = { 0,0 };
+		puaseText._Colour = Colors::White;
+		puaseText._Position = { 0,static_cast<float>(_SizeOfScreen.y * 0.12) };
 		puaseText._Text = "Pause";
 		PuaseTextTitles.push_back(puaseText);
 
-		puaseText._Colour = Colors::LightGreen;
+		puaseText._Colour = Colors::White;
 		puaseText._Position = { _SizeOfScreen.x / 2,_SizeOfScreen.y / 3 };
 		puaseText._Text = "Tip";
 		PuaseTextTitles.push_back(puaseText);
 
-		puaseText._Colour = Colors::LightGreen;
+		puaseText._Colour = Colors::White;
 		puaseText._Position = { static_cast<float>(_SizeOfScreen.x * 0.5),static_cast<float>(_SizeOfScreen.y * 0.5) };
 		puaseText._Text = "Tip Text";
 		PuaseTextPG.push_back(puaseText);
@@ -77,6 +77,7 @@ void Pause::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMa
 	Shaders::BindShaders(_Contex.Get(), vert, pix);
 	if (_isPuased) {
 		PuaseBakgtound.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		_TitleCard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		for (unsigned int i = 0; i < 4; i++) {
 			PuaseButtions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, PGTextRenderer.get());
 			Shaders::BindShaders(_Contex.Get(), vert, pix);

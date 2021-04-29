@@ -46,7 +46,7 @@ void Application::Update()
 		XMFLOAT2 windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
 		EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
 		cameras.UpDateUICamValues(windowsize.x, windowsize.y, 0.0f, 1.0f);
-		cameras.GetCamera(cameras.GetCurrentCamera())->SetProjectionValues(70.0f, windowsize.x / windowsize.y, 0.1f, 1000.0f);
+		gfx.UpdateWidthHight(windowsize.x, windowsize.y);
 		renderWindow.SetWidthHight(windowsize.x, windowsize.y);
 	}
 

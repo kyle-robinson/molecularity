@@ -33,6 +33,8 @@ public:
 	//fix to update ui cam
 	void UpDateUICamValues(float width, float height, float nearZ, float farZ) {
 		UICamera.SetProjectionValues(width, height, nearZ, farZ);
+		for (const auto& cam : cameras)
+			cam.second->SetProjectionValues(70.0f, width / height, 0.1f, 1000.0f);
 	}
 
 private:

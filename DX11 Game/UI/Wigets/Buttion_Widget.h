@@ -45,10 +45,10 @@ inline bool Buttion_Widget<ButtionTexType>::INITSprite(ID3D11DeviceContext* Cont
 template<typename ButtionTexType>
 inline void Buttion_Widget<ButtionTexType>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender)
 {
-    _Bakground.UpdateTex(Device, ButtionColour);
+        
     	_Bakground.SetInitialPosition(_Pos.x, _Pos.y, 0);
     	_Bakground.SetScale(_Size.x, _Size.y);
-    
+        _Bakground.UpdateTex(Device, ButtionColour);
     	cb_ps_scene.data.alphaFactor = _AlfaFactor;
     	cb_ps_scene.data.useTexture = false;
     
@@ -56,7 +56,8 @@ inline void Buttion_Widget<ButtionTexType>::Draw(ID3D11DeviceContext* Contex, ID
     	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
     	_Bakground.Draw(WorldOrthoMatrix);
     
-    	textrender->RenderString(ButtionTex, _Pos, TextColour);
+        XMFLOAT2 textpos = { _Pos.x+10 ,_Pos.y+ (_Size.y /2)-12 };
+    	textrender->RenderString(ButtionTex, textpos, TextColour);
 }
 
 template<typename ButtionTexType>

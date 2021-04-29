@@ -30,10 +30,14 @@ private:
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;
 	DropDown_Widget<string> SettingsDropdowns[10];
 	DataSlider_Widget<Colour, Colour> SettingsSliders[10];
-	Buttion_Widget<Colour> SettingsButtions[10];
+	Buttion_Widget<string> SettingsButtions[10];
 	Input_Widget ControllInput[20];
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;
+
+	vector<string> ButtionTex = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds",
+		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds",
+		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
 
 	XMFLOAT2 TabTextPos;
 

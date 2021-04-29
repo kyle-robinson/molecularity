@@ -20,10 +20,14 @@ private:
 
 	bool _isPuased;
 	//Puase
-	Buttion_Widget<Colour> PuaseButtions[4];
+	Buttion_Widget<string> PuaseButtions[4];
 	ColourBlock PuaseBakgtound;
+	Immage_Widget _TitleCard;
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;
+	vector<string> ButtionTex = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds", 
+		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds", 
+		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
 	//fonts
 	std::shared_ptr<TextRenderer>  HeadderTextRenderer;
 	std::shared_ptr<TextRenderer>  PGTextRenderer;

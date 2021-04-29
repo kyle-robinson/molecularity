@@ -22,7 +22,7 @@ void Camera::SetProjectionValues( float fovDegrees, float aspectRatio, float nea
 	this->nearZ = nearZ;
 	this->farZ = farZ;
 	float fovRadians = ( fovDegrees / 360.0f ) * XM_2PI;
-	projection = XMMatrixPerspectiveFovLH( fovRadians, aspectRatio, nearZ, farZ );
+	projection = XMMatrixPerspectiveFovLH(fovRadians, aspectRatio, nearZ, farZ);
 }
 
 void Camera::UpdateMatrix()
