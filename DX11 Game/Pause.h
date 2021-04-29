@@ -20,7 +20,7 @@ private:
 
 	bool _isPuased;
 	//Puase
-	Buttion_Widget PuaseButtions[4];
+	Buttion_Widget<Colour> PuaseButtions[4];
 	ColourBlock PuaseBakgtound;
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;

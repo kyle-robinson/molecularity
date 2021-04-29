@@ -30,18 +30,18 @@ void Input_Widget::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, Const
 	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
 	Background.Draw(WorldOrthoMatrix);
 
-	textrender->RenderString(CurrentText, _Pos, DirectX::Colors::White);
+	textrender->RenderString(CurrentText, _Pos, TextColour);
 
 }
 
 
-void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, unsigned char key, MouseData MData)
+void Input_Widget::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, XMVECTORF32 textColour, unsigned char key, MouseData MData)
 {
 
 	_Size = size;
 	_Pos = pos;
 	BackgoundColour = colour;
-
+	TextColour = textColour;
 
 	//get if user hit
 	if (

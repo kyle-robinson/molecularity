@@ -74,8 +74,9 @@ inline void PageSlider_Widget<BarTex, SliderTex>::Function(DirectX::XMFLOAT2 siz
 {
 	_Size = size;
 	_Pos = pos;
-	
-	
+	_BarColour = bar;
+	_SliderColour = slider;
+
 	if (
 		MData.Pos.x >= pos.x &&
 		MData.Pos.x <= (pos.x + size.x + 1) &&

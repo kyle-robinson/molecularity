@@ -14,7 +14,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     }
 
     Application game;
-    if ( game.Initialize( hInstance, "DirectX 11 Group Project - Molecularity", "WindowClass", 2560, 1377 ) )
+    if ( game.Initialize( hInstance, "DirectX 11 Group Project - Molecularity", "WindowClass", 1280, 720) )
     {
         while ( game.ProcessMessages() == true )
         {

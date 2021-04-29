@@ -21,7 +21,7 @@ public:
     ListData getSelected() { return DataSelected; }
 
 
-	void Function(vector<ListData>DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour,MouseData MData);
+	void Function(vector<ListData>DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, XMVECTORF32 textColour,MouseData MData);
 
 	void setCurrent(int slected){
 		Selected = slected;
@@ -37,9 +37,9 @@ private:
 	Colour BakgroungColour;
 
     Sprite _Options;
-
-    Buttion_Widget ButtionDrop;
-	Buttion_Widget ListButtions [10];
+	XMVECTORF32 TextColour;
+    Buttion_Widget<Colour> ButtionDrop;
+	Buttion_Widget<Colour> ListButtions [10];
 	DopStae DropState=Up;
 
 };
@@ -98,27 +98,27 @@ inline void DropDown_Widget<ListData>::Draw(ID3D11DeviceContext* Contex, ID3D11D
 	
 
 	//text	
-	textrender->RenderString(_ListData[Selected], _Pos, DirectX::Colors::White);
+	textrender->RenderString(_ListData[Selected], _Pos, TextColour);
 	if (DropState == Down)
 	{
 		for (int i = 0; i < _ListData.size(); i++)
 		{
-			textrender->RenderString(_ListData[i], ListButtions[i].GetPos(), DirectX::Colors::White);
+			textrender->RenderString(_ListData[i], ListButtions[i].GetPos(), TextColour);
 		}
 	}
 
 }
 
 template<typename ListData>
-inline void DropDown_Widget<ListData>::Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour,MouseData MData)
+inline void DropDown_Widget<ListData>::Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, XMVECTORF32 textColour, MouseData MData)
 {
 	
 	BakgroungColour = colour;
 	_Size = size;
 	_Pos = pos;
 	_ListData = DropDownList;
-	
-	ButtionDrop.Function("", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { size.y, size.y }, XMFLOAT2{ pos.x + size.x ,  pos.y }, MData);
+	TextColour = textColour;
+	ButtionDrop.Function("", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { size.y, size.y }, XMFLOAT2{ pos.x + size.x ,  pos.y }, textColour, MData);
 
 	//list buttions
 	
@@ -129,7 +129,7 @@ inline void DropDown_Widget<ListData>::Function(vector<ListData> DropDownList, D
 	for (int i = 0; i < DropDownList.size(); i++)
 	{
 		
-		ListButtions[i].Function("", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { size.x,size.y }, XMFLOAT2{ pos.x  ,  PosY }, MData);
+		ListButtions[i].Function("", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { size.x,size.y }, XMFLOAT2{ pos.x  ,  PosY }, textColour, MData);
 		PosY += size.y+1;
 	}
 

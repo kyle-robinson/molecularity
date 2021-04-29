@@ -168,10 +168,10 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 		//set setting type
 		std::string objectName = Object->name.GetString();
 	
-		if (objectName == "Genral") {
+		if (objectName == "General") {
 			type = SettingType::GeneralType;
 		}
-		else if (objectName == "Controlls") {
+		else if (objectName == "Controls") {
 			type = SettingType::ControllType;
 		}
 		else if (objectName == "Sound") {

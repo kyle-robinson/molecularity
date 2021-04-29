@@ -71,7 +71,8 @@ inline void DataSlider_Widget<BarTex, SliderTex>::Function(DirectX::XMFLOAT2 siz
 {
 	_Size = size;
 	_Pos = pos;
-
+	_BarColour = bar;
+	_SliderColour = slider;
 	 PX = ((float)start / 100) * size.x;
 
 	if (

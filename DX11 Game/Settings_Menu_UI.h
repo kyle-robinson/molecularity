@@ -26,15 +26,16 @@ private:
 	bool _isSettings;
 	std::vector<JSON::SettingData> _SettingsData;
 	//Settings
-	ColourBlock SettingsBakgtound;
+	Immage_Widget SettingsBakgtound;
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;
 	DropDown_Widget<string> SettingsDropdowns[10];
 	DataSlider_Widget<Colour, Colour> SettingsSliders[10];
-	Buttion_Widget SettingsButtions[10];
+	Buttion_Widget<Colour> SettingsButtions[10];
 	Input_Widget ControllInput[20];
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;
 
+	XMFLOAT2 TabTextPos;
 
 	UINT SettingsDropCount = 0;
 	UINT SettingSliderCount = 0;

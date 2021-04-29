@@ -2,6 +2,7 @@
 #include <imgui/imgui.h>
 #include <memory>
 
+#include<stdafx.h>
 WindowContainer::WindowContainer()
 {
 	static bool rawInputInitialized = false;

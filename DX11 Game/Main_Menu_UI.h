@@ -14,7 +14,7 @@ public:
 private:
 	//MainMenu
 	ColourBlock MainMenuBackGround;
-	Buttion_Widget MainMenuButtions[5];
+	Buttion_Widget<string> MainMenuButtions[5];
 	Immage_Widget Titlecard;
 };
 

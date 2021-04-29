@@ -12,7 +12,7 @@ public:
 
 
 
-    void Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, unsigned char key, MouseData MData);
+    void Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, XMVECTORF32 textColour, unsigned char key, MouseData MData);
     void setCurrentText(string text) { CurrentText = text; }
     string getCurrentText() {
         return CurrentText;
@@ -23,7 +23,7 @@ private:
     Colour BackgoundColour;
 
     string CurrentText;
-
+    XMVECTORF32 TextColour;
     bool Selcted=false;
 
 };

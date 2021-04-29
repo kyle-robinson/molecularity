@@ -21,6 +21,7 @@ void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* cont
 	_Contex = contex;
 	_cb_vs_matrix_2d = cb_vs_matrix_2d;
 
+	//font
 	HeadderTextRenderer = make_shared<TextRenderer>("OpenSans_50.spritefont", _Device.Get(), _Contex.Get());
 	PGTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont", _Device.Get(), _Contex.Get());
 
@@ -42,21 +43,22 @@ void Settings_Menu_UI::Update()
 	if (_isSettings) {
 		TextToDraw TextToDraw;
 		//Bakground
-		SettingsBakgtound.Function({ 255,255,255 }, { _SizeOfScreen.x ,_SizeOfScreen.y }, { 0,0 }, 1.0f);
+		SettingsBakgtound.Function("Settings\\settingsBack.dds", { _SizeOfScreen.x ,_SizeOfScreen.y+10 }, { 0,0 });
 		//Tab Buttions
 		float PosXBut = 10;
 		string TabNames[4] = { "Genral","Grapics","Sound","Controls" };
+		float posy = _SizeOfScreen.y / _SizeOfScreen.x;
 		for (UINT i = 0; i < 4; i++)
 		{
-			SettingsButtions[i].Function(TabNames[i], vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ PosXBut ,  100 }, _MouseData);
-			PosXBut += 100;
+			SettingsButtions[i].Function(TabNames[i], vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { _SizeOfScreen.x/15, _SizeOfScreen.y/15 }, XMFLOAT2{ PosXBut ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::White, _MouseData);
+			PosXBut += _SizeOfScreen.x / 15;
 			SettingsButtionCount++;
 		}
 
 	
 
 		//set tabs
-		SettingsScrollBar.Function({ 30,_SizeOfScreen.y - 100 }, { _SizeOfScreen.x - 30 ,150 }, 0, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
+		SettingsScrollBar.Function({ 30,_SizeOfScreen.y}, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.x * 0.20) }, 0, Colour{ 255,0,0 }, Colour{ 0,255,0 }, _MouseData);
 		if (SettingsButtions[0].GetIsPressed()) {
 			CurrentTab = GenralTab;
 			SettingsScrollBar.setPY(0);
@@ -77,19 +79,20 @@ void Settings_Menu_UI::Update()
 
 		
 
-		float currentY = 300 - SettingsScrollBar.getPY();
-		//box
-		XMFLOAT2 boxPos = { 0,300 };
-		XMFLOAT2 boxSize = { _SizeOfScreen.x, _SizeOfScreen.y - 116 };
+		float currentY = static_cast<float>(_SizeOfScreen.x * 0.20) - SettingsScrollBar.getPY();
+		TabTextPos = { 10,static_cast<float>(_SizeOfScreen.x * 0.12) };
+		//box for colision 
+		XMFLOAT2 boxPos = { 0,static_cast<float>(_SizeOfScreen.x * 0.20) };
+		XMFLOAT2 boxSize = { _SizeOfScreen.x, _SizeOfScreen.y-160};
 
 		//swich settings tabs
 		switch (CurrentTab)
 		{
 		case GrapicsTab:
 		{
-			TextToDraw._Colour = Colors::Black;
-			TextToDraw._Position = { 10,150 };
-			TextToDraw._Text = "Grapics";
+			TextToDraw._Colour = Colors::White;
+			TextToDraw._Position = TabTextPos;
+			TextToDraw._Text = "Graphics";
 			PuaseTextTitles.push_back(TextToDraw);
 		
 			for (auto& setting : _SettingsData)
@@ -99,18 +102,18 @@ void Settings_Menu_UI::Update()
 					if (currentY >= boxPos.y &&
 						currentY <= (boxPos.y + boxSize.y))
 					{
-						TextToDraw._Colour = Colors::Black;
+						TextToDraw._Colour = Colors::White;
 						TextToDraw._Position = { 10,currentY };
 						TextToDraw._Text = setting.Name;
 						PuaseTextPG.push_back(TextToDraw);
 						if (int* input = std::get_if<int>(&setting.Setting)) {
 
-							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
+							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 255,255,255 }, Colour{ 255,255,255 }, _MouseData);
 							setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
 							SettingSliderCount++;
 
 
-							TextToDraw._Colour = Colors::Black;
+							TextToDraw._Colour = Colors::White;
 							TextToDraw._Position = { 750,currentY };
 							TextToDraw._Text = to_string(*input);
 							PuaseTextPG.push_back(TextToDraw);
@@ -119,7 +122,7 @@ void Settings_Menu_UI::Update()
 							if (!*input) {
 								SettingsDropdowns[SettingsDropCount].setCurrent(1);
 							}
-							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
+							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 255,255,255 }, DirectX::Colors::Black, _MouseData);
 
 							if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
 								setting.Setting = false;
@@ -145,9 +148,9 @@ void Settings_Menu_UI::Update()
 		case GenralTab:
 		{
 
-			TextToDraw._Colour = Colors::Black;
-			TextToDraw._Position = { 10,150 };
-			TextToDraw._Text = "Genral";
+			TextToDraw._Colour = Colors::White;
+			TextToDraw._Position = TabTextPos;
+			TextToDraw._Text = "General";
 			PuaseTextTitles.push_back(TextToDraw);
 
 			
@@ -161,18 +164,18 @@ void Settings_Menu_UI::Update()
 					if (currentY >= boxPos.y &&
 						currentY <= (boxPos.y + boxSize.y))
 					{
-						TextToDraw._Colour = Colors::Black;
+						TextToDraw._Colour = Colors::White;
 						TextToDraw._Position = { 10,currentY };
 						TextToDraw._Text = setting.Name;
 						PuaseTextPG.push_back(TextToDraw);
 						if (int* input = std::get_if<int>(&setting.Setting)) {
 
-							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
+							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 255,255,255 }, Colour{ 224,224,224 }, _MouseData);
 							setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
 							SettingSliderCount++;
 
 
-							TextToDraw._Colour = Colors::Black;
+							TextToDraw._Colour = Colors::White;
 							TextToDraw._Position = { 750,currentY };
 							TextToDraw._Text = to_string(*input);
 							PuaseTextPG.push_back(TextToDraw);
@@ -181,7 +184,7 @@ void Settings_Menu_UI::Update()
 							if (!*input) {
 								SettingsDropdowns[SettingsDropCount].setCurrent(1);
 							}
-							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
+							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 255,255,255 }, DirectX::Colors::Black, _MouseData);
 							if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
 								setting.Setting = false;
 							}
@@ -196,7 +199,7 @@ void Settings_Menu_UI::Update()
 						else if (string* input = std::get_if<string>(&setting.Setting)) {
 
 							vector<string>Language = { "Eng", "Fr","" };
-							SettingsDropdowns[SettingsDropCount].Function(Language, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
+							SettingsDropdowns[SettingsDropCount].Function(Language, { 200,30 }, { 500,currentY }, { 255,255,255 }, DirectX::Colors::Black, _MouseData);
 							setting.Setting = SettingsDropdowns[SettingsDropCount].getSelected();
 							SettingsDropCount++;
 						}
@@ -211,8 +214,8 @@ void Settings_Menu_UI::Update()
 		case SoundTab: {
 
 
-			TextToDraw._Colour = Colors::Black;
-			TextToDraw._Position = { 10,150 };
+			TextToDraw._Colour = Colors::White;
+			TextToDraw._Position = TabTextPos;
 			TextToDraw._Text = "Sound";
 			PuaseTextTitles.push_back(TextToDraw);
 
@@ -224,7 +227,7 @@ void Settings_Menu_UI::Update()
 					if (currentY >= boxPos.y &&
 						currentY <= (boxPos.y + boxSize.y))
 					{
-						TextToDraw._Colour = Colors::Black;
+						TextToDraw._Colour = Colors::White;
 						TextToDraw._Position = { 10,currentY };
 						TextToDraw._Text = setting.Name;
 						PuaseTextPG.push_back(TextToDraw);
@@ -232,12 +235,12 @@ void Settings_Menu_UI::Update()
 
 						if (int* input = std::get_if<int>(&setting.Setting)) {
 
-							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 224,224,224 }, Colour{ 224,224,224 }, _MouseData);
+							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, Colour{ 255,255,255 }, Colour{ 224,224,224 }, _MouseData);
 							setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
 							SettingSliderCount++;
 
 
-							TextToDraw._Colour = Colors::Black;;
+							TextToDraw._Colour = Colors::White;;
 							TextToDraw._Position = { 750,currentY };
 							TextToDraw._Text = to_string(*input);
 							PuaseTextPG.push_back(TextToDraw);
@@ -247,7 +250,7 @@ void Settings_Menu_UI::Update()
 							if (!*input) {
 								SettingsDropdowns[SettingsDropCount].setCurrent(1);
 							}
-							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 0,0,0 }, _MouseData);
+							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, { 255,255,255 },DirectX::Colors::Black, _MouseData);
 
 
 
@@ -277,9 +280,9 @@ void Settings_Menu_UI::Update()
 		case ControlsTab:
 		{
 
-			TextToDraw._Colour = Colors::Black;
-			TextToDraw._Position = { 10,150 };
-			TextToDraw._Text = "Controlls";
+			TextToDraw._Colour = Colors::White;
+			TextToDraw._Position = TabTextPos;
+			TextToDraw._Text = "Controls";
 			PuaseTextTitles.push_back(TextToDraw);
 			
 			for (auto& setting : _SettingsData)
@@ -290,7 +293,7 @@ void Settings_Menu_UI::Update()
 					if (currentY >= boxPos.y &&
 						currentY <= (boxPos.y + boxSize.y)) {
 
-						TextToDraw._Colour = Colors::Black;
+						TextToDraw._Colour = Colors::White;
 						TextToDraw._Position = { 10,currentY };
 						TextToDraw._Text = setting.Name;
 						PuaseTextPG.push_back(TextToDraw);
@@ -298,7 +301,7 @@ void Settings_Menu_UI::Update()
 
 						string controll = get<string>(setting.Setting);
 						ControllInput[SettingsInputCount].setCurrentText(controll);
-						ControllInput[SettingsInputCount].Function({ 300, 30 }, { 200,currentY }, { 0,0,0 }, Key, _MouseData);
+						ControllInput[SettingsInputCount].Function({ 300, 30 }, { 200,currentY }, { 255,255,255 }, DirectX::Colors::Black, Key, _MouseData);
 						string output = ControllInput[SettingsInputCount].getCurrentText();
 
 						string UpperOut;
@@ -320,7 +323,7 @@ void Settings_Menu_UI::Update()
 		}
 
 		//update file
-		if (SettingsButtions[4].Function("Acccept", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ _SizeOfScreen.x - 100 ,  0 }, _MouseData))
+		if (SettingsButtions[4].Function("Accept", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { 100, 50 }, XMFLOAT2{ _SizeOfScreen.x - 100 ,  0 }, DirectX::Colors::White, _MouseData))
 		{
 
 
@@ -334,7 +337,7 @@ void Settings_Menu_UI::Update()
 					type = "General";
 					break;
 				case JSON::SettingType::ControllType:
-					type = "Controlls";
+					type = "Controls";
 					break;
 				case JSON::SettingType::SoundType:
 					type = "Sound";
@@ -381,7 +384,7 @@ void Settings_Menu_UI::Update()
 		}
 		SettingsButtionCount++;
 		//Headding text
-		TextToDraw._Colour = Colors::Black;
+		TextToDraw._Colour = Colors::White;
 		TextToDraw._Position = { 100,0 };
 		TextToDraw._Text = "Settings";
 
@@ -460,7 +463,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 	case EVENTID::WindowSizeChangeEvent:
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
-
+		
 	}
 	break;
 
