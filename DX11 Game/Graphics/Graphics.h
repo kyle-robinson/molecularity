@@ -2,80 +2,101 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include "Cube.h"
-#include "Camera.h"
-#include "Sprite.h"
-#include "Camera2D.h"
-#include "SpotLight.h"
-#include "PointLight.h"
-#include "JSON_Helper.h"
-#include "ImGuiManager.h"
-#include "MultiViewport.h"
-#include "CameraController.h"
-#include "DirectionalLight.h"
-#include "GraphicsContainer.h"
-#include <dxtk/WICTextureLoader.h>
+#include <map>
+#include <memory>
+#include <string>
+#include <Windows.h>
+#include <d3d11_1.h>
+#include <wrl/client.h>
 
-class Fog;
-class TextRenderer;
-class PostProcessing;
-class StencilOutline;
+#include "Shaders.h"
+#include "Quad.h"
+
+namespace Bind
+{
+	class Blender;
+	class DepthStencil;
+	class Rasterizer;
+	class RenderTarget;
+	class Sampler;
+	class Stencil;
+	class SwapChain;
+	class Viewport;
+}
 
 /// <summary>
-/// Loads and renders/updates all the components and models for the current scene/level.
-/// Sets up any constant buffers that are specific to this particular scene/level.
+/// Initializes DirectX components and shaders required by all scenes/levels.
+/// Holds some pipeline functions that clear/present the current frame and bind DirectX components.
 /// </summary>
-class Graphics : public GraphicsContainer
+class Graphics
 {
-	friend class Application;
+	friend class ImGuiManager;
+	friend class StencilOutline;
+	friend class GraphicsResource;
 public:
+	// Functions
 	virtual ~Graphics( void ) = default;
-	bool Initialize( HWND hWnd, CameraController* camera, int width, int height );
+	UINT GetWidth() const noexcept { return windowWidth; }
+	UINT GetHeight() const noexcept { return windowHeight; }
 
-	// Render/Update Scene Functions
-	void BeginFrame();
-	void RenderFrame();
-	void EndFrame();
-	void Update( const float dt );
+	// Pipeline Getters
+	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }
+	std::shared_ptr<Bind::Viewport> GetViewport( const std::string& vp ) noexcept { return viewports[vp]; }
+	std::shared_ptr<Bind::RenderTarget> GetRenderTarget() noexcept { return renderTarget; }
+protected:
+	// Pipeline Functions
+	bool InitializeGraphics( HWND hWnd, int width, int height );
+	void ClearScene();
+	void UpdateRenderState();
+	void RenderSceneToTexture();
+	void PresentScene();
 
-	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
-	std::shared_ptr<MultiViewport> GetMultiViewport() const noexcept { return multiViewport; }
-	CameraController* GetCameraController() const noexcept { return cameras; }
-	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
+	// Device/Context
+	Microsoft::WRL::ComPtr<ID3D11Device> device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+
+	// Vertex Shaders
+	VertexShader vertexShader_2D;
+	VertexShader vertexShader_full;
+	VertexShader vertexShader_light;
+
+	// Pixel Shaders
+	PixelShader pixelShader_2D;
+	PixelShader pixelShader_full;
+	PixelShader pixelShader_light;
+	PixelShader pixelShader_noLight;
+	PixelShader pixelShader_2D_discard;
+
+	// Constant Buffer Variables
+	BOOL multiView = FALSE;
+	BOOL useTexture = TRUE;
+	float alphaFactor = 1.0f;
+	bool rasterizerSolid = true;
+	std::string samplerToUse = "Anisotropic";
 private:
-	bool InitializeScene();
+	// Initialization Functions
+	bool InitializeDirectX( HWND hWnd );
+	bool InitializeShaders();
+	bool InitializeRTT();
 
-	// Scene Objects
-	Quad simpleQuad;
-	Sprite crosshair;
-	CameraController* cameras;
-	RenderableGameObject hubRoom;
-	RenderableGameObject skysphere;
-	RenderableGameObject pressurePlate;
-	std::vector<std::shared_ptr<Cube>> cubes;
+	UINT windowWidth;
+	UINT windowHeight;
 
-	// Lights
-	SpotLight spotLight;
-	PointLight pointLight;
-	DirectionalLight directionalLight;
+	// Viewport/RTT Components
+	QuadFullscreen fullscreen;
+	float clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	ConstantBuffer<CB_VS_fullscreen> cb_vs_fullscreen;
 
-	// Systems
-	ImGuiManager imgui;
-	std::shared_ptr<Fog> fogSystem;
-	std::shared_ptr<TextRenderer> textRenderer;
-	std::shared_ptr<MultiViewport> multiViewport;
-	std::shared_ptr<PostProcessing> postProcessing;
-	std::shared_ptr<StencilOutline> stencilOutline;
-
-	// Constant Buffers
-	ConstantBuffer<CB_PS_scene> cb_ps_scene;
-	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
-	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
-
-	// Textures
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallTexture;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> brickwallNormalTexture;
-	std::map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+	// DirectX Pipeline Components
+	std::shared_ptr<Bind::Blender> blender;
+	std::shared_ptr<Bind::SwapChain> swapChain;
+	std::shared_ptr<Bind::RenderTarget> backBuffer;
+	std::shared_ptr<Bind::RenderTarget> renderTarget;
+	std::shared_ptr<Bind::DepthStencil> depthStencil;
+	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
+	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
+	std::map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
+	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 };
 
 #endif

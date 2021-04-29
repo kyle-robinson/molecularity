@@ -1,10 +1,10 @@
 #include "DirectionalLight.h"
 #include "Camera.h"
-#include <imgui/imgui.h>
+//#include <imgui/imgui.h>
 
 // "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-bool DirectionalLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+bool DirectionalLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
 	{
@@ -22,7 +22,7 @@ bool DirectionalLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_
 	return true;
 }
 
-void DirectionalLight::SpawnControlWindow()
+/*void DirectionalLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Directional Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -49,9 +49,9 @@ void DirectionalLight::SpawnControlWindow()
 		}
 	}
 	ImGui::End();
-}
+}*/
 
-void DirectionalLight::UpdateConstantBuffer( GraphicsContainer& gfx )
+void DirectionalLight::UpdateConstantBuffer( Graphics& gfx )
 {
 	cb_ps_directional.data.directionalEnable = enable;
 	cb_ps_directional.data.directionalPosition = position;

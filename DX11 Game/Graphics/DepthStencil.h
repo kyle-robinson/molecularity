@@ -14,7 +14,7 @@ namespace Bind
 	class DepthStencil : public GraphicsResource
 	{
 	public:
-		DepthStencil( GraphicsContainer& gfx )
+		DepthStencil( Graphics& gfx )
 		{
 			try
 			{
@@ -40,7 +40,7 @@ namespace Bind
 				return;
 			}
 		}
-		void ClearDepthStencil( GraphicsContainer& gfx ) noexcept
+		void ClearDepthStencil( Graphics& gfx ) noexcept
 		{
 			GetContext( gfx )->ClearDepthStencilView( depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 		}

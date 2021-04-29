@@ -1,6 +1,6 @@
 #include "stdafx.h"
+#include "Graphics.h"
 #include "ImGuiManager.h"
-#include "GraphicsContainer.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
@@ -78,7 +78,7 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
     ImGui::End();
 }
 
-void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
+void ImGuiManager::SpawnGraphicsWindow( Graphics& gfx ) const noexcept
 {
 	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{

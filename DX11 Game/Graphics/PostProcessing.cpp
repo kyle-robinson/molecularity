@@ -2,9 +2,9 @@
 #include "DepthStencil.h"
 #include "RenderTarget.h"
 #include "PostProcessing.h"
-#include <imgui/imgui.h>
+//#include <imgui/imgui.h>
 
-PostProcessing::PostProcessing( GraphicsContainer& gfx )
+PostProcessing::PostProcessing( Graphics& gfx )
 {
 	postProcessBasic = std::make_shared<BasicPostProcess>( GetDevice( gfx ) );
 	postProcessToneMap = std::make_shared<ToneMapPostProcess>( GetDevice( gfx ) );
@@ -21,7 +21,7 @@ PostProcessing::PostProcessing( GraphicsContainer& gfx )
 	toneMapTransferFunction = ToneMapPostProcess::TransferFunction::Linear;
 }
 
-void PostProcessing::Bind( GraphicsContainer& gfx ) noexcept
+void PostProcessing::Bind( Graphics& gfx ) noexcept
 {
 	// BASIC POST-PROCESS
 	if ( useBasicPostProcess )
@@ -59,7 +59,7 @@ void PostProcessing::Bind( GraphicsContainer& gfx ) noexcept
 	}
 }
 
-void PostProcessing::SpawnControlWindow()
+/*void PostProcessing::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Post-Processing", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -185,4 +185,4 @@ void PostProcessing::SpawnControlWindow()
 		}	
 	}
 	ImGui::End();
-}
+}*/

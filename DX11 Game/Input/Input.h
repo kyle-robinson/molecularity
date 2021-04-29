@@ -2,7 +2,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "Graphics.h"
+#include "Level.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
 class Sound;
@@ -14,14 +14,14 @@ class Sound;
 class Input : public WindowContainer
 {
 public:
-	void Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height );
+	void Initialize( Level* gfx, RenderWindow& window,CameraController* camera, int width, int height );
 	void Update( const float dt, Sound sound );
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
 
+	Level* level;
 	MousePicking mousePick;
-	Graphics* graphics;
 	CameraController* cameras;
 };
 

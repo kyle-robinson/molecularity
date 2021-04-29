@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "TextRenderer.h"
 #include "Graphics.h"
+#include "JSON_Helper.h"
 
-TextRenderer::TextRenderer( GraphicsContainer& gfx ) : fileName( L"open_sans_ms_16.spritefont" )
+TextRenderer::TextRenderer( Graphics& gfx ) : fileName( L"open_sans_ms_16.spritefont" )
 {
 	spriteBatch = std::make_unique<SpriteBatch>( GetContext( gfx ) );
 	spriteFont = std::make_unique<SpriteFont>( GetDevice( gfx ),
@@ -17,28 +18,28 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 	spriteBatch->End();
 }
 
-void TextRenderer::RenderCubeMoveText( Graphics& gfx )
+void TextRenderer::RenderCubeMoveText( Level& manager )
 {
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		if ( gfx.GetCube()[i]->GetIsInRange() && gfx.GetCube()[i]->GetIsHovering() && !gfx.GetCube()[i]->GetIsHolding() )
+		if ( manager.GetCube()[i]->GetIsInRange() && manager.GetCube()[i]->GetIsHovering() && !manager.GetCube()[i]->GetIsHolding() )
 		{
 			DrawString( L"Press 'E' to pick up cube.",
-				XMFLOAT2( gfx.GetWidth() / 2 - 120.0f, gfx.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
+				XMFLOAT2( manager.GetWidth() / 2 - 120.0f, manager.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
 		}
 	}
 }
 
-void TextRenderer::RenderMultiToolText( Graphics& gfx )
+void TextRenderer::RenderMultiToolText( Level& manager )
 {
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		if ( gfx.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
+		if ( manager.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
 		{
-			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
+			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( manager.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 			static std::wstring boxType;
-			switch ( gfx.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
+			switch ( manager.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
 			{
 			case 0: boxType = L"Default Box"; break;
 			case 1: boxType = L"Bounce Box"; break;
@@ -47,14 +48,14 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 			}
 
 			DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-				XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
+				XMFLOAT2( manager.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
 		}
-		else if ( gfx.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
+		else if ( manager.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
 		{
-			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( gfx.GetWidth() - 760.0f, 0.0f ), Colors::White );
+			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( manager.GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 			static std::wstring sizeType;
-			switch ( gfx.GetCube()[i]->GetEditableProperties()->GetSizeID() )
+			switch ( manager.GetCube()[i]->GetEditableProperties()->GetSizeID() )
 			{
 			case 0: sizeType = L"Shrink Ray"; break;
 			case 1: sizeType = L"Reset Ray"; break;
@@ -62,16 +63,16 @@ void TextRenderer::RenderMultiToolText( Graphics& gfx )
 			}
 
 			DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-				XMFLOAT2( gfx.GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
+				XMFLOAT2( manager.GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
 		}
 	}
 }
 
-void TextRenderer::RenderCameraText( Graphics& gfx )
+void TextRenderer::RenderCameraText( Level& manager )
 {
 	std::string displayText;
 
-	switch ( gfx.GetCameraController()->GetCurrentCamera() )
+	switch ( manager.GetCameraController()->GetCurrentCamera() )
 	{
 	case JSON::CameraType::Default: displayText = "Default"; break;
 	case JSON::CameraType::Debug: displayText = "Debug"; break;

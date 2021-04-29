@@ -5,7 +5,10 @@
 #include "Input.h"
 #include "Timer.h"
 #include "Sound.h"
+#include "Level1.h"
+#include "Level2.h"
 #include "CameraController.h"
+#include "LevelStateMachine.h"
 
 /// <summary>
 /// Calls functions which initialize the window and main graphics components.
@@ -25,11 +28,17 @@ public:
 	void Update();
 	void Render();
 private:
+	uint32_t level1_ID;
+	uint32_t level2_ID;
+
 	Input input;
 	Timer timer;
 	Sound sound;
-	Graphics gfx;
 	CameraController cameras;
+	//LevelManager levelManager;
+	std::shared_ptr<Level1> level1;
+	std::shared_ptr<Level2> level2;
+	LevelStateMachine stateMachine;
 };
 
 #endif

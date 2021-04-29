@@ -1,10 +1,10 @@
 #include "PointLight.h"
 #include "Camera.h"
-#include <imgui/imgui.h>
+//#include <imgui/imgui.h>
 
 // "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-bool PointLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+bool PointLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
 	{
@@ -22,7 +22,7 @@ bool PointLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix
 	return true;
 }
 
-void PointLight::SpawnControlWindow()
+/*void PointLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Point Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -60,9 +60,9 @@ void PointLight::SpawnControlWindow()
 		}
 	}
 	ImGui::End();
-}
+}*/
 
-void PointLight::UpdateConstantBuffer( GraphicsContainer& gfx )
+void PointLight::UpdateConstantBuffer( Graphics& gfx )
 {
 	cb_ps_point.data.pointAmbientColor = ambientColor;
 	cb_ps_point.data.pointAmbientStrength = ambientStrength;

@@ -1,10 +1,10 @@
 #include "SpotLight.h"
 #include "Camera.h"
-#include <imgui/imgui.h>
+//#include <imgui/imgui.h>
 
 // "Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-bool SpotLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
 	{
@@ -22,7 +22,7 @@ bool SpotLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>
 	return true;
 }
 
-void SpotLight::SpawnControlWindow()
+/*void SpotLight::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Spot Light", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -41,9 +41,9 @@ void SpotLight::SpawnControlWindow()
 		ImGui::SliderFloat( "Intensity", &strength, 0.1f, 2.0f, "%.1f" );
 	}
 	ImGui::End();
-}
+}*/
 
-void SpotLight::UpdateConstantBuffer( GraphicsContainer& gfx, std::unique_ptr<Camera>& camera )
+void SpotLight::UpdateConstantBuffer( Graphics& gfx, std::unique_ptr<Camera>& camera )
 {
 	cb_ps_spot.data.spotEnable = enable;
 	cb_ps_spot.data.spotCone = cone;

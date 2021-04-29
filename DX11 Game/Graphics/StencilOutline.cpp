@@ -2,9 +2,9 @@
 #include "RenderableGameObject.h"
 #include "InputLayout.h"
 #include "Cube.h"
-#include <imgui/imgui.h>
+//#include <imgui/imgui.h>
 
-StencilOutline::StencilOutline( GraphicsContainer& gfx ) : scale( 0.1f ), color( XMFLOAT3( 1.0f, 0.6f, 0.1f ) )
+StencilOutline::StencilOutline( Graphics& gfx ) : scale( 0.1f ), color( XMFLOAT3( 1.0f, 0.6f, 0.1f ) )
 {			
 	try
 	{				
@@ -24,7 +24,7 @@ StencilOutline::StencilOutline( GraphicsContainer& gfx ) : scale( 0.1f ), color(
 	}
 }
 
-void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, Cube& cube, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
+void StencilOutline::DrawWithOutline( Graphics& gfx, Cube& cube, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
 	ConstantBuffer<CB_PS_point>& cb_ps_point, ID3D11ShaderResourceView* texture )
 {
 	// write pixels to the buffer, which will act as the stencil mask
@@ -57,7 +57,7 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, Cube& cube, Consta
 	cube.Draw( cb_vs_matrix, texture );
 }
 
-void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point )
+void StencilOutline::DrawWithOutline( Graphics& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point )
 {
 	// write pixels to the buffer, which will act as the stencil mask
 	GetStencil( gfx, "Write" )->Bind( gfx );
@@ -81,7 +81,7 @@ void StencilOutline::DrawWithOutline( GraphicsContainer& gfx, RenderableGameObje
 	object.Draw();
 }
 
-void StencilOutline::SpawnControlWindow()
+/*void StencilOutline::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Stencil Outline Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -89,4 +89,4 @@ void StencilOutline::SpawnControlWindow()
 		ImGui::SliderFloat( "Scale", &scale, 0.0f, 1.0f, "%.1f" );
 	}
 	ImGui::End();
-}
+}*/

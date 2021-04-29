@@ -2,7 +2,7 @@
 #ifndef MULTIVIEWPORT_H
 #define MULTIVIEWPORT_H
 
-class Graphics;
+class Level;
 
 /// <summary>
 /// Handles the camera view on a given viewport.
@@ -12,7 +12,7 @@ class MultiViewport
 {
 public:
 	MultiViewport() = default;
-	void Update( Graphics& gfx );
+	void Update( Level& manager );
 	bool IsUsingSub() const noexcept { return useViewportSub; }
 	bool IsUsingMain() const noexcept { return useViewportMain; }
 	void SetUsingSub( bool sub ) noexcept { useViewportSub = sub; }
