@@ -20,8 +20,8 @@ bool Application::Initialize(
 	input.Initialize( &gfx, renderWindow, &cameras, width, height );
 
 	// sound
-	//if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
-	//if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.0f ) ) return false;
+	//if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false; //remove this
+	//if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.0f ) ) return false; //remove this
 	if (FAILED(sound2.Initialise())) return false;
 	if (FAILED(sound2.PlayAudio(sound2.MAIN_MUSIC, 0.1f)));
 

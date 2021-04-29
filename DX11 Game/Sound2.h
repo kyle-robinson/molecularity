@@ -1,4 +1,5 @@
 #pragma once
+#pragma comment(lib, "xaudio2")
 #include <xaudio2.h>
 #include <x3daudio.h>
 #include <winnt.h>
@@ -23,6 +24,9 @@ public:
 	HRESULT LoadAudio(const TCHAR* strFileName, int bufferNum);
 	HRESULT PlayAudio(int bufferNum, float volume);
 
+	//void UpdateEmitter();
+	//void UpdateListener();
+
 	enum SOUND_NAMES
 	{
 		MAIN_MUSIC = 0,
@@ -38,4 +42,10 @@ private:
 	XAUDIO2_BUFFER buffer[3] = { 0 };
 
 	IXAudio2* pXAudio2 = nullptr;
+	IXAudio2MasteringVoice* pMasterVoice = nullptr;
+
+	X3DAUDIO_HANDLE X3DInstance;
+	X3DAUDIO_LISTENER pListener;
+	X3DAUDIO_EMITTER pEmitter;
+	X3DAUDIO_DSP_SETTINGS DSPSettings = { 0 };
 };

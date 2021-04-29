@@ -17,7 +17,7 @@ HRESULT Sound2::Initialise()
 	if (FAILED(hr = XAudio2Create(&pXAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR)))
 		return hr;
 
-    IXAudio2MasteringVoice* pMasterVoice = nullptr;
+    
 	if (FAILED(hr = pXAudio2->CreateMasteringVoice(&pMasterVoice)))
 		return hr;
 
@@ -25,8 +25,32 @@ HRESULT Sound2::Initialise()
     DWORD dwChannelMask;
     pMasterVoice->GetChannelMask(&dwChannelMask);
 
-    X3DAUDIO_HANDLE X3DInstance;
-    //X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, X3DInstance);
+    X3DAudioInitialize(dwChannelMask, X3DAUDIO_SPEED_OF_SOUND, X3DInstance);
+
+    //Create listener and emitter instances
+    pEmitter.ChannelCount = 1;
+    pEmitter.CurveDistanceScaler = FLT_MIN;
+
+    //Create instance of DSP settings
+    XAUDIO2_VOICE_DETAILS voiceDetails;
+    pMasterVoice->GetVoiceDetails(&voiceDetails);
+    FLOAT32* matrix = new FLOAT32[voiceDetails.InputChannels];
+
+    DSPSettings.SrcChannelCount = 1;
+    DSPSettings.DstChannelCount = voiceDetails.InputChannels;
+    DSPSettings.pMatrixCoefficients = matrix;
+
+    ////Update the listener and emitter
+
+    ////Calculate the new settings for the voice
+    //X3DAudioCalculate(X3DInstance, &pListener, &pEmitter, X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER | X3DAUDIO_CALCULATE_LPF_DIRECT | X3DAUDIO_CALCULATE_REVERB, &DSPSettings);
+
+    ////Apply volume and pitch to the voice
+
+    ////Calculate reverb level
+
+    ////Apply calculated low pass filter direct coefficient to the voice
+    //XAUDIO2_FILTER_PARAMETERS FilterParameters = { LowPassFilter, 2.0f * sinf(X3DAUDIO_PI / 6.0f * DSPSettings.LPFDirectCoefficient), 1.0f };
 
     if (FAILED(hr = InitialiseAudioFiles()))
         return hr;
@@ -115,6 +139,8 @@ HRESULT Sound2::ReadChunkData(HANDLE hFile, void* buffer, DWORD bufferSize, DWOR
     return hr;
 }
 
+
+
 HRESULT Sound2::LoadAudio(const TCHAR* strFileName, int bufferNum)
 {
     HANDLE hFile = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
@@ -153,7 +179,7 @@ HRESULT Sound2::PlayAudio(int bufferNum, float volume)
     HRESULT hr;
 
     IXAudio2SourceVoice* pSourceVoice;
-    if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, (WAVEFORMATEX*)&wfx[bufferNum])))
+    if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, (WAVEFORMATEX*)&wfx[bufferNum], 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
         return hr;
 
     if (FAILED(hr = pSourceVoice->SubmitSourceBuffer(&buffer[bufferNum])))
@@ -161,6 +187,27 @@ HRESULT Sound2::PlayAudio(int bufferNum, float volume)
 
     if (FAILED(hr = pSourceVoice->SetVolume(volume)))
         return hr;
+
+    //Update the listener and emitter
+    pEmitter.OrientFront = XMFLOAT3(0.0f, 0.0f, 1.0f);
+    pEmitter.OrientTop = XMFLOAT3(0.0f, 1.0f, 0.0f);
+    pEmitter.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+    pEmitter.Velocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
+    pListener.OrientFront = XMFLOAT3(0.0f, 0.0f, 1.0f);
+    pListener.OrientTop = XMFLOAT3(0.0f, 1.0f, 0.0f);
+    pListener.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+    pListener.Velocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+    //Calculate the new settings for the voice
+    X3DAudioCalculate(X3DInstance, &pListener, &pEmitter, X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER | X3DAUDIO_CALCULATE_LPF_DIRECT | X3DAUDIO_CALCULATE_REVERB, &DSPSettings);
+
+    XAUDIO2_VOICE_DETAILS voiceDetails;
+    pSourceVoice->GetVoiceDetails(&voiceDetails);
+    pSourceVoice->SetOutputMatrix(pSourceVoice, 1, voiceDetails.InputChannels, DSPSettings.pMatrixCoefficients);
+    pSourceVoice->SetFrequencyRatio(DSPSettings.DopplerFactor);
+    //pSourceVoice->SetOutputMatrix(pSourceVoice, 1, 1, &DSPSettings.LPFDirectCoefficient);
+    XAUDIO2_FILTER_PARAMETERS FilterParameters = { LowPassFilter, 2.0f * sinf(X3DAUDIO_PI / 6.0f * DSPSettings.LPFDirectCoefficient) };
+    pSourceVoice->SetFilterParameters(&FilterParameters);
 
     if (FAILED(hr = pSourceVoice->Start(0)))
         return hr;
