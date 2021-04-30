@@ -11,7 +11,7 @@ void LevelStateMachine::Update( const float dt )
 	}
 }
 
-void LevelStateMachine::RenderFrame()
+void LevelStateMachine::Render()
 {
 	if ( currentLevel )
 	{

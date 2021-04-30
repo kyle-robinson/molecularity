@@ -1,8 +1,7 @@
 #include "Graphics.h"
 #include "Bindables.h"
-//#include <imgui/imgui.h>
 
-bool Graphics::InitializeGraphics( HWND hWnd, int width, int height )
+bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
 	windowWidth = width;
 	windowHeight = height;

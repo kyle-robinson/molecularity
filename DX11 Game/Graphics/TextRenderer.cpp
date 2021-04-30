@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "TextRenderer.h"
-#include "Graphics.h"
-#include "JSON_Helper.h"
 
 TextRenderer::TextRenderer( Graphics& gfx ) : fileName( L"open_sans_ms_16.spritefont" )
 {
@@ -18,28 +16,28 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 	spriteBatch->End();
 }
 
-void TextRenderer::RenderCubeMoveText( Level& manager )
+void TextRenderer::RenderCubeMoveText( Level& level )
 {
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		if ( manager.GetCube()[i]->GetIsInRange() && manager.GetCube()[i]->GetIsHovering() && !manager.GetCube()[i]->GetIsHolding() )
+		if ( level.GetCube()[i]->GetIsInRange() && level.GetCube()[i]->GetIsHovering() && !level.GetCube()[i]->GetIsHolding() )
 		{
 			DrawString( L"Press 'E' to pick up cube.",
-				XMFLOAT2( manager.GetWidth() / 2 - 120.0f, manager.GetHeight() / 2 - 40.0f ), Colors::LightGreen );
+				XMFLOAT2( level.GetGraphics()->GetWidth() / 2 - 120.0f, level.GetGraphics()->GetHeight() / 2 - 40.0f ), Colors::LightGreen );
 		}
 	}
 }
 
-void TextRenderer::RenderMultiToolText( Level& manager )
+void TextRenderer::RenderMultiToolText( Level& level )
 {
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		if ( manager.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
+		if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
 		{
-			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( manager.GetWidth() - 760.0f, 0.0f ), Colors::White );
+			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 			static std::wstring boxType;
-			switch ( manager.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
+			switch ( level.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
 			{
 			case 0: boxType = L"Default Box"; break;
 			case 1: boxType = L"Bounce Box"; break;
@@ -48,14 +46,14 @@ void TextRenderer::RenderMultiToolText( Level& manager )
 			}
 
 			DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-				XMFLOAT2( manager.GetWidth() - 260.0f, 0.0f ), Colors::Orange );
+				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::Orange );
 		}
-		else if ( manager.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
+		else if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
 		{
-			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( manager.GetWidth() - 760.0f, 0.0f ), Colors::White );
+			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
 
 			static std::wstring sizeType;
-			switch ( manager.GetCube()[i]->GetEditableProperties()->GetSizeID() )
+			switch ( level.GetCube()[i]->GetEditableProperties()->GetSizeID() )
 			{
 			case 0: sizeType = L"Shrink Ray"; break;
 			case 1: sizeType = L"Reset Ray"; break;
@@ -63,7 +61,7 @@ void TextRenderer::RenderMultiToolText( Level& manager )
 			}
 
 			DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-				XMFLOAT2( manager.GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
+				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
 		}
 	}
 }

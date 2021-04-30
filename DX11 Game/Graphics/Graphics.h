@@ -2,12 +2,12 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include <map>
 #include <memory>
 #include <string>
 #include <Windows.h>
 #include <d3d11_1.h>
 #include <wrl/client.h>
+#include <unordered_map>
 
 #include "Shaders.h"
 #include "Quad.h"
@@ -30,6 +30,11 @@ namespace Bind
 /// </summary>
 class Graphics
 {
+	friend class Level;
+	friend class Level1;
+	friend class Level2;
+
+	friend class Application;
 	friend class ImGuiManager;
 	friend class StencilOutline;
 	friend class GraphicsResource;
@@ -39,18 +44,18 @@ public:
 	UINT GetWidth() const noexcept { return windowWidth; }
 	UINT GetHeight() const noexcept { return windowHeight; }
 
-	// Pipeline Getters
-	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }
-	std::shared_ptr<Bind::Viewport> GetViewport( const std::string& vp ) noexcept { return viewports[vp]; }
-	std::shared_ptr<Bind::RenderTarget> GetRenderTarget() noexcept { return renderTarget; }
-protected:
 	// Pipeline Functions
-	bool InitializeGraphics( HWND hWnd, int width, int height );
+	bool Initialize( HWND hWnd, int width, int height );
 	void ClearScene();
 	void UpdateRenderState();
 	void RenderSceneToTexture();
 	void PresentScene();
 
+	// Pipeline Getters
+	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }
+	std::shared_ptr<Bind::Viewport> GetViewport( const std::string& vp ) noexcept { return viewports[vp]; }
+	std::shared_ptr<Bind::RenderTarget> GetRenderTarget() noexcept { return renderTarget; }
+protected:
 	// Device/Context
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
@@ -93,10 +98,10 @@ private:
 	std::shared_ptr<Bind::RenderTarget> backBuffer;
 	std::shared_ptr<Bind::RenderTarget> renderTarget;
 	std::shared_ptr<Bind::DepthStencil> depthStencil;
-	std::map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
-	std::map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
-	std::map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
-	std::map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
+	std::unordered_map<std::string, std::shared_ptr<Bind::Stencil>> stencils;
+	std::unordered_map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
+	std::unordered_map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
+	std::unordered_map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
 };
 
 #endif

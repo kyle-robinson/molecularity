@@ -4,7 +4,6 @@
 
 #include "Graphics.h"
 #include "JSON_Helper.h"
-//#include "ImGuiManager.h"
 #include "MultiViewport.h"
 
 #include "Cube.h"
@@ -19,6 +18,7 @@
 #include <dxtk/WICTextureLoader.h>
 
 class Fog;
+class ImGuiManager;
 class TextRenderer;
 class PostProcessing;
 class StencilOutline;
@@ -27,12 +27,12 @@ class StencilOutline;
 /// Loads and renders/updates all the components and models for the current scene/level.
 /// Sets up any constant buffers that are specific to this particular scene/level.
 /// </summary>
-class Level : public Graphics
+class Level
 {
 	friend class Application;
 public:
 	virtual ~Level( void ) = default;
-	bool Initialize( HWND hWnd, CameraController* camera, int width, int height );
+	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -48,8 +48,11 @@ public:
 	std::shared_ptr<MultiViewport> GetMultiViewport() const noexcept { return multiViewport; }
 	CameraController* GetCameraController() const noexcept { return cameras; }
 	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
+	Graphics* GetGraphics() const noexcept { return graphics; }
 protected:
-	//ImGuiManager imgui;
+	// Graphics
+	Graphics* graphics;
+	ImGuiManager* imgui;
 
 	// Objects
 	CameraController* cameras;

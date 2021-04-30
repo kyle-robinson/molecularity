@@ -9,7 +9,7 @@ class LevelStateMachine
 {
 public:
 	LevelStateMachine();
-	void RenderFrame();
+	void Render();
 	void Update( const float dt );
 
 	uint32_t Add( std::shared_ptr<Level> level );

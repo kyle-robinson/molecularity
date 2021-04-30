@@ -3,19 +3,17 @@
 #define LEVEL1_H
 
 #include "Sprite.h"
-//#include "Level.h"
 #include "LevelStateMachine.h"
 
 class Level1 : public Level
 {
 public:
-	//bool Initialize( HWND hWnd, CameraController* camera, int width, int height );
 	Level1( LevelStateMachine& stateMachine );
 	bool OnCreate() override;
 	void Render() override;
-	void RenderFrame() override;
 	void Update( const float dt ) override;
 private:
+	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;
 
 	// Scene Objects

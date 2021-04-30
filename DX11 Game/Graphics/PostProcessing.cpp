@@ -2,7 +2,7 @@
 #include "DepthStencil.h"
 #include "RenderTarget.h"
 #include "PostProcessing.h"
-//#include <imgui/imgui.h>
+#include <imgui/imgui.h>
 
 PostProcessing::PostProcessing( Graphics& gfx )
 {
@@ -59,7 +59,7 @@ void PostProcessing::Bind( Graphics& gfx ) noexcept
 	}
 }
 
-/*void PostProcessing::SpawnControlWindow()
+void PostProcessing::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Post-Processing", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -185,4 +185,4 @@ void PostProcessing::Bind( Graphics& gfx ) noexcept
 		}	
 	}
 	ImGui::End();
-}*/
+}

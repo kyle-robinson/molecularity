@@ -174,7 +174,7 @@ void Input::UpdateMouse( const float dt )
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				// test intersection between crosshair and cube
-				if ( mousePick.TestIntersection( level->GetWidth() / 2, level->GetHeight() / 2, *level->GetCube()[i] ) )
+				if ( mousePick.TestIntersection( level->GetGraphics()->GetWidth() / 2, level->GetGraphics()->GetHeight() / 2, *level->GetCube()[i] ) )
 					level->GetCube()[i]->SetIsHovering( true );
 				else
 					level->GetCube()[i]->SetIsHovering( false );

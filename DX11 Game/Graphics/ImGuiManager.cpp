@@ -9,6 +9,7 @@ ImGuiManager::ImGuiManager()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
     SetBlackGoldStyle();
 }
 
@@ -87,7 +88,7 @@ void ImGuiManager::SpawnGraphicsWindow( Graphics& gfx ) const noexcept
         ImGui::Text( "Enable Multi-View: " );
         ImGui::SameLine();
         ImGui::Checkbox( "", &multiViewBool );
-        gfx.multiView = static_cast< BOOL >( multiViewBool );
+        gfx.multiView = static_cast<BOOL>( multiViewBool );
         
         // update texture usage
 		ImGui::Text( "Texture Usage: " );

@@ -2,18 +2,12 @@
 #include "Level2.h"
 #include "Rasterizer.h"
 
-Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
+/*Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
 bool Level2::OnCreate()
 {
 	try
 	{
-		/*if ( !initialized )
-		{
-			initialized = true;
-			Level::Initialize( hWnd, camera, width, height );
-		}*/
-
 		// DRAWABLES
 		{
 			// models
@@ -84,4 +78,4 @@ void Level2::Update( const float dt )
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
-}
+}*/

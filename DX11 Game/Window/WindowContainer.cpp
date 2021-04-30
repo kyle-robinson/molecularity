@@ -1,5 +1,5 @@
 #include "WindowContainer.h"
-//#include <imgui/imgui.h>
+#include <imgui/imgui.h>
 #include <memory>
 
 WindowContainer::WindowContainer()
@@ -26,9 +26,9 @@ WindowContainer::WindowContainer()
 extern LRESULT ImGui_ImplWin32_WndProcHandler( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	/*if ( ImGui_ImplWin32_WndProcHandler( hWnd, uMsg, wParam, lParam ) )
+	if ( ImGui_ImplWin32_WndProcHandler( hWnd, uMsg, wParam, lParam ) )
 		return true;
-	const auto& imio = ImGui::GetIO();*/
+	const auto& imio = ImGui::GetIO();
 
 	switch ( uMsg )
 	{
@@ -53,8 +53,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	{
-		//if ( imio.WantCaptureKeyboard )
-		//	return 0;
+		if ( imio.WantCaptureKeyboard )
+			return 0;
 		unsigned char keycode = static_cast<unsigned char>( wParam );
 		if ( keyboard.IsKeysAutoRepeat() )
 			keyboard.OnKeyPressed( keycode );
@@ -77,8 +77,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 	{
-		//if ( imio.WantCaptureKeyboard )
-		//	return 0;
+		if ( imio.WantCaptureKeyboard )
+			return 0;
 		unsigned char keycode = static_cast<unsigned char>( wParam );
 		keyboard.OnKeyReleased( keycode );
 		return 0;
@@ -86,8 +86,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 
 	case WM_CHAR:
 	{
-		//if ( imio.WantCaptureKeyboard )
-		//	return 0;
+		if ( imio.WantCaptureKeyboard )
+			return 0;
 		unsigned char ch = static_cast<unsigned char>( wParam );
 		if ( keyboard.IsCharsAutoRepeat() )
 			keyboard.OnChar( ch );
@@ -117,8 +117,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 			}
 			return 0;
 		}
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 		if ( pt.x >= 0 && pt.x < renderWindow.GetWidth() && pt.y >= 0 && pt.y < renderWindow.GetHeight() )
 		{
 			mouse.OnMouseMove( x, y );
@@ -147,8 +147,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	{
 		SetForegroundWindow( renderWindow.GetHWND() );
 		SetCursor( renderWindow.hCursorNightSelect );
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 		
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
@@ -165,8 +165,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	case WM_LBUTTONUP:
 	{
 		SetCursor( renderWindow.hCursorNightNormal );
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 		
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
@@ -183,8 +183,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 
 	case WM_RBUTTONDOWN:
 	{
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
@@ -194,8 +194,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 
 	case WM_RBUTTONUP:
 	{		
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
@@ -212,8 +212,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 
 	case WM_MBUTTONDOWN:
 	{
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnMiddlePressed( x, y );
@@ -222,8 +222,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 
 	case WM_MBUTTONUP:
 	{
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnMiddleReleased( x, y );
@@ -232,8 +232,8 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 
 	case WM_MOUSEWHEEL:
 	{
-		//if ( imio.WantCaptureMouse )
-		//	return 0;
+		if ( imio.WantCaptureMouse )
+			return 0;
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		if ( GET_WHEEL_DELTA_WPARAM( wParam ) > 0 )
@@ -313,11 +313,11 @@ void WindowContainer::HideCursor() noexcept
 
 void WindowContainer::EnableImGuiMouse() noexcept
 {
-	//ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
 }
 
 void WindowContainer::DisableImGuiMouse() noexcept
 {
-	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
 #pragma endregion

@@ -9,7 +9,7 @@ void MultiViewport::Update( Level& manager )
 	if ( useViewportSub )
 	{
 		manager.GetCameraController()->SetCurrentCamera( JSON::CameraType::Static );
-		manager.GetViewport( "Sub" )->Bind( manager );
+		manager.GetGraphics()->GetViewport( "Sub" )->Bind( *manager.GetGraphics() );
 		useViewportSub = false;
 	}
 
@@ -20,7 +20,7 @@ void MultiViewport::Update( Level& manager )
 			manager.GetCameraController()->SetCurrentCamera( JSON::CameraType::Default );
 		else if ( !manager.GetCameraController()->GetIsUsingMain() )
 			manager.GetCameraController()->SetCurrentCamera( JSON::CameraType::Debug );
-		manager.GetViewport( "Main" )->Bind( manager );
+		manager.GetGraphics()->GetViewport( "Main" )->Bind( *manager.GetGraphics() );
 		useViewportMain = false;
 	}
 }
