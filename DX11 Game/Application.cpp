@@ -20,10 +20,7 @@ bool Application::Initialize(
 	input.Initialize( &gfx, renderWindow, &cameras, width, height );
 
 	// sound
-	//if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false; //remove this
-	//if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.0f ) ) return false; //remove this
-	if (FAILED(sound2.Initialise())) return false;
-	if (FAILED(sound2.PlayAudio(sound2.MAIN_MUSIC, 0.1f)));
+	if (FAILED(sound.PlayMusic(sound.MUSIC_MAIN, true))) return false;
 
 	return true;
 }
@@ -37,9 +34,9 @@ void Application::Update()
 {
 	float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
 	timer.Restart();
-	sound.UpdateListenerPos( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3() ) );
-	sound.UpdateListenerRot( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetRotationFloat3() ) );
+	
 	input.Update( dt );
+	sound.UpdatePosition(cameras.GetCamera(cameras.GetCurrentCamera())->GetPositionFloat3(), cameras.GetCamera(cameras.GetCurrentCamera())->GetRotationFloat3().y); // Update to make this every few frames
 	gfx.Update( dt );
 	EventSystem::Instance()->ProcessEvents();
 }

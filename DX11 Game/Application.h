@@ -5,7 +5,6 @@
 #include "Input.h"
 #include "Timer.h"
 #include "Sound.h"
-#include "Sound2.h"
 #include "CameraController.h"
 
 /// <summary>
@@ -29,7 +28,6 @@ private:
 	Input input;
 	Timer timer;
 	Sound sound;
-	Sound2 sound2;
 	Graphics gfx;
 	CameraController cameras;
 };

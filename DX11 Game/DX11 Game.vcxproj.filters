@@ -138,9 +138,6 @@
     <ClCompile Include="Graphics\Shaders.cpp">
       <Filter>Source\Graphics\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\Sound.cpp">
-      <Filter>Source\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\SpotLight.cpp">
       <Filter>Source\Graphics\Drawables\Lights</Filter>
     </ClCompile>
@@ -165,9 +162,6 @@
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Sound2.cpp">
-      <Filter>Source\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="WinMain.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -176,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_plot.cpp">
       <Filter>Resources\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -356,9 +353,6 @@
     <ClInclude Include="Graphics\Shaders.h">
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Sound.h">
-      <Filter>Headers\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\SpotLight.h">
       <Filter>Headers\Graphics\Drawables\Lights</Filter>
     </ClInclude>
@@ -401,9 +395,6 @@
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Sound2.h">
-      <Filter>Headers\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\EventSystem\Event.h">
       <Filter>Headers\Utility\EventSystem</Filter>
     </ClInclude>
@@ -415,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_plot.h">
       <Filter>Resources\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Headers\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
