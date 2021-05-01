@@ -28,6 +28,11 @@ bool Level2::OnCreate()
 	return true;
 }
 
+void Level2::OnSwitch()
+{
+	// update items on level switch here...
+}
+
 void Level2::Render()
 {
 	// Render to sub viewport first using static camera

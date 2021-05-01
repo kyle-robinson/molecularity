@@ -32,6 +32,11 @@ bool Level1::OnCreate()
 	return true;
 }
 
+void Level1::OnSwitch()
+{
+	// update items on level switch here...
+}
+
 void Level1::Render()
 {
 	// Render to sub viewport first using static camera

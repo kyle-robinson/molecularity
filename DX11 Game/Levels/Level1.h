@@ -14,6 +14,7 @@ class Level1 : public LevelContainer
 public:
 	Level1( LevelStateMachine& stateMachine );
 	bool OnCreate() override;
+	void OnSwitch() override;
 	void Render() override;
 	void Update( const float dt ) override;
 	void ProcessInput() override;

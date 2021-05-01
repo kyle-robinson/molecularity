@@ -46,5 +46,6 @@ void LevelStateMachine::SwitchTo( uint32_t id )
 	if ( it != levels.end() )
 	{
 		currentLevel = it->second;
+		currentLevel->OnSwitch();
 	}
 }

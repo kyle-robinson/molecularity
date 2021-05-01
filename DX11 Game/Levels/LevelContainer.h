@@ -38,6 +38,7 @@ public:
 	void EndFrame();
 
 	virtual bool OnCreate() = 0;
+	virtual void OnSwitch() {}
 	virtual void Render() {}
 	virtual void RenderFrame();
 	virtual void Update( const float dt );
