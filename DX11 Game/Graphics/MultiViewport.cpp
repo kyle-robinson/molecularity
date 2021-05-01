@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "MultiViewport.h"
+#include "LevelContainer.h"
 #include "Viewport.h"
-#include "Level.h"
 
-void MultiViewport::Update( Level& manager )
+void MultiViewport::Update( LevelContainer& manager )
 {
 	// Create view on static camera and bind to sub viewport.
 	if ( useViewportSub )

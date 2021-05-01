@@ -2,9 +2,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "Level.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
+#include "LevelStateMachine.h"
 class Sound;
 
 /// <summary>
@@ -14,15 +14,18 @@ class Sound;
 class Input : public WindowContainer
 {
 public:
-	void Initialize( Level* gfx, RenderWindow& window,CameraController* camera, int width, int height );
+	void Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
+		CameraController* camera, std::vector<uint32_t> level_IDs );
 	void Update( const float dt, Sound sound );
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
 
-	Level* level;
+	LevelContainer* level;
 	MousePicking mousePick;
 	CameraController* cameras;
+	LevelStateMachine* levelSystem;
+	std::vector<uint32_t> level_IDs;
 };
 
 #endif

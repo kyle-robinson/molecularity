@@ -5,13 +5,18 @@
 #include "Sprite.h"
 #include "LevelStateMachine.h"
 
-class Level1 : public Level
+/// <summary>
+/// The first level of the game.
+/// Inherits from Level to render/update objects used in each level.
+/// </summary>
+class Level1 : public LevelContainer
 {
 public:
 	Level1( LevelStateMachine& stateMachine );
 	bool OnCreate() override;
 	void Render() override;
 	void Update( const float dt ) override;
+	void ProcessInput() override;
 private:
 	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;
@@ -19,11 +24,7 @@ private:
 	// Scene Objects
 	Sprite crosshair;
 	RenderableGameObject hubRoom;
-	RenderableGameObject skysphere;
 	RenderableGameObject pressurePlate;
-
-	// Textures
-	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 };
 
 #endif

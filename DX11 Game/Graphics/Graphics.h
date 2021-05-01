@@ -30,9 +30,9 @@ namespace Bind
 /// </summary>
 class Graphics
 {
-	friend class Level;
 	friend class Level1;
 	friend class Level2;
+	friend class LevelContainer;
 
 	friend class Application;
 	friend class ImGuiManager;

@@ -19,7 +19,7 @@ void LevelStateMachine::Render()
 	}
 }
 
-uint32_t LevelStateMachine::Add( std::shared_ptr<Level> level )
+uint32_t LevelStateMachine::Add( std::shared_ptr<LevelContainer> level )
 {
 	auto inserted = levels.insert( std::make_pair( insertedLevelID, level ) );
 	insertedLevelID++;

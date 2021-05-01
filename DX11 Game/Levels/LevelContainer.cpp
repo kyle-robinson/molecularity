@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Level.h"
+#include "LevelContainer.h"
 
 // bindables
 #include "Rasterizer.h"
@@ -8,12 +8,14 @@
 
 // systems
 #include "Fog.h"
+#include "Collisions.h"
 #include "ImGuiManager.h"
 #include "TextRenderer.h"
 #include "PostProcessing.h"
 #include "StencilOutline.h"
+#include <dxtk/WICTextureLoader.h>
 
-bool Level::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui )
 {
 	graphics = gfx;
 	cameras = camera;
@@ -23,13 +25,13 @@ bool Level::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* i
 	return true;
 }
 
-bool Level::InitializeScene()
+bool LevelContainer::InitializeScene()
 {
 	try
 	{
-		// CUBES
+		// DRAWABLES
 		{
-			// primitives
+			// cubes
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				std::shared_ptr<Cube> cube = std::make_shared<Cube>();
@@ -42,7 +44,13 @@ bool Level::InitializeScene()
 				cubes.push_back( std::move( cube ) );
 			}
 
-			// lights
+			// skysphere
+			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
+		}
+
+		// LIGHTS
+		{
 			if ( !directionalLight.Initialize( *graphics, cb_vs_matrix ) ) return false;
 			directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
 			directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
@@ -52,7 +60,7 @@ bool Level::InitializeScene()
 			pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
 			if ( !spotLight.Initialize( *graphics, cb_vs_matrix ) ) return false;
-			spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
+			spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );			
 		}
 
 		// SYSTEMS
@@ -71,6 +79,15 @@ bool Level::InitializeScene()
 			hr = cb_ps_scene.Initialize( graphics->device.Get(), graphics->context.Get() );
 			COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
 		}
+
+		// TEXTURES
+		{
+			HRESULT hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures[BoxType::Default].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures[BoxType::Bounce].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures[BoxType::Arrow].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures[BoxType::TNT].GetAddressOf() );
+			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
+		}
 	}
 	catch ( COMException& exception )
 	{
@@ -81,7 +98,7 @@ bool Level::InitializeScene()
 }
 
 // RENDER PIPELINE
-void Level::BeginFrame()
+void LevelContainer::BeginFrame()
 {
 	// setup viewports and pipeline state
 	if ( multiViewport->IsUsingSub() )
@@ -106,7 +123,46 @@ void Level::BeginFrame()
 	Model::BindMatrices( graphics->context.Get(), cb_vs_matrix, cameras->GetCamera( cameras->GetCurrentCamera() ) );
 }
 
-void Level::EndFrame()
+void LevelContainer::RenderFrameEarly()
+{
+	// SKYSPHERE
+	{
+		Shaders::BindShaders( graphics->context.Get(), graphics->vertexShader_light, graphics->pixelShader_noLight );
+		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
+		skysphere.Draw();
+		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
+	}
+
+	// LIGHTS
+	{
+		// w/out normals
+		pointLight.Draw();
+		directionalLight.Draw();
+
+		// w/ normals
+		graphics->context->PSSetShader( graphics->pixelShader_light.GetShader(), NULL, 0 );
+		spotLight.Draw();
+	}
+}
+
+void LevelContainer::RenderFrame()
+{
+	// CUBES
+	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	{
+		if ( cubes[i]->GetIsHovering() )
+		{
+			GetStencilOutline()->DrawWithOutline( *graphics, *cubes[i], cb_vs_matrix,
+				pointLight.GetConstantBuffer(), boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
+		}
+		else
+		{
+			cubes[i]->Draw( cb_vs_matrix, boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
+		}
+	}
+}
+
+void LevelContainer::EndFrame()
 {
 	// setup RTT and update post-processing
 	graphics->RenderSceneToTexture();
@@ -133,4 +189,39 @@ void Level::EndFrame()
 	}
 
 	graphics->PresentScene();
+}
+
+void LevelContainer::Update( const float dt )
+{
+	// update lights
+	pointLight.SetPosition( pointLight.GetLightPosition() );
+	directionalLight.SetPosition( directionalLight.GetLightPosition() );
+
+	// update skysphere
+	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
+}
+
+void LevelContainer::LateUpdate( const float dt )
+{
+	// update cubes
+	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	{
+		// update cube scale multiplier
+		if ( cubes[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
+			cubes[i]->SetScale( static_cast< float >( cubes[i]->GetEditableProperties()->GetSizeMultiplier() ) );
+
+		// cube range collision check
+		cubes[i]->SetIsInRange( Collisions::CheckCollisionSphere( cameras->GetCamera( cameras->GetCurrentCamera() ), *cubes[i], 5.0f ) );
+
+		// update objects
+		cubes[i]->Update( dt );
+	}
+
+	// set position of spot light model
+	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
+}
+
+void LevelContainer::ProcessInput()
+{
+	// update main input here...
 }

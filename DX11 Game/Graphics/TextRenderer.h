@@ -2,7 +2,7 @@
 #ifndef TEXTRENDERER_H
 #define TEXTRENDERER_H
 
-#include "Level.h"
+#include "LevelContainer.h"
 #include "GraphicsResource.h"
 #include <dxtk/SpriteFont.h>
 #include <dxtk/SpriteBatch.h>
@@ -16,9 +16,9 @@ class TextRenderer : public GraphicsResource
 {
 public:
 	TextRenderer( Graphics& gfx );
-	void RenderCubeMoveText( Level& level );
-	void RenderMultiToolText( Level& level );
-	void RenderCameraText( Level& level );
+	void RenderCubeMoveText( LevelContainer& level );
+	void RenderMultiToolText( LevelContainer& level );
+	void RenderCameraText( LevelContainer& level );
 private:
 	void DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color );
 private:

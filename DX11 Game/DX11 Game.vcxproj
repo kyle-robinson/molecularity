@@ -236,7 +236,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Levels\Level1.cpp" />
-    <ClCompile Include="Levels\Level.cpp" />
+    <ClCompile Include="Levels\LevelContainer.cpp" />
     <ClCompile Include="Levels\Level2.cpp" />
     <ClCompile Include="Levels\LevelStateMachine.cpp" />
     <ClCompile Include="Model\Colour.cpp">
@@ -366,7 +366,7 @@
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MousePicking.h" />
     <ClInclude Include="Levels\Level1.h" />
-    <ClInclude Include="Levels\Level.h" />
+    <ClInclude Include="Levels\LevelContainer.h" />
     <ClInclude Include="Levels\Level2.h" />
     <ClInclude Include="Levels\LevelStateMachine.h" />
     <ClInclude Include="Model\Colour.h" />

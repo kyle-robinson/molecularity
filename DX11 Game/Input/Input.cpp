@@ -3,13 +3,20 @@
 #include "Sound.h"
 #include "CameraMovement.h"
 
-void Input::Initialize( Level* gfx, RenderWindow& window, CameraController* camera, int width, int height )
+void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
+	CameraController* camera, std::vector<uint32_t> level_IDs )
 {
-	this->level = gfx;
-	this->cameras = camera;
-	this->renderWindow = window;
+	cameras = camera;
+	renderWindow = window;
+	this->level_IDs = level_IDs;
+	this->levelSystem = stateMachine;
+	this->level = &*stateMachine->GetCurrentLevel();
+
 	keyboard.DisableAutoRepeatKeys();
-	mousePick.Initialize( width, height );
+	mousePick.Initialize(
+		static_cast<int>( renderWindow.GetWidth() ),
+		static_cast<int>( renderWindow.GetHeight() )
+	);
 }
 
 void Input::Update( const float dt, Sound sound )
@@ -28,6 +35,12 @@ void Input::UpdateKeyboard( const float dt )
 	while ( !keyboard.KeyBufferIsEmpty() )
 	{
 		unsigned char keycode = keyboard.ReadKey().GetKeyCode();
+
+		// LEVEL SELECTION
+		{
+			if ( keycode == VK_NUMPAD1 ) levelSystem->SwitchTo( level_IDs[0] );
+			if ( keycode == VK_NUMPAD2 ) levelSystem->SwitchTo( level_IDs[1] );
+		}
 
 		// CAMERA INPUT
 		{

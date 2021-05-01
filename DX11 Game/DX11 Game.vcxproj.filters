@@ -177,7 +177,7 @@
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Levels\Level.cpp">
+    <ClCompile Include="Levels\LevelContainer.cpp">
       <Filter>Source\Levels</Filter>
     </ClCompile>
     <ClCompile Include="Levels\Level1.cpp">
@@ -425,7 +425,7 @@
     <ClInclude Include="Levels\Level1.h">
       <Filter>Headers\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="Levels\Level.h">
+    <ClInclude Include="Levels\LevelContainer.h">
       <Filter>Headers\Levels</Filter>
     </ClInclude>
     <ClInclude Include="Levels\LevelStateMachine.h">

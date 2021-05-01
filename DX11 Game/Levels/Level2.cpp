@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "Level2.h"
+#include "Collisions.h"
 #include "Rasterizer.h"
 
-/*Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
+Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
 bool Level2::OnCreate()
 {
@@ -11,11 +12,12 @@ bool Level2::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
+			if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 
-			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
-			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
+			// sprites
+			if ( !crosshair.Initialize( graphics->device.Get(), graphics->context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
+			crosshair.SetInitialPosition( graphics->GetWidth() / 2 - crosshair.GetWidth() / 2, graphics->GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
 		}
 	}
 	catch ( COMException& exception )
@@ -29,53 +31,62 @@ bool Level2::OnCreate()
 void Level2::Render()
 {
 	// Render to sub viewport first using static camera
-	this->GetMultiViewport()->SetUsingSub( true );
-	this->BeginFrame();
-	this->RenderFrame();
+	GetMultiViewport()->SetUsingSub();
+	BeginFrame();
+	RenderFrame();
 
 	// Render main scene next with main/debug camera
-	this->GetMultiViewport()->SetUsingMain( true );
-	this->BeginFrame();
-	this->RenderFrame();
+	GetMultiViewport()->SetUsingMain();
+	BeginFrame();
+	RenderFrame();
 
 	// Render UI and present the complete frame
-	this->EndFrame();
+	EndFrame();
 }
 
 void Level2::RenderFrame()
 {
-	// SKYSPHERE
-	{
-		Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-		GetRasterizer( "Skybox" )->Bind( *this );
-		skysphere.Draw();
-		GetRasterizer( rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *this );
-	}
-
-	// LIGHTS
-	{
-		// w/out normals
-		pointLight.Draw();
-		directionalLight.Draw();
-
-		// w/ normals
-		context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-		spotLight.Draw();
-	}
+	// render ligths/skysphere
+	LevelContainer::RenderFrameEarly();
 
 	// DRAWABLES
 	{
 		hubRoom.Draw();
+
+		// render the cubes
+		LevelContainer::RenderFrame();
+	}
+
+	// SPRITES
+	{
+		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
+		{
+			Shaders::BindShaders( graphics->context.Get(), graphics->vertexShader_2D, graphics->pixelShader_2D );
+			cb_ps_scene.data.useTexture = TRUE;
+			if ( !cb_ps_scene.ApplyChanges() ) return;
+			graphics->context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+			crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+		}
 	}
 }
 
 void Level2::Update( const float dt )
 {
 	// update lights/skysphere
-	pointLight.SetPosition( pointLight.GetLightPosition() );
-	directionalLight.SetPosition( directionalLight.GetLightPosition() );
-	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );
+	LevelContainer::Update( dt );
 
-	// set position of spot light model
-	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
-}*/
+	// camera world collisions. Will be player object collisions in the future and ideally not here
+	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
+		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
+
+	// update cubes/multi-tool position
+	LevelContainer::LateUpdate( dt );
+}
+
+void Level2::ProcessInput()
+{
+	// update main input
+	LevelContainer::ProcessInput();
+
+	// update level input here...
+}

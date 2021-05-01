@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "CameraMovement.h"
+#include <thread>
 
 bool Application::Initialize(
 	HINSTANCE hInstance,
@@ -11,30 +12,44 @@ bool Application::Initialize(
 	// initialize delta time
 	timer.Start();
 
-	// initialize graphics
-	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
-	if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) ) return false;
-	imgui.Initialize( renderWindow.GetHWND(), gfx.device.Get(), gfx.context.Get() );
+	// GRAPHICS
+	{
+		// initialize graphics
+		if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
+		if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) ) return false;
+		imgui.Initialize( renderWindow.GetHWND(), gfx.device.Get(), gfx.context.Get() );
+	}
 
-	// initialize levels
-	level1 = std::make_shared<Level1>( stateMachine );
-	if ( !level1->Initialize( &gfx, &cameras, &imgui ) ) return false;
+	// LEVELS
+	{
+		// initialize levels
+		level1 = std::make_shared<Level1>( stateMachine );
+		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui );
+		first.join();
 
-	//level2 = std::make_shared<Level2>( stateMachine );
-	//if ( !level2->Initialize( renderWindow.GetHWND(), &cameras, width, height ) ) return false;
+		level2 = std::make_shared<Level2>( stateMachine );
+		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui );
+		second.join();
 
-	// add levels to state machine
-	level1_ID = stateMachine.Add( level1 );
-	//level2_ID = stateMachine.Add( level2 );
-	stateMachine.SwitchTo( level1_ID );
+		// add levels to state machine
+		level1_ID = stateMachine.Add( level1 );
+		level2_ID = stateMachine.Add( level2 );
+		stateMachine.SwitchTo( level1_ID );
+	}
 
-	// initialize input
-	cameras.Initialize( width, height );
-	input.Initialize( level1.get(), renderWindow, &cameras, width, height );
+	// SYSTEMS
+	{
+		// initialize input
+		cameras.Initialize( width, height );
+		std::vector<uint32_t> level_IDs;
+		level_IDs.push_back( std::move( level1_ID ) );
+		level_IDs.push_back( std::move( level2_ID ) );
+		input.Initialize( renderWindow, &stateMachine, &cameras, level_IDs );
 
-	// initialize sound
-	if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
-	if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.75f ) ) return false;
+		// initialize sound
+		if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
+		if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.75f ) ) return false;
+	}
 
 	return true;
 }
@@ -56,10 +71,6 @@ void Application::Update()
 
 	// update current level
 	stateMachine.Update( dt );
-	if ( GetAsyncKeyState( 'J' ) )
-		stateMachine.SwitchTo( level1_ID );
-	//if ( GetAsyncKeyState( 'K' ) )
-	//	stateMachine.SwitchTo( level2_ID );
 }
 
 void Application::Render()

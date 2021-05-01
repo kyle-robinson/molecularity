@@ -6,7 +6,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     UNREFERENCED_PARAMETER( lpCmdLine );
     UNREFERENCED_PARAMETER( nCmdShow );
 
-    HRESULT hr = CoInitialize( NULL );
+    HRESULT hr = CoInitializeEx( NULL, COINITBASE_MULTITHREADED );
     if ( FAILED( hr ) )
     {
         ErrorLogger::Log( hr, "Failed to call CoInitialize!" );

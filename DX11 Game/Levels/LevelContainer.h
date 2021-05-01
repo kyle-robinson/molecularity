@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LEVELMANAGER_H
-#define LEVELMANAGER_H
+#ifndef LEVELCONTAINER_H
+#define LEVELCONTAINER_H
 
 #include "Graphics.h"
 #include "JSON_Helper.h"
@@ -15,8 +15,6 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 
-#include <dxtk/WICTextureLoader.h>
-
 class Fog;
 class ImGuiManager;
 class TextRenderer;
@@ -26,12 +24,13 @@ class StencilOutline;
 /// <summary>
 /// Loads and renders/updates all the components and models for the current scene/level.
 /// Sets up any constant buffers that are specific to this particular scene/level.
+/// Used to initialize objects native to every level.
 /// </summary>
-class Level
+class LevelContainer
 {
 	friend class Application;
 public:
-	virtual ~Level( void ) = default;
+	virtual ~LevelContainer( void ) = default;
 	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui );
 
 	// Render/Update Scene Functions
@@ -40,8 +39,10 @@ public:
 
 	virtual bool OnCreate() = 0;
 	virtual void Render() {}
-	virtual void RenderFrame() {}
-	virtual void Update( const float dt ) {}
+	virtual void RenderFrame();
+	virtual void Update( const float dt );
+	void LateUpdate( const float dt );
+	virtual void ProcessInput();
 
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<StencilOutline> GetStencilOutline() const noexcept { return stencilOutline; }
@@ -50,12 +51,13 @@ public:
 	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
 	Graphics* GetGraphics() const noexcept { return graphics; }
 protected:
-	// Graphics
-	Graphics* graphics;
-	ImGuiManager* imgui;
+	void RenderFrameEarly();
 
 	// Objects
+	Graphics* graphics;
+	ImGuiManager* imgui;
 	CameraController* cameras;
+	RenderableGameObject skysphere;
 	std::vector<std::shared_ptr<Cube>> cubes;
 
 	// Lights
@@ -76,6 +78,9 @@ private:
 	std::shared_ptr<MultiViewport> multiViewport;
 	std::shared_ptr<PostProcessing> postProcessing;
 	std::shared_ptr<StencilOutline> stencilOutline;
+
+	// Textures
+	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 };
 
 #endif

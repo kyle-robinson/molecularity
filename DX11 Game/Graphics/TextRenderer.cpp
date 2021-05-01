@@ -16,7 +16,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 	spriteBatch->End();
 }
 
-void TextRenderer::RenderCubeMoveText( Level& level )
+void TextRenderer::RenderCubeMoveText( LevelContainer& level )
 {
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
@@ -28,7 +28,7 @@ void TextRenderer::RenderCubeMoveText( Level& level )
 	}
 }
 
-void TextRenderer::RenderMultiToolText( Level& level )
+void TextRenderer::RenderMultiToolText( LevelContainer& level )
 {
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
@@ -66,7 +66,7 @@ void TextRenderer::RenderMultiToolText( Level& level )
 	}
 }
 
-void TextRenderer::RenderCameraText( Level& manager )
+void TextRenderer::RenderCameraText( LevelContainer& manager )
 {
 	std::string displayText;
 
