@@ -7,7 +7,7 @@ enum DopStae
 	Up
 };
 
-template<typename ListData>
+template<typename ListData, typename BakgroundType, typename ButtionBacktype>
 class DropDown_Widget :
     public widget
 {
@@ -21,12 +21,13 @@ public:
     ListData getSelected() { return DataSelected; }
 
 
-	void Function(vector<ListData>DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, XMVECTORF32 textColour,MouseData MData);
+	void Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, vector<BakgroundType> Backcolour, vector<ButtionBacktype> ButtionImmage, XMVECTORF32 textColour, MouseData MData);
 
 	void setCurrent(int slected){
 		Selected = slected;
 	}
 	
+	bool GetIsDown();
 
 private:
     vector<ListData>_ListData;
@@ -34,27 +35,29 @@ private:
     ListData DataSelected;
 
     Sprite _Bakground;
-	Colour BakgroungColour;
-
+	BakgroundType BakgroungColour;
+	int Flag;
+	int FlagMax = 20;
     Sprite _Options;
 	XMVECTORF32 TextColour;
-    Buttion_Widget<Colour> ButtionDrop;
-	Buttion_Widget<Colour> ListButtions [10];
+    Buttion_Widget<ButtionBacktype> ButtionDrop;
+	Buttion_Widget<BakgroundType> ListButtions [10];
 	DopStae DropState=Up;
 
 };
 
-template<typename ListData>
-inline DropDown_Widget<ListData>::DropDown_Widget(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, MouseData MData)
+template<typename ListData, typename BakgroundType, typename ButtionBacktype>
+inline DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::DropDown_Widget(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, MouseData MData)
 {
 	Function(DropDownList, size, pos, colour, MData);
 }
 
 
 
-template<typename ListData>
-inline bool DropDown_Widget<ListData>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
+template<typename ListData, typename BakgroundType, typename ButtionBacktype>
+inline bool DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
+	Flag = FlagMax;
 	_Bakground.Initialize(Device, Contex, _Size.x, _Size.y, BakgroungColour, cb_vs_matrix_2d);
 	ButtionDrop.INITSprite(Contex, Device, cb_vs_matrix_2d);
 	for (UINT i = 0; i < 10; i++)
@@ -65,15 +68,15 @@ inline bool DropDown_Widget<ListData>::INITSprite(ID3D11DeviceContext* Contex, I
 	return true;
 }
 
-template<typename ListData>
-inline void DropDown_Widget<ListData>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender, VertexShader& vert, PixelShader& pix)
+template<typename ListData, typename BakgroundType, typename ButtionBacktype>
+inline void DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender, VertexShader& vert, PixelShader& pix)
 {
-	_Bakground.UpdateTex(Device, BakgroungColour);
+	_Bakground.UpdateTex(Device, "Resources\\Textures\\Settings\\Input_Yellow.dds");
 	_Bakground.SetScale(_Size.x, _Size.y);
 	_Bakground.SetInitialPosition(_Pos.x, _Pos.y, 0);
 
 	cb_ps_scene.data.alphaFactor = _AlfaFactor;
-	cb_ps_scene.data.useTexture = false;
+	cb_ps_scene.data.useTexture = true;
 
 	if (!cb_ps_scene.ApplyChanges()) return;
 	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
@@ -96,29 +99,23 @@ inline void DropDown_Widget<ListData>::Draw(ID3D11DeviceContext* Contex, ID3D11D
 		
 	}
 	
-
+	XMFLOAT2 textpos = { _Pos.x + 10 ,_Pos.y + (_Size.y / 2) - 12 };
 	//text	
-	textrender->RenderString(_ListData[Selected], _Pos, TextColour);
-	if (DropState == Down)
-	{
-		for (int i = 0; i < _ListData.size(); i++)
-		{
-			textrender->RenderString(_ListData[i], ListButtions[i].GetPos(), TextColour);
-		}
-	}
+	textrender->RenderString(_ListData[Selected], textpos, TextColour);
+	
 
 }
 
-template<typename ListData>
-inline void DropDown_Widget<ListData>::Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, Colour colour, XMVECTORF32 textColour, MouseData MData)
+template<typename ListData, typename BakgroundType, typename ButtionBacktype>
+inline void DropDown_Widget< ListData,  BakgroundType,  ButtionBacktype>::Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, vector<BakgroundType> Backcolour, vector<ButtionBacktype> ButtionImmage, XMVECTORF32 textColour, MouseData MData)
 {
 	
-	BakgroungColour = colour;
+	BakgroungColour = Backcolour[2];
 	_Size = size;
 	_Pos = pos;
 	_ListData = DropDownList;
 	TextColour = textColour;
-	ButtionDrop.Function("", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { size.y, size.y }, XMFLOAT2{ pos.x + size.x ,  pos.y }, textColour, MData);
+	ButtionDrop.Function("", ButtionImmage, { size.y, size.y }, XMFLOAT2{ pos.x + size.x ,  pos.y }, textColour, MData);
 
 	//list buttions
 	
@@ -129,7 +126,7 @@ inline void DropDown_Widget<ListData>::Function(vector<ListData> DropDownList, D
 	for (int i = 0; i < DropDownList.size(); i++)
 	{
 		
-		ListButtions[i].Function("", vector<Colour>{ {255, 0, 0 }, { 0, 255, 0 }, { 0, 0, 255 }}, { size.x,size.y }, XMFLOAT2{ pos.x  ,  PosY }, textColour, MData);
+		ListButtions[i].Function(_ListData[i], Backcolour, { size.x,size.y }, XMFLOAT2{ pos.x  ,  PosY }, textColour, MData);
 		PosY += size.y+1;
 	}
 
@@ -139,23 +136,32 @@ inline void DropDown_Widget<ListData>::Function(vector<ListData> DropDownList, D
 
 			if (ListButtions[i].GetIsPressed()) {
 				Selected = i;
-				DropState = Up;
+				//DropState = Up;
 			}
 			
 
 		}
 
-		
+		if (ButtionDrop.GetIsPressed() && Flag == FlagMax) {
 
-
-
+			DropState = Up;
+			Flag = 0;
+		}
+		else if(Flag<FlagMax)
+		{
+			Flag++;
+		}
 	}
 			 break;
 	case Up:
-		if (ButtionDrop.GetIsPressed()) {
+		if (ButtionDrop.GetIsPressed() && Flag == FlagMax) {
 
 			DropState = Down;
-
+			Flag = 0;
+		}
+		else if (Flag < FlagMax)
+		{
+			Flag++;
 		}
 
 	default:
@@ -164,6 +170,20 @@ inline void DropDown_Widget<ListData>::Function(vector<ListData> DropDownList, D
 
 	DataSelected = DropDownList[Selected];
 	
+
+	
+}
+
+template<typename ListData, typename BakgroundType, typename ButtionBacktype>
+inline bool DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::GetIsDown()
+{
+	if (DropState == Down) {
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 
 	
 }

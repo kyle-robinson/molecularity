@@ -28,14 +28,29 @@ private:
 	//Settings
 	Immage_Widget SettingsBakgtound;
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;
-	DropDown_Widget<string> SettingsDropdowns[10];
-	DataSlider_Widget<Colour, Colour> SettingsSliders[10];
+	DropDown_Widget<string,string,string> SettingsDropdowns[10];
+	DataSlider_Widget<string, string> SettingsSliders[10];
 	Buttion_Widget<string> SettingsButtions[10];
-	Input_Widget ControllInput[20];
+	Input_Widget<string> ControllInput[20];
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;
 
-	vector<string> ButtionTex = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds",
+
+	vector<string> ButtionTexDrop = { "Resources\\Textures\\Settings\\DropArrow_Blue.dds",
+		"Resources\\Textures\\Settings\\DropArrow_Blue.dds",
+		"Resources\\Textures\\Settings\\DropArrow.dds" };
+
+	vector<string> ButtionBackDrop = { "Resources\\Textures\\Settings\\Input_Blue.dds",
+		"Resources\\Textures\\Settings\\Input_Blue.dds",
+		"Resources\\Textures\\Settings\\Input_Yellow.dds" };
+
+
+
+	vector<string> ButtionTex = { "Resources\\Textures\\Settings\\Buttion_SettingsBar_Hover.dds",
+		"Resources\\Textures\\Settings\\Buttion_SettingsBar_Hover.dds",
+		"Resources\\Textures\\Settings\\Buttion_SettingsBar_Up.dds" };
+
+	vector<string> AcceptButtion = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds",
 		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds",
 		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
 

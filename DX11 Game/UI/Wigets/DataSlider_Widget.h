@@ -41,11 +41,12 @@ template<typename BarTex, typename SliderTex>
 inline void DataSlider_Widget<BarTex, SliderTex>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix)
 {
 	
-	Bar.UpdateTex(Device, _BarColour);
+	
 	Bar.SetInitialPosition(_Pos.x, _Pos.y, 0);
 	Bar.SetScale(_Size.x, _Size.y);
+	Bar.UpdateTex(Device, _BarColour);
 	cb_ps_scene.data.alphaFactor = _AlfaFactor;
-	cb_ps_scene.data.useTexture = false;
+	cb_ps_scene.data.useTexture = true;
 
 	if (!cb_ps_scene.ApplyChanges()) return;
 	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
@@ -58,7 +59,7 @@ inline void DataSlider_Widget<BarTex, SliderTex>::Draw(ID3D11DeviceContext* Cont
 	Slider.SetScale(25, _Size.y / 0.75);
 
 	cb_ps_scene.data.alphaFactor = _AlfaFactor;
-	cb_ps_scene.data.useTexture = false;
+	cb_ps_scene.data.useTexture = true;
 
 	if (!cb_ps_scene.ApplyChanges()) return;
 	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());

@@ -34,7 +34,7 @@ void Pause::Update()
 {
 	if (_isPuased) {
 		//bakground
-		PuaseBakgtound.Function({ 0,0,0 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
+		PuaseBakgtound.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		_TitleCard.Function("Title_Card\\TitleCard.dds", { 500,100 }, { 0,0 });
 		//Buttions
 		if (PuaseButtions[0].Function("Play", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>( _SizeOfScreen.y*0.25) },DirectX::Colors::Black, _MouseData)) {
