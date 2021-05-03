@@ -13,7 +13,7 @@ Sound::Sound()
 	InitialiseSounds();
 
 	musicVolume = 1.0f;
-	SFXVolume = 1.0f;
+	SoundEffectsVolume = 1.0f;
 }
 
 Sound::~Sound()
@@ -27,8 +27,8 @@ HRESULT Sound::InitialiseSounds()
 	musicVec.push_back(engine->addSoundSourceFromFile("Resources\\Audio\\Music.wav"));
 
 	// Sound effects
-	SFXVec.push_back(engine->addSoundSourceFromFile("Resources\\Audio\\Shot.wav"));
-	SFXVec.push_back(engine->addSoundSourceFromFile("Resources\\Audio\\Collision.wav"));
+	SoundEffectsVec.push_back(engine->addSoundSourceFromFile("Resources\\Audio\\Shot.wav"));
+	SoundEffectsVec.push_back(engine->addSoundSourceFromFile("Resources\\Audio\\Collision.wav"));
 
 	return S_OK;
 }
@@ -49,16 +49,16 @@ HRESULT Sound::PlayMusic(int musicNum, bool loops)
 	return S_OK;
 }
 
-HRESULT Sound::PlaySFX(int soundNum, XMFLOAT3 soundPosition)
+HRESULT Sound::PlaySoundEffects(int soundNum, XMFLOAT3 soundPosition)
 {
 	irrklang::vec3df position(soundPosition.x, soundPosition.y, soundPosition.z);
-	engine->play3D(SFXVec[soundNum], position);
+	engine->play3D(SoundEffectsVec[soundNum], position);
 
 	return S_OK;
 }
 
-HRESULT Sound::PlaySFX(int soundNum)
+HRESULT Sound::PlaySoundEffects(int soundNum)
 {
-	engine->play3D(SFXVec[soundNum], camPosition);
+	engine->play3D(SoundEffectsVec[soundNum], camPosition);
 	return S_OK;
 }
