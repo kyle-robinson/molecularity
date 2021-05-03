@@ -13,8 +13,8 @@ public:
 	HRESULT UpdatePosition(XMFLOAT3 position, float rotation);
 
 	HRESULT PlayMusic(int musicNum, bool loops); //Plays music
-	HRESULT PlaySoundEffect(int soundNum, XMFLOAT3 soundPosition); //Plays sound effects
-	HRESULT PlaySoundEffect(int soundNum);
+	HRESULT PlaySFX(int soundNum, XMFLOAT3 soundPosition); //Plays sound effects
+	HRESULT PlaySFX(int soundNum);
 
 	// Only changes volume for sounds played after the change so at the moment music won't change
 	float GetMusicVolume() { return musicVolume; } // Gets the volume level for music

@@ -20,6 +20,7 @@ bool Application::Initialize(
 	input.Initialize( &gfx, renderWindow, &cameras, width, height );
 
 	// sound
+	sound.SetMusicVolume(0.5f);
 	if (FAILED(sound.PlayMusic(sound.MUSIC_MAIN, true))) return false;
 
 	return true;

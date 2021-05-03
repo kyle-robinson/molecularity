@@ -9,6 +9,7 @@ void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* c
 	this->renderWindow = window;
 	keyboard.DisableAutoRepeatKeys();
 	mousePick.Initialize( width, height );
+	sound.SetSFXVolume(0.3f); // Sets the SFX volume for this class, need to update so this isn't needed
 }
 
 void Input::Update( const float dt )
@@ -168,10 +169,10 @@ void Input::UpdateMouse( const float dt )
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
-				// testing sound on left click, feel free to move or remove
+				// testing sound, feel free to move or remove
 				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
 				{
-					sound.PlaySoundEffect(sound.SOUND_TOOLUSE);
+					sound.PlaySFX(sound.SOUND_TOOLUSE);
 				}
 
 				// test intersection between crosshair and cube

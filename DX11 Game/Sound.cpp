@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Sound.h"
 
+// Currently if a sound is played from a different class you need to update its volume and camera position in that class, I've tried to find a fix but I've spent too much time on this and burnt myself out
+
 Sound::Sound()
 {
 	camPosition = irrklang::vec3df(0.0f, 9.0f, -15.0f);
@@ -10,8 +12,8 @@ Sound::Sound()
 
 	InitialiseSounds();
 
-	SetMusicVolume(0.1f);
-	SetSFXVolume(0.3f);
+	musicVolume = 1.0f;
+	SFXVolume = 1.0f;
 }
 
 Sound::~Sound()
@@ -47,7 +49,7 @@ HRESULT Sound::PlayMusic(int musicNum, bool loops)
 	return S_OK;
 }
 
-HRESULT Sound::PlaySoundEffect(int soundNum, XMFLOAT3 soundPosition)
+HRESULT Sound::PlaySFX(int soundNum, XMFLOAT3 soundPosition)
 {
 	irrklang::vec3df position(soundPosition.x, soundPosition.y, soundPosition.z);
 	engine->play3D(SFXVec[soundNum], position);
@@ -55,7 +57,7 @@ HRESULT Sound::PlaySoundEffect(int soundNum, XMFLOAT3 soundPosition)
 	return S_OK;
 }
 
-HRESULT Sound::PlaySoundEffect(int soundNum)
+HRESULT Sound::PlaySFX(int soundNum)
 {
 	engine->play3D(SFXVec[soundNum], camPosition);
 	return S_OK;
