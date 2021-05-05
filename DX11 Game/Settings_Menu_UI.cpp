@@ -80,7 +80,7 @@ void Settings_Menu_UI::Update()
 
 		
 
-		float currentY = static_cast<float>(_SizeOfScreen.x * 0.20) - SettingsScrollBar.getPY();
+		currentY = static_cast<float>(_SizeOfScreen.x * 0.20) - SettingsScrollBar.getPY();
 		TabTextPos = { 10,static_cast<float>(_SizeOfScreen.x * 0.12) };
 		//box for colision 
 		XMFLOAT2 boxPos = { 0,static_cast<float>(_SizeOfScreen.x * 0.20) };
@@ -100,58 +100,7 @@ void Settings_Menu_UI::Update()
 			{
 				if (setting.Type == JSON::SettingType::GraphicType)
 				{
-					if (currentY >= boxPos.y &&
-						currentY <= (boxPos.y + boxSize.y))
-					{
-						TextToDraw._Colour = Colors::Black;
-						TextToDraw._Position = { 10,currentY };
-						TextToDraw._Text = setting.Name;
-						PuaseTextPG.push_back(TextToDraw);
-						if (int* input = std::get_if<int>(&setting.Setting)) {
-							MouseData Data;
-							//stop inputs for blow widgets
-							//Could be improved
-							for (UINT i = 0; i < SettingsDropCount; i++)
-							{
-								if (SettingsDropdowns[i].GetIsDown()) {
-									Data = _MouseData;
-									Data.LPress = false;
-								}
-								else
-								{
-									Data = _MouseData;
-								}
-							}
-							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input,"Resources\\Textures\\Settings\\Slider_Line_Yellow.dds", "Resources\\Textures\\Settings\\Slider_Yellow.dds", Data);
-							setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
-							SettingSliderCount++;
-
-
-							TextToDraw._Colour = Colors::Black;
-							TextToDraw._Position = { 750,currentY };
-							TextToDraw._Text = to_string(*input);
-							PuaseTextPG.push_back(TextToDraw);
-						}
-						else if (bool* input = std::get_if<bool>(&setting.Setting)) {
-							if (!*input) {
-								SettingsDropdowns[SettingsDropCount].setCurrent(1);
-							}
-							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, _MouseData);
-
-							if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
-								setting.Setting = false;
-							}
-							else
-							{
-								setting.Setting = true;
-
-							}
-							SettingsDropCount++;
-
-						}
-					}
-						currentY += 50;
-					
+					CreateSettings(setting);
 				}
 			}
 
@@ -171,65 +120,7 @@ void Settings_Menu_UI::Update()
 			{
 				if (setting.Type == JSON::SettingType::GeneralType)
 				{
-					if (currentY >= boxPos.y &&
-						currentY <= (boxPos.y + boxSize.y))
-					{
-						TextToDraw._Colour = Colors::Black;
-						TextToDraw._Position = { 10,currentY };
-						TextToDraw._Text = setting.Name;
-						PuaseTextPG.push_back(TextToDraw);
-						if (int* input = std::get_if<int>(&setting.Setting)) {
-							MouseData Data;
-							//stop inputs for blow widgets
-							//Could be improved
-							for (UINT i = 0; i < SettingsDropCount; i++)
-							{
-								if (SettingsDropdowns[i].GetIsDown()) {
-									 Data = _MouseData;
-									Data.LPress = false;
-								}
-								else
-								{
-									 Data = _MouseData;
-								}
-							}
-							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, "Resources\\Textures\\Settings\\Slider_Line_Yellow.dds", "Resources\\Textures\\Settings\\Slider_Yellow.dds", Data);
-							setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
-							SettingSliderCount++;
-							
-
-							TextToDraw._Colour = Colors::Black;
-							TextToDraw._Position = { 750,currentY };
-							TextToDraw._Text = to_string(*input);
-							PuaseTextPG.push_back(TextToDraw);
-							Data.LPress = false;
-						}
-						else if (bool* input = std::get_if<bool>(&setting.Setting)) {
-							if (!*input) {
-								SettingsDropdowns[SettingsDropCount].setCurrent(1);
-							}
-							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, _MouseData);
-							if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
-								setting.Setting = false;
-							}
-							else
-							{
-								setting.Setting = true;
-
-							}
-							SettingsDropCount++;
-
-						}
-						else if (string* input = std::get_if<string>(&setting.Setting)) {
-
-							vector<string>Language = { "Eng", "Fr","" };
-							SettingsDropdowns[SettingsDropCount].Function(Language, { 200,30 }, { 500,currentY }, ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, _MouseData);
-							setting.Setting = SettingsDropdowns[SettingsDropCount].getSelected();
-							SettingsDropCount++;
-						}
-					}
-						currentY += 50;
-					
+					CreateSettings(setting);
 				}
 			}
 			break;
@@ -248,67 +139,7 @@ void Settings_Menu_UI::Update()
 			for (auto& setting : _SettingsData)
 			{
 				if (setting.Type == JSON::SettingType::SoundType) {
-					if (currentY >= boxPos.y &&
-						currentY <= (boxPos.y + boxSize.y))
-					{
-						TextToDraw._Colour = Colors::Black;
-						TextToDraw._Position = { 10,currentY };
-						TextToDraw._Text = setting.Name;
-						PuaseTextPG.push_back(TextToDraw);
-
-
-						if (int* input = std::get_if<int>(&setting.Setting)) {
-							MouseData Data;
-							//stop inputs for blow widgets
-							//Could be improved
-							for (UINT i = 0; i < SettingsDropCount; i++)
-							{
-								if (SettingsDropdowns[i].GetIsDown()) {
-									Data = _MouseData;
-									Data.LPress = false;
-								}
-								else
-								{
-									Data = _MouseData;
-								}
-							}
-							SettingsSliders[SettingSliderCount].Function({ 200,30 }, { 500,currentY }, *input, "Resources\\Textures\\Settings\\Slider_Line_Yellow.dds", "Resources\\Textures\\Settings\\Slider_Yellow.dds", Data);
-							setting.Setting = (int)SettingsSliders[SettingSliderCount].getData();
-							SettingSliderCount++;
-
-
-							TextToDraw._Colour = Colors::Black;;
-							TextToDraw._Position = { 750,currentY };
-							TextToDraw._Text = to_string(*input);
-							PuaseTextPG.push_back(TextToDraw);
-
-						}
-						else if (bool* input = std::get_if<bool>(&setting.Setting)) {
-							if (!*input) {
-								SettingsDropdowns[SettingsDropCount].setCurrent(1);
-							}
-							SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { 200,30 }, { 500,currentY }, ButtionBackDrop, ButtionTexDrop,DirectX::Colors::White, _MouseData);
-
-
-
-							if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
-								setting.Setting = false;
-							}
-							else
-							{
-								setting.Setting = true;
-
-							}
-
-
-
-
-							SettingsDropCount++;
-
-						}
-					}
-						currentY += 50;
-					
+					CreateSettings(setting);
 				}
 
 			}
@@ -338,7 +169,7 @@ void Settings_Menu_UI::Update()
 
 						string controll = get<string>(setting.Setting);
 						ControllInput[SettingsInputCount].setCurrentText(controll);
-						ControllInput[SettingsInputCount].Function({ 300, 30 }, { 200,currentY }, "Resources\\Textures\\Settings\\Input_Yellow.dds", DirectX::Colors::Black, Key, _MouseData);
+						ControllInput[SettingsInputCount].Function({ static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.07) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, "Resources\\Textures\\Settings\\Input_Yellow.dds", DirectX::Colors::Black, Key, _MouseData);
 						string output = ControllInput[SettingsInputCount].getCurrentText();
 
 						string UpperOut;
@@ -501,9 +332,91 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
 		
+		D3D11_VIEWPORT a;
+		a.TopLeftX = 0;
+		a.TopLeftY = 0;
+		a.Width = _SizeOfScreen.x;
+		a.Height = _SizeOfScreen.y;
+		a.MaxDepth = 1.0f;
+		a.MinDepth = 0.0f;
+
+		HeadderTextRenderer->UpdateViewPort(a);
+		PGTextRenderer->UpdateViewPort(a);
 	}
 	break;
 
 	}
 
+}
+
+void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
+{
+	TextToDraw TextToDraw;
+	XMFLOAT2 boxPos = { 0,static_cast<float>(_SizeOfScreen.x * 0.20) };
+	XMFLOAT2 boxSize = { _SizeOfScreen.x, _SizeOfScreen.y - 160 };
+
+	if (currentY >= boxPos.y &&
+		currentY <= (boxPos.y + boxSize.y))
+	{
+		TextToDraw._Colour = Colors::Black;
+		TextToDraw._Position = { 10,currentY };
+		TextToDraw._Text = settingData.Name;
+		PuaseTextPG.push_back(TextToDraw);
+		if (int* input = std::get_if<int>(&settingData.Setting)) {
+			MouseData Data;
+			//stop inputs for blow widgets
+			//Could be improved
+			Data = _MouseData;
+			for (UINT i = 0; i < SettingsDropCount; i++)
+			{
+				if (SettingsDropdowns[i].GetIsDown()) {
+
+					Data.LPress = false;
+				}
+				else
+				{
+					Data = _MouseData;
+				}
+			}
+			SettingsSliders[SettingSliderCount].Function({ static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.07) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, *input, "Resources\\Textures\\Settings\\Slider_Line_Yellow.dds", "Resources\\Textures\\Settings\\Slider_Yellow.dds", Data);
+			settingData.Setting = (int)SettingsSliders[SettingSliderCount].getData();
+			SettingSliderCount++;
+
+
+			TextToDraw._Colour = Colors::Black;
+			TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.58),currentY };
+			TextToDraw._Text = to_string(*input);
+			PuaseTextPG.push_back(TextToDraw);
+			Data.LPress = false;
+		}
+		else if (bool* input = std::get_if<bool>(&settingData.Setting)) {
+			string a;
+			if (!*input) {
+				a = "false";
+			}
+			else
+			{
+				a = "true";
+			}
+			SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, a, _MouseData);
+			
+			if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
+				settingData.Setting = false;
+			}
+			else
+			{
+				settingData.Setting = true;
+			}
+			SettingsDropCount++;
+
+		}
+		else if (string* input = std::get_if<string>(&settingData.Setting)) {
+
+			vector<string>Language = { "Eng", "Fr"};
+			SettingsDropdowns[SettingsDropCount].Function(Language, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, *input, _MouseData);
+			settingData.Setting = SettingsDropdowns[SettingsDropCount].getSelected();
+			SettingsDropCount++;
+		}
+	}
+	currentY += static_cast<float>(_SizeOfScreen.y * 0.1);
 }

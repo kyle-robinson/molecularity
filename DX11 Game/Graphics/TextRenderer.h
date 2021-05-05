@@ -22,7 +22,7 @@ public:
 	void RenderCameraText( Graphics& gfx );
 
 	void RenderString(std::string text, XMFLOAT2 position, XMVECTORF32 color);
-
+	void UpdateViewPort(D3D11_VIEWPORT& NewView);
 private:
 	void DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color );
 private:

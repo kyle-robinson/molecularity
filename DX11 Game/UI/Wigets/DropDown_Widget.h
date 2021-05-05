@@ -21,7 +21,7 @@ public:
     ListData getSelected() { return DataSelected; }
 
 
-	void Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, vector<BakgroundType> Backcolour, vector<ButtionBacktype> ButtionImmage, XMVECTORF32 textColour, MouseData MData);
+	void Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, vector<BakgroundType> Backcolour, vector<ButtionBacktype> ButtionImmage, XMVECTORF32 textColour, ListData Current, MouseData MData);
 
 	void setCurrent(int slected){
 		Selected = slected;
@@ -107,7 +107,7 @@ inline void DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::Draw(ID3D
 }
 
 template<typename ListData, typename BakgroundType, typename ButtionBacktype>
-inline void DropDown_Widget< ListData,  BakgroundType,  ButtionBacktype>::Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, vector<BakgroundType> Backcolour, vector<ButtionBacktype> ButtionImmage, XMVECTORF32 textColour, MouseData MData)
+inline void DropDown_Widget< ListData,  BakgroundType,  ButtionBacktype>::Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, vector<BakgroundType> Backcolour, vector<ButtionBacktype> ButtionImmage, XMVECTORF32 textColour, ListData Current, MouseData MData)
 {
 	
 	BakgroungColour = Backcolour[2];
@@ -117,29 +117,28 @@ inline void DropDown_Widget< ListData,  BakgroundType,  ButtionBacktype>::Functi
 	TextColour = textColour;
 	ButtionDrop.Function("", ButtionImmage, { size.y, size.y }, XMFLOAT2{ pos.x + size.x ,  pos.y }, textColour, MData);
 
+	for (UINT i = 0; i < _ListData.size(); i++)
+	{
+		if (Current == _ListData[i]) {
+			Selected = i;
+		}
+	}
+
 	//list buttions
-	
 	switch (DropState)
 	{
 	case Down: {
 		float PosY = pos.y + size.y;
-	for (int i = 0; i < DropDownList.size(); i++)
-	{
-		
-		ListButtions[i].Function(_ListData[i], Backcolour, { size.x,size.y }, XMFLOAT2{ pos.x  ,  PosY }, textColour, MData);
-		PosY += size.y+1;
-	}
-
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < DropDownList.size(); i++)
 		{
+		
 			
-
-			if (ListButtions[i].GetIsPressed()) {
+			if (ListButtions[i].Function(_ListData[i], Backcolour, { size.x,size.y }, XMFLOAT2{ pos.x  ,  PosY }, textColour, MData)) {
 				Selected = i;
-				//DropState = Up;
+				DropState = Up;
+				Flag = 0;
 			}
-			
-
+			PosY += size.y+1;
 		}
 
 		if (ButtionDrop.GetIsPressed() && Flag == FlagMax) {

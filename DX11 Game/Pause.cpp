@@ -35,7 +35,7 @@ void Pause::Update()
 	if (_isPuased) {
 		//bakground
 		PuaseBakgtound.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
-		_TitleCard.Function("Title_Card\\TitleCard.dds", { 500,100 }, { 0,0 });
+		_TitleCard.Function("Title_Card\\TitleCard.dds", { static_cast<float>(_SizeOfScreen.x*0.5),static_cast<float>(_SizeOfScreen.y*0.12) }, { 0,0 });
 		//Buttions
 		if (PuaseButtions[0].Function("Play", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>( _SizeOfScreen.y*0.25) },DirectX::Colors::Black, _MouseData)) {
 			//back to game
@@ -55,17 +55,17 @@ void Pause::Update()
 
 		//text
 		TextToDraw puaseText;
-		puaseText._Colour = Colors::White;
+		puaseText._Colour = Colors::Black;
 		puaseText._Position = { 0,static_cast<float>(_SizeOfScreen.y * 0.12) };
 		puaseText._Text = "Pause";
 		PuaseTextTitles.push_back(puaseText);
 
-		puaseText._Colour = Colors::White;
+		puaseText._Colour = Colors::Black;
 		puaseText._Position = { _SizeOfScreen.x / 2,_SizeOfScreen.y / 3 };
 		puaseText._Text = "Tip";
 		PuaseTextTitles.push_back(puaseText);
 
-		puaseText._Colour = Colors::White;
+		puaseText._Colour = Colors::Black;
 		puaseText._Position = { static_cast<float>(_SizeOfScreen.x * 0.5),static_cast<float>(_SizeOfScreen.y * 0.5) };
 		puaseText._Text = "Tip Text";
 		PuaseTextPG.push_back(puaseText);
@@ -119,6 +119,17 @@ void Pause::HandleEvent(Event* event)
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
 		
+
+		D3D11_VIEWPORT a;
+		a.TopLeftX = 0;
+		a.TopLeftY = 0;
+		a.Width = _SizeOfScreen.x;
+		a.Height = _SizeOfScreen.y;
+		a.MaxDepth = 1.0f;
+		a.MinDepth = 0.0f;
+
+		HeadderTextRenderer->UpdateViewPort(a);
+		PGTextRenderer->UpdateViewPort(a);
 	}
 	break;
 

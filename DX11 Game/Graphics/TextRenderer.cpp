@@ -16,7 +16,6 @@ TextRenderer::TextRenderer(std::string Font, ID3D11Device* device, ID3D11DeviceC
 	spriteBatch = std::make_unique<SpriteBatch>(contex);
 	spriteFont = std::make_unique<SpriteFont>(device,
 		std::wstring(L"Resources\\Fonts\\").append(fileName).c_str());
-
 	
 }
 
@@ -100,6 +99,12 @@ void TextRenderer::RenderString(string text, XMFLOAT2 position, XMVECTORF32 colo
 {
 	wstring String = wstring(text.begin(), text.end());
 	DrawString(String, position, color);
+}
+
+//update viewport when screen size changes
+void TextRenderer::UpdateViewPort(D3D11_VIEWPORT& NewView)
+{
+	spriteBatch->SetViewport(NewView);
 }
 
 

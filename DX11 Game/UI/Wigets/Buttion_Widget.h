@@ -57,6 +57,8 @@ inline void Buttion_Widget<ButtionTexType>::Draw(ID3D11DeviceContext* Contex, ID
     	_Bakground.Draw(WorldOrthoMatrix);
     
         XMFLOAT2 textpos = { _Pos.x+10 ,_Pos.y+ (_Size.y /2)-12 };
+        
+
     	textrender->RenderString(ButtionTex, textpos, TextColour);
 }
 

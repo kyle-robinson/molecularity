@@ -23,6 +23,8 @@ public:
 	void HandleEvent(Event* event);
 
 private:
+	void CreateSettings(JSON::SettingData& settingData);
+private:
 	bool _isSettings;
 	std::vector<JSON::SettingData> _SettingsData;
 	//Settings
@@ -67,5 +69,7 @@ private:
 	std::shared_ptr<TextRenderer>  HeadderTextRenderer;
 	std::shared_ptr<TextRenderer>  PGTextRenderer;
 
+
+	float currentY;
 };
 
