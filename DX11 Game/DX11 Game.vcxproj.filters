@@ -204,19 +204,19 @@
     <ClCompile Include="UI\Wigets\widget.cpp">
       <Filter>UI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="HUD_UI.cpp">
+    <ClCompile Include="UI\HUD_UI.cpp">
       <Filter>UI\UIClass</Filter>
     </ClCompile>
-    <ClCompile Include="Main_Menu_UI.cpp">
+    <ClCompile Include="UI\Main_Menu_UI.cpp">
       <Filter>UI\UIClass</Filter>
     </ClCompile>
-    <ClCompile Include="Pause.cpp">
+    <ClCompile Include="UI\Pause.cpp">
       <Filter>UI\UIClass</Filter>
     </ClCompile>
-    <ClCompile Include="Settings_Menu_UI.cpp">
+    <ClCompile Include="UI\Settings_Menu_UI.cpp">
       <Filter>UI\UIClass</Filter>
     </ClCompile>
-    <ClCompile Include="UI.cpp">
+    <ClCompile Include="UI\UI.cpp">
       <Filter>UI\UIClass</Filter>
     </ClCompile>
   </ItemGroup>
@@ -488,19 +488,19 @@
     <ClInclude Include="UI\Wigets\widget.h">
       <Filter>UI\Widgets</Filter>
     </ClInclude>
-    <ClInclude Include="HUD_UI.h">
+    <ClInclude Include="UI\HUD_UI.h">
       <Filter>UI\UIClass</Filter>
     </ClInclude>
-    <ClInclude Include="Main_Menu_UI.h">
+    <ClInclude Include="UI\Main_Menu_UI.h">
       <Filter>UI\UIClass</Filter>
     </ClInclude>
-    <ClInclude Include="Pause.h">
+    <ClInclude Include="UI\Pause.h">
       <Filter>UI\UIClass</Filter>
     </ClInclude>
-    <ClInclude Include="Settings_Menu_UI.h">
+    <ClInclude Include="UI\Settings_Menu_UI.h">
       <Filter>UI\UIClass</Filter>
     </ClInclude>
-    <ClInclude Include="UI.h">
+    <ClInclude Include="UI\UI.h">
       <Filter>UI\UIClass</Filter>
     </ClInclude>
   </ItemGroup>

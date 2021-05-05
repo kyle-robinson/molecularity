@@ -50,25 +50,6 @@ void Application::Update()
 		renderWindow.SetWidthHight(windowsize.x, windowsize.y);
 	}
 
-	////full screen
-	//https://devblogs.microsoft.com/oldnewthing/20100412-00/?p=14353
-	//WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
-	//DWORD dwStyle = GetWindowLong(renderWindow.GetHWND(), GWL_STYLE);
-	//if (dwStyle & WS_OVERLAPPEDWINDOW) {
-	//	MONITORINFO mi = { sizeof(mi) };
-	//	if (GetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev) &&
-	//		GetMonitorInfo(MonitorFromWindow(renderWindow.GetHWND(),
-	//			MONITOR_DEFAULTTOPRIMARY), &mi)) {
-	//		SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
-	//			dwStyle & ~WS_OVERLAPPEDWINDOW);
-	//		SetWindowPos(renderWindow.GetHWND(), HWND_TOP,
-	//			mi.rcMonitor.left, mi.rcMonitor.top,
-	//			mi.rcMonitor.right - mi.rcMonitor.left,
-	//			mi.rcMonitor.bottom - mi.rcMonitor.top,
-	//			SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-	//	}
-	//}
-
 	EventSystem::Instance()->ProcessEvents();
 }
 

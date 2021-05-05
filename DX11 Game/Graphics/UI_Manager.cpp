@@ -2,9 +2,9 @@
 #include "UI_Manager.h"
 #include"Graphics.h"
 
-#include<HUD_UI.h>
-#include<Pause.h>
-#include<Settings_Menu_UI.h>
+#include<UI/HUD_UI.h>
+#include<UI/Pause.h>
+#include<UI/Settings_Menu_UI.h>
 
 
 UI_Manager::UI_Manager()

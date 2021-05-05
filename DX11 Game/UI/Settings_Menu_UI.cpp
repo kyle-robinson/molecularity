@@ -81,7 +81,7 @@ void Settings_Menu_UI::Update()
 		
 
 		currentY = static_cast<float>(_SizeOfScreen.x * 0.20) - SettingsScrollBar.getPY();
-		TabTextPos = { 10,static_cast<float>(_SizeOfScreen.x * 0.12) };
+		TabTextPos = { static_cast<float>(_SizeOfScreen.x * 0.01),static_cast<float>(_SizeOfScreen.x * 0.12) };
 		//box for colision 
 		XMFLOAT2 boxPos = { 0,static_cast<float>(_SizeOfScreen.x * 0.20) };
 		XMFLOAT2 boxSize = { _SizeOfScreen.x, _SizeOfScreen.y-160};
@@ -115,13 +115,64 @@ void Settings_Menu_UI::Update()
 			TextToDraw._Position = TabTextPos;
 			TextToDraw._Text = "General";
 			PuaseTextTitles.push_back(TextToDraw);
-
+			XMFLOAT2 curretJsonWinsize = { 0,0 };
 			for (auto& setting : _SettingsData)
 			{
 				if (setting.Type == JSON::SettingType::GeneralType)
 				{
-					CreateSettings(setting);
+					//window size
+					if (setting.Name == "WindowWidth") {
+						
+						if (int* input = std::get_if<int>(&setting.Setting)) {
+							curretJsonWinsize.x = *input;
+						}
+						continue;
+					}
+					else if (setting.Name == "WindowHight") {
+
+						TextToDraw._Colour = Colors::Black;
+						TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
+						TextToDraw._Text = "Window Size";
+						PuaseTextPG.push_back(TextToDraw);
+
+						if (int* input = std::get_if<int>(&setting.Setting)) {
+							vector<string> WinSize{ "1024x576","1280x720","1600x900","1920x1080","2560x1440" };
+							vector<XMFLOAT2> WinSizeFlot{ {1024,576},{1280,720},{1600,900},{1920,1080},{2560,1440} };
+							curretJsonWinsize.y = *input;
+							int current;
+							for (UINT i = 0; i < WinSize.size(); i++)
+							{
+								if (curretJsonWinsize.x == WinSizeFlot[i].x && curretJsonWinsize.y == WinSizeFlot[i].y) {
+									current = i;
+									break;
+								}
+							}
+
+
+							SettingsDropdowns[SettingsDropCount].Function(WinSize, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, 
+								ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, WinSize[current], _MouseData);
+
+
+							curretJsonWinsize = WinSizeFlot[SettingsDropdowns[SettingsDropCount].GetIntSelcted()];
+
+							setting.Setting = static_cast<int>(curretJsonWinsize.y);
+							for (auto& setting : _SettingsData)
+							{
+								if (setting.Name == "WindowWidth") {
+									setting.Setting = static_cast<int>(curretJsonWinsize.x);
+									break;
+								}
+							}
+							SettingsDropCount++;
+							currentY += static_cast<float>(_SizeOfScreen.y * 0.1);
+							continue;
+						}
+					}
+					else {
+						CreateSettings(setting);
+					}
 				}
+				
 			}
 			break;
 		}
@@ -162,7 +213,7 @@ void Settings_Menu_UI::Update()
 						currentY <= (boxPos.y + boxSize.y)) {
 
 						TextToDraw._Colour = Colors::Black;
-						TextToDraw._Position = { 10,currentY };
+						TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
 						TextToDraw._Text = setting.Name;
 						PuaseTextPG.push_back(TextToDraw);
 
@@ -359,9 +410,10 @@ void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 		currentY <= (boxPos.y + boxSize.y))
 	{
 		TextToDraw._Colour = Colors::Black;
-		TextToDraw._Position = { 10,currentY };
+		TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
 		TextToDraw._Text = settingData.Name;
 		PuaseTextPG.push_back(TextToDraw);
+		//scaling number input
 		if (int* input = std::get_if<int>(&settingData.Setting)) {
 			MouseData Data;
 			//stop inputs for blow widgets
@@ -389,6 +441,7 @@ void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 			PuaseTextPG.push_back(TextToDraw);
 			Data.LPress = false;
 		}
+		//true false input
 		else if (bool* input = std::get_if<bool>(&settingData.Setting)) {
 			string a;
 			if (!*input) {
@@ -410,6 +463,7 @@ void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 			SettingsDropCount++;
 
 		}
+		//language input
 		else if (string* input = std::get_if<string>(&settingData.Setting)) {
 
 			vector<string>Language = { "Eng", "Fr"};

@@ -1,6 +1,6 @@
 #pragma once
 #include<EventSystem/Listener.h>
-#include<UI.h>
+#include <UI/UI.h>
 #include<map>;
 
 class Input;
@@ -34,7 +34,7 @@ private:
 
 	XMFLOAT4X4 WorldOrthMatrix;
 
-	std::map<string, std::shared_ptr <UI>> UiList;
+	std::map<std::string, std::shared_ptr <UI>> UiList;
 
 };
 

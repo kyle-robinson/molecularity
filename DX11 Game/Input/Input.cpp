@@ -76,6 +76,33 @@ void Input::UpdateKeyboard( const float dt )
 				DisableCursor();
 			}
 
+			//full screen
+			WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
+			DWORD dwStyle = GetWindowLong(renderWindow.GetHWND(), GWL_STYLE);
+			if (keycode == 'M') {
+				
+				if (dwStyle & WS_OVERLAPPEDWINDOW) {
+					MONITORINFO mi = { sizeof(mi) };
+					if (GetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev) &&
+						GetMonitorInfo(MonitorFromWindow(renderWindow.GetHWND(),
+							MONITOR_DEFAULTTOPRIMARY), &mi)) {
+						SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
+							dwStyle & ~WS_OVERLAPPEDWINDOW);
+						SetWindowPos(renderWindow.GetHWND(), HWND_TOP,
+							mi.rcMonitor.left, mi.rcMonitor.top,
+							mi.rcMonitor.right - mi.rcMonitor.left,
+							mi.rcMonitor.bottom - mi.rcMonitor.top,
+							SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+					}
+				}
+			}
+			//not full screen
+			if (keycode == 'N') {
+				SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
+					dwStyle | WS_OVERLAPPEDWINDOW);
+				SetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev);
+				SetWindowPos(renderWindow.GetHWND(), NULL, 0, 0, 1296, 737, SWP_SHOWWINDOW | SWP_NOOWNERZORDER| SWP_FRAMECHANGED);
+			}
 		}
 
 	}

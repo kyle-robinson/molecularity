@@ -26,7 +26,7 @@ public:
 	void setCurrent(int slected){
 		Selected = slected;
 	}
-	
+	int GetIntSelcted() { return Selected; }
 	bool GetIsDown();
 
 private:
