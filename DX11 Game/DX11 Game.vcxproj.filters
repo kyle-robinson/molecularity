@@ -636,6 +636,9 @@
     <None Include="Resources\Cursors\NightDiamond\Precision Select.ani">
       <Filter>Resources\Cursors</Filter>
     </None>
+    <None Include="Resources\JSON\Settings.json">
+      <Filter>Resources\JSON</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

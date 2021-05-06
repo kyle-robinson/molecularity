@@ -16,6 +16,7 @@ public:
 private:
 	//HUD
 	float hudScale = 1;
+	bool isHudActive=true;
 	Immage_Widget HUDImages[3];
 	ColourBlock HudBakgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;

@@ -49,3 +49,11 @@ void LevelStateMachine::SwitchTo( uint32_t id )
 		currentLevel->OnSwitch();
 	}
 }
+
+void LevelStateMachine::AddToEvent()
+{
+}
+
+void LevelStateMachine::HandleEvent(Event* event)
+{
+}

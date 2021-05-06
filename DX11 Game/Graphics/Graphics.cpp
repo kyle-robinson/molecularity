@@ -147,3 +147,22 @@ void Graphics::PresentScene()
 		exit( -1 );
 	}
 }
+
+void Graphics::AddtoEvent()
+{
+}
+
+void Graphics::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+	case EVENTID::WindowSizeChangeEvent:
+	{
+		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
+		windowWidth = _SizeOfScreen.x;
+		windowHeight = _SizeOfScreen.y;
+	}
+	default:
+		break;
+	}
+}

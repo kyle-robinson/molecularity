@@ -11,12 +11,18 @@
 /// Handles user input by update keyboard and mouse events.
 /// Contains functions to update game state on successful keyboard/mouse event registers.
 /// </summary>
-class Input : public WindowContainer
+class Input : public WindowContainer, public Listener
 {
 public:
 	void Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 		CameraController* camera, Sound* sound, std::vector<uint32_t> level_IDs );
 	void Update( const float dt );
+
+	//eventsystem
+	void AddToEvent();
+	void HandleEvent(Event* event);
+
+
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );

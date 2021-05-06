@@ -17,12 +17,76 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 		static_cast<int>( renderWindow.GetWidth() ),
 		static_cast<int>( renderWindow.GetHeight() )
 	);
+	AddToEvent();
 }
 
 void Input::Update( const float dt )
 {
 	UpdateKeyboard( dt );
 	UpdateMouse( dt );
+}
+
+void Input::AddToEvent()
+{
+	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
+	
+}
+
+void Input::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+	case EVENTID::GamePauseEvent:
+	{
+			EnableCursor();
+	}
+	break;
+	case EVENTID::GameUnPauseEvent:
+	{
+		DisableCursor();
+	}
+	break;
+	case EVENTID::WindowSizeChangeEvent:
+	{
+		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
+		mousePick.SetWidthHight(_SizeOfScreen.x, _SizeOfScreen.y);
+
+		if (
+			mouse.GetPosX() <= 0 &&
+			mouse.GetPosX() >= (0 + _SizeOfScreen.x) &&
+			mouse.GetPosY() <= 0 &&
+			mouse.GetPosY() >= (0 + _SizeOfScreen.y)) {
+			UiMouseData.LPress = false;
+			UiMouseData.MPress = false;
+			UiMouseData.RPress = false;
+		}
+
+
+	} 
+	break;
+	case EVENTID::UpdateSettingsEvent:
+	{
+		//controlls 
+		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		for (auto& setting : a)
+		{
+			if (setting.Type == JSON::SettingType::ControllType) {
+				//change controll
+
+
+
+
+			}
+
+		}
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 void Input::UpdateKeyboard( const float dt )
@@ -73,41 +137,9 @@ void Input::UpdateKeyboard( const float dt )
 			if (keycode == 'P') {
 				//puase game
 				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
-				EnableCursor();
+			
 			}
 
-			//for ui when exit pause: to be remove when decoupling is complet
-			if (keycode == 'L') {
-				DisableCursor();
-			}
-
-			//full screen
-			WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
-			DWORD dwStyle = GetWindowLong(renderWindow.GetHWND(), GWL_STYLE);
-			if (keycode == 'M') {
-
-				if (dwStyle & WS_OVERLAPPEDWINDOW) {
-					MONITORINFO mi = { sizeof(mi) };
-					if (GetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev) &&
-						GetMonitorInfo(MonitorFromWindow(renderWindow.GetHWND(),
-							MONITOR_DEFAULTTOPRIMARY), &mi)) {
-						SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
-							dwStyle & ~WS_OVERLAPPEDWINDOW);
-						SetWindowPos(renderWindow.GetHWND(), HWND_TOP,
-							mi.rcMonitor.left, mi.rcMonitor.top,
-							mi.rcMonitor.right - mi.rcMonitor.left,
-							mi.rcMonitor.bottom - mi.rcMonitor.top,
-							SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-					}
-				}
-			}
-			//not full screen
-			if (keycode == 'N') {
-				SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
-					dwStyle | WS_OVERLAPPEDWINDOW);
-				SetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev);
-				SetWindowPos(renderWindow.GetHWND(), NULL, 0, 0, 1296, 737, SWP_SHOWWINDOW | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-			}
 		}
 
 	}

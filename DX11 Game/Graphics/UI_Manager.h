@@ -4,7 +4,7 @@
 #include<map>;
 
 class Input;
-class Graphics;
+
 //ui driver code
 class UI_Manager: public Listener
 {

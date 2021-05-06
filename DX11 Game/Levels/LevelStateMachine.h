@@ -4,7 +4,7 @@
 
 #include "LevelContainer.h"
 
-class LevelStateMachine
+class LevelStateMachine:public Listener
 {
 public:
 	LevelStateMachine();
@@ -15,6 +15,10 @@ public:
 	uint32_t Add( std::shared_ptr<LevelContainer> level );
 	void Remove( uint32_t id );
 	void SwitchTo( uint32_t id );
+
+	void AddToEvent();
+	void HandleEvent(Event* event);
+
 private:
 	uint32_t insertedLevelID;
 	std::shared_ptr<LevelContainer> currentLevel;

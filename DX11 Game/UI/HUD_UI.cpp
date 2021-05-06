@@ -24,6 +24,10 @@ void HUD_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Consta
 		if (setting.Name == "Hud_Scale") {
 			hudScale = (float)get<int>(setting.Setting) / 100;
 		}
+
+		if (setting.Name == "HUD_ON") {
+			isHudActive = get<bool>(setting.Setting);
+		}
 	}
 
 
@@ -89,17 +93,18 @@ void HUD_UI::Update()
 
 void HUD_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
-	Shaders::BindShaders(_Contex.Get(), vert, pix);
-	HudBakgrounds[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	HUDImages[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	
-	
-	for (unsigned int i = 0; i < 3; i++)
-	{
-		HUDImages[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	}
+	if (isHudActive) {
+		Shaders::BindShaders(_Contex.Get(), vert, pix);
+		HudBakgrounds[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		HUDImages[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 
+
+		for (unsigned int i = 0; i < 3; i++)
+		{
+			HUDImages[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		}
+	}
 }
 
 void HUD_UI::HandleEvent(Event* event)
@@ -128,6 +133,9 @@ void HUD_UI::HandleEvent(Event* event)
 		{
 			if (setting.Name == "Hud_Scale") {
 				hudScale = (float)get<int>(setting.Setting) / 100;
+			}
+			else if (setting.Name == "HUD_ON") {
+				isHudActive = get<bool>(setting.Setting);
 			}
 		}
 

@@ -527,6 +527,7 @@
     <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
     <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
     <None Include="Resources\JSON\Objects.json" />
+    <None Include="Resources\JSON\Settings.json" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Audio\Music.wav" />

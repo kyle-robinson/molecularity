@@ -69,7 +69,7 @@ void EventSystem::AddEvent(EVENTID eventid, void* data) {
 
 //Process event buffer
 void EventSystem::ProcessEvents() {
-	while (eventsList.size()) {
+	while (!eventsList.empty()) {
 		SendEvents(&eventsList.front());
 		//Remove the event from the buffer
 		eventsList.pop_front();

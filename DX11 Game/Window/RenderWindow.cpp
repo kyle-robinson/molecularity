@@ -1,12 +1,13 @@
 #include "WindowContainer.h"
 #include "Resources\\Resource.h"
-
+#include <JSON_Helper.h>
 
 // Window icon made by https://www.freepik.com Freepik from https://www.flaticon.com/
 
 bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hInstance,
 	const std::string& windowName, const std::string& windowClass, int width, int height )
-{
+{	
+	AddToEvent();
 	// register window class
 	this->hInstance = hInstance;
 	this->width = width;
@@ -129,14 +130,66 @@ bool RenderWindow::ProcessMessages() noexcept
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
+void RenderWindow::AddToEvent()
+{
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+}
+static int width, hight;
 void RenderWindow::HandleEvent(Event* event)
 {
 	switch (event->GetEventID())
 	{
 	case EVENTID::UpdateSettingsEvent:
+	{
 		//full screen
 		//change in window size
+		
+		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		for (auto& setting : a)
+		{
+			if (setting.Name == "FullScreen") {
+				//setfullscreen
+				WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
+				DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+				
+				if (bool* input = std::get_if<bool>(&setting.Setting)) {
+					if (*input) {
+						
+						if (dwStyle & WS_OVERLAPPEDWINDOW) {
+							MONITORINFO mi = { sizeof(mi) };
+							if (GetWindowPlacement(hWnd, &g_wpPrev) &&
+								GetMonitorInfo(MonitorFromWindow(hWnd,
+									MONITOR_DEFAULTTOPRIMARY), &mi)) {
+								SetWindowLong(hWnd, GWL_STYLE,
+									dwStyle & ~WS_OVERLAPPEDWINDOW);
+								SetWindowPos(hWnd, HWND_TOP,
+									mi.rcMonitor.left, mi.rcMonitor.top,
+									mi.rcMonitor.right - mi.rcMonitor.left,
+									mi.rcMonitor.bottom - mi.rcMonitor.top,
+									SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+							}
+						}
+					}
+					else
+					{
+						SetWindowLong(hWnd, GWL_STYLE,
+							dwStyle | WS_OVERLAPPEDWINDOW);
+						SetWindowPlacement(hWnd, &g_wpPrev);
+						SetWindowPos(hWnd, NULL, 0, 0, width, hight, SWP_SHOWWINDOW | SWP_NOMOVE |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+					}
+				}
+				
+			}
+			else if (setting.Name == "WindowWidth") {
+				width = std::get<int>(setting.Setting);
+			}
+			else if (setting.Name == "WindowHight") {
+				hight = std::get<int>(setting.Setting);
+			}
+		}
 
+	}
 		break;
 	case EVENTID::WindowSizeChangeEvent:
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());

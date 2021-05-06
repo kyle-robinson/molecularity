@@ -40,6 +40,8 @@ void Pause::Update()
 		if (PuaseButtions[0].Function("Play", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>( _SizeOfScreen.y*0.25) },DirectX::Colors::Black, _MouseData)) {
 			//back to game
 			_isPuased = false;
+			EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
+			
 		}
 		else if (PuaseButtions[1].Function("Reset", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 			//reset level
@@ -102,7 +104,10 @@ void Pause::HandleEvent(Event* event)
 	{
 	case EVENTID::GamePauseEvent:
 	{
-		_isPuased = true;
+		
+			_isPuased = true;
+		
+		
 	}
 	break;
 	case EVENTID::UIKeyInput:

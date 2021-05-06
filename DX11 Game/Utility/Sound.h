@@ -8,10 +8,10 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include <vector>
-
+#include<EventSystem/EventSystem.h>
 using namespace DirectX;
 
-class Sound
+class Sound: public Listener
 {
 public:
 	Sound();
@@ -42,6 +42,10 @@ public:
 		SOUND_TOOLUSE = 0,
 		SOUND_COLLISION
 	};
+
+	//eventsystem
+	void AddtoEvent();
+	void HandleEvent(Event* event);
 
 private:
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();

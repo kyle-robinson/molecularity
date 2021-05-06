@@ -16,6 +16,7 @@ enum class EVENTID {
 	WorldOrthMatrixEvent,
 
 	GamePauseEvent,
+	GameUnPauseEvent,
 	GAmeSettingsEvent,
 	//utitlity
 	WindowSizeChangeEvent,
