@@ -22,6 +22,8 @@ public:
 	void EndRender() const noexcept;
 	void SpawnInstructionWindow() const noexcept;
 	void SpawnGraphicsWindow( Graphics& gfx ) const noexcept;
+	void SpawnPerformanceWindow() noexcept;
+	void PassDeltaTime( float dt ) { deltaTime = dt; }
 private:
 	void SetBlackGoldStyle();
 
