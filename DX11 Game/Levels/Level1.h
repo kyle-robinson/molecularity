@@ -26,7 +26,6 @@ private:
 	Sprite crosshair;
 	RenderableGameObject hubRoom;
 	RenderableGameObject pressurePlate;
-	
 };
 
 #endif

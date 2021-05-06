@@ -8,6 +8,7 @@
 
 // systems
 #include "Fog.h"
+#include "Billboard.h"
 #include "Collisions.h"
 #include "ImGuiManager.h"
 #include "TextRenderer.h"
@@ -15,8 +16,11 @@
 #include "StencilOutline.h"
 #include <dxtk/WICTextureLoader.h>
 
-//ui
-#include<Graphics/UI_Manager.h>
+// ui
+#include <Graphics/UI_Manager.h>
+#include <UI/HUD_UI.h>
+#include <UI/Pause.h>
+#include <UI/Settings_Menu_UI.h>
 
 bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui )
 {
@@ -50,6 +54,11 @@ bool LevelContainer::InitializeScene()
 			// skysphere
 			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
+
+			// security camera
+			if ( !securityCamera.Initialize( "Resources\\Models\\SecurityCam.FBX", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			securityCamera.SetInitialPosition( 0.0f, 15.0f, 15.0f );
+			securityCamera.SetInitialScale( 0.2f, 0.2f, 0.2f );
 		}
 
 		// LIGHTS
@@ -92,14 +101,21 @@ bool LevelContainer::InitializeScene()
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
 
-		//UI
+		// UI
 		{
 			_UiManager = std::make_shared<UI_Manager>();
 			
+			shared_ptr<HUD_UI> HUD = make_shared<HUD_UI>();
+			_UiManager->AddUi( HUD, "HUD" );
+
+			shared_ptr<Pause> PauseUI = make_shared<Pause>();
+			_UiManager->AddUi( PauseUI, "Pause" );
+
+			shared_ptr<Settings_Menu_UI> settingsUi = make_shared<Settings_Menu_UI>();
+			_UiManager->AddUi( settingsUi, "Settings" );
+
+			_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 		}
-
-
-
 	}
 	catch ( COMException& exception )
 	{
@@ -159,6 +175,9 @@ void LevelContainer::RenderFrameEarly()
 
 void LevelContainer::RenderFrame()
 {
+	// SECURITY CAMERA
+	securityCamera.Draw();
+
 	// CUBES
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
@@ -181,8 +200,6 @@ void LevelContainer::EndFrame()
 	// setup RTT and update post-processing
 	graphics->RenderSceneToTexture();
 	postProcessing->Bind( *graphics );
-
-	
 
 	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
@@ -230,6 +247,10 @@ void LevelContainer::LateUpdate( const float dt )
 		// update objects
 		cubes[i]->Update( dt );
 	}
+
+	// set rotation of security camera
+	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
+	securityCamera.SetRotation( -0.2f + XM_PIDIV2, -0.25f + rotation, 0.0f );
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
