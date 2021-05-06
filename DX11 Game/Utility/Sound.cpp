@@ -11,7 +11,7 @@ Sound::Sound()
 	engine->setListenerPosition( camPosition, camLookDir, irrklang::vec3df( 0.0f, 0.0f, 0.0f ), irrklang::vec3df( 0.0f, 1.0f, 0.0f ) );
 
 	InitialiseSounds();
-	AddtoEvent();
+
 	musicVolume = 1.0f;
 	SoundEffectsVolume = 1.0f;
 }
@@ -24,7 +24,9 @@ Sound::~Sound()
 HRESULT Sound::InitialiseSounds()
 {
 	// Music
-	musicVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Music.wav" ) );
+	//musicVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Music.wav" ) );
+
+	musicVec.push_back(engine->play2D("Resources\\Audio\\Music.wav", true, true, true));
 
 	// Sound effects
 	SoundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Shot.wav" ) );
@@ -45,79 +47,21 @@ HRESULT Sound::UpdatePosition( XMFLOAT3 position, float rotation )
 
 HRESULT Sound::PlayMusic( int musicNum, bool loops )
 {
-	engine->play2D( musicVec[musicNum], loops, false, false, true );
+	//engine->play2D( musicVec[musicNum], loops, false, false, true );
+	musicVec[musicNum]->setIsLooped(loops);
+	musicVec[musicNum]->setIsPaused(false);
 	return S_OK;
 }
 
-HRESULT Sound::PlaySoundEffects( int soundNum, XMFLOAT3 soundPosition )
+HRESULT Sound::PlaySoundEffects(int soundNum, XMFLOAT3 soundPosition)
 {
-	irrklang::vec3df position( soundPosition.x, soundPosition.y, soundPosition.z );
-	engine->play3D( SoundEffectsVec[soundNum], position );
-
-	return S_OK;
-}
-
-HRESULT Sound::PlaySoundEffects( int soundNum )
-{
-	engine->play3D( SoundEffectsVec[soundNum], camPosition );
-	return S_OK;
-}
-
-void Sound::AddtoEvent()
-{
-	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
-}
-#include<JSON_Helper.h>
-void Sound::HandleEvent(Event* event)
-{
-
-	switch (event->GetEventID())
+	if (soundPosition.x == NULL)
+		engine->play2D(SoundEffectsVec[soundNum]);
+	else
 	{
-
-		case EVENTID::UpdateSettingsEvent:
-		{
-			//controlls 
-			std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
-			for (auto& setting : a)
-			{
-				if (setting.Type == JSON::SettingType::SoundType) 
-				{
-					//change sound
-					if (setting.Name == "SoundOn") {
-
-
-					}
-					if (setting.Name == "SoundVolume") {
-
-
-					}
-					if (setting.Name == "MusicOn") {
-
-
-					}
-					if (setting.Name == "MusicVolume") {
-						musicVolume = (float)std::get<int>(setting.Setting) / 100;
-						SetMusicVolume(musicVolume);
-						engine->stopAllSounds();
-
-						//musicVec set is puased
-						//will change
-						PlayMusic(0, true);
-					}
-					if (setting.Name == "BackgroundSoundsOn") {
-						
-					}
-					if (setting.Name == "BackgroundSoundsVolume") {
-						SoundEffectsVolume = (float)std::get<int>(setting.Setting) / 100;
-						SetSoundEffectsVolume(SoundEffectsVolume);
-					}
-
-				}
-
-			}
-		}
-		break;
+		irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
+		engine->play3D(SoundEffectsVec[soundNum], position);
 	}
+
+	return S_OK;
 }
-
-

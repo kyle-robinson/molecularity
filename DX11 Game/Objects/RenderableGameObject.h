@@ -5,6 +5,8 @@
 class Camera;
 class PhysicsModel;
 #include "GameObject3D.h"
+#include "Indices.h"
+#include "Vertices.h"
 
 /// <summary>
 /// Allows for a model to be bound to a 3D game object.

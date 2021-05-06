@@ -30,6 +30,8 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
         return false;
     }
     
+    delay = 0;
+
     return true;
 }
 
@@ -48,6 +50,21 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 void Cube::Update( const float deltaTime ) noexcept
 {
     if ( !isHeld ) physicsModel->Update( deltaTime / 20.0f );
+
+    else 
+        physicsModel->Update(deltaTime / 20.0f, true);
+
+    pos = GetPositionFloat3();
+
+    if (heldLastFrame && !isHeld && (pos.x != prevPos.x || pos.z != prevPos.z))
+        physicsModel->AddForce(XMFLOAT3((pos.x - prevPos.x) * 5.0f, 0.0f, (pos.z - prevPos.z) * 5.0f));
+
+    if (delay == 5)
+        prevPos = pos;
+    delay++;
+    if (delay > 5)
+        delay = 0;
+    heldLastFrame = isHeld;
 }
 
 #pragma region Collisions
