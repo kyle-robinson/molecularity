@@ -1,6 +1,7 @@
 #include "WindowContainer.h"
 #include "Resources\\Resource.h"
 
+
 // Window icon made by https://www.freepik.com Freepik from https://www.flaticon.com/
 
 bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hInstance,
@@ -123,6 +124,27 @@ bool RenderWindow::ProcessMessages() noexcept
 	}
 
 	return true;
+}
+
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
+void RenderWindow::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+	case EVENTID::UpdateSettingsEvent:
+		//full screen
+		//change in window size
+
+		break;
+	case EVENTID::WindowSizeChangeEvent:
+		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
+		width = _SizeOfScreen.x;
+		height = _SizeOfScreen.y;
+		break;
+	
+	}
 }
 
 void RenderWindow::RegisterWindowClass() noexcept

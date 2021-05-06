@@ -9,7 +9,7 @@
 /// <summary>
 /// Handles the user's current camera.
 /// </summary>
-class CameraController
+class CameraController:public Listener
 {
 public:
 	void Initialize( int width, int height );
@@ -29,6 +29,11 @@ public:
 	Camera2D GetUICamera() const noexcept { return UICamera; }
 
 	void CollisionResolution( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept;
+
+
+	void AddToEvent();
+	void HandleEvent(Event* event);
+
 private:
 	Camera2D UICamera;
 	bool usingMainCamera = true;

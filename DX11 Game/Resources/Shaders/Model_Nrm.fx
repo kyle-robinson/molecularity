@@ -54,9 +54,11 @@ VS_OUTPUT VS( VS_INPUT input )
 // PIXEL SHADER
 cbuffer SceneBuffer : register( b2 )
 {
+   
     bool useTexture;
     float alphaFactor;
     bool useNormalMap;
+
 }
 
 cbuffer PointLightBuffer : register( b3 )

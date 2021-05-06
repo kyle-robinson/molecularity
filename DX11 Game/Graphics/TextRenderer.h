@@ -15,10 +15,14 @@
 class TextRenderer : public GraphicsResource
 {
 public:
-	TextRenderer( Graphics& gfx );
-	void RenderCubeMoveText( LevelContainer& level );
-	void RenderMultiToolText( LevelContainer& level );
-	void RenderCameraText( LevelContainer& level );
+	TextRenderer(Graphics& gfx );
+	TextRenderer(std::string Font, ID3D11Device* device, ID3D11DeviceContext* contex);
+	void RenderCubeMoveText(LevelContainer& level);
+	void RenderMultiToolText(LevelContainer& level);
+	void RenderCameraText(LevelContainer& level);
+
+	void RenderString(std::string text, XMFLOAT2 position, XMVECTORF32 color);
+	void UpdateViewPort(D3D11_VIEWPORT& NewView);
 private:
 	void DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color );
 private:

@@ -15,6 +15,9 @@
 #include "StencilOutline.h"
 #include <dxtk/WICTextureLoader.h>
 
+//ui
+#include<Graphics/UI_Manager.h>
+
 bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui )
 {
 	graphics = gfx;
@@ -88,6 +91,15 @@ bool LevelContainer::InitializeScene()
 			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures[BoxType::TNT].GetAddressOf() );
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
+
+		//UI
+		{
+			_UiManager = std::make_shared<UI_Manager>();
+			
+		}
+
+
+
 	}
 	catch ( COMException& exception )
 	{
@@ -164,14 +176,13 @@ void LevelContainer::RenderFrame()
 
 void LevelContainer::EndFrame()
 {
+	_UiManager->Draw(graphics->vertexShader_2D, graphics->pixelShader_2D, &cb_ps_scene);
+	
 	// setup RTT and update post-processing
 	graphics->RenderSceneToTexture();
 	postProcessing->Bind( *graphics );
 
-	// update text rendering
-	textRenderer->RenderCubeMoveText( *this );
-	textRenderer->RenderMultiToolText( *this );
-	textRenderer->RenderCameraText( *this );
+	
 
 	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
@@ -200,6 +211,8 @@ void LevelContainer::Update( const float dt )
 
 	// update skysphere
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
+
+	_UiManager->Update();
 }
 
 void LevelContainer::LateUpdate( const float dt )

@@ -33,5 +33,6 @@ std::string StringConverter::GetFileExtension( const std::string& fileName )
 	size_t offset = fileName.find_last_of('.');
 	if ( offset == std::string::npos )
 		return {};
-	return std::string( fileName.substr( offset + 1 ) );
+	std::string a=std::string( fileName.substr( offset + 1 ) );
+	return a;
 }
