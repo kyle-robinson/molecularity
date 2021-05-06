@@ -18,6 +18,7 @@
 #include <vector>
 #include <array>
 #include <map>
+#include <unordered_map>
 
 // Windows API
 #include <Windows.h>

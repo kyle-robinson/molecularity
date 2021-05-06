@@ -2,10 +2,10 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "Graphics.h"
+#include "..\Sound.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
-#include "..\Sound.h"
+#include "LevelStateMachine.h"
 
 /// <summary>
 /// Handles user input by update keyboard and mouse events.
@@ -14,16 +14,19 @@
 class Input : public WindowContainer
 {
 public:
-	void Initialize( Graphics* gfx, RenderWindow& window,CameraController* camera, int width, int height );
+	void Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
+		CameraController* camera, std::vector<uint32_t> level_IDs );
 	void Update( const float dt );
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
 
+  Sound sound;
+	LevelContainer* level;
 	MousePicking mousePick;
-	Graphics* graphics;
 	CameraController* cameras;
-	Sound sound;
+	LevelStateMachine* levelSystem;
+	std::vector<uint32_t> level_IDs;
 };
 
 #endif

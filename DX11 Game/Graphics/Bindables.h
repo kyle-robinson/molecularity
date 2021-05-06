@@ -4,7 +4,7 @@
 
 /// <summary>
 /// A list of #includes for the main DirectX bindable components
-/// Currently only used in GraphicsContainer.h to quickly include all relevant components
+/// Currently only used in Graphics.h to quickly include all relevant components
 /// </summary>
 
 #include "Blender.h"

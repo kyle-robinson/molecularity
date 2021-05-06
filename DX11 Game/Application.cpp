@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "CameraMovement.h"
 #include "Utility/EventSystem/EventSystem.h"
+#include <thread>
 
 bool Application::Initialize(
 	HINSTANCE hInstance,
@@ -9,19 +10,47 @@ bool Application::Initialize(
 	int width,
 	int height )
 {
+	// initialize delta time
 	timer.Start();
 
-	// graphics
-	if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
-	if ( !gfx.Initialize( renderWindow.GetHWND(), &cameras, width, height ) ) return false;
+	// GRAPHICS
+	{
+		// initialize graphics
+		if ( !renderWindow.Initialize( &input, hInstance, windowTitle, windowClass, width, height ) ) return false;
+		if ( !gfx.Initialize( renderWindow.GetHWND(), width, height ) ) return false;
+		imgui.Initialize( renderWindow.GetHWND(), gfx.device.Get(), gfx.context.Get() );
+	}
 
-	// input
-	cameras.Initialize( width, height );
-	input.Initialize( &gfx, renderWindow, &cameras, width, height );
+	// LEVELS
+	{
+		// initialize levels
+		level1 = std::make_shared<Level1>( stateMachine );
+		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui );
+		first.join();
+    
+		level2 = std::make_shared<Level2>( stateMachine );
+		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui );
+		second.join();
 
-	// sound
-	sound.SetMusicVolume(0.5f);
-	if (FAILED(sound.PlayMusic(sound.MUSIC_MAIN, true))) return false;
+		// add levels to state machine
+		level1_ID = stateMachine.Add( level1 );
+		level2_ID = stateMachine.Add( level2 );
+		stateMachine.SwitchTo( level1_ID );
+	}
+
+	// SYSTEMS
+	{
+		// initialize input
+		cameras.Initialize( width, height );
+		std::vector<uint32_t> level_IDs;
+		level_IDs.push_back( std::move( level1_ID ) );
+		level_IDs.push_back( std::move( level2_ID ) );
+		input.Initialize( renderWindow, &stateMachine, &cameras, level_IDs );
+
+		// initialize sound
+	  sound.SetMusicVolume(0.5f);
+    if (FAILED(sound.PlayMusic(sound.MUSIC_MAIN, true))) return false;
+	}
 
 	return true;
 }
@@ -33,27 +62,21 @@ bool Application::ProcessMessages() noexcept
 
 void Application::Update()
 {
+	// delta time
 	float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
 	timer.Restart();
-	
-	input.Update( dt );
-	sound.UpdatePosition(cameras.GetCamera(cameras.GetCurrentCamera())->GetPositionFloat3(), cameras.GetCamera(cameras.GetCurrentCamera())->GetRotationFloat3().y); // Update to make this every few frames
-	gfx.Update( dt );
+
+	// update systems
+	input.Update( dt, sound );
+  sound.UpdatePosition(cameras.GetCamera(cameras.GetCurrentCamera())->GetPositionFloat3(), cameras.GetCamera(cameras.GetCurrentCamera())->GetRotationFloat3().y); // Update to make this every few frames
+
+	// update current level
+	stateMachine.Update( dt );
 	EventSystem::Instance()->ProcessEvents();
 }
 
 void Application::Render()
 {
-	// Render to sub viewport first using static camera
-	gfx.GetMultiViewport()->SetUsingSub( true );
-	gfx.BeginFrame();
-	gfx.RenderFrame();
-
-	// Render main scene next with main/debug camera
-	gfx.GetMultiViewport()->SetUsingMain( true );
-	gfx.BeginFrame();
-	gfx.RenderFrame();
-
-	// Render UI and present the complete frame
-	gfx.EndFrame();
+	// render current level
+	stateMachine.Render();
 }

@@ -81,9 +81,6 @@
     <ClCompile Include="Graphics\Graphics.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\GraphicsContainer.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\ImGuiManager.cpp">
       <Filter>Source\Graphics\Bindables</Filter>
     </ClCompile>
@@ -161,6 +158,18 @@
     </ClCompile>
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\LevelContainer.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\Level1.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\LevelStateMachine.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\Level2.cpp">
+      <Filter>Source\Levels</Filter>
     </ClCompile>
     <ClCompile Include="WinMain.cpp">
       <Filter>Source</Filter>
@@ -264,9 +273,6 @@
       <Filter>Headers\Graphics\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Graphics.h">
-      <Filter>Headers\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\GraphicsContainer.h">
       <Filter>Headers\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsResource.h">
@@ -394,6 +400,18 @@
     </ClInclude>
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\Level1.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\LevelContainer.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\LevelStateMachine.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\Level2.h">
+      <Filter>Headers\Levels</Filter>
     </ClInclude>
     <ClInclude Include="Utility\EventSystem\Event.h">
       <Filter>Headers\Utility\EventSystem</Filter>
@@ -667,6 +685,12 @@
     </Filter>
     <Filter Include="Headers\Physics">
       <UniqueIdentifier>{628a7f71-123c-461e-a692-c582039feecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Levels">
+      <UniqueIdentifier>{1d69493f-0c4e-45c9-b4d8-9d8ea512b721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Levels">
+      <UniqueIdentifier>{4d08fc3a-cef2-41f4-aa07-a74f535a5918}</UniqueIdentifier>
     </Filter>
     <Filter Include="Headers\Utility\EventSystem">
       <UniqueIdentifier>{e9346ea4-6134-4a1a-b67b-d49927c11470}</UniqueIdentifier>

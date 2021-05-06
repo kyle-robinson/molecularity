@@ -18,7 +18,7 @@ namespace Bind
 			Main,
 			Sub
 		};
-		Viewport( GraphicsContainer& gfx, Type type ) : type( type )
+		Viewport( Graphics& gfx, Type type ) : type( type )
 		{
 			// get render target dimensions
 			FLOAT width = static_cast< FLOAT >( gfx.GetWidth() );
@@ -35,7 +35,7 @@ namespace Bind
 				viewportDesc.MinDepth = 0.0f;
 			}
 		}
-		void Bind( GraphicsContainer& gfx ) noexcept override
+		void Bind( Graphics& gfx ) noexcept override
 		{
 			GetContext( gfx )->RSSetViewports( 1u, &viewportDesc );
 		}

@@ -1,6 +1,6 @@
 #include "stdafx.h"
+#include "Graphics.h"
 #include "ImGuiManager.h"
-#include "GraphicsContainer.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
@@ -10,6 +10,7 @@ ImGuiManager::ImGuiManager()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
     SetBlackGoldStyle();
 }
 
@@ -79,7 +80,7 @@ void ImGuiManager::SpawnInstructionWindow() const noexcept
     ImGui::End();
 }
 
-void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
+void ImGuiManager::SpawnGraphicsWindow( Graphics& gfx ) const noexcept
 {
 	if ( ImGui::Begin( "Graphics Controls", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
@@ -88,7 +89,7 @@ void ImGuiManager::SpawnGraphicsWindow( GraphicsContainer& gfx ) const noexcept
         ImGui::Text( "Enable Multi-View: " );
         ImGui::SameLine();
         ImGui::Checkbox( "", &multiViewBool );
-        gfx.multiView = static_cast< BOOL >( multiViewBool );
+        gfx.multiView = static_cast<BOOL>( multiViewBool );
         
         // update texture usage
 		ImGui::Text( "Texture Usage: " );

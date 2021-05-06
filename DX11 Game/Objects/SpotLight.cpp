@@ -4,7 +4,7 @@
 
 // "Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-bool SpotLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
 	{
@@ -43,7 +43,7 @@ void SpotLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void SpotLight::UpdateConstantBuffer( GraphicsContainer& gfx, std::unique_ptr<Camera>& camera )
+void SpotLight::UpdateConstantBuffer( Graphics& gfx, std::unique_ptr<Camera>& camera )
 {
 	cb_ps_spot.data.spotEnable = enable;
 	cb_ps_spot.data.spotCone = cone;
