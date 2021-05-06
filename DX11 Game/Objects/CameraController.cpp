@@ -33,3 +33,22 @@ void CameraController::CollisionResolution( std::unique_ptr<Camera>& camera, Gam
 	dz *= camera->GetCameraSpeed() * dt;
 	camera->AdjustPosition( dx, 0.0f, dz );
 }
+
+void CameraController::AddToEvent()
+{
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+}
+
+void CameraController::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+		case EVENTID::WindowSizeChangeEvent:
+			XMFLOAT2 _SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
+			UICamera.SetProjectionValues(_SizeOfScreen.x, _SizeOfScreen.y, 0.0f, 1.0f);
+			for (const auto& cam : cameras)
+				cam.second->SetProjectionValues(70.0f, _SizeOfScreen.x / _SizeOfScreen.y, 0.1f, 1000.0f);
+			break;
+
+	}
+}

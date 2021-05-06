@@ -159,7 +159,7 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 	std::string p;
 	SettingType type;
 	std::vector< JSON::SettingData> Settings;
-	Document document = ParseFile( "Settings.json" );
+	Document document = ParseFile( "Settings.JSON" );
 
 	// Parse data from file
 	for ( Value::ConstMemberIterator Object = document.MemberBegin();

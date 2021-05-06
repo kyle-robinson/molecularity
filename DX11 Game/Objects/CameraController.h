@@ -9,7 +9,7 @@
 /// <summary>
 /// Handles the user's current camera.
 /// </summary>
-class CameraController
+class CameraController:public Listener
 {
 public:
 	void Initialize( int width, int height );
@@ -30,12 +30,9 @@ public:
 
 	void CollisionResolution( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept;
 
-	//fix to update ui cam
-	void UpDateUICamValues(float width, float height, float nearZ, float farZ) {
-		UICamera.SetProjectionValues(width, height, nearZ, farZ);
-		for (const auto& cam : cameras)
-			cam.second->SetProjectionValues(70.0f, width / height, 0.1f, 1000.0f);
-	}
+
+	void AddToEvent();
+	void HandleEvent(Event* event);
 
 private:
 	Camera2D UICamera;

@@ -327,7 +327,7 @@ void Settings_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX 
 		}
 
 		
-		for (UINT i = 0; i < SettingsDropCount; i++) {
+		for (int i = SettingsDropCount-1; i >= 0; i--) {
 			
 			SettingsDropdowns[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, PGTextRenderer.get(),vert ,pix);
 			Shaders::BindShaders(_Contex.Get(), vert, pix);
