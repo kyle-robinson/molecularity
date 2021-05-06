@@ -36,9 +36,6 @@
     <ClCompile Include="Objects\Camera2D.cpp">
       <Filter>Source\Graphics\Cameras</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\Collisions.cpp">
-      <Filter>Source\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="..\External\imgui\imgui.cpp">
       <Filter>Resources\ImGui</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
     <ClCompile Include="Objects\DirectionalLight.cpp">
       <Filter>Source\Graphics\Drawables\Lights</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\ErrorLogger.cpp">
-      <Filter>Source\Utility\Logging</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Fog.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
@@ -87,14 +81,8 @@
     <ClCompile Include="Utility\stdafx.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\Timer.cpp">
-      <Filter>Source\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\JSON_Helper.cpp">
       <Filter>Source\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\StringConverter.cpp">
-      <Filter>Source\Utility\Logging</Filter>
     </ClCompile>
     <ClCompile Include="Input\Input.cpp">
       <Filter>Source\Input</Filter>
@@ -174,22 +162,31 @@
     <ClCompile Include="WinMain.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\EventSystem\EventSystem.cpp">
-      <Filter>Headers\Utility\EventSystem</Filter>
-    </ClCompile>
     <ClCompile Include="..\External\imgui\imgui_plot.cpp">
       <Filter>Resources\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Sound.cpp">
+    <ClCompile Include="Utility\EventSystem\EventSystem.cpp">
+      <Filter>Source\Utility\EventSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Logging\ErrorLogger.cpp">
+      <Filter>Source\Utility\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Logging\StringConverter.cpp">
+      <Filter>Source\Utility\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Logging\Timer.cpp">
+      <Filter>Source\Utility\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Sound.cpp">
       <Filter>Source\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collisions.cpp">
+      <Filter>Source\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
       <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Billboard.h">
-      <Filter>Headers\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Bindables.h">
       <Filter>Headers\Graphics\Bindables</Filter>
@@ -208,9 +205,6 @@
     </ClInclude>
     <ClInclude Include="Input\CameraMovement.h">
       <Filter>Headers\Graphics\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Collisions.h">
-      <Filter>Headers\Utility</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imconfig.h">
       <Filter>Resources\ImGui</Filter>
@@ -242,9 +236,6 @@
     <ClInclude Include="Graphics\ConstantBuffer.h">
       <Filter>Headers\Graphics\Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\COMException.h">
-      <Filter>Headers\Utility\Logging</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Cube.h">
       <Filter>Headers\Graphics\Drawables\Primitives</Filter>
     </ClInclude>
@@ -256,9 +247,6 @@
     </ClInclude>
     <ClInclude Include="Objects\DirectionalLight.h">
       <Filter>Headers\Graphics\Drawables\Lights</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\ErrorLogger.h">
-      <Filter>Headers\Utility\Logging</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Fog.h">
       <Filter>Headers\Graphics\Systems</Filter>
@@ -287,9 +275,6 @@
     <ClInclude Include="Graphics\Indices.h">
       <Filter>Headers\Graphics\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Timer.h">
-      <Filter>Headers\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\stdafx.h">
       <Filter>Headers\Utility</Filter>
     </ClInclude>
@@ -298,9 +283,6 @@
     </ClInclude>
     <ClInclude Include="Resources\resource.h">
       <Filter>Resources\Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\StringConverter.h">
-      <Filter>Headers\Utility\Logging</Filter>
     </ClInclude>
     <ClInclude Include="Input\Input.h">
       <Filter>Headers\Input</Filter>
@@ -416,17 +398,35 @@
     <ClInclude Include="Utility\EventSystem\Event.h">
       <Filter>Headers\Utility\EventSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\EventSystem\Listener.h">
-      <Filter>Headers\Utility\EventSystem\Listeners</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\EventSystem\EventSystem.h">
       <Filter>Headers\Utility\EventSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\External\imgui\imgui_plot.h">
       <Filter>Resources\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
+    <ClInclude Include="Utility\EventSystem\Listener.h">
+      <Filter>Headers\Utility\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Logging\StringConverter.h">
+      <Filter>Headers\Utility\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Logging\Timer.h">
+      <Filter>Headers\Utility\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Logging\COMException.h">
+      <Filter>Headers\Utility\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Logging\ErrorLogger.h">
+      <Filter>Headers\Utility\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Sound.h">
       <Filter>Headers\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Billboard.h">
+      <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collisions.h">
+      <Filter>Headers\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -695,14 +695,8 @@
     <Filter Include="Headers\Utility\EventSystem">
       <UniqueIdentifier>{e9346ea4-6134-4a1a-b67b-d49927c11470}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\Utility\EventSystem\Listeners">
-      <UniqueIdentifier>{abe35aae-69a4-4c42-bc99-8b1ebc70590e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Utility\EventSystem">
       <UniqueIdentifier>{56fe880a-bba3-4c89-b061-dca56cd06b78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Utility\EventSystem\Listeners">
-      <UniqueIdentifier>{b9ece522-4701-4a74-9594-2dcf30712862}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
