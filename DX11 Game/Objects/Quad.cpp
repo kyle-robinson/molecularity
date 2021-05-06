@@ -1,6 +1,4 @@
 #include "Quad.h"
-#include "Indices.h"
-#include "Vertices.h"
 
 // NORMAL QUAD
 bool Quad::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )

@@ -18,7 +18,7 @@ public:
 	void SetActivated( bool activated ) noexcept { mActivated = activated; }
 
 	// Update Forces
-	virtual void Update( const float dt );
+	virtual void Update( const float dt, bool isHeld = false );
 	void AddForce( XMFLOAT3 force ) noexcept;
 	void ResetForces() noexcept;
 
@@ -58,6 +58,9 @@ private:
 	float mWeight;
 	bool mActivated;
 	bool mUseLaminar;
+
+	bool mIsHeld;
+
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;
 	XMFLOAT3 mNetForce;
