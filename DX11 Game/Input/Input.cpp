@@ -9,6 +9,7 @@ void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* c
 	this->renderWindow = window;
 	keyboard.DisableAutoRepeatKeys();
 	mousePick.Initialize( width, height );
+	sound.SetSoundEffectsVolume(0.3f); // Sets the SFX volume for this class, need to update so this isn't needed
 }
 
 void Input::Update( const float dt )
@@ -128,8 +129,8 @@ void Input::UpdateKeyboard( const float dt )
 	// CUBE INPUT
 	{
 		// update cube movement
-		if ( keyboard.KeyIsPressed( VK_RIGHT ) )
-			graphics->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
+		if (keyboard.KeyIsPressed(VK_RIGHT))
+			graphics->GetCube()[0]->GetPhysicsModel()->AddForce({ 0.1f, 0.0f, 0.0f });
 		if ( keyboard.KeyIsPressed( VK_LEFT ) )
 			graphics->GetCube()[0]->GetPhysicsModel()->AddForce( { -0.1f, 0.0f, 0.0f } );
 	}
@@ -166,9 +167,14 @@ void Input::UpdateMouse( const float dt )
 		{
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
-
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
+				// testing sound, feel free to move or remove
+				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				{
+					sound.PlaySoundEffects(sound.SOUND_TOOLUSE);
+				}
+
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( graphics->GetWidth() / 2, graphics->GetHeight() / 2, *graphics->GetCube()[i] ) )
 					graphics->GetCube()[i]->SetIsHovering( true );

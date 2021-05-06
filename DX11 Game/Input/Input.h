@@ -5,6 +5,7 @@
 #include "Graphics.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
+#include "..\Sound.h"
 
 /// <summary>
 /// Handles user input by update keyboard and mouse events.
@@ -22,6 +23,7 @@ private:
 	MousePicking mousePick;
 	Graphics* graphics;
 	CameraController* cameras;
+	Sound sound;
 };
 
 #endif
