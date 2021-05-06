@@ -20,7 +20,7 @@ class ImGuiManager;
 class TextRenderer;
 class PostProcessing;
 class StencilOutline;
-
+class UI_Manager;
 /// <summary>
 /// Loads and renders/updates all the components and models for the current scene/level.
 /// Sets up any constant buffers that are specific to this particular scene/level.
@@ -70,6 +70,9 @@ protected:
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
+	
+	//UI
+	std::shared_ptr<UI_Manager> _UiManager;
 private:
 	bool InitializeScene();
 
@@ -82,6 +85,9 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+
+
+	
 };
 
 #endif

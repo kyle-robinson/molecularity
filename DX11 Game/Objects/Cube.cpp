@@ -15,6 +15,7 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
         
         editableProperties = std::make_shared<CubeProperties>();
         physicsModel = std::make_shared<PhysicsModel>( this );
+
         //send out editable properties to hud for data
         EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, editableProperties.get());
         

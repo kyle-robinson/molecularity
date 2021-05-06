@@ -183,6 +183,51 @@
     <ClCompile Include="Physics\Collisions.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="UI\HUD_UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Main_Menu_UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Pause.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Settings_Menu_UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Buttion_Widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\ColourBlock.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\DropDown_Widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Immage_Widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\Input_Widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp">
+      <Filter>UI\widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\UI_Manager.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -427,6 +472,54 @@
     </ClInclude>
     <ClInclude Include="Physics\Collisions.h">
       <Filter>Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\HUD_UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Main_Menu_UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Pause.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Settings_Menu_UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\WidgetIncludes.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Buttion_Widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\ColourBlock.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\DataSlider_Widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\DropDown_Widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Energy_Bar_Widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Immage_Widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Input_Widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\PageSlider_Widget.h">
+      <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\UI_Manager.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -697,6 +790,12 @@
     </Filter>
     <Filter Include="Source\Utility\EventSystem">
       <UniqueIdentifier>{56fe880a-bba3-4c89-b061-dca56cd06b78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{0e437398-f8a0-4ddb-88d8-8d1f2a6cdda9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\widgets">
+      <UniqueIdentifier>{e28dbb1f-b36f-448d-8172-bc55867379d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

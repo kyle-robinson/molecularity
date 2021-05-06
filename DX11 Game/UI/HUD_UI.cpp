@@ -11,6 +11,7 @@ HUD_UI::HUD_UI()
 
 HUD_UI::~HUD_UI()
 {
+	delete Mode;
 }
 
 void HUD_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
@@ -89,9 +90,11 @@ void HUD_UI::Update()
 void HUD_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
 	Shaders::BindShaders(_Contex.Get(), vert, pix);
+	HudBakgrounds[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 	HUDenergyWidget.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 	HUDImages[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	HudBakgrounds[0].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+	
+	
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		HUDImages[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);

@@ -23,7 +23,9 @@ bool ColourBlock::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, 
 
 
 void ColourBlock::Draw(ID3D11DeviceContext* Contex,
-	ID3D11Device* Device,ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix)
+	ID3D11Device* Device,ConstantBuffer<CB_PS_scene>& cb_ps_scene, 
+	ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, 
+	XMMATRIX WorldOrthoMatrix)
 {  
 	_ColourSprite.UpdateTex(Device, _Colour);
     _ColourSprite.SetInitialPosition(_Pos.x, _Pos.y, 0);

@@ -6,7 +6,7 @@
 #include "MousePicking.h"
 #include "WindowContainer.h"
 #include "LevelStateMachine.h"
-
+#include<UI/UI.h>
 /// <summary>
 /// Handles user input by update keyboard and mouse events.
 /// Contains functions to update game state on successful keyboard/mouse event registers.
@@ -27,6 +27,12 @@ private:
 	CameraController* cameras;
 	LevelStateMachine* levelSystem;
 	std::vector<uint32_t> level_IDs;
+
+
+	//ui input
+	unsigned char UIChar;
+	MouseData UiMouseData;
+
 };
 
 #endif

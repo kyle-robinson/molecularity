@@ -24,7 +24,7 @@ public:
 	void SetToDraw(bool ToDraw) { IsToDraw = ToDraw; }
 
 	std::shared_ptr <UI> GetCustomUi(string UIName){return UiList[UIName];}
-
+	void AddUi(std::shared_ptr < UI> NewUI, string Name);
 	void HandleEvent(Event* event);
 
 

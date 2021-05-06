@@ -14,15 +14,13 @@ UI_Manager::UI_Manager()
 
 void UI_Manager::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d)
 {
-	UiList["HUD"] = make_shared<HUD_UI>();
-	UiList["HUD"]->Inizalize(device, context, _cb_vs_matrix_2d);
 
 
-	UiList["Pause"] = make_shared<Pause>();
-	UiList["Pause"]->Inizalize(device, context, _cb_vs_matrix_2d);
+	for (auto const& UIItem : UiList) {
 
-	UiList["Settings"] = make_shared<Settings_Menu_UI>();
-	UiList["Settings"]->Inizalize(device, context, _cb_vs_matrix_2d);
+		UIItem.second->Inizalize(device, context, _cb_vs_matrix_2d);
+	}
+	
 }
 
 UI_Manager::~UI_Manager()
@@ -45,6 +43,12 @@ void UI_Manager::Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS
 	}
 		
 
+}
+
+void UI_Manager::AddUi(std::shared_ptr < UI> NewUI, string Name)
+{
+	UiList[Name] = NewUI;
+	
 }
 
 void UI_Manager::HandleEvent(Event* event)

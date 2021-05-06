@@ -2,6 +2,11 @@
 #include "Level1.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
+//ui
+#include<Graphics/UI_Manager.h>
+#include<UI/HUD_UI.h>
+#include<UI/Pause.h>
+#include<UI/Settings_Menu_UI.h>
 
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
@@ -19,9 +24,17 @@ bool Level1::OnCreate()
 			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 15.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
 
-			// sprites
-			if ( !crosshair.Initialize( graphics->device.Get(), graphics->context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
-			crosshair.SetInitialPosition( graphics->GetWidth() / 2 - crosshair.GetWidth() / 2, graphics->GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
+
+			shared_ptr<HUD_UI> HUD = make_shared<HUD_UI>();
+			_UiManager->AddUi(HUD,"HUD");
+
+			shared_ptr<Pause> PauseUI = make_shared<Pause>();
+			_UiManager->AddUi(PauseUI, "Pause");
+
+			shared_ptr<Settings_Menu_UI> settingsUi = make_shared<Settings_Menu_UI>();
+			_UiManager->AddUi(settingsUi, "Settings");
+
+			_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
 		}
 	}
 	catch ( COMException& exception )
@@ -75,7 +88,8 @@ void Level1::RenderFrame()
 			cb_ps_scene.data.useTexture = TRUE;
 			if ( !cb_ps_scene.ApplyChanges() ) return;
 			graphics->context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-			crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+
+			
 		}
 	}
 }
@@ -83,7 +97,7 @@ void Level1::RenderFrame()
 void Level1::Update( const float dt )
 {
 	LevelContainer::Update( dt );
-
+	
 	// camera world collisions. Will be player object collisions in the future and ideally not here
 	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
 		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
