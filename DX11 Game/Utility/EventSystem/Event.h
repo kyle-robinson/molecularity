@@ -21,7 +21,7 @@ enum class EVENTID {
 	//utitlity
 	WindowSizeChangeEvent,
 	QuitGameEvent,
-	UpdateSettingsEvent
+	UpdateSettingsEvent 
 };
 
 class Event {

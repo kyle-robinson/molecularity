@@ -40,6 +40,8 @@ private:
 	std::shared_ptr<Level1> level1;
 	std::shared_ptr<Level2> level2;
 	LevelStateMachine stateMachine;
+
+	std::vector<JSON::SettingData> _SettingsData;
 };
 
 #endif
