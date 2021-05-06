@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "CameraMovement.h"
+#include "Utility/EventSystem/EventSystem.h"
 #include <thread>
 
 bool Application::Initialize(
@@ -26,7 +27,7 @@ bool Application::Initialize(
 		level1 = std::make_shared<Level1>( stateMachine );
 		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui );
 		first.join();
-
+    
 		level2 = std::make_shared<Level2>( stateMachine );
 		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui );
 		second.join();
@@ -47,8 +48,8 @@ bool Application::Initialize(
 		input.Initialize( renderWindow, &stateMachine, &cameras, level_IDs );
 
 		// initialize sound
-		if ( !sound.Initialize( renderWindow.GetHWND() ) ) return false;
-		if ( !sound.PlayWavFile( sound.MAIN_MUSIC, 0.75f ) ) return false;
+	  sound.SetMusicVolume(0.5f);
+    if (FAILED(sound.PlayMusic(sound.MUSIC_MAIN, true))) return false;
 	}
 
 	return true;
@@ -66,11 +67,12 @@ void Application::Update()
 	timer.Restart();
 
 	// update systems
-	sound.UpdateListenerPos( ( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3() ) );
 	input.Update( dt, sound );
+  sound.UpdatePosition(cameras.GetCamera(cameras.GetCurrentCamera())->GetPositionFloat3(), cameras.GetCamera(cameras.GetCurrentCamera())->GetRotationFloat3().y); // Update to make this every few frames
 
 	// update current level
 	stateMachine.Update( dt );
+	EventSystem::Instance()->ProcessEvents();
 }
 
 void Application::Render()

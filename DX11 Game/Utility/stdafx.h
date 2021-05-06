@@ -33,5 +33,6 @@ using namespace DirectX;
 // Classes
 #include "Timer.h"
 #include "ErrorLogger.h"
+#include "EventSystem/EventSystem.h"
 
 #endif

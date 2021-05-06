@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Input.h"
-#include "Sound.h"
 #include "CameraMovement.h"
 
 void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
@@ -19,13 +18,10 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 	);
 }
 
-void Input::Update( const float dt, Sound sound )
+void Input::Update( const float dt )
 {
 	UpdateKeyboard( dt );
 	UpdateMouse( dt );
-
-	if ( keyboard.KeyIsPressed( 'B' ) )
-		sound.PlayWavFile( sound.COLLISION_SOUND, 1.0f, level->GetCube()[0]->GetPositionFloat3() );
 }
 
 void Input::UpdateKeyboard( const float dt )
@@ -183,9 +179,14 @@ void Input::UpdateMouse( const float dt )
 		{
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
-
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
+				// testing sound, feel free to move or remove
+				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				{
+					sound.PlaySoundEffects(sound.SOUND_TOOLUSE);
+				}
+
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( level->GetGraphics()->GetWidth() / 2, level->GetGraphics()->GetHeight() / 2, *level->GetCube()[i] ) )
 					level->GetCube()[i]->SetIsHovering( true );
