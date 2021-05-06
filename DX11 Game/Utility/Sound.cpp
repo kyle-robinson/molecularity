@@ -24,7 +24,9 @@ Sound::~Sound()
 HRESULT Sound::InitialiseSounds()
 {
 	// Music
-	musicVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Music.wav" ) );
+	//musicVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Music.wav" ) );
+
+	musicVec.push_back(engine->play2D("Resources\\Audio\\Music.wav", true, true, true));
 
 	// Sound effects
 	SoundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Shot.wav" ) );
@@ -45,20 +47,21 @@ HRESULT Sound::UpdatePosition( XMFLOAT3 position, float rotation )
 
 HRESULT Sound::PlayMusic( int musicNum, bool loops )
 {
-	engine->play2D( musicVec[musicNum], loops, false, false, true );
+	//engine->play2D( musicVec[musicNum], loops, false, false, true );
+	musicVec[musicNum]->setIsLooped(loops);
+	musicVec[musicNum]->setIsPaused(false);
 	return S_OK;
 }
 
-HRESULT Sound::PlaySoundEffects( int soundNum, XMFLOAT3 soundPosition )
+HRESULT Sound::PlaySoundEffects(int soundNum, XMFLOAT3 soundPosition)
 {
-	irrklang::vec3df position( soundPosition.x, soundPosition.y, soundPosition.z );
-	engine->play3D( SoundEffectsVec[soundNum], position );
+	if (soundPosition.x == NULL)
+		engine->play2D(SoundEffectsVec[soundNum]);
+	else
+	{
+		irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
+		engine->play3D(SoundEffectsVec[soundNum], position);
+	}
 
-	return S_OK;
-}
-
-HRESULT Sound::PlaySoundEffects( int soundNum )
-{
-	engine->play3D( SoundEffectsVec[soundNum], camPosition );
 	return S_OK;
 }

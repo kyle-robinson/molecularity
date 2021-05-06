@@ -233,7 +233,7 @@ void Input::UpdateMouse( const float dt )
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
-					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE );
+					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, XMFLOAT3(0.0f, 0.0f, 0.0f) );
 				}
 
 				// test intersection between crosshair and cube
