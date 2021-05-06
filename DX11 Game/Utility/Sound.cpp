@@ -49,16 +49,15 @@ HRESULT Sound::PlayMusic( int musicNum, bool loops )
 	return S_OK;
 }
 
-HRESULT Sound::PlaySoundEffects( int soundNum, XMFLOAT3 soundPosition )
+HRESULT Sound::PlaySoundEffects(int soundNum, XMFLOAT3 soundPosition)
 {
-	irrklang::vec3df position( soundPosition.x, soundPosition.y, soundPosition.z );
-	engine->play3D( SoundEffectsVec[soundNum], position );
+	if (soundPosition.x == NULL)
+		engine->play2D(SoundEffectsVec[soundNum]);
+	else
+	{
+		irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
+		engine->play3D(SoundEffectsVec[soundNum], position);
+	}
 
-	return S_OK;
-}
-
-HRESULT Sound::PlaySoundEffects( int soundNum )
-{
-	engine->play3D( SoundEffectsVec[soundNum], camPosition );
 	return S_OK;
 }
