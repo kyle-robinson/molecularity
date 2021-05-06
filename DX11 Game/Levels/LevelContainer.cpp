@@ -179,6 +179,7 @@ void LevelContainer::EndFrame()
 		imgui->BeginRender();
 		imgui->SpawnInstructionWindow();
 		imgui->SpawnGraphicsWindow( *graphics );
+		imgui->SpawnPerformanceWindow();
 		directionalLight.SpawnControlWindow();
 		pointLight.SpawnControlWindow();
 		spotLight.SpawnControlWindow();

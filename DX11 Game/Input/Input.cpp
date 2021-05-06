@@ -3,9 +3,10 @@
 #include "CameraMovement.h"
 
 void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
-	CameraController* camera, std::vector<uint32_t> level_IDs )
+	CameraController* camera, Sound* sound, std::vector<uint32_t> level_IDs )
 {
 	cameras = camera;
+	soundSystem = sound;
 	renderWindow = window;
 	this->level_IDs = level_IDs;
 	this->levelSystem = stateMachine;
@@ -182,9 +183,9 @@ void Input::UpdateMouse( const float dt )
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				// testing sound, feel free to move or remove
-				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
-					sound.PlaySoundEffects(sound.SOUND_TOOLUSE);
+					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE );
 				}
 
 				// test intersection between crosshair and cube
