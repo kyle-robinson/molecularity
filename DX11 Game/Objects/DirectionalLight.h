@@ -13,8 +13,8 @@ class Camera;
 class DirectionalLight : public Light, public GraphicsResource
 {
 public:
-	bool Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
-	void UpdateConstantBuffer( GraphicsContainer& gfx );
+	bool Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
+	void UpdateConstantBuffer( Graphics& gfx );
 	void SpawnControlWindow();
 	inline const XMFLOAT3 GetLightPosition() const noexcept { return position; };
 private:

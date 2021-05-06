@@ -38,7 +38,7 @@ private:
 	Camera2D UICamera;
 	bool usingMainCamera = true;
 	JSON::CameraType cameraToUse = JSON::CameraType::Default;
-	std::map<JSON::CameraType, std::unique_ptr<Camera>> cameras;
+	std::unordered_map<JSON::CameraType, std::unique_ptr<Camera>> cameras;
 };
 
 #endif

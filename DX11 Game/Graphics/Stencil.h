@@ -21,7 +21,7 @@ namespace Bind
 			Mask,
 			Write
 		};
-		Stencil( GraphicsContainer& gfx, Mode mode ) : mode( mode )
+		Stencil( Graphics& gfx, Mode mode ) : mode( mode )
 		{
 			try
 			{
@@ -67,7 +67,7 @@ namespace Bind
 				return;
 			}
 		}
-		void Bind( GraphicsContainer& gfx ) noexcept override
+		void Bind( Graphics& gfx ) noexcept override
 		{
 			GetContext( gfx )->OMSetDepthStencilState( pStencil.Get(), 0 );
 		}

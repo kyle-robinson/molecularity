@@ -4,7 +4,7 @@
 
 // "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-bool DirectionalLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+bool DirectionalLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
 	{
@@ -51,7 +51,7 @@ void DirectionalLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void DirectionalLight::UpdateConstantBuffer( GraphicsContainer& gfx )
+void DirectionalLight::UpdateConstantBuffer( Graphics& gfx )
 {
 	cb_ps_directional.data.directionalEnable = enable;
 	cb_ps_directional.data.directionalPosition = position;

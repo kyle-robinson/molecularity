@@ -81,9 +81,6 @@
     <ClCompile Include="Graphics\Graphics.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\GraphicsContainer.cpp">
-      <Filter>Source\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\ImGuiManager.cpp">
       <Filter>Source\Graphics\Bindables</Filter>
     </ClCompile>
@@ -138,9 +135,6 @@
     <ClCompile Include="Graphics\Shaders.cpp">
       <Filter>Source\Graphics\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\Sound.cpp">
-      <Filter>Source\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\SpotLight.cpp">
       <Filter>Source\Graphics\Drawables\Lights</Filter>
     </ClCompile>
@@ -165,6 +159,18 @@
     <ClCompile Include="Graphics\PostProcessing.cpp">
       <Filter>Source\Graphics\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Levels\LevelContainer.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\Level1.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\LevelStateMachine.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\Level2.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
     <ClCompile Include="WinMain.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -174,50 +180,8 @@
     <ClCompile Include="..\External\imgui\imgui_plot.cpp">
       <Filter>Resources\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\Buttion_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\ColourBlock.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\DropDown_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\Immage_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\Input_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\UI_Manager.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Wigets\widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\HUD_UI.cpp">
-      <Filter>UI\UIClass</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Main_Menu_UI.cpp">
-      <Filter>UI\UIClass</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Pause.cpp">
-      <Filter>UI\UIClass</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\Settings_Menu_UI.cpp">
-      <Filter>UI\UIClass</Filter>
-    </ClCompile>
-    <ClCompile Include="UI\UI.cpp">
-      <Filter>UI\UIClass</Filter>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -311,9 +275,6 @@
     <ClInclude Include="Graphics\Graphics.h">
       <Filter>Headers\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GraphicsContainer.h">
-      <Filter>Headers\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GraphicsResource.h">
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
@@ -398,9 +359,6 @@
     <ClInclude Include="Graphics\Shaders.h">
       <Filter>Headers\Graphics\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Sound.h">
-      <Filter>Headers\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\SpotLight.h">
       <Filter>Headers\Graphics\Drawables\Lights</Filter>
     </ClInclude>
@@ -443,6 +401,18 @@
     <ClInclude Include="Graphics\PostProcessing.h">
       <Filter>Headers\Graphics\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Levels\Level1.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\LevelContainer.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\LevelStateMachine.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\Level2.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
     <ClInclude Include="Utility\EventSystem\Event.h">
       <Filter>Headers\Utility\EventSystem</Filter>
     </ClInclude>
@@ -455,53 +425,8 @@
     <ClInclude Include="..\External\imgui\imgui_plot.h">
       <Filter>Resources\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\Buttion_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\ColourBlock.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\DataSlider_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\DropDown_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\Energy_Bar_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\Immage_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\Input_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\PageSlider_Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\WidgetIncludes.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\UI_Manager.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Wigets\widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\HUD_UI.h">
-      <Filter>UI\UIClass</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Main_Menu_UI.h">
-      <Filter>UI\UIClass</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Pause.h">
-      <Filter>UI\UIClass</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\Settings_Menu_UI.h">
-      <Filter>UI\UIClass</Filter>
-    </ClInclude>
-    <ClInclude Include="UI\UI.h">
-      <Filter>UI\UIClass</Filter>
+    <ClInclude Include="Sound.h">
+      <Filter>Headers\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -617,9 +542,6 @@
     </None>
     <None Include="Resources\Cursors\NightDiamond\Precision Select.ani">
       <Filter>Resources\Cursors</Filter>
-    </None>
-    <None Include="Resources\JSON\Settings.json">
-      <Filter>Resources\JSON</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -764,6 +686,12 @@
     <Filter Include="Headers\Physics">
       <UniqueIdentifier>{628a7f71-123c-461e-a692-c582039feecc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Levels">
+      <UniqueIdentifier>{1d69493f-0c4e-45c9-b4d8-9d8ea512b721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Levels">
+      <UniqueIdentifier>{4d08fc3a-cef2-41f4-aa07-a74f535a5918}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Headers\Utility\EventSystem">
       <UniqueIdentifier>{e9346ea4-6134-4a1a-b67b-d49927c11470}</UniqueIdentifier>
     </Filter>
@@ -775,15 +703,6 @@
     </Filter>
     <Filter Include="Source\Utility\EventSystem\Listeners">
       <UniqueIdentifier>{b9ece522-4701-4a74-9594-2dcf30712862}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI">
-      <UniqueIdentifier>{eca58ae9-98ac-421c-b807-cf7ede9232b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\Widgets">
-      <UniqueIdentifier>{c0b137f6-c49f-4f83-ad61-2e83b7a5e3a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\UIClass">
-      <UniqueIdentifier>{e5e58d2e-2873-4eac-ae8d-7ea7171163df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

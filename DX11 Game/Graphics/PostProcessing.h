@@ -8,8 +8,8 @@
 class PostProcessing : public GraphicsResource
 {
 public:
-	PostProcessing( GraphicsContainer& gfx );
-	void Bind( GraphicsContainer& gfx ) noexcept override;
+	PostProcessing( Graphics& gfx );
+	void Bind( Graphics& gfx ) noexcept override;
 	void SpawnControlWindow();
 private:
 	// post-processing parameters

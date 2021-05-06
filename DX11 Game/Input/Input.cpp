@@ -1,24 +1,27 @@
 #include "stdafx.h"
 #include "Input.h"
-#include "Sound.h"
 #include "CameraMovement.h"
 
-void Input::Initialize( Graphics* gfx, RenderWindow& window, CameraController* camera, int width, int height )
+void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
+	CameraController* camera, std::vector<uint32_t> level_IDs )
 {
-	this->graphics = gfx;
-	this->cameras = camera;
-	this->renderWindow = window;
+	cameras = camera;
+	renderWindow = window;
+	this->level_IDs = level_IDs;
+	this->levelSystem = stateMachine;
+	this->level = &*stateMachine->GetCurrentLevel();
+
 	keyboard.DisableAutoRepeatKeys();
-	mousePick.Initialize( width, height );
+	mousePick.Initialize(
+		static_cast<int>( renderWindow.GetWidth() ),
+		static_cast<int>( renderWindow.GetHeight() )
+	);
 }
 
-void Input::Update( const float dt, Sound sound )
+void Input::Update( const float dt )
 {
 	UpdateKeyboard( dt );
 	UpdateMouse( dt );
-
-	if ( keyboard.KeyIsPressed( 'B' ) )
-		sound.PlayWavFile( sound.COLLISION_SOUND, 1.0f, graphics->GetCube()[0]->GetPositionFloat3() );
 }
 
 void Input::UpdateKeyboard( const float dt )
@@ -27,14 +30,19 @@ void Input::UpdateKeyboard( const float dt )
 	// handle input for single key presses
 	while ( !keyboard.KeyBufferIsEmpty() )
 	{
-		
 		unsigned char keycode = keyboard.ReadKey().GetKeyCode();
+
+		// LEVEL SELECTION
+		{
+			if ( keycode == VK_NUMPAD1 ) levelSystem->SwitchTo( level_IDs[0] );
+			if ( keycode == VK_NUMPAD2 ) levelSystem->SwitchTo( level_IDs[1] );
+		}
 
 		// CAMERA INPUT
 		{
 			// set camera to use
-			if ( keycode == VK_F1 ) graphics->GetCameraController()->SetIsUsingMain( true );
-			if ( keycode == VK_F2 ) graphics->GetCameraController()->SetIsUsingMain( false );
+			if ( keycode == VK_F1 ) level->GetCameraController()->SetIsUsingMain( true );
+			if ( keycode == VK_F2 ) level->GetCameraController()->SetIsUsingMain( false );
 
 			// set options for debug camera
 			if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
@@ -47,64 +55,12 @@ void Input::UpdateKeyboard( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
-			
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
-				if (keycode == '1') {
-					graphics->GetCube()[i]->GetEditableProperties()->SetToolType(ToolType::Convert);
-				}
-				if (keycode == '2') {
-					graphics->GetCube()[i]->GetEditableProperties()->SetToolType(ToolType::Resize);
-				}
-			}
-			
-		}
-		//UI
-		{
-			 UIChar = keyboard.ReadChar();
-			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
-
-		
-			if (keycode == 'P') {
-				//puase game
-				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
-				EnableCursor();
-			}
-
-			//for ui when exit pause: to be remove when decoupling is complet
-			if (keycode == 'L') {
-				DisableCursor();
-			}
-
-			//full screen
-			WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
-			DWORD dwStyle = GetWindowLong(renderWindow.GetHWND(), GWL_STYLE);
-			if (keycode == 'M') {
-				
-				if (dwStyle & WS_OVERLAPPEDWINDOW) {
-					MONITORINFO mi = { sizeof(mi) };
-					if (GetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev) &&
-						GetMonitorInfo(MonitorFromWindow(renderWindow.GetHWND(),
-							MONITOR_DEFAULTTOPRIMARY), &mi)) {
-						SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
-							dwStyle & ~WS_OVERLAPPEDWINDOW);
-						SetWindowPos(renderWindow.GetHWND(), HWND_TOP,
-							mi.rcMonitor.left, mi.rcMonitor.top,
-							mi.rcMonitor.right - mi.rcMonitor.left,
-							mi.rcMonitor.bottom - mi.rcMonitor.top,
-							SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-					}
-				}
-			}
-			//not full screen
-			if (keycode == 'N') {
-				SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
-					dwStyle | WS_OVERLAPPEDWINDOW);
-				SetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev);
-				SetWindowPos(renderWindow.GetHWND(), NULL, 0, 0, 1296, 737, SWP_SHOWWINDOW | SWP_NOOWNERZORDER| SWP_FRAMECHANGED);
+				if ( keycode == '1' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
+				if ( keycode == '2' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
 			}
 		}
-
 	}
 #pragma endregion
 
@@ -114,7 +70,7 @@ void Input::UpdateKeyboard( const float dt )
 		// TODO: THIS SHOULD GO INTO AN UPDATE FUNCTION IN THE CAMERA CLASS
 		// set which camera for the static camera to look at
 		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
-			cameras->GetCamera( graphics->GetCameraController()->GetCurrentCamera() )->GetPositionFloat3() );
+			cameras->GetCamera( level->GetCameraController()->GetCurrentCamera() )->GetPositionFloat3() );
 
 		// update mode to ignore y-movement when not in debug mode. Will be changed in the future likely when player can move around the environment with physics/collisions.
 		// will also need to be changed to the player object when player becomes its own class. Unknown how that will work currently
@@ -156,28 +112,28 @@ void Input::UpdateKeyboard( const float dt )
 			// ensure another cube is not already being held
 			float alreadyHeld = false;
 			for ( uint32_t j = 0; j < NUM_CUBES; j++ )
-				if ( i != j && graphics->GetCube()[j]->GetIsHolding() == true )
+				if ( i != j && level->GetCube()[j]->GetIsHolding() == true )
 					alreadyHeld = true;
 
 			// pick-up cube - set position relative to camera.
 			if ( keyboard.KeyIsPressed( 'E' ) && !alreadyHeld &&
-				 graphics->GetCube()[i]->GetIsInRange() &&
-				( graphics->GetCube()[i]->GetIsHovering() ||
-				  graphics->GetCube()[i]->GetIsHolding() ) )
+				 level->GetCube()[i]->GetIsInRange() &&
+				( level->GetCube()[i]->GetIsHovering() ||
+				  level->GetCube()[i]->GetIsHolding() ) )
 			{
-				graphics->GetCube()[i]->SetIsHolding( true );
+				level->GetCube()[i]->SetIsHolding( true );
 				XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
 				cubePosition += cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() * 2;
-				graphics->GetCube()[i]->SetPosition( cubePosition );
-				graphics->GetCube()[i]->SetRotation(
-					graphics->GetCube()[i]->GetRotationFloat3().x,
+				level->GetCube()[i]->SetPosition( cubePosition );
+				level->GetCube()[i]->SetRotation(
+					level->GetCube()[i]->GetRotationFloat3().x,
 					cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y,
-					graphics->GetCube()[i]->GetRotationFloat3().z
+					level->GetCube()[i]->GetRotationFloat3().z
 				);
 			}
 			else
 			{
-				graphics->GetCube()[i]->SetIsHolding( false );
+				level->GetCube()[i]->SetIsHolding( false );
 			}
 		}
 	}
@@ -186,9 +142,9 @@ void Input::UpdateKeyboard( const float dt )
 	{
 		// update cube movement
 		if ( keyboard.KeyIsPressed( VK_RIGHT ) )
-			graphics->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
+			level->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
 		if ( keyboard.KeyIsPressed( VK_LEFT ) )
-			graphics->GetCube()[0]->GetPhysicsModel()->AddForce( { -0.1f, 0.0f, 0.0f } );
+			level->GetCube()[0]->GetPhysicsModel()->AddForce( { -0.1f, 0.0f, 0.0f } );
 	}
 #pragma endregion
 }
@@ -223,115 +179,91 @@ void Input::UpdateMouse( const float dt )
 		{
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
-			mousePick.SetWidthHight(renderWindow.GetWidth(), renderWindow.GetHeight());
-
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
+				// testing sound, feel free to move or remove
+				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				{
+					sound.PlaySoundEffects(sound.SOUND_TOOLUSE);
+				}
+
 				// test intersection between crosshair and cube
-				if ( mousePick.TestIntersection( graphics->GetWidth() / 2, graphics->GetHeight() / 2, *graphics->GetCube()[i] ) )
-					graphics->GetCube()[i]->SetIsHovering( true );
+				if ( mousePick.TestIntersection( level->GetGraphics()->GetWidth() / 2, level->GetGraphics()->GetHeight() / 2, *level->GetCube()[i] ) )
+					level->GetCube()[i]->SetIsHovering( true );
 				else
-					graphics->GetCube()[i]->SetIsHovering( false );
+					level->GetCube()[i]->SetIsHovering( false );
 
 #pragma region Tool_Convert
 				// manage multi-tool options
-				if ( graphics->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
+				if ( level->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
 				{
 					// change current id of texture to be used on box
 					if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
-						graphics->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 3 )
+						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 3 )
 					{
-						graphics->GetCube()[i]->GetEditableProperties()->SetMaterialID(
-							graphics->GetCube()[i]->GetEditableProperties()->GetMaterialID() + 1
+						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
+							level->GetCube()[i]->GetEditableProperties()->GetMaterialID() + 1
 						);
 					}
 					else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
-						graphics->GetCube()[i]->GetEditableProperties()->GetMaterialID() > 0 )
+						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() > 0 )
 					{
-						graphics->GetCube()[i]->GetEditableProperties()->SetMaterialID(
-							graphics->GetCube()[i]->GetEditableProperties()->GetMaterialID() - 1
+						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
+							level->GetCube()[i]->GetEditableProperties()->GetMaterialID() - 1
 						);
 					}
 
 					// update box texture on click while hovering
-					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube()[i]->GetIsHovering() )
+					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && level->GetCube()[i]->GetIsHovering() )
 					{
-						graphics->GetCube()[i]->GetEditableProperties()->SetBoxType(
-							static_cast<BoxType>( graphics->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
+						level->GetCube()[i]->GetEditableProperties()->SetBoxType(
+							static_cast<BoxType>( level->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
 						);
 					}
 				}
 #pragma endregion
 
 #pragma region Tool_Resize
-				else if ( graphics->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
+				else if ( level->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
 				{
 					// set size multiplier to be applied to the box
 					if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
-						graphics->GetCube()[i]->GetEditableProperties()->GetSizeID() < 2 )
+						level->GetCube()[i]->GetEditableProperties()->GetSizeID() < 2 )
 					{
-						graphics->GetCube()[i]->GetEditableProperties()->SetSizeID(
-							graphics->GetCube()[i]->GetEditableProperties()->GetSizeID() + 1
+						level->GetCube()[i]->GetEditableProperties()->SetSizeID(
+							level->GetCube()[i]->GetEditableProperties()->GetSizeID() + 1
 						);
 					}
 					else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
-						graphics->GetCube()[i]->GetEditableProperties()->GetSizeID() > 0 )
+						level->GetCube()[i]->GetEditableProperties()->GetSizeID() > 0 )
 					{
-						graphics->GetCube()[i]->GetEditableProperties()->SetSizeID(
-							graphics->GetCube()[i]->GetEditableProperties()->GetSizeID() - 1
+						level->GetCube()[i]->GetEditableProperties()->SetSizeID(
+							level->GetCube()[i]->GetEditableProperties()->GetSizeID() - 1
 						);
 					}
 
 					// set the box scale to use based on the option previously selected
-					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && graphics->GetCube()[i]->GetIsHovering() )
+					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && level->GetCube()[i]->GetIsHovering() )
 					{
-						switch ( graphics->GetCube()[i]->GetEditableProperties()->GetSizeID() )
+						switch ( level->GetCube()[i]->GetEditableProperties()->GetSizeID() )
 						{
 						case 0:
-							graphics->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 0.5f );
-							graphics->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Small );
+							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 0.5f );
+							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Small );
 							break;
 						case 1:
-							graphics->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 1.0f );
-							graphics->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Normal );
+							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 1.0f );
+							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Normal );
 							break;
 						case 2:
-							graphics->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 2.0f );
-							graphics->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Large );
+							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 2.0f );
+							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Large );
 							break;
 						}
 					}
 				}
 #pragma endregion
 			}
-		}
-		//UI mouse input
-		{
-			UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
-			if (mouse.IsRightDown()&& cursorEnabled) {
-				UiMouseData.RPress = true;
-			}
-			else
-			{
-				UiMouseData.RPress = false;
-			}
-			if (mouse.IsLeftDown()&& cursorEnabled) {
-				UiMouseData.LPress= true;
-			}
-			else
-			{
-				UiMouseData.LPress = false;
-			}
-			if (mouse.IsMiddleDown() && cursorEnabled) {
-				UiMouseData.MPress = true;
-			}
-			else
-			{
-				UiMouseData.MPress = false;
-			}
-
-			EventSystem::Instance()->AddEvent(EVENTID::UIMouseInput, &UiMouseData);
-
 		}
 	}
 }
