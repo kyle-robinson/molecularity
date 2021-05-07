@@ -59,6 +59,12 @@ private:
 
 	float musicVolume = 1.0f;
 	float SoundEffectsVolume = 1.0f;
+
+	//bool for shutting off sound
+	bool musicOn;
+	bool SoundEffectsOn;
+	bool soundON;
+
 };
 
 #endif

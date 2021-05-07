@@ -17,6 +17,7 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 		static_cast<int>( renderWindow.GetWidth() ),
 		static_cast<int>( renderWindow.GetHeight() )
 	);
+	
 	AddToEvent();
 }
 
@@ -46,6 +47,9 @@ void Input::HandleEvent(Event* event)
 	break;
 	case EVENTID::GameUnPauseEvent:
 	{
+		UiMouseData.LPress = false;
+		UiMouseData.MPress = false;
+		UiMouseData.RPress = false;
 		DisableCursor();
 	}
 	break;
@@ -63,7 +67,7 @@ void Input::HandleEvent(Event* event)
 			UiMouseData.MPress = false;
 			UiMouseData.RPress = false;
 		}
-
+		
 
 	} 
 	break;
@@ -76,8 +80,11 @@ void Input::HandleEvent(Event* event)
 			if (setting.Type == JSON::SettingType::ControllType) {
 				//change controll
 
+				//control map
+				//keybord
 
-
+				map<string,unsigned char> KeyBindes;
+				//mouse
 
 			}
 

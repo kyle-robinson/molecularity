@@ -134,12 +134,20 @@ void RenderWindow::AddToEvent()
 {
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::QuitGameEvent, this);
 }
 static int width, hight;
 void RenderWindow::HandleEvent(Event* event)
 {
 	switch (event->GetEventID())
 	{
+	case EVENTID::QuitGameEvent:
+	{
+		DestroyWindow(hWnd);
+		PostQuitMessage(0);
+		
+	}
+	break;
 	case EVENTID::UpdateSettingsEvent:
 	{
 		//full screen
@@ -152,12 +160,12 @@ void RenderWindow::HandleEvent(Event* event)
 				//setfullscreen
 				WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
 				DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
-				
+					MONITORINFO mi = { sizeof(mi) };
 				if (bool* input = std::get_if<bool>(&setting.Setting)) {
 					if (*input) {
-						
+					
 						if (dwStyle & WS_OVERLAPPEDWINDOW) {
-							MONITORINFO mi = { sizeof(mi) };
+							
 							if (GetWindowPlacement(hWnd, &g_wpPrev) &&
 								GetMonitorInfo(MonitorFromWindow(hWnd,
 									MONITOR_DEFAULTTOPRIMARY), &mi)) {
@@ -173,10 +181,14 @@ void RenderWindow::HandleEvent(Event* event)
 					}
 					else
 					{
+						GetMonitorInfo(MonitorFromWindow(hWnd,
+							MONITOR_DEFAULTTOPRIMARY), &mi);
+
 						SetWindowLong(hWnd, GWL_STYLE,
 							dwStyle | WS_OVERLAPPEDWINDOW);
 						SetWindowPlacement(hWnd, &g_wpPrev);
-						SetWindowPos(hWnd, NULL, 0, 0, width, hight, SWP_SHOWWINDOW | SWP_NOMOVE |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+						SetWindowPos(hWnd, NULL, ((mi.rcMonitor.right - mi.rcMonitor.left)/2)- width/2,
+							((mi.rcMonitor.bottom - mi.rcMonitor.top)/2)- hight/2, width, hight, SWP_SHOWWINDOW |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 					}
 				}
 				

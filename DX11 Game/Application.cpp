@@ -56,19 +56,11 @@ bool Application::Initialize(
 		input.Initialize( renderWindow, &stateMachine, &cameras, &sound, level_IDs );
 	}
 
+	//load settings
 	_SettingsData = JSON::LoadSettings();
 	EventSystem::Instance()->AddEvent(EVENTID::UpdateSettingsEvent, &_SettingsData);
-	//update screen size
-	RECT windowRect;
-	if (GetClientRect(renderWindow.GetHWND(), &windowRect)) {
-
-		XMFLOAT2 windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
-		EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
-	}
-
-
 	
-
+	//Process Initialize events 
 	EventSystem::Instance()->ProcessEvents();
 	return true;
 }

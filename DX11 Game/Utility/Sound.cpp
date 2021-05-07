@@ -55,14 +55,16 @@ HRESULT Sound::PlayMusic( int musicNum, bool loops )
 
 HRESULT Sound::PlaySoundEffects(int soundNum, XMFLOAT3 soundPosition)
 {
-	if (soundPosition.x == NULL)
-		engine->play2D(SoundEffectsVec[soundNum]);
-	else
-	{
-		irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
-		engine->play3D(SoundEffectsVec[soundNum], position);
-	}
 
+	if (SoundEffectsOn) {
+		if (soundPosition.x == NULL)
+			engine->play2D(SoundEffectsVec[soundNum]);
+		else
+		{
+			irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
+			engine->play3D(SoundEffectsVec[soundNum], position);
+		}
+	}
 	return S_OK;
 }
 void Sound::AddtoEvent()
@@ -81,42 +83,53 @@ void Sound::HandleEvent(Event* event)
 	{
 		//controlls 
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		float soundVol=1.0f;
 		for (auto& setting : a)
 		{
 			if (setting.Type == JSON::SettingType::SoundType)
 			{
 				//change sound
 				if (setting.Name == "SoundOn") {
-
-
+					//music
+					soundON = std::get<bool>(setting.Setting);
+					continue;
+					
 				}
 				if (setting.Name == "SoundVolume") {
-
-
+					 soundVol = (float)std::get<int>(setting.Setting) / 100;
+					 continue;
 				}
 				if (setting.Name == "MusicOn") {
-
-
+					musicOn = std::get<bool>(setting.Setting);
+					continue;
 				}
 				if (setting.Name == "MusicVolume") {
 					musicVolume = (float)std::get<int>(setting.Setting) / 100;
-					SetMusicVolume(musicVolume);
-					
-					//musicVec set is puased
-					musicVec[0]->setIsPaused(true);
-					musicVec[0]->setIsPaused(false);
+					continue;
 				}
 				if (setting.Name == "BackgroundSoundsOn") {
-
+					SoundEffectsOn = std::get<bool>(setting.Setting);
+					continue;
 				}
 				if (setting.Name == "BackgroundSoundsVolume") {
 					SoundEffectsVolume = (float)std::get<int>(setting.Setting) / 100;
-					SetSoundEffectsVolume(SoundEffectsVolume);
+					continue;
 				}
 
 			}
 
 		}
+					SetMusicVolume(musicVolume* soundVol);
+					//musicVec set is puased
+					musicVec[0]->setIsPaused(true);
+					musicVec[0]->setIsPaused(false);
+					SetSoundEffectsVolume(SoundEffectsVolume* soundVol);
+
+
+
+
+
+
 	}
 	break;
 	}
