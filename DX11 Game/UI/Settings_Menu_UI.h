@@ -37,7 +37,7 @@ private:
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;
 
-
+	string TabNames[4] = { "General","Graphics","Sound","Controls" };
 	vector<string> ButtionTexDrop = { "Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow.dds" };
@@ -69,7 +69,8 @@ private:
 	std::shared_ptr<TextRenderer>  HeadderTextRenderer;
 	std::shared_ptr<TextRenderer>  PGTextRenderer;
 
-
+	bool LoadFlag = false;
+	float currentPY;
 	float currentY;
 };
 

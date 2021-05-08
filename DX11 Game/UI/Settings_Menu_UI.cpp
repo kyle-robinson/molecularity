@@ -21,6 +21,10 @@ void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* cont
 	_Contex = contex;
 	_cb_vs_matrix_2d = cb_vs_matrix_2d;
 
+
+
+	
+
 	//font
 	HeadderTextRenderer = make_shared<TextRenderer>("OpenSans_50.spritefont", _Device.Get(), _Contex.Get());
 	PGTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont", _Device.Get(), _Contex.Get());
@@ -46,13 +50,13 @@ void Settings_Menu_UI::Update()
 		//Bakground
 		SettingsBakgtound.Function("Settings\\settingsBack.dds", { _SizeOfScreen.x ,_SizeOfScreen.y+10 }, { 0,0 });
 		//Tab Buttions
-		float PosXBut = 0;
-		string TabNames[4] = { "Genral","Grapics","Sound","Controls" };
-		float posy = _SizeOfScreen.y / _SizeOfScreen.x;
+		float PosXButtion = 0;
+		
+		
 		for (UINT i = 0; i < 4; i++)
 		{
-			SettingsButtions[i].Function(TabNames[i], ButtionTex, { _SizeOfScreen.x/14, _SizeOfScreen.y/14 }, XMFLOAT2{ PosXBut ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::Black, _MouseData);
-			PosXBut += _SizeOfScreen.x / 14;
+			SettingsButtions[i].Function(TabNames[i], ButtionTex, { _SizeOfScreen.x/14, _SizeOfScreen.y/14 }, XMFLOAT2{ PosXButtion ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::Black, _MouseData);
+			PosXButtion += _SizeOfScreen.x / 14;
 			SettingsButtionCount++;
 		}
 
@@ -60,6 +64,7 @@ void Settings_Menu_UI::Update()
 
 		//set tabs
 		SettingsScrollBar.Function({ 30,_SizeOfScreen.y}, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.x * 0.20) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
+
 		if (SettingsButtions[0].GetIsPressed()) {
 			CurrentTab = GenralTab;
 			SettingsScrollBar.setPY(0);
@@ -80,7 +85,12 @@ void Settings_Menu_UI::Update()
 
 		
 
-		currentY = static_cast<float>(_SizeOfScreen.x * 0.20) - SettingsScrollBar.getPY();
+		currentY = (static_cast<float>(_SizeOfScreen.x * 0.20) - SettingsScrollBar.getPY())+20;
+		if (currentPY != SettingsScrollBar.getPY()) {
+			currentPY = SettingsScrollBar.getPY();
+			LoadFlag = false;
+		}
+
 		TabTextPos = { static_cast<float>(_SizeOfScreen.x * 0.01),static_cast<float>(_SizeOfScreen.x * 0.12) };
 		//box for colision 
 		XMFLOAT2 boxPos = { 0,static_cast<float>(_SizeOfScreen.x * 0.20) };
@@ -217,18 +227,16 @@ void Settings_Menu_UI::Update()
 						TextToDraw._Text = setting.Name;
 						PuaseTextPG.push_back(TextToDraw);
 
-
-						string controll = get<string>(setting.Setting);
-						ControllInput[SettingsInputCount].setCurrentText(controll);
-						ControllInput[SettingsInputCount].Function({ static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.07) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, "Resources\\Textures\\Settings\\Input_Yellow.dds", DirectX::Colors::Black, Key, _MouseData);
-						string output = ControllInput[SettingsInputCount].getCurrentText();
-
-						string UpperOut;
-						for (UINT i = 0; i < output.size(); i++) {
-							UpperOut += toupper(output[i]);
+						if (!LoadFlag) {
+							unsigned char* controll = (unsigned char*)get<string>(setting.Setting).c_str();
+							ControllInput[SettingsInputCount].SetKey(*controll);
+							
 						}
-
-						setting.Setting = UpperOut;
+						ControllInput[SettingsInputCount].Function({ static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.07) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, "Resources\\Textures\\Settings\\Input_Yellow.dds", DirectX::Colors::Black, Key, _MouseData);
+						
+						string output;
+						output = ControllInput[SettingsInputCount].getKey();
+						setting.Setting = output;
 						SettingsInputCount++;
 					}
 					currentY += 40;
@@ -236,6 +244,8 @@ void Settings_Menu_UI::Update()
 				}
 
 			}
+			LoadFlag = true;
+			Key = 0;
 			break;
 		}
 
@@ -299,6 +309,7 @@ void Settings_Menu_UI::Update()
 
 			_isSettings = false;
 			CurrentTab = GenralTab;
+			LoadFlag = false;
 			return;
 		}
 		SettingsButtionCount++;

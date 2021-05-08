@@ -84,6 +84,7 @@ void Sound::HandleEvent(Event* event)
 		//controlls 
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 		float soundVol=1.0f;
+		bool MusicOn=false;
 		for (auto& setting : a)
 		{
 			if (setting.Type == JSON::SettingType::SoundType)
@@ -101,6 +102,7 @@ void Sound::HandleEvent(Event* event)
 				}
 				if (setting.Name == "MusicOn") {
 					musicOn = std::get<bool>(setting.Setting);
+					MusicOn= std::get<bool>(setting.Setting);
 					continue;
 				}
 				if (setting.Name == "MusicVolume") {
@@ -120,12 +122,15 @@ void Sound::HandleEvent(Event* event)
 
 		}
 					SetMusicVolume(musicVolume* soundVol);
-					//musicVec set is puased
-					musicVec[0]->setIsPaused(true);
-					musicVec[0]->setIsPaused(false);
+					SetMusicPause(true);
 					SetSoundEffectsVolume(SoundEffectsVolume* soundVol);
-
-
+					
+					if (soundON) {
+						if (musicOn) {
+							SetMusicPause(false);
+							
+						}
+					}
 
 
 

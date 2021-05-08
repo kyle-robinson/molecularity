@@ -42,6 +42,9 @@ public:
 		SOUND_COLLISION
 	};
 
+	void SetMusicPause(bool isPause) { for (int i = 0; i < musicVec.size(); i++) { musicVec[i]->setIsPaused(isPause); } } // Sets the volume level for music
+
+
 	//eventsystem
 	void AddtoEvent();
 	void HandleEvent(Event* event);

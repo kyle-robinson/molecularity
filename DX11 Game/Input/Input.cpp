@@ -77,22 +77,47 @@ void Input::HandleEvent(Event* event)
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 		for (auto& setting : a)
 		{
+			//only for player not debug key changes
 			if (setting.Type == JSON::SettingType::ControllType) {
 				//change controll
 
 				//control map
-				//keybord
+				string key =std::get<string>(setting.Setting).c_str();
 
-				map<string,unsigned char> KeyBindes;
-				//mouse
-
+				//convert to input commands
+				
+				if (key == "SCROLL WHEEL") {
+					MouseBindes[setting.Name+"_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+					MouseBindes[setting.Name+"_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+				}
+				else if (key == "RMB")
+				{
+					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::RPress;
+				}
+				else if (key == "LMB")
+				{
+					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::LPress;
+				}
+				else if (key == "MMB")
+				{
+					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::MPress;
+				}
+				else
+				{
+					unsigned char* valChar= (unsigned char*)key.c_str();
+					KeyBindes[setting.Name]= *valChar;
+				}
+				
 			}
+			//mouse inputs
+				MouseBindes["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+				MouseBindes["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+				MouseBindes["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
 
 		}
+		
 	}
 	break;
-	default:
-		break;
 	}
 }
 
@@ -129,26 +154,26 @@ void Input::UpdateKeyboard( const float dt )
 		{
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
-				if ( keycode == '1' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
-				if ( keycode == '2' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
+				if ( keycode == KeyBindes["Gun_State_One"]) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
+				if ( keycode == KeyBindes["Gun_State_Two"]) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
 			}
 		}
 
 
 		//UI
 		{
-			UIChar = keyboard.ReadChar();
+			UIChar = keycode;
 			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
 
 
-			if (keycode == 'P') {
+			if (keycode == KeyBindes["Pause"]) {
 				//puase game
 				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 			
 			}
-
+			
 		}
-
+		
 	}
 #pragma endregion
 
@@ -172,21 +197,21 @@ void Input::UpdateKeyboard( const float dt )
 		else
 		{
 			static bool jumping = false;
-			if ( keyboard.KeyIsPressed( VK_SPACE ) || jumping )
+			if ( keyboard.KeyIsPressed(KeyBindes["Jump"]) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
 		}
 	
 		// normalize diagonal movement speed
-		if ( keyboard.KeyIsPressed( 'W' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
+		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
-		if ( keyboard.KeyIsPressed( 'S' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
+		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
 
 		// update camera movement
-		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Left"]) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Right"]) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 
 		// set camera speed
 		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
@@ -204,7 +229,7 @@ void Input::UpdateKeyboard( const float dt )
 					alreadyHeld = true;
 
 			// pick-up cube - set position relative to camera.
-			if ( keyboard.KeyIsPressed( 'E' ) && !alreadyHeld &&
+			if ( keyboard.KeyIsPressed(KeyBindes["Action"]) && !alreadyHeld &&
 				 level->GetCube()[i]->GetIsInRange() &&
 				( level->GetCube()[i]->GetIsHovering() ||
 				  level->GetCube()[i]->GetIsHolding() ) )
@@ -286,14 +311,14 @@ void Input::UpdateMouse( const float dt )
 				if ( level->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
 				{
 					// change current id of texture to be used on box
-					if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
+					if ( me.GetType() == MouseBindes["Change_Gun_State_Up"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 3 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
 							level->GetCube()[i]->GetEditableProperties()->GetMaterialID() + 1
 						);
 					}
-					else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
+					else if ( me.GetType() == MouseBindes["Change_Gun_State_Down"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() > 0 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
@@ -302,7 +327,7 @@ void Input::UpdateMouse( const float dt )
 					}
 
 					// update box texture on click while hovering
-					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && level->GetCube()[i]->GetIsHovering() )
+					if ( me.GetType() == MouseBindes["Fire_Tool"] && level->GetCube()[i]->GetIsHovering() )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetBoxType(
 							static_cast<BoxType>( level->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
@@ -315,14 +340,14 @@ void Input::UpdateMouse( const float dt )
 				else if ( level->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
 				{
 					// set size multiplier to be applied to the box
-					if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
+					if ( me.GetType() == MouseBindes["Change_Gun_State_Up"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetSizeID() < 2 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetSizeID(
 							level->GetCube()[i]->GetEditableProperties()->GetSizeID() + 1
 						);
 					}
-					else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
+					else if ( me.GetType() == MouseBindes["Change_Gun_State_Down"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetSizeID() > 0 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetSizeID(
@@ -331,7 +356,7 @@ void Input::UpdateMouse( const float dt )
 					}
 
 					// set the box scale to use based on the option previously selected
-					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && level->GetCube()[i]->GetIsHovering() )
+					if ( me.GetType() == MouseBindes["Fire_Tool"] && level->GetCube()[i]->GetIsHovering() )
 					{
 						switch ( level->GetCube()[i]->GetEditableProperties()->GetSizeID() )
 						{

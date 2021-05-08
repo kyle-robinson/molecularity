@@ -67,7 +67,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		switch ( wParam )
 		{
-		case VK_ESCAPE:
+		case VK_BACK:
 			DestroyWindow( renderWindow.GetHWND() );
 			PostQuitMessage( 0 );
 			return 0;
