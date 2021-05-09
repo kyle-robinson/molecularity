@@ -24,8 +24,8 @@ private:
 	float specularStrength = 0.2f;
 
 	XMFLOAT3 position = { 10.0f, 20.0f, 10.0f };
-	XMFLOAT3 diffuseColor = { 0.4f, 1.0f, 0.1f };
-	XMFLOAT3 specularColor = { 0.4f, 1.0f, 0.1f };
+	XMFLOAT3 diffuseColor = { 1.0f, 1.0f, 1.0f };
+	XMFLOAT3 specularColor = { 1.0f, 1.0f, 1.0f };
 
 	ConstantBuffer<CB_PS_directional> cb_ps_directional;
 };
