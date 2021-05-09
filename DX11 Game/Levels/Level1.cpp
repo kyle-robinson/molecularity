@@ -12,8 +12,6 @@ bool Level1::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			//if ( !room.Initialize( "Resources\\Models\\TestRoom.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			//if ( !room.Initialize( "Resources\\Models\\Flashlight.gbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
 			room.SetInitialPosition( 0.1f, 0.0f, -20.0f );

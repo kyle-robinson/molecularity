@@ -68,7 +68,7 @@ bool LevelContainer::InitializeScene()
 			directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
 			if ( !pointLight.Initialize( *graphics, cb_vs_matrix ) ) return false;
-			pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
+			pointLight.SetInitialPosition( 0.0f, 15.0f, 0.0f );
 			pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
 
 			if ( !spotLight.Initialize( *graphics, cb_vs_matrix ) ) return false;
@@ -207,6 +207,9 @@ void LevelContainer::EndFrame()
 	graphics->RenderSceneToTexture();
 	postProcessing->Bind( *graphics );
 
+	// render text
+	textRenderer->RenderCubeMoveText( *this );
+
 	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
@@ -248,7 +251,7 @@ void LevelContainer::LateUpdate( const float dt )
 			cubes[i]->SetScale( static_cast< float >( cubes[i]->GetEditableProperties()->GetSizeMultiplier() ) );
 
 		// cube range collision check
-		cubes[i]->SetIsInRange( Collisions::CheckCollisionSphere( cameras->GetCamera( cameras->GetCurrentCamera() ), *cubes[i], 5.0f ) );
+		cubes[i]->SetIsInRange( Collisions::CheckCollisionCircle( cameras->GetCamera( cameras->GetCurrentCamera() ), *cubes[i], 5.0f ) );
 
 		// update objects
 		cubes[i]->Update( dt );
