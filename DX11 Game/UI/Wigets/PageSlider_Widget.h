@@ -1,8 +1,11 @@
 #pragma once
+#ifndef PAGESLIDER_WIDGET_H
+#define PAGESLIDER_WIDGET_H
+
 #include "widget.h"
+
 template<typename BarTex,typename SliderTex>
-class PageSlider_Widget :
-    public widget
+class PageSlider_Widget : public widget
 {
 public:
     PageSlider_Widget(){}
@@ -42,8 +45,6 @@ inline bool PageSlider_Widget<BarTex, SliderTex>::INITSprite(ID3D11DeviceContext
 template<typename BarTex, typename SliderTex>
 inline void PageSlider_Widget<BarTex, SliderTex>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix)
 {
-	
-
 	Bar.UpdateTex(Device, _BarColour);
 	Bar.SetScale(_Size.x, _Size.y);
 	Bar.SetInitialPosition(_Pos.x, _Pos.y, 0);
@@ -59,15 +60,12 @@ inline void PageSlider_Widget<BarTex, SliderTex>::Draw(ID3D11DeviceContext* Cont
 	Slider.SetInitialPosition(_Pos.x, _Pos.y + PY, 0);
 	Slider.SetScale(_Size.x, 100);
 
-	cb_ps_scene.data.alphaFactor = _AlfaFactor;
+	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = false;
 	
 	if (!cb_ps_scene.ApplyChanges()) return;
 	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
 	Slider.Draw(WorldOrthoMatrix);
-	
-
-
 }
 
 template<typename BarTex, typename SliderTex>
@@ -89,7 +87,8 @@ inline void PageSlider_Widget<BarTex, SliderTex>::Function(DirectX::XMFLOAT2 siz
 		}
 	}
 
-
 	//return data
 	PagePos=(PY / _Size.y) * 100;
 }
+
+#endif

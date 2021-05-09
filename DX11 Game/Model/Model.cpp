@@ -113,7 +113,7 @@ Mesh Model::ProcessMesh( aiMesh* mesh, const aiScene* scene, const XMMATRIX& tra
 	return Mesh( device, context, vertices, indices, textures, transformMatrix );
 }
 
-TextureStorageType Model::GetTextureStorageType( const aiScene* pScene, aiMaterial* pMaterial, unsigned int index, aiTextureType textureType )
+TextureStorageType Model::GetTextureStorageType( const aiScene* pScene, aiMaterial* pMaterial, uint32_t index, aiTextureType textureType )
 {
 	if ( pMaterial->GetTextureCount( textureType ) == 0 )
 		return TextureStorageType::None;
@@ -156,7 +156,7 @@ std::vector<Texture> Model::LoadMaterialTextures( aiMaterial* pMaterial, aiTextu
 {
 	std::vector<Texture> materialTextures;
 	TextureStorageType storeType = TextureStorageType::Invalid;
-	unsigned int textureCount = pMaterial->GetTextureCount( textureType );
+	uint32_t textureCount = pMaterial->GetTextureCount( textureType );
 
 	if ( textureCount == 0u )
 	{

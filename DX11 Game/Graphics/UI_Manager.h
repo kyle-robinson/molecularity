@@ -1,6 +1,6 @@
 #pragma once
-//#ifndef UI_MANAGER_H
-//#define UI_MANAGER_H
+#ifndef UI_MANAGER_H
+#define UI_MANAGER_H
 
 #include <EventSystem/Listener.h>
 #include <UI/UI.h>
@@ -36,4 +36,4 @@ private:
 	std::map<std::string, std::shared_ptr<UI>> UiList;
 };
 
-//#endif
+#endif

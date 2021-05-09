@@ -1,127 +1,126 @@
 #pragma once
-#include "widget.h"  
+#ifndef ENERGY_BAR_WIDGET_H
+#define ENERGY_BAR_WIDGET_H
+
+#include "widget.h"
+
 /// <summary>
-/// Sets up the ablity to show a data bar 
+/// Sets up the ability to show a data bar.
 /// </summary>
 template<typename BackGroundType, typename BarType, typename FrontType>
 class Energy_Bar_Widget :
-    public widget
+	public widget
 {
 
 public:
-	Energy_Bar_Widget(){}
-    Energy_Bar_Widget(BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction);
+	Energy_Bar_Widget() {}
+	Energy_Bar_Widget( BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction );
 
-	bool INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device,ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d);
+	bool INITSprite( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d );
 	~Energy_Bar_Widget() {}
-  
-    void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix);
-    void Function(BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction);
 
-
+	void Draw( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix );
+	void Function( BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction );
 
 	int GetCurrentPercent() { return CurrentPercent; }
 
 private:
 
-    float currentFraction;
-    int CurrentPercent;
+	float currentFraction;
+	int CurrentPercent;
 
-	//Bakground 
-    Sprite _Background;
-    BackGroundType _TypeBackGround;
-	bool updateTexBackground= true;
+	// Background 
+	Sprite _Background;
+	BackGroundType _TypeBackGround;
+	bool updateTexBackground = true;
 
-	//Moveing bar
-    Sprite Bar;
-    BarType _TypeBar;
-	bool updateTexBar= true;
+	// Moving bar
+	Sprite Bar;
+	BarType _TypeBar;
+	bool updateTexBar = true;
 
-	//Front
-    Sprite Front;
-    FrontType _TypeFront;
-	bool updateTexFront=true;
-
-
+	// Front
+	Sprite Front;
+	FrontType _TypeFront;
+	bool updateTexFront = true;
 };
+
 //functions
 template<typename BackGroundType, typename BarType, typename FrontType>
-inline Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Energy_Bar_Widget(BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction)
+inline Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Energy_Bar_Widget( BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction )
 {
-	Function(TexBackGround, TexBar, TexFront, size, pos, fraction);
+	Function( TexBackGround, TexBar, TexFront, size, pos, fraction );
 }
 
 template<typename BackGroundType, typename BarType, typename FrontType>
-inline bool Energy_Bar_Widget<BackGroundType, BarType, FrontType>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
+inline bool Energy_Bar_Widget<BackGroundType, BarType, FrontType>::INITSprite( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d )
 {
 
-	_Background.Initialize(Device, Contex, 100, 100, _TypeBackGround, cb_vs_matrix_2d);
-	Bar.Initialize(Device, Contex,200, 300, _TypeBar, cb_vs_matrix_2d);
-	Front.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
+	_Background.Initialize( Device, Contex, 100, 100, _TypeBackGround, cb_vs_matrix_2d );
+	Bar.Initialize( Device, Contex, 200, 300, _TypeBar, cb_vs_matrix_2d );
+	Front.Initialize( Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d );
 
 	return true;
 }
 
 template<typename BackGroundType, typename BarType, typename FrontType>
-inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix)
+inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Draw( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix )
 {
-	//bakground
-	if (updateTexBackground) {
-		_Background.UpdateTex(Device, _TypeBackGround);
+	// background
+	if ( updateTexBackground ) {
+		_Background.UpdateTex( Device, _TypeBackGround );
 	}
-	_Background.SetInitialPosition(_Pos.x, _Pos.y, 0);
-	_Background.SetScale(_Size.x, _Size.y,0 );
-	
+	_Background.SetInitialPosition( _Pos.x, _Pos.y, 0 );
+	_Background.SetScale( _Size.x, _Size.y, 0 );
 
 	cb_ps_scene.data.alphaFactor = 0.5f;
 	cb_ps_scene.data.useTexture = false;
 
-	if (!cb_ps_scene.ApplyChanges()) return;
-	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
-	_Background.Draw(WorldOrthoMatrix);
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	Contex->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+	_Background.Draw( WorldOrthoMatrix );
 
-	//Bar
-	if (updateTexBar) {
-		Bar.UpdateTex(Device, _TypeBar);
+	// Bar
+	if ( updateTexBar ) {
+		Bar.UpdateTex( Device, _TypeBar );
 	}
-	Bar.SetInitialPosition(_Pos.x, _Pos.y, 0);
-	Bar.SetScale(_Size.x * currentFraction, _Size.y, 0);
+	Bar.SetInitialPosition( _Pos.x, _Pos.y, 0 );
+	Bar.SetScale( _Size.x * currentFraction, _Size.y, 0 );
 	cb_ps_scene.data.alphaFactor = 1.0f;
 	cb_ps_scene.data.useTexture = false;
 
-	if (!cb_ps_scene.ApplyChanges()) return;
-	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
-	Bar.Draw(WorldOrthoMatrix);
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	Contex->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+	Bar.Draw( WorldOrthoMatrix );
 
-	//Front
-	if (_TypeFront!="") {
-		if (updateTexFront){
-			Front.UpdateTex(Device, _TypeFront);
+	// Front
+	if ( _TypeFront != "" ) {
+		if ( updateTexFront ) {
+			Front.UpdateTex( Device, _TypeFront );
 		}
-		Front.SetInitialPosition(_Pos.x, _Pos.y, 0);
-		Front.SetScale(_Size.x+15, _Size.y, 0);
+		Front.SetInitialPosition( _Pos.x, _Pos.y, 0 );
+		Front.SetScale( _Size.x + 15, _Size.y, 0 );
 
 		cb_ps_scene.data.alphaFactor = 1.0f;
 		cb_ps_scene.data.useTexture = true;
 
-
-		if (!cb_ps_scene.ApplyChanges()) return;
-		Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
-		Front.Draw(WorldOrthoMatrix);
+		if ( !cb_ps_scene.ApplyChanges() ) return;
+		Contex->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+		Front.Draw( WorldOrthoMatrix );
 	}
 }
 
 template<typename BackGroundType, typename BarType, typename FrontType>
-inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Function(BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction)
+inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Function( BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction )
 {
-	if (_TypeBackGround== TexBackGround) {
+	if ( _TypeBackGround == TexBackGround ) {
 		updateTexBackground = false;
 	}
 	else {
 		_TypeBackGround = TexBackGround;
 		updateTexBackground = true;
 	}
-	if (_TypeBar == TexBar)
+	if ( _TypeBar == TexBar )
 	{
 		updateTexBar = false;
 	}
@@ -131,11 +130,11 @@ inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Function(Back
 		updateTexBar = true;
 	}
 
-	if (_TypeFront == TexFront)
+	if ( _TypeFront == TexFront )
 	{
 		updateTexFront = false;
 	}
-	else 
+	else
 	{
 		_TypeFront = TexFront;
 		updateTexFront = true;
@@ -146,5 +145,6 @@ inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Function(Back
 
 	currentFraction = fraction / 100;
 	CurrentPercent = fraction;
-
 }
+
+#endif

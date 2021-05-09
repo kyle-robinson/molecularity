@@ -118,7 +118,7 @@ void ImGuiManager::SpawnGraphicsWindow( Graphics& gfx ) const noexcept
         static const char* samplerList[]{ "Anisotropic", "Bilinear", "Point Sampling" };
         if ( ImGui::BeginCombo( "Sampler", previewValueSampler.c_str() ) )
         {
-            for ( unsigned int i = 0; i < IM_ARRAYSIZE( samplerList ); i++ )
+            for ( uint32_t i = 0; i < IM_ARRAYSIZE( samplerList ); i++ )
             {
                 const bool isSelected = i == activeSampler;
                 if ( ImGui::Selectable( samplerList[i], isSelected ) )
