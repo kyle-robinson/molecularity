@@ -13,8 +13,8 @@
 class Fog : public GraphicsResource
 {
 public:
-	Fog( GraphicsContainer& gfx );
-	void UpdateConstantBuffer( GraphicsContainer& gfx ) noexcept;
+	Fog( Graphics& gfx );
+	void UpdateConstantBuffer( Graphics& gfx ) noexcept;
 	void SpawnControlWindow();
 private:
 	float end;

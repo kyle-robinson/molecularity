@@ -32,6 +32,10 @@ public:
 	aiTextureType GetType();
 	ID3D11ShaderResourceView* GetTextureResourceView();
 	ID3D11ShaderResourceView** GetTextureResourceViewAddress();
+
+	void UpdateTexture(ID3D11Device* device, std::string file);
+	void UpdateTexture(ID3D11Device* device, Colour& file);
+
 private:
 	void Initialize1x1ColourTexture( ID3D11Device* device, const Colour& colour, aiTextureType type );
 	void InitializeColourTexture( ID3D11Device* device, const Colour* colorData, UINT width, UINT height, aiTextureType type );

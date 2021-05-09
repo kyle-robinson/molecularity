@@ -16,10 +16,10 @@ class RenderableGameObject;
 class StencilOutline : public GraphicsResource
 {
 public:
-	StencilOutline( GraphicsContainer& gfx );
-	void DrawWithOutline( GraphicsContainer& gfx, Cube& cube, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
+	StencilOutline( Graphics& gfx );
+	void DrawWithOutline( Graphics& gfx, Cube& cube, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
 		ConstantBuffer<CB_PS_point>& cb_ps_point, ID3D11ShaderResourceView* texture );
-	void DrawWithOutline( GraphicsContainer& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point );
+	void DrawWithOutline( Graphics& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point );
 	void SpawnControlWindow();
 
 	void SetOutlineScale( float outlineScale ) noexcept { scale = outlineScale; }

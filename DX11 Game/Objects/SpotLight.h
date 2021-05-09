@@ -13,8 +13,8 @@ class Camera;
 class SpotLight : public Light, public GraphicsResource
 {
 public:
-	bool Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
-	void UpdateConstantBuffer( GraphicsContainer& gfx, std::unique_ptr<Camera>& camera );
+	bool Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix );
+	void UpdateConstantBuffer( Graphics& gfx, std::unique_ptr<Camera>& camera );
 	void UpdateModelPosition( std::unique_ptr<Camera>& camera );
 	void SpawnControlWindow();
 private:

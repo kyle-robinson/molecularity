@@ -8,14 +8,14 @@
 namespace Bind
 {
 	/// <summary>
-	/// Creates a rasterizer bindable, referenced in GraphicsContainer.h
+	/// Creates a rasterizer bindable, referenced in Graphics.h
 	/// Constructor takes 'bool' values to modify the CULL and FILL modes.
 	/// Call "Bind( gfx )" on a class object to bind it to the render pipeline.
 	/// </summary>
 	class Rasterizer : public GraphicsResource
 	{
 	public:
-		Rasterizer( GraphicsContainer& gfx, bool isSolid, bool isTwoSided )
+		Rasterizer( Graphics& gfx, bool isSolid, bool isTwoSided )
 			: isSolid( isSolid ), isTwoSided( isTwoSided )
 		{
 			try
@@ -33,7 +33,7 @@ namespace Bind
 				return;
 			}
 		}
-		Rasterizer( GraphicsContainer& gfx, ID3D11RasterizerState* pRasterizer, bool isSolid, bool isTwoSided )
+		Rasterizer( Graphics& gfx, ID3D11RasterizerState* pRasterizer, bool isSolid, bool isTwoSided )
 			: isSolid( isSolid ), isTwoSided( isTwoSided )
 		{
 			try
@@ -51,11 +51,11 @@ namespace Bind
 				return;
 			}
 		}
-		void Bind( GraphicsContainer& gfx ) noexcept override
+		void Bind( Graphics& gfx ) noexcept override
 		{
 			GetContext( gfx )->RSSetState( pRasterizer.Get() );
 		}
-		static void DrawSolid( GraphicsContainer& gfx, UINT indexCount ) noexcept
+		static void DrawSolid( Graphics& gfx, UINT indexCount ) noexcept
 		{
 			Microsoft::WRL::ComPtr<ID3D11RasterizerState> pRasterizer_Solid;
 			GetContext( gfx )->RSSetState( pRasterizer_Solid.Get() );

@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Physics;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Levels;$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Physics;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility\Logging;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\lib;$(SolutionDir)External\lib\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -220,9 +220,6 @@
     <ClCompile Include="Graphics\Graphics.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Graphics\GraphicsContainer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Graphics\ImGuiManager.cpp" />
     <ClCompile Include="Graphics\MultiViewport.cpp" />
     <ClCompile Include="Graphics\PostProcessing.cpp" />
@@ -233,12 +230,17 @@
     <ClCompile Include="Graphics\TextRenderer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Graphics\UI_Manager.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Input\MousePicking.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Levels\Level1.cpp" />
+    <ClCompile Include="Levels\LevelContainer.cpp" />
+    <ClCompile Include="Levels\Level2.cpp" />
+    <ClCompile Include="Levels\LevelStateMachine.cpp" />
     <ClCompile Include="Model\Colour.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -291,20 +293,34 @@
     <ClCompile Include="Objects\Sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Physics\PhysicsModel.cpp" />
-    <ClCompile Include="Utility\Collisions.cpp">
+    <ClCompile Include="Physics\Collisions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Utility\ErrorLogger.cpp" />
+    <ClCompile Include="Physics\PhysicsModel.cpp" />
+    <ClCompile Include="UI\HUD_UI.cpp" />
+    <ClCompile Include="UI\Main_Menu_UI.cpp" />
+    <ClCompile Include="UI\Pause.cpp" />
+    <ClCompile Include="UI\Settings_Menu_UI.cpp" />
+    <ClCompile Include="UI\UI.cpp" />
+    <ClCompile Include="UI\Wigets\Buttion_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\ColourBlock.cpp" />
+    <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\DropDown_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\Immage_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\Input_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp" />
+    <ClCompile Include="UI\Wigets\widget.cpp" />
     <ClCompile Include="Utility\EventSystem\EventSystem.cpp" />
     <ClCompile Include="Utility\JSON_Helper.cpp" />
+    <ClCompile Include="Utility\Logging\ErrorLogger.cpp" />
+    <ClCompile Include="Utility\Logging\StringConverter.cpp" />
+    <ClCompile Include="Utility\Logging\Timer.cpp" />
     <ClCompile Include="Utility\Sound.cpp" />
     <ClCompile Include="Utility\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Utility\StringConverter.cpp" />
-    <ClCompile Include="Utility\Timer.cpp" />
     <ClCompile Include="Window\RenderWindow.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -333,7 +349,6 @@
     <ClInclude Include="Graphics\DepthStencil.h" />
     <ClInclude Include="Graphics\Fog.h" />
     <ClInclude Include="Graphics\Graphics.h" />
-    <ClInclude Include="Graphics\GraphicsContainer.h" />
     <ClInclude Include="Graphics\GraphicsResource.h" />
     <ClInclude Include="Graphics\ImGuiManager.h" />
     <ClInclude Include="Graphics\IndexBuffer.h" />
@@ -352,6 +367,7 @@
     <ClInclude Include="Graphics\StencilOutline.h" />
     <ClInclude Include="Graphics\SwapChain.h" />
     <ClInclude Include="Graphics\TextRenderer.h" />
+    <ClInclude Include="Graphics\UI_Manager.h" />
     <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Graphics\VertexType.h" />
     <ClInclude Include="Graphics\Vertices.h">
@@ -364,6 +380,10 @@
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
     <ClInclude Include="Input\MousePicking.h" />
+    <ClInclude Include="Levels\Level1.h" />
+    <ClInclude Include="Levels\LevelContainer.h" />
+    <ClInclude Include="Levels\Level2.h" />
+    <ClInclude Include="Levels\LevelStateMachine.h" />
     <ClInclude Include="Model\Colour.h" />
     <ClInclude Include="Model\Mesh.h" />
     <ClInclude Include="Model\Model.h" />
@@ -384,20 +404,35 @@
     <ClInclude Include="Objects\RenderableGameObject.h" />
     <ClInclude Include="Objects\SpotLight.h" />
     <ClInclude Include="Objects\Sprite.h" />
+    <ClInclude Include="Physics\Billboard.h" />
+    <ClInclude Include="Physics\Collisions.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
-    <ClInclude Include="Utility\Billboard.h" />
-    <ClInclude Include="Utility\Collisions.h" />
-    <ClInclude Include="Utility\COMException.h" />
-    <ClInclude Include="Utility\ErrorLogger.h" />
+    <ClInclude Include="UI\HUD_UI.h" />
+    <ClInclude Include="UI\Main_Menu_UI.h" />
+    <ClInclude Include="UI\Pause.h" />
+    <ClInclude Include="UI\Settings_Menu_UI.h" />
+    <ClInclude Include="UI\UI.h" />
+    <ClInclude Include="UI\WidgetIncludes.h" />
+    <ClInclude Include="UI\Wigets\Buttion_Widget.h" />
+    <ClInclude Include="UI\Wigets\ColourBlock.h" />
+    <ClInclude Include="UI\Wigets\DataSlider_Widget.h" />
+    <ClInclude Include="UI\Wigets\DropDown_Widget.h" />
+    <ClInclude Include="UI\Wigets\Energy_Bar_Widget.h" />
+    <ClInclude Include="UI\Wigets\Immage_Widget.h" />
+    <ClInclude Include="UI\Wigets\Input_Widget.h" />
+    <ClInclude Include="UI\Wigets\PageSlider_Widget.h" />
+    <ClInclude Include="UI\Wigets\widget.h" />
     <ClInclude Include="Utility\EventSystem\Event.h" />
     <ClInclude Include="Utility\EventSystem\EventSystem.h" />
     <ClInclude Include="Utility\EventSystem\Listener.h" />
     <ClInclude Include="Utility\JSON_Helper.h" />
+    <ClInclude Include="Utility\Logging\COMException.h" />
+    <ClInclude Include="Utility\Logging\ErrorLogger.h" />
+    <ClInclude Include="Utility\Logging\StringConverter.h" />
+    <ClInclude Include="Utility\Logging\Timer.h" />
     <ClInclude Include="Utility\Sound.h" />
     <ClInclude Include="Utility\stdafx.h" />
-    <ClInclude Include="Utility\StringConverter.h" />
-    <ClInclude Include="Utility\Timer.h" />
     <ClInclude Include="Window\RenderWindow.h" />
     <ClInclude Include="Window\WindowContainer.h" />
   </ItemGroup>

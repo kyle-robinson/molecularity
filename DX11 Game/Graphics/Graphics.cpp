@@ -1,105 +1,51 @@
 #include "Graphics.h"
-#include "Collisions.h"
+#include "Bindables.h"
 
-// bindables
-#include "Rasterizer.h"
-#include "DepthStencil.h"
-#include "RenderTarget.h"
-
-// systems
-#include "Fog.h"
-#include "TextRenderer.h"
-#include "PostProcessing.h"
-#include "StencilOutline.h"
-
-bool Graphics::Initialize( HWND hWnd, CameraController* camera, int width, int height )
+bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
-	if ( !InitializeGraphics( hWnd, width, height ) ) return false;
-	imgui.Initialize( hWnd, device.Get(), context.Get() );
-	if ( !InitializeScene() ) return false;
-	this->cameras = camera;
+	windowWidth = width;
+	windowHeight = height;
+
+	if ( !InitializeDirectX( hWnd ) ) return false;
+	if ( !InitializeShaders() ) return false;
+	if ( !InitializeRTT() ) return false;
 
 	return true;
 }
 
-bool Graphics::InitializeScene()
+bool Graphics::InitializeDirectX( HWND hWnd )
 {
 	try
 	{
-		// DRAWABLES
-		{
-			// models
-			if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
-			hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
+		// pipeline - main components
+		swapChain = std::make_shared<Bind::SwapChain>( *this, context.GetAddressOf(), device.GetAddressOf(), hWnd );
+		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
+		blender = std::make_shared<Bind::Blender>( *this );
+		
+		// render target - two in use to allow for RTT
+		backBuffer = std::make_shared<Bind::RenderTarget>( *this, swapChain->GetSwapChain() );
+		renderTarget = std::make_shared<Bind::RenderTarget>( *this );
 
-			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
-			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
+		// stencils - for outlining models
+		stencils.emplace( "Off", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Off ) );
+        stencils.emplace( "Mask", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Mask ) );
+        stencils.emplace( "Write", std::make_shared<Bind::Stencil>( *this, Bind::Stencil::Mode::Write ) );
 
-			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", device.Get(), context.Get(), cb_vs_matrix ) ) return false;
-			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 15.0f );
-			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
+		// rasterizers - solid/wireframe && skysphere specific options
+		rasterizers.emplace( "Solid", std::make_shared<Bind::Rasterizer>( *this, true, false ) );
+        rasterizers.emplace( "Skybox", std::make_shared<Bind::Rasterizer>( *this, true, true ) );
+        rasterizers.emplace( "Wireframe", std::make_shared<Bind::Rasterizer>( *this, false, true ) );
 
-			// lights
-			if ( !directionalLight.Initialize( *this, cb_vs_matrix ) ) return false;
-			directionalLight.SetInitialPosition( 10.0f, 20.0f, 10.0f );
-			directionalLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
-			
-			if ( !pointLight.Initialize( *this, cb_vs_matrix ) ) return false;
-			pointLight.SetInitialPosition( -5.0f, 9.0f, -10.0f );
-			pointLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
+		// samplers - point (low quality) && anisotropic (high quality)
+        samplers.emplace( "Anisotropic", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Anisotropic ) );
+        samplers.emplace( "Bilinear", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Bilinear ) );
+        samplers.emplace( "Point", std::make_shared<Bind::Sampler>( *this, Bind::Sampler::Type::Point ) );
 
-			if ( !spotLight.Initialize( *this, cb_vs_matrix ) ) return false;
-			spotLight.SetInitialScale( 0.01f, 0.01f, 0.01f );
+		// viewports - main (default camera) && sub (static camera)
+		viewports.emplace( "Main", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Main ) );
+		viewports.emplace( "Sub", std::make_shared<Bind::Viewport>( *this, Bind::Viewport::Type::Sub ) );
 
-			// primitives
-			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-			{
-				std::shared_ptr<Cube> cube = std::make_shared<Cube>();
-				if ( !cube->Initialize( context.Get(), device.Get() ) ) return false;
-				
-				float xPos = 2.5f;
-				if ( i % 2 == 0 ) xPos = -xPos;
-				cube->SetInitialPosition( xPos, 0.0f, -6.0f );
-
-				cubes.push_back( std::move( cube ) );
-			}
-
-			if ( !simpleQuad.Initialize( context.Get(), device.Get() ) ) return false;
-			simpleQuad.SetInitialPosition( 0.0f, 5.0f, 5.0f );
-			simpleQuad.SetInitialRotation( simpleQuad.GetRotationFloat3().x + XM_PI, simpleQuad.GetRotationFloat3().y + XM_PI, simpleQuad.GetRotationFloat3().z );
-
-			// sprites
-			if ( !crosshair.Initialize( device.Get(), context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
-			crosshair.SetInitialPosition( GetWidth() / 2 - crosshair.GetWidth() / 2, GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
-		}
-
-		// SYSTEMS
-		{
-			postProcessing = std::make_shared<PostProcessing>( *this );
-			stencilOutline = std::make_shared<StencilOutline>( *this );
-			textRenderer = std::make_shared<TextRenderer>( *this );
-			multiViewport = std::make_shared<MultiViewport>();
-			fogSystem = std::make_shared<Fog>( *this );
-		}
-
-		// TEXTURES
-		{
-			HRESULT hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures[BoxType::Default].GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures[BoxType::Bounce].GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures[BoxType::Arrow].GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures[BoxType::TNT].GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall.jpg", nullptr, brickwallTexture.GetAddressOf() );
-			hr = CreateWICTextureFromFile( device.Get(), L"Resources\\Textures\\brickwall_normal.jpg", nullptr, brickwallNormalTexture.GetAddressOf() );
-			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
-		}
-
-		// CONSTANT BUFFERS
-		{
-			HRESULT hr = cb_vs_matrix_2d.Initialize( device.Get(), context.Get() );
-			hr = cb_vs_matrix.Initialize( device.Get(), context.Get() );
-			hr = cb_ps_scene.Initialize( device.Get(), context.Get() );
-			COM_ERROR_IF_FAILED( hr, "Failed to initialize constant buffer!" );
-		}
+		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	}
 	catch ( COMException& exception )
 	{
@@ -109,156 +55,95 @@ bool Graphics::InitializeScene()
 	return true;
 }
 
-// RENDER PIPELINE
-void Graphics::BeginFrame()
+bool Graphics::InitializeShaders()
 {
-	// setup viewports and pipeline state
-	if ( multiViewport->IsUsingSub() )
-		ClearScene();
-	UpdateRenderState();
-	multiViewport->Update( *this );
+	try
+	{
+		// Models
+		HRESULT hr = vertexShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx",
+			Layout::layoutPosTexNrm, ARRAYSIZE( Layout::layoutPosTexNrm ) );
+	    hr = pixelShader_light.Initialize( device, L"Resources\\Shaders\\Model_Nrm.fx" );
+		hr = pixelShader_noLight.Initialize( device, L"Resources\\Shaders\\Model_NoNrm.fx" );
+		COM_ERROR_IF_FAILED( hr, "Failed to create 'Light' shaders!" );
 
-	// update constant buffers
-	fogSystem->UpdateConstantBuffer( *this );
-	
-	cb_ps_scene.data.useNormalMap = FALSE;
-	cb_ps_scene.data.useTexture = useTexture;
-	cb_ps_scene.data.alphaFactor = alphaFactor;
-	if ( !cb_ps_scene.ApplyChanges() ) return;
-	context->PSSetConstantBuffers( 2u, 1u, cb_ps_scene.GetAddressOf() );
+		// Sprites
+		hr = vertexShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx",
+			Layout::layoutPosTex, ARRAYSIZE( Layout::layoutPosTex ) );
+		hr = pixelShader_2D.Initialize( device, L"Resources\\Shaders\\Sprite.fx" );
+		hr = pixelShader_2D_discard.Initialize( device, L"Resources\\Shaders\\Sprite_Discard.fx" );
+        COM_ERROR_IF_FAILED( hr, "Failed to create 'Sprite' shaders!" );
 
-	pointLight.UpdateConstantBuffer( *this );
-	directionalLight.UpdateConstantBuffer( *this );
-	spotLight.UpdateConstantBuffer( *this, cameras->GetCamera( JSON::CameraType::Default ) );
-
-	// bind camera matrices
-	Model::BindMatrices( context.Get(), cb_vs_matrix, cameras->GetCamera( cameras->GetCurrentCamera() ) );
+		// Post-Processing
+		hr = vertexShader_full.Initialize( device, L"Resources\\Shaders\\Fullscreen.fx",
+			Layout::layoutPos, ARRAYSIZE( Layout::layoutPos ) );
+		hr = pixelShader_full.Initialize( device, L"Resources\\Shaders\\Fullscreen.fx" );
+		COM_ERROR_IF_FAILED( hr, "Failed to create 'Fullscreen' shaders!" );
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
+	}
+	return true;
 }
 
-void Graphics::RenderFrame()
+bool Graphics::InitializeRTT()
 {
-	// SKYSPHERE
+	if ( !fullscreen.Initialize( device.Get() ) ) return false;
+
+	try
 	{
-		Shaders::BindShaders( context.Get(), vertexShader_light, pixelShader_noLight );
-		GetRasterizer( "Skybox" )->Bind( *this );
-		skysphere.Draw();
-		GetRasterizer( rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *this );
+		HRESULT hr = cb_vs_fullscreen.Initialize( device.Get(), context.Get() );
+		COM_ERROR_IF_FAILED( hr, "Failed to initialize RTT quad!" );
+	}
+	catch ( COMException& exception )
+	{
+		ErrorLogger::Log( exception );
+		return false;
 	}
 
-	// LIGHTS
-	{
-		// w/out normals
-		pointLight.Draw();
-		directionalLight.Draw();
-
-		// w/ normals
-		context->PSSetShader( pixelShader_light.GetShader(), NULL, 0 );
-		spotLight.Draw();
-	}
-
-	// DRAWABLES
-	{
-		hubRoom.Draw();
-		pressurePlate.Draw();
-
-		// w/ normal maps
-		simpleQuad.Draw( cb_vs_matrix, cb_ps_scene, brickwallTexture.Get(), brickwallNormalTexture.Get() );
-
-		// w/ stencils
-		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-		{
-			if ( cubes[i]->GetIsHovering() )
-			{
-				stencilOutline->DrawWithOutline( *this, *cubes[i], cb_vs_matrix,
-					pointLight.GetConstantBuffer(), boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
-			}
-			else
-			{
-				cubes[i]->Draw( cb_vs_matrix, boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
-			}
-		}
-	}
-
-	// SPRITES
-	{
-		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
-		{
-			Shaders::BindShaders( context.Get(), vertexShader_2D, pixelShader_2D );
-			cb_ps_scene.data.useTexture = TRUE;
-			if ( !cb_ps_scene.ApplyChanges() ) return;
-			context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-			crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
-		}
-	}
+	return true;
 }
 
-void Graphics::EndFrame()
+void Graphics::ClearScene()
 {
-	// setup RTT and update post-processing
-	RenderSceneToTexture();
-	postProcessing->Bind( *this );
-
-	// update text rendering
-	textRenderer->RenderCubeMoveText( *this );
-	textRenderer->RenderMultiToolText( *this );
-	textRenderer->RenderCameraText( *this );
-
-	// spawn imgui windows
-	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
-	{
-		imgui.BeginRender();
-		imgui.SpawnInstructionWindow();
-		imgui.SpawnGraphicsWindow( *this );
-		imgui.SpawnPerformanceWindow();
-		directionalLight.SpawnControlWindow();
-		pointLight.SpawnControlWindow();
-		spotLight.SpawnControlWindow();
-		fogSystem->SpawnControlWindow();
-		stencilOutline->SpawnControlWindow();
-		postProcessing->SpawnControlWindow();
-		imgui.EndRender();
-	}
-
-	PresentScene();
+	// clear render target/depth stencil
+	renderTarget->BindAsTexture( *this, depthStencil.get(), clearColor );
+    depthStencil->ClearDepthStencil( *this );
 }
 
-void Graphics::Update( const float dt )
+void Graphics::UpdateRenderState()
 {
-	//pass dt
-	imgui.PassDeltaTime(dt);
-	
-	// update lights/skysphere
-	pointLight.SetPosition( pointLight.GetLightPosition() );
-	directionalLight.SetPosition( directionalLight.GetLightPosition() );
-	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );
+	samplers[samplerToUse]->Bind( *this );
+	stencils["Off"]->Bind( *this );
+	blender->Bind( *this );
+}
 
-	// camera world collisions. Will be player object collisions in the future and ideally not here
-	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
-		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
+void Graphics::RenderSceneToTexture()
+{
+	// bind new render target
+	backBuffer->BindAsBuffer( *this, clearColor );
 
-	// update cubes
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	// render fullscreen texture to new render target
+	Shaders::BindShaders( context.Get(), vertexShader_full, pixelShader_full );
+	fullscreen.SetupBuffers( context.Get(), cb_vs_fullscreen, multiView );
+	context->PSSetShaderResources( 0u, 1u, renderTarget->GetShaderResourceViewPtr() );
+	Bind::Rasterizer::DrawSolid( *this, fullscreen.ib_full.IndexCount() ); // always draw as solid
+}
+
+void Graphics::PresentScene()
+{
+	// unbind render target
+	renderTarget->BindAsNull( *this );
+	backBuffer->BindAsNull( *this );
+
+	// display frame
+	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
+	if ( FAILED( hr ) )
 	{
-		// update cube scale multiplier
-		if ( cubes[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
-			cubes[i]->SetScale( static_cast<float>( cubes[i]->GetEditableProperties()->GetSizeMultiplier() ) );
-
-		// cube range collision check
-		cubes[i]->SetIsInRange( Collisions::CheckCollisionSphere( cameras->GetCamera( cameras->GetCurrentCamera() ), *cubes[i], 5.0f ) );
-
-		// update objects
-		cubes[i]->Update( dt );
+		hr == DXGI_ERROR_DEVICE_REMOVED ?
+            ErrorLogger::Log( device->GetDeviceRemovedReason(), "Swap Chain. Graphics device removed!" ) :
+            ErrorLogger::Log( hr, "Swap Chain failed to render frame!" );
+		exit( -1 );
 	}
-
-	// update collisions
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-	{
-		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
-		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
-			if ( i != j )
-				cubes[i]->CheckCollisionAABB( cubes[j], dt );
-	}
-
-	// set position of spot light model
-	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
 }

@@ -4,8 +4,10 @@
 
 #include "Input.h"
 #include "Timer.h"
-#include "Sound.h"
-#include "CameraController.h"
+#include "ImGuiManager.h"
+
+#include "Level1.h"
+#include "Level2.h"
 
 /// <summary>
 /// Calls functions which initialize the window and main graphics components.
@@ -29,7 +31,15 @@ private:
 	Timer timer;
 	Sound sound;
 	Graphics gfx;
+	ImGuiManager imgui;
 	CameraController cameras;
+	
+	// Levels
+	uint32_t level1_ID;
+	uint32_t level2_ID;
+	std::shared_ptr<Level1> level1;
+	std::shared_ptr<Level2> level2;
+	LevelStateMachine stateMachine;
 };
 
 #endif

@@ -17,6 +17,9 @@ public:
 	LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 	void EnableCursor()noexcept;
 	void DisableCursor()noexcept;
+
+
+
 protected:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;

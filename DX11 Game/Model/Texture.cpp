@@ -61,6 +61,41 @@ ID3D11ShaderResourceView** Texture::GetTextureResourceViewAddress()
 	return textureView.GetAddressOf();
 }
 
+void Texture::UpdateTexture(ID3D11Device* device, std::string file)
+{
+
+	if(texture)texture->Release();
+	if(textureView)textureView->Release();
+	if (StringConverter::GetFileExtension(file) == "dds")
+	{
+		HRESULT hr = DirectX::CreateDDSTextureFromFile(device,
+			StringConverter::StringToWide(file).c_str(),
+			texture.GetAddressOf(),
+			textureView.GetAddressOf());
+		if (FAILED(hr))
+			Initialize1x1ColourTexture(device, Colours::UnloadedTextureColour, type);
+		return;
+	}
+	else
+	{
+		HRESULT hr = DirectX::CreateWICTextureFromFile(device,
+			StringConverter::StringToWide(file).c_str(),
+			texture.GetAddressOf(),
+			textureView.GetAddressOf());
+		if (FAILED(hr))
+			Initialize1x1ColourTexture(device, Colours::UnloadedTextureColour, type);
+
+	}
+}
+
+void Texture::UpdateTexture(ID3D11Device* device, Colour& file)
+{
+	if (texture)texture->Release();
+	if (textureView)textureView->Release();
+
+	Initialize1x1ColourTexture(device, file, aiTextureType_DIFFUSE);
+}
+
 void Texture::Initialize1x1ColourTexture( ID3D11Device* device, const Colour& color, aiTextureType type )
 {
 	InitializeColourTexture( device, &color, 1, 1, type );

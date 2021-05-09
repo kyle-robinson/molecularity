@@ -4,7 +4,7 @@
 
 // "Disco Ball" (https://skfb.ly/6C9ET) by mozillareality is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-bool PointLight::Initialize( GraphicsContainer& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
+bool PointLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
 	{
@@ -62,7 +62,7 @@ void PointLight::SpawnControlWindow()
 	ImGui::End();
 }
 
-void PointLight::UpdateConstantBuffer( GraphicsContainer& gfx )
+void PointLight::UpdateConstantBuffer( Graphics& gfx )
 {
 	cb_ps_point.data.pointAmbientColor = ambientColor;
 	cb_ps_point.data.pointAmbientStrength = ambientStrength;
