@@ -12,14 +12,14 @@ bool Level1::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			//if ( !hubRoom.Initialize( "Resources\\Models\\TestRoom.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			//if ( !hubRoom.Initialize( "Resources\\Models\\Flashlight.gbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
-			hubRoom.SetInitialPosition( 0.0f, 0.0f, 0.0f );
+			//if ( !room.Initialize( "Resources\\Models\\TestRoom.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			//if ( !room.Initialize( "Resources\\Models\\Flashlight.gbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
+			room.SetInitialPosition( 0.1f, 0.0f, -20.0f );
 
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 15.0f );
+			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 45.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
 		}
 	}
@@ -59,7 +59,9 @@ void Level1::RenderFrame()
 
 	// DRAWABLES
 	{
-		hubRoom.Draw();
+		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
+		room.Draw();
+		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 		pressurePlate.Draw();
 
 		// render objects (these are objects that are found in each level)
@@ -83,8 +85,15 @@ void Level1::Update( const float dt )
 	LevelContainer::Update( dt );
 	
 	// camera world collisions. Will be player object collisions in the future and ideally not here
-	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
-		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
+	Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
+
+	// adjust pressure plate x-position over time
+	static float offset = 0.1f;
+	if ( pressurePlate.GetPositionFloat3().x > 30.0f )
+		offset = -offset;
+	else if ( pressurePlate.GetPositionFloat3().x < -30.0f )
+		offset = 0.1f;
+	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
 
 	// update collisions w pressure plate
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )

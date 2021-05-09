@@ -56,9 +56,9 @@ bool LevelContainer::InitializeScene()
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
 
 			// security camera
-			if ( !securityCamera.Initialize( "Resources\\Models\\SecurityCam.FBX", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			securityCamera.SetInitialPosition( 0.0f, 15.0f, 15.0f );
-			securityCamera.SetInitialScale( 0.2f, 0.2f, 0.2f );
+			//if ( !securityCamera.Initialize( "Resources\\Models\\SecurityCam.FBX", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			//securityCamera.SetInitialPosition( 0.0f, 15.0f, 15.0f );
+			//securityCamera.SetInitialScale( 1.0f, 1.0f, 1.0f );
 		}
 
 		// LIGHTS
@@ -166,29 +166,35 @@ void LevelContainer::RenderFrameEarly()
 		// w/out normals
 		pointLight.Draw();
 		directionalLight.Draw();
-
-		// w/ normals
 		graphics->context->PSSetShader( graphics->pixelShader_light.GetShader(), NULL, 0 );
-		spotLight.Draw();
 	}
 }
 
 void LevelContainer::RenderFrame()
 {
-	// SECURITY CAMERA
-	securityCamera.Draw();
-
-	// CUBES
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	// CYBERGUN / SPOTLIGHT
 	{
-		if ( cubes[i]->GetIsHovering() )
+		// w/ normals
+		GetStencilOutline()->DrawWithOutline( *graphics, spotLight, pointLight.GetConstantBuffer() );
+	}
+
+	// DRAWABLES
+	{
+		// SECURITY CAMERA
+		//securityCamera.Draw();
+
+		// CUBES
+		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 		{
-			GetStencilOutline()->DrawWithOutline( *graphics, *cubes[i], cb_vs_matrix,
-				pointLight.GetConstantBuffer(), boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
-		}
-		else
-		{
-			cubes[i]->Draw( cb_vs_matrix, boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
+			if ( cubes[i]->GetIsHovering() )
+			{
+				GetStencilOutline()->DrawWithOutline( *graphics, *cubes[i], cb_vs_matrix,
+					pointLight.GetConstantBuffer(), boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
+			}
+			else
+			{
+				cubes[i]->Draw( cb_vs_matrix, boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
+			}
 		}
 	}
 }
@@ -249,8 +255,10 @@ void LevelContainer::LateUpdate( const float dt )
 	}
 
 	// set rotation of security camera
-	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
-	securityCamera.SetRotation( -0.2f + XM_PIDIV2, -0.25f + rotation, 0.0f );
+	//float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
+	//securityCamera.SetRotation( -0.2f + XM_PIDIV2, -0.25f + rotation, 0.0f );
+	//securityCamera.SetRotation( -0.75f - rotation, -0.25f + rotation - XM_PIDIV2, 0.0f );
+	//securityCamera.SetRotation( rotation, XM_PIDIV2, 0.0f );
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );

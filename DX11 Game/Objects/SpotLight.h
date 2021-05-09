@@ -23,7 +23,7 @@ private:
 	float range = 1000.0f;
 	float strength = 1.0f;
 
-	XMFLOAT3 color = { 1.0f, 0.2f, 1.0f };
+	XMFLOAT3 color = { 0.2f, 0.2f, 1.0f };
 	XMFLOAT3 direction = { 0.0f, 0.0f, 1.0f };
 
 	ConstantBuffer<CB_PS_spot> cb_ps_spot;
