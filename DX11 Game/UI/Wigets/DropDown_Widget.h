@@ -14,7 +14,7 @@ class DropDown_Widget :
 
 public:
 	DropDown_Widget() = default;
-    DropDown_Widget(vector<ListData>DropDownList,DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos,Colour colour,MouseData MData);
+    DropDown_Widget(vector<ListData>DropDownList,DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos,Colour colour, MouseData MData);
    
 	bool INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d);
 	void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix,TextRenderer* textrender, VertexShader& vert, PixelShader& pix);
@@ -86,7 +86,7 @@ inline void DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::Draw(ID3D
 
 	ButtionDrop.Draw(Contex, Device, cb_ps_scene, cb_vs_matrix_2d, WorldOrthoMatrix, textrender);
 	Shaders::BindShaders(Contex, vert, pix);
-	if (DropState==Down)
+	if (DropState== DopStae::Down)
 	{
 		
 		for (int i = 0; i < _ListData.size(); i++)
@@ -127,7 +127,7 @@ inline void DropDown_Widget< ListData,  BakgroundType,  ButtionBacktype>::Functi
 	//list buttions
 	switch (DropState)
 	{
-	case Down: {
+	case DopStae::Down: {
 		float PosY = pos.y + size.y;
 		for (int i = 0; i < DropDownList.size(); i++)
 		{
@@ -152,7 +152,7 @@ inline void DropDown_Widget< ListData,  BakgroundType,  ButtionBacktype>::Functi
 		}
 	}
 			 break;
-	case Up:
+	case DopStae::Up:
 		if (ButtionDrop.GetIsPressed() && Flag == FlagMax) {
 
 			DropState = Down;

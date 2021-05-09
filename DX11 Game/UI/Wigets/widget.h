@@ -3,20 +3,22 @@
 
 #include"Graphics/TextRenderer.h"
 #include "Sprite.h"
+#include<string>
 
 struct MouseData
-{
-	XMFLOAT2 Pos;
-	bool LPress;
-	bool RPress;
-	bool MPress;
-};
+	{
+		XMFLOAT2 Pos;
+		bool LPress;
+		bool RPress;
+		bool MPress;
+	};
 
 using namespace std;
 class widget
 {
 	//function
 public:
+	
 	widget();
 	~widget();
 

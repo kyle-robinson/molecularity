@@ -7,6 +7,7 @@
 #include<UI/HUD_UI.h>
 #include<UI/Pause.h>
 #include<UI/Settings_Menu_UI.h>
+#include<UI/Main_Menu_UI.h>
 
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
@@ -24,7 +25,7 @@ bool Level1::OnCreate()
 			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 15.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
 
-
+			//add level UI 
 			shared_ptr<HUD_UI> HUD = make_shared<HUD_UI>();
 			_UiManager->AddUi(HUD,"HUD");
 

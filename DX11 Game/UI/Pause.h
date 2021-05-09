@@ -1,5 +1,6 @@
 #pragma once
 #include "UI.h"
+#include<vector>
 class Pause :
     public UI
 {

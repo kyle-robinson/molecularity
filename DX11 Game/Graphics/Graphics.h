@@ -34,6 +34,7 @@ class Graphics:public Listener
 {
 	friend class Level1;
 	friend class Level2;
+	friend class MainMenu_Level;
 	friend class LevelContainer;
 
 	friend class Application;
@@ -110,6 +111,10 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 	std::unordered_map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
 	std::unordered_map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
+
+
+	int VsynicON;
+
 };
 
 #endif

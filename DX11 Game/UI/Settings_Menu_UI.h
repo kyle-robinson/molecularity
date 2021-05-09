@@ -30,14 +30,14 @@ private:
 	//Settings
 	Immage_Widget SettingsBakgtound;
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;
-	DropDown_Widget<string,string,string> SettingsDropdowns[10];
-	DataSlider_Widget<string, string> SettingsSliders[10];
-	Buttion_Widget<string> SettingsButtions[10];
-	Input_Widget<string> ControllInput[20];
+	DropDown_Widget<std::string, std::string, std::string> SettingsDropdowns[10];
+	DataSlider_Widget<std::string, std::string> SettingsSliders[10];
+	Buttion_Widget<std::string> SettingsButtions[10];
+	Input_Widget<std::string> ControllInput[20];
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;
 
-	string TabNames[4] = { "General","Graphics","Sound","Controls" };
+	std::string TabNames[4] = { "General","Graphics","Sound","Controls" };
 	vector<string> ButtionTexDrop = { "Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow.dds" };

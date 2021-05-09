@@ -23,8 +23,8 @@ public:
 	bool GetToDraw()const { return IsToDraw; }
 	void SetToDraw(bool ToDraw) { IsToDraw = ToDraw; }
 
-	std::shared_ptr <UI> GetCustomUi(string UIName){return UiList[UIName];}
-	void AddUi(std::shared_ptr < UI> NewUI, string Name);
+	std::shared_ptr <UI> GetCustomUi(std::string UIName){return UiList[UIName];}
+	void AddUi(std::shared_ptr < UI> NewUI, std::string Name);
 	void HandleEvent(Event* event);
 
 

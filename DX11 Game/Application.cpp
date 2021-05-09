@@ -74,7 +74,10 @@ void Application::Update()
 {
 	// delta time
 	float dt = static_cast< float >( timer.GetMilliSecondsElapsed() );
-	timer.Restart();
+
+	if (timer.GetMilliSecondsElapsed() == 60000) {
+		timer.Restart();
+	}
 
 	// update systems
 	input.Update( dt );
@@ -92,6 +95,8 @@ void Application::Update()
 		EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
 
 	}
+
+	
 	// update current level
 	stateMachine.Update( dt );
 	EventSystem::Instance()->ProcessEvents();

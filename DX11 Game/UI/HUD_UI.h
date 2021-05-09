@@ -1,6 +1,8 @@
 #pragma once
 #include "UI.h"
 #include<Objects/CubeProperties.h>
+
+using namespace std;
 class HUD_UI :
     public UI
 {

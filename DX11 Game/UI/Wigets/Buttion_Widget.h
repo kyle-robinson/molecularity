@@ -1,5 +1,6 @@
 #pragma once
 #include "widget.h"
+
 template<typename ButtionTexType>
 class Buttion_Widget :
     public widget
@@ -22,13 +23,13 @@ public:
         Defaulet
     };
 
-    bool Function(string text, vector<ButtionTexType>  ButtionText, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, XMVECTORF32 textColour, MouseData MData);
+    bool Function(std::string text, vector<ButtionTexType>  ButtionText, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, XMVECTORF32 textColour,MouseData MData);
  
 private:
 
     Sprite _Bakground;
     ButtionTexType ButtionColour;
-    string ButtionTex;
+    std::string ButtionTex;
     XMVECTORF32 TextColour;
     bool IsPressed = false;
     ButtionState CurrentState;
@@ -63,7 +64,7 @@ inline void Buttion_Widget<ButtionTexType>::Draw(ID3D11DeviceContext* Contex, ID
 }
 
 template<typename ButtionTexType>
-inline bool Buttion_Widget<ButtionTexType>::Function(string text,vector<ButtionTexType> ButtionText, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, XMVECTORF32 textColour, MouseData MData)
+inline bool Buttion_Widget<ButtionTexType>::Function(std::string text,vector<ButtionTexType> ButtionText, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, XMVECTORF32 textColour, MouseData MData)
 {
         CurrentState = Defaulet;
     	 ButtionTex = text;

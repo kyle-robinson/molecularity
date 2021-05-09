@@ -228,6 +228,9 @@
     <ClCompile Include="Graphics\UI_Manager.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu_Level.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -520,6 +523,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\UI_Manager.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu_Level.h">
+      <Filter>Headers\Levels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

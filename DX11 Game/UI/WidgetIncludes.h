@@ -1,5 +1,8 @@
 #pragma once
 
+#include<string>
+#include<Sprite.h>
+#include"Graphics/TextRenderer.h"
 //Base
 #include"Wigets/widget.h"
 

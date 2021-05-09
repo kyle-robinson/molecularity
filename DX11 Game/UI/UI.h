@@ -1,5 +1,6 @@
 #pragma once
 #include<queue>
+#include<vector>
 #include <Utility/JSON_Helper.h>
 #include<UI/WidgetIncludes.h>
 #include"TextRenderer.h"

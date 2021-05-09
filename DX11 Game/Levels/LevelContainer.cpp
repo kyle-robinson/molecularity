@@ -213,6 +213,7 @@ void LevelContainer::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
 
 	_UiManager->Update();
+	imgui->PassDeltaTime(dt);
 }
 
 void LevelContainer::LateUpdate( const float dt )
