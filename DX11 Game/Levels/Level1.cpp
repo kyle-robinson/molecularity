@@ -16,6 +16,10 @@ bool Level1::OnCreate()
 			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
 			room.SetInitialPosition( 0.1f, 0.0f, -20.0f );
 
+			if ( !podium.Initialize( "Resources\\Models\\Levels\\Podium.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			podium.SetInitialScale( 0.005f, 0.005f, 0.005f );
+			podium.SetInitialPosition( 0.0f, 0.0f, 10.0f );
+
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 45.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
@@ -60,6 +64,8 @@ void Level1::RenderFrame()
 		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
 		room.Draw();
 		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
+		
+		podium.Draw();
 		pressurePlate.Draw();
 
 		// render objects (these are objects that are found in each level)
