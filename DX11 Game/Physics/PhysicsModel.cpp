@@ -155,11 +155,23 @@ void PhysicsModel::CheckFloorCollisions( std::shared_ptr<CubeProperties>& proper
 	}
 }
 
+void PhysicsModel::AddForce( float x, float y, float z ) noexcept
+{
+	AddForce( XMFLOAT3( x, y, z ) );
+}
+
 void PhysicsModel::AddForce( XMFLOAT3 force ) noexcept
 {
 	mNetForce.x += force.x;
 	mNetForce.y += force.y;
 	mNetForce.z += force.z;
+}
+
+void PhysicsModel::AddForce( XMVECTOR force ) noexcept
+{
+	mNetForce.x += XMVectorGetX( force );
+	mNetForce.y += XMVectorGetY( force );
+	mNetForce.z += XMVectorGetZ( force );
 }
 
 void PhysicsModel::ResetForces() noexcept

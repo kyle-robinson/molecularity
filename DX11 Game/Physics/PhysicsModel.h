@@ -20,7 +20,9 @@ public:
 
 	// Update Forces
 	virtual void Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld = false );
+	void AddForce( float x, float y, float z ) noexcept;
 	void AddForce( XMFLOAT3 force ) noexcept;
+	void AddForce( XMVECTOR force ) noexcept;
 	void ResetForces() noexcept;
 
 	// Get Forces
