@@ -139,10 +139,17 @@ void PhysicsModel::CheckFloorCollisions()
 {
 	mPosition = mTransform->GetPositionFloat3();
 
-	if ( mPosition.y < 0.5f )
+	static float offset = 0.5f;
+	switch ( (int)mMass )
+	{
+	case 10: offset = 0.25f; break;
+	case 25: offset = 0.5f; break;
+	case 50: offset = 1.0f; break;
+	}
+	if ( mPosition.y < offset )
 	{
 		mVelocity.y = 0.0f;
-		mPosition.y = 0.5f;
+		mPosition.y = offset;
 		mTransform->SetPosition( mPosition );
 	}
 }

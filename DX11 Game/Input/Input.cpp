@@ -137,9 +137,9 @@ void Input::UpdateKeyboard( const float dt )
 
 		// normalize diagonal movement speed
 		if ( keyboard.KeyIsPressed( 'W' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
-			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
+			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
 		if ( keyboard.KeyIsPressed( 'S' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
-			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
+			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
 
 		// update camera movement
 		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
@@ -295,14 +295,17 @@ void Input::UpdateMouse( const float dt )
 						case 0:
 							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 0.5f );
 							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Small );
+							level->GetCube()[i]->GetPhysicsModel()->SetMass( 10.0f );
 							break;
 						case 1:
 							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 1.0f );
 							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Normal );
+							level->GetCube()[i]->GetPhysicsModel()->SetMass( 25.0f );
 							break;
 						case 2:
 							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 2.0f );
 							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Large );
+							level->GetCube()[i]->GetPhysicsModel()->SetMass( 50.0f );
 							break;
 						}
 					}

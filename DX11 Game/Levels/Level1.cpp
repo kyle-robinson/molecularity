@@ -98,11 +98,21 @@ void Level1::Update( const float dt )
 	else if ( pressurePlate.GetPositionFloat3().x < -30.0f )
 		offset = 0.1f;
 	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
-
-	// update collisions w pressure plate
+	
+	// cube collisions
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
+		// update collisions w pressure plate
+		if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
+		{
+			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
+			//if ( cubes[i]->GetPhysicsModel()->GetMass() >  )
+			//{
+			//
+			//}
+		}
+
+		// update collisions w other cubes
 		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
 			if ( i != j )
 				cubes[i]->CheckCollisionAABB( cubes[j], dt );
