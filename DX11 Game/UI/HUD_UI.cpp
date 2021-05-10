@@ -52,10 +52,11 @@ void HUD_UI::Update()
 		TextFile = "HUD\\Tool_Assets\\ConvertSelect_500x500.dds";
 		switch ( Mode->GetMaterialID() )
 		{
-		case 0: ToolInformationTexture = "crates\\basic_crate.png"; break;
-		case 1: ToolInformationTexture = "crates\\bounce_crate.png"; break;
-		case 2: ToolInformationTexture = "crates\\arrow_crate.png"; break;
-		case 3: ToolInformationTexture = "crates\\tnt_crate.png"; break;
+		case 0: ToolInformationTexture = "crates\\mesh.png"; break;
+		case 1: ToolInformationTexture = "crates\\wood.png"; break;
+		case 2: ToolInformationTexture = "crates\\stone.jpg"; break;
+		case 3: ToolInformationTexture = "crates\\iron.jpg"; break;
+		case 4: ToolInformationTexture = "crates\\alien.jpg"; break;
 		}
 	}
 		break;
