@@ -14,8 +14,8 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 
 	keyboard.DisableAutoRepeatKeys();
 	mousePick.Initialize(
-		static_cast<int>( renderWindow.GetWidth() ),
-		static_cast<int>( renderWindow.GetHeight() )
+		static_cast< int >( renderWindow.GetWidth() ),
+		static_cast< int >( renderWindow.GetHeight() )
 	);
 }
 
@@ -63,50 +63,48 @@ void Input::UpdateKeyboard( const float dt )
 			}
 		}
 
-
-		//UI
+		// UI
 		{
 			UIChar = keyboard.ReadChar();
-			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
+			EventSystem::Instance()->AddEvent( EVENTID::UIKeyInput, &UIChar );
 
-
-			if (keycode == 'P') {
+			if ( keycode == 'P' ) {
 				//puase game
-				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+				EventSystem::Instance()->AddEvent( EVENTID::GamePauseEvent );
 				EnableCursor();
 			}
 
 			//for ui when exit pause: to be remove when decoupling is complet
-			if (keycode == 'L') {
+			if ( keycode == 'L' ) {
 				DisableCursor();
 			}
 
 			//full screen
-			WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
-			DWORD dwStyle = GetWindowLong(renderWindow.GetHWND(), GWL_STYLE);
-			if (keycode == 'M') {
+			WINDOWPLACEMENT g_wpPrev = { sizeof( g_wpPrev ) };
+			DWORD dwStyle = GetWindowLong( renderWindow.GetHWND(), GWL_STYLE );
+			if ( keycode == 'M' ) {
 
-				if (dwStyle & WS_OVERLAPPEDWINDOW) {
-					MONITORINFO mi = { sizeof(mi) };
-					if (GetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev) &&
-						GetMonitorInfo(MonitorFromWindow(renderWindow.GetHWND(),
-							MONITOR_DEFAULTTOPRIMARY), &mi)) {
-						SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
-							dwStyle & ~WS_OVERLAPPEDWINDOW);
-						SetWindowPos(renderWindow.GetHWND(), HWND_TOP,
+				if ( dwStyle & WS_OVERLAPPEDWINDOW ) {
+					MONITORINFO mi = { sizeof( mi ) };
+					if ( GetWindowPlacement( renderWindow.GetHWND(), &g_wpPrev ) &&
+						GetMonitorInfo( MonitorFromWindow( renderWindow.GetHWND(),
+							MONITOR_DEFAULTTOPRIMARY ), &mi ) ) {
+						SetWindowLong( renderWindow.GetHWND(), GWL_STYLE,
+							dwStyle & ~WS_OVERLAPPEDWINDOW );
+						SetWindowPos( renderWindow.GetHWND(), HWND_TOP,
 							mi.rcMonitor.left, mi.rcMonitor.top,
 							mi.rcMonitor.right - mi.rcMonitor.left,
 							mi.rcMonitor.bottom - mi.rcMonitor.top,
-							SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+							SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
 					}
 				}
 			}
 			//not full screen
-			if (keycode == 'N') {
-				SetWindowLong(renderWindow.GetHWND(), GWL_STYLE,
-					dwStyle | WS_OVERLAPPEDWINDOW);
-				SetWindowPlacement(renderWindow.GetHWND(), &g_wpPrev);
-				SetWindowPos(renderWindow.GetHWND(), NULL, 0, 0, 1296, 737, SWP_SHOWWINDOW | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+			if ( keycode == 'N' ) {
+				SetWindowLong( renderWindow.GetHWND(), GWL_STYLE,
+					dwStyle | WS_OVERLAPPEDWINDOW );
+				SetWindowPlacement( renderWindow.GetHWND(), &g_wpPrev );
+				SetWindowPos( renderWindow.GetHWND(), NULL, 0, 0, 1296, 737, SWP_SHOWWINDOW | SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
 			}
 		}
 
@@ -136,7 +134,7 @@ void Input::UpdateKeyboard( const float dt )
 			if ( keyboard.KeyIsPressed( VK_SPACE ) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
 		}
-	
+
 		// normalize diagonal movement speed
 		if ( keyboard.KeyIsPressed( 'W' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
@@ -166,9 +164,9 @@ void Input::UpdateKeyboard( const float dt )
 
 			// pick-up cube - set position relative to camera.
 			if ( keyboard.KeyIsPressed( 'E' ) && !alreadyHeld &&
-				 level->GetCube()[i]->GetIsInRange() &&
+				level->GetCube()[i]->GetIsInRange() &&
 				( level->GetCube()[i]->GetIsHovering() ||
-				  level->GetCube()[i]->GetIsHolding() ) )
+					level->GetCube()[i]->GetIsHolding() ) )
 			{
 				level->GetCube()[i]->SetIsHolding( true );
 				XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
@@ -191,7 +189,7 @@ void Input::UpdateKeyboard( const float dt )
 	{
 		// update cube movement
 		if ( keyboard.KeyIsPressed( VK_RIGHT ) )
-			level->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
+			level->GetCube()[0]->GetPhysicsModel()->AddForce( { 1.0f, 0.0f, 0.0f } );
 		if ( keyboard.KeyIsPressed( VK_LEFT ) )
 			level->GetCube()[0]->GetPhysicsModel()->AddForce( { -0.1f, 0.0f, 0.0f } );
 	}
@@ -215,8 +213,8 @@ void Input::UpdateMouse( const float dt )
 				{
 					cameras->GetCamera( cameras->GetCurrentCamera() )->AdjustRotation(
 						XMFLOAT3(
-							static_cast<float>( me.GetPosY() ) * 0.005f,
-							static_cast<float>( me.GetPosX() ) * 0.005f,
+							static_cast< float >( me.GetPosY() ) * 0.005f,
+							static_cast< float >( me.GetPosX() ) * 0.005f,
 							0.0f
 						)
 					);
@@ -232,9 +230,7 @@ void Input::UpdateMouse( const float dt )
 			{
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
-				{
-					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE );
-				}
+					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
 
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( level->GetGraphics()->GetWidth() / 2, level->GetGraphics()->GetHeight() / 2, *level->GetCube()[i] ) )
@@ -266,7 +262,7 @@ void Input::UpdateMouse( const float dt )
 					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && level->GetCube()[i]->GetIsHovering() )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetBoxType(
-							static_cast<BoxType>( level->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
+							static_cast< BoxType >( level->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
 						);
 					}
 				}
@@ -313,32 +309,26 @@ void Input::UpdateMouse( const float dt )
 				}
 #pragma endregion
 			}
-			//UI mouse input
-			{
-				UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
-				if (mouse.IsRightDown() && cursorEnabled) {
-					UiMouseData.RPress = true;
-				}
-				else
-				{
-					UiMouseData.RPress = false;
-				}
-				if (mouse.IsLeftDown() && cursorEnabled) {
-					UiMouseData.LPress = true;
-				}
-				else
-				{
-					UiMouseData.LPress = false;
-				}
-				if (mouse.IsMiddleDown() && cursorEnabled) {
-					UiMouseData.MPress = true;
-				}
-				else
-				{
-					UiMouseData.MPress = false;
-				}
 
-				EventSystem::Instance()->AddEvent(EVENTID::UIMouseInput, &UiMouseData);
+			// UI MOUSE INPUT
+			{
+				UiMouseData.Pos = { static_cast<float>( me.GetPosX() ),static_cast<float>( me.GetPosY() ) };
+				if ( mouse.IsRightDown() && cursorEnabled )
+					UiMouseData.RPress = true;
+				else
+					UiMouseData.RPress = false;
+
+				if ( mouse.IsLeftDown() && cursorEnabled )
+					UiMouseData.LPress = true;
+				else
+					UiMouseData.LPress = false;
+
+				if ( mouse.IsMiddleDown() && cursorEnabled )
+					UiMouseData.MPress = true;
+				else
+					UiMouseData.MPress = false;
+
+				EventSystem::Instance()->AddEvent( EVENTID::UIMouseInput, &UiMouseData );
 
 			}
 		}

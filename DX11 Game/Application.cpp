@@ -42,11 +42,11 @@ bool Application::Initialize(
 	{
 		// initialize sound
 		sound.SetMusicVolume( 0.5f );
-		if ( FAILED( sound.PlayMusic( sound.MUSIC_MAIN, true ) ) ) return false;
+		if ( FAILED( sound.PlayMusic( sound.MUSIC_MAIN ) ) ) return false;
 
 		// initialize cameras
 		cameras.Initialize( width, height );
-		
+
 		// add levels to list
 		std::vector<uint32_t> level_IDs;
 		level_IDs.push_back( std::move( level1_ID ) );
@@ -67,20 +67,25 @@ bool Application::ProcessMessages() noexcept
 void Application::Update()
 {
 	// delta time
-	float dt = static_cast< float >( timer.GetMilliSecondsElapsed() );
+	float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
 	timer.Restart();
 
 	// update systems
 	input.Update( dt );
-	sound.UpdatePosition( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3(), cameras.GetCamera( cameras.GetCurrentCamera() )->GetRotationFloat3().y ); // Update to make this every few frames
+	sound.UpdatePosition(
+		cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3(),
+		cameras.GetCamera( cameras.GetCurrentCamera() )->GetRotationFloat3().y
+	); // update to make this every few frames
 	cameras.Update();
-	//update screen size
-	RECT windowRect;
-	if (GetClientRect(renderWindow.GetHWND(), &windowRect)) {
 
-		XMFLOAT2 windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
-		EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);	
+	// update screen size
+	RECT windowRect;
+	if ( GetClientRect( renderWindow.GetHWND(), &windowRect ) ) {
+
+		XMFLOAT2 windowsize = { ( float )( windowRect.right - windowRect.left ), ( float )( windowRect.bottom - windowRect.top ) };
+		EventSystem::Instance()->AddEvent( EVENTID::WindowSizeChangeEvent, &windowsize );
 	}
+
 	// update current level
 	stateMachine.Update( dt );
 	EventSystem::Instance()->ProcessEvents();

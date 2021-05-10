@@ -1,8 +1,11 @@
 #pragma once
+#ifndef HUD_UI_H
+#define HUD_UI_H
+
 #include "UI.h"
 #include<Objects/CubeProperties.h>
-class HUD_UI :
-    public UI
+
+class HUD_UI : public UI
 {
 public:
 	HUD_UI();
@@ -16,11 +19,12 @@ public:
 private:
 	//HUD
 	float hudScale = 1;
-	Immage_Widget HUDImages[3];
-	ColourBlock HudBakgrounds[2];
+	Image_Widget HUDImages[3];
+	ColourBlock HudBackgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
 	int energy = 100;
 	CubeProperties* Mode= nullptr;
 	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 };
 
+#endif

@@ -29,7 +29,7 @@ public:
 	Camera2D GetUICamera() const noexcept { return UICamera; }
 
 	void CollisionResolution( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept;
-
+	void CollisionResolutionSquare( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept;
 
 	void AddToEvent();
 	void HandleEvent(Event* event);

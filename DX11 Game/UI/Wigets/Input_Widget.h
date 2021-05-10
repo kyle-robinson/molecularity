@@ -1,8 +1,11 @@
 #pragma once
+#ifndef INPUT_WIDGET_H
+#define INPUT_WIDGET_H
+
 #include "widget.h"
+
 template<typename background>
-class Input_Widget :
-    public widget
+class Input_Widget : public widget
 {
 public:
     Input_Widget();
@@ -25,8 +28,7 @@ private:
 
     string CurrentText;
     XMVECTORF32 TextColour;
-    bool Selcted=false;
-
+    bool Selected=false;
 };
 
 template<typename background>
@@ -42,7 +44,7 @@ Input_Widget<background>::~Input_Widget()
 template<typename background>
 bool Input_Widget<background>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
-	Selcted = false;
+	Selected = false;
 	Background.Initialize(Device, Contex, _Size.x, _Size.y, Colour{ 0,0,0 }, cb_vs_matrix_2d);
 	return true;
 }
@@ -54,7 +56,7 @@ void Input_Widget<background>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* D
 	Background.SetInitialPosition(_Pos.x, _Pos.y, 0);
 	Background.SetScale(_Size.x, _Size.y);
 
-	cb_ps_scene.data.alphaFactor = _AlfaFactor;
+	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = false;
 
 	if (!cb_ps_scene.ApplyChanges()) return;
@@ -79,64 +81,63 @@ void Input_Widget<background>::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT
 		MData.Pos.y >= pos.y &&
 		MData.Pos.y <= (pos.y + size.y)) {
 		if (MData.LPress) {
-			Selcted = true;
+			Selected = true;
 			CurrentText = "";
 		}
 
 	}
 
 	//get text to display
-	if (Selcted) {
+	if (Selected) {
 		switch (key)
 		{
 			//Specialkeys
 		case VK_RETURN:
 			CurrentText = "Enter";
-			Selcted = false;
+			Selected = false;
 			break;
 		case VK_SPACE:
 			CurrentText = "Space";
-			Selcted = false;
+			Selected = false;
 			break;
 		case VK_LSHIFT:
 			CurrentText = "Left shift";
-			Selcted = false;
+			Selected = false;
 			break;
 		case VK_UP:
 			CurrentText = "Up_Arrow";
-			Selcted = false;
+			Selected = false;
 			break;
 		case VK_DOWN:
 			CurrentText = "Down_Arrow";
-			Selcted = false;
+			Selected = false;
 			break;
 		case VK_LEFT:
 			CurrentText = "Left_Arrow";
-			Selcted = false;
+			Selected = false;
 			break;
 		case VK_RIGHT:
 			CurrentText = "Right_Arrow";
-			Selcted = false;
+			Selected = false;
 			break;
 		default:
 			if (key != 0) {
 				CurrentText = key;
-				Selcted = false;
+				Selected = false;
 			}
 			else if (MData.MPress)
 			{
 				CurrentText = "Scroll Wheel";
-				Selcted = false;
+				Selected = false;
 			}
 			else if (MData.RPress)
 			{
 				CurrentText = "Right Mouse";
-				Selcted = false;
+				Selected = false;
 			}
 			break;
 		}
-
 	}
 }
 
-
+#endif

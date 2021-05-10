@@ -21,6 +21,7 @@ class TextRenderer;
 class PostProcessing;
 class StencilOutline;
 class UI_Manager;
+
 /// <summary>
 /// Loads and renders/updates all the components and models for the current scene/level.
 /// Sets up any constant buffers that are specific to this particular scene/level.
@@ -59,6 +60,7 @@ protected:
 	ImGuiManager* imgui;
 	CameraController* cameras;
 	RenderableGameObject skysphere;
+	//RenderableGameObject securityCamera;
 	std::vector<std::shared_ptr<Cube>> cubes;
 
 	// Lights
@@ -85,9 +87,6 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
-
-
-	
 };
 
 #endif

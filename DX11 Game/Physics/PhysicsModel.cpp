@@ -8,20 +8,27 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 	mUseLaminar = true;
 	mPosition = mTransform->GetPositionFloat3();
 
+	mIsHeld = false;
+
 	mFriction = { 0.0f, 0.0f, 0.0f };
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 	mVelocity = { 0.0f, 0.0f, 0.0f };
 	mAcceleration = { 0.0f, 0.0f, 0.0f };
 }
 
-void PhysicsModel::Update( const float dt )
+void PhysicsModel::Update( const float dt, bool isHeld )
 {
+	mIsHeld = isHeld;
+
 	if ( !mActivated )
 	{
-		Weight();
+		if ( !mIsHeld )
+		{
+			Weight();
+			Friction( dt );
+			Velocity(dt);
+		}
 		Acceleration();
-		Friction( dt );
-		Velocity( dt );
 		Drag();
 		ComputePosition( dt );
 		CheckFloorCollisions();

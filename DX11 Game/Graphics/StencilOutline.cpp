@@ -59,24 +59,24 @@ void StencilOutline::DrawWithOutline( Graphics& gfx, Cube& cube, ConstantBuffer<
 
 void StencilOutline::DrawWithOutline( Graphics& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point )
 {
+	static XMFLOAT3 outlineColor = { 0.0f, 0.29f, 0.85f };
+
 	// write pixels to the buffer, which will act as the stencil mask
 	GetStencil( gfx, "Write" )->Bind( gfx );
 	object.Draw();
 
 	// scale the model and draw the stencil outline, ignoring the pixels previously written to the buffer
 	Shaders::BindShaders( GetContext( gfx ), vertexShader_outline, pixelShader_outline );
-	cb_ps_outline.data.outlineColor = color;
+	cb_ps_outline.data.outlineColor = outlineColor;
 	if ( !cb_ps_outline.ApplyChanges() ) return;
 	GetContext( gfx )->PSSetConstantBuffers( 6u, 1u, cb_ps_outline.GetAddressOf() );
 	GetStencil( gfx, "Mask" )->Bind( gfx );
-	object.SetScale( object.GetScaleFloat3().x + scale, 1.0f, object.GetScaleFloat3().z + scale );
 	object.Draw();
 
 	// rescale the model and draw using the appropriate shaders and textures
 	Shaders::BindShaders( GetContext( gfx ), gfx.vertexShader_light, gfx.pixelShader_light );
 	if ( !cb_ps_point.ApplyChanges() ) return;
 	GetContext( gfx )->PSSetConstantBuffers( 3u, 1u, cb_ps_point.GetAddressOf() );
-	object.SetScale( object.GetScaleFloat3().x - scale, 1.0f, object.GetScaleFloat3().z - scale );
 	GetStencil( gfx, "Off" )->Bind( gfx );
 	object.Draw();
 }

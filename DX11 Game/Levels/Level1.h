@@ -24,9 +24,9 @@ private:
 
 	// Scene Objects
 	Sprite crosshair;
-	RenderableGameObject hubRoom;
+	RenderableGameObject room;
+	RenderableGameObject podium;
 	RenderableGameObject pressurePlate;
-	
 };
 
 #endif

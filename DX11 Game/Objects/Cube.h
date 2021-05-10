@@ -43,8 +43,15 @@ private:
 	IndexBuffer ib_cube;
 
 	bool isHeld = false;
+	bool heldLastFrame = false;
 	bool cubeHover = false;
 	bool cubeInRange = false;
+
+	int delay;
+
+	XMFLOAT3 prevPos;
+	XMFLOAT3 pos;
+
 };
 
 #endif

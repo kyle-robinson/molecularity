@@ -24,7 +24,7 @@ private:
 	bool LoadModel( const std::string& filePath );
 	void ProcessNode( aiNode* node, const aiScene* scene, const XMMATRIX& parentTransformMatrix );
 	Mesh ProcessMesh( aiMesh* mesh, const aiScene* scene, const XMMATRIX& transformMatrix );
-	TextureStorageType GetTextureStorageType( const aiScene* pScene, aiMaterial* pMaterial, unsigned int index, aiTextureType textureType );
+	TextureStorageType GetTextureStorageType( const aiScene* pScene, aiMaterial* pMaterial, uint32_t index, aiTextureType textureType );
 	std::vector<Texture> LoadMaterialTextures( aiMaterial* pMaterial, aiTextureType textureType, const aiScene* pScene );
 	int GetTextureIndex( aiString* pStr );
 private:
