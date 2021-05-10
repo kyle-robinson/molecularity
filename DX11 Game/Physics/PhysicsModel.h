@@ -3,6 +3,7 @@
 #define PHYSICSMODEL_H
 
 #include "GameObject.h"
+class CubeProperties;
 
 /// <summary>
 /// Managers the generic physics calculations for a given object.
@@ -18,7 +19,7 @@ public:
 	void SetActivated( bool activated ) noexcept { mActivated = activated; }
 
 	// Update Forces
-	virtual void Update( const float dt, bool isHeld = false );
+	virtual void Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld = false );
 	void AddForce( XMFLOAT3 force ) noexcept;
 	void ResetForces() noexcept;
 
@@ -46,7 +47,7 @@ private:
 	void LaminarDrag();
 	void TurbulentDrag();
 	void ComputePosition( const float dt );
-	void CheckFloorCollisions();
+	void CheckFloorCollisions( std::shared_ptr<CubeProperties>& properties );
 
 	// Constants
 	static constexpr float mGravity = 9.81f;

@@ -169,9 +169,20 @@ void Input::UpdateKeyboard( const float dt )
 					level->GetCube()[i]->GetIsHolding() ) )
 			{
 				level->GetCube()[i]->SetIsHolding( true );
+				
+				// set cube position
+				static int offset = 2;
+				switch ( level->GetCube()[i]->GetEditableProperties()->GetBoxSize() )
+				{
+				case BoxSize::Small:  offset = 1; break;
+				case BoxSize::Normal: offset = 2; break;
+				case BoxSize::Large:  offset = 4; break;
+				}
 				XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
-				cubePosition += cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() * 2;
+				cubePosition += cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() * offset;
 				level->GetCube()[i]->SetPosition( cubePosition );
+
+				// set cube rotation
 				level->GetCube()[i]->SetRotation(
 					level->GetCube()[i]->GetRotationFloat3().x,
 					cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y,
@@ -244,7 +255,7 @@ void Input::UpdateMouse( const float dt )
 				{
 					// change current id of texture to be used on box
 					if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
-						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 3 )
+						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 4 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
 							level->GetCube()[i]->GetEditableProperties()->GetMaterialID() + 1
@@ -295,17 +306,14 @@ void Input::UpdateMouse( const float dt )
 						case 0:
 							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 0.5f );
 							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Small );
-							level->GetCube()[i]->GetPhysicsModel()->SetMass( 10.0f );
 							break;
 						case 1:
 							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 1.0f );
 							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Normal );
-							level->GetCube()[i]->GetPhysicsModel()->SetMass( 25.0f );
 							break;
 						case 2:
 							level->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 2.0f );
 							level->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Large );
-							level->GetCube()[i]->GetPhysicsModel()->SetMass( 50.0f );
 							break;
 						}
 					}

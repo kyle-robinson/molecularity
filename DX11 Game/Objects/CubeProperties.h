@@ -11,10 +11,11 @@ enum class ToolType
 
 enum class BoxType
 {
-	Default,
-	Bounce,
-	Arrow,
-	TNT
+	Mesh,
+	Wood,
+	Stone,
+	Iron,
+	Alien
 };
 
 enum class BoxSize
@@ -60,8 +61,8 @@ private:
 	bool isBurnable = false;
 	bool isReflective = false;
 	float sizeMultiplier = 1.0f;
+	BoxType boxType = BoxType::Wood;
 	BoxSize boxSize = BoxSize::Normal;
-	BoxType boxType = BoxType::Default;
 	ToolType toolType = ToolType::Convert;
 };
 

@@ -54,6 +54,7 @@ public:
 	Graphics* GetGraphics() const noexcept { return graphics; }
 protected:
 	void RenderFrameEarly();
+	bool levelCompleted = false;
 
 	// Objects
 	Graphics* graphics;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PhysicsModel.h"
+#include "CubeProperties.h"
 
 PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 {
@@ -16,7 +17,7 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 	mAcceleration = { 0.0f, 0.0f, 0.0f };
 }
 
-void PhysicsModel::Update( const float dt, bool isHeld )
+void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
 	mIsHeld = isHeld;
 
@@ -31,7 +32,7 @@ void PhysicsModel::Update( const float dt, bool isHeld )
 		Acceleration();
 		Drag();
 		ComputePosition( dt );
-		CheckFloorCollisions();
+		CheckFloorCollisions( properties );
 	}
 	else
 	{
@@ -135,16 +136,16 @@ void PhysicsModel::ComputePosition( const float dt )
 	mTransform->SetPosition( mPosition );
 }
 
-void PhysicsModel::CheckFloorCollisions()
+void PhysicsModel::CheckFloorCollisions( std::shared_ptr<CubeProperties>& properties )
 {
 	mPosition = mTransform->GetPositionFloat3();
 
 	static float offset = 0.5f;
-	switch ( (int)mMass )
+	switch ( properties->GetBoxSize() )
 	{
-	case 10: offset = 0.25f; break;
-	case 25: offset = 0.5f; break;
-	case 50: offset = 1.0f; break;
+	case BoxSize::Small:  offset = 0.25f; break;
+	case BoxSize::Normal: offset = 0.5f;  break;
+	case BoxSize::Large:  offset = 1.0f;  break;
 	}
 	if ( mPosition.y < offset )
 	{

@@ -49,11 +49,30 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 
 void Cube::Update( const float deltaTime ) noexcept
 {
-    if ( !isHeld )
-        physicsModel->Update( deltaTime / 20.0f );
-    else
-        physicsModel->Update( deltaTime / 20.0f, true );
+    // update properties
+    physicsModel->SetMass( 0.0f );
+    switch ( editableProperties->GetBoxType() )
+    {
+    case BoxType::Mesh:  physicsModel->SetMass( 10.0f );  break;
+    case BoxType::Wood:  physicsModel->SetMass( 30.0f );  break;
+    case BoxType::Stone: physicsModel->SetMass( 50.0f );  break;
+    case BoxType::Iron:  physicsModel->SetMass( 70.0f );  break;
+    case BoxType::Alien: physicsModel->SetMass( 100.0f ); break;
+    }
+    switch ( editableProperties->GetBoxSize() )
+    {
+    case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); break;
+    case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() + 25.0f ); break;
+    case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); break;
+    }
 
+    // update physics
+    if ( !isHeld )
+        physicsModel->Update( deltaTime / 20.0f, editableProperties );
+    else
+        physicsModel->Update( deltaTime / 20.0f, editableProperties, true );
+
+    // update positioning
     pos = GetPositionFloat3();
 
     if ( heldLastFrame && !isHeld && ( pos.x != prevPos.x || pos.z != prevPos.z ) )
@@ -70,12 +89,13 @@ void Cube::Update( const float deltaTime ) noexcept
 #pragma region Collisions
 bool Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept
 {
+    // set collision offset
     static float offset = 1.0f;
     switch ( editableProperties->GetBoxSize() )
     {
-    case BoxSize::Small:  offset = 0.5f; break;
-    case BoxSize::Normal: offset = 1.0f; break;
-    case BoxSize::Large:  offset = 1.5f; break;
+    case BoxSize::Small:  offset = 0.75f; break;
+    case BoxSize::Normal: offset = 1.0f;  break;
+    case BoxSize::Large:  offset = 1.5f;  break;
     default: break;
     }
 
@@ -102,7 +122,7 @@ bool Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) no
 
 void Cube::CheckCollisionAABB( std::shared_ptr<Cube>& object, const float dt ) noexcept
 {
-    // adjust x/z collision scaling for pressure plate
+    // set collision offset
     static float offset = 0.5f;
     switch ( editableProperties->GetBoxSize() )
     {

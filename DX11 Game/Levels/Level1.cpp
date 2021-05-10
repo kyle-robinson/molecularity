@@ -65,7 +65,8 @@ void Level1::RenderFrame()
 		room.Draw();
 		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 		
-		podium.Draw();
+		if ( levelCompleted )
+			podium.Draw();
 		pressurePlate.Draw();
 
 		// render objects (these are objects that are found in each level)
@@ -106,10 +107,8 @@ void Level1::Update( const float dt )
 		if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
 		{
 			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
-			//if ( cubes[i]->GetPhysicsModel()->GetMass() >  )
-			//{
-			//
-			//}
+			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f )
+				levelCompleted = true;
 		}
 
 		// update collisions w other cubes
