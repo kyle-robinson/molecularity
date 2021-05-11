@@ -235,7 +235,7 @@ void Settings_Menu_UI::Update()
 						setting.Setting = output;
 						SettingsInputCount++;
 					}
-					currentY += 40;
+					currentY += static_cast<float>(_SizeOfScreen.x * 0.05);
 
 				}
 

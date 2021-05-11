@@ -47,22 +47,27 @@ HRESULT Sound::UpdatePosition( XMFLOAT3 position, float rotation )
 
 HRESULT Sound::PlayMusic( int musicNum, bool loops )
 {
-	//engine->play2D( musicVec[musicNum], loops, false, false, true );
-	musicVec[musicNum]->setIsLooped(loops);
-	musicVec[musicNum]->setIsPaused(false);
+	//stop sound
+	if (soundON) {
+		//engine->play2D( musicVec[musicNum], loops, false, false, true );
+		musicVec[musicNum]->setIsLooped(loops);
+		musicVec[musicNum]->setIsPaused(false);
+	}
 	return S_OK;
 }
 
 HRESULT Sound::PlaySoundEffects(int soundNum, XMFLOAT3 soundPosition)
 {
-
-	if (SoundEffectsOn) {
-		if (soundPosition.x == NULL)
-			engine->play2D(SoundEffectsVec[soundNum]);
-		else
-		{
-			irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
-			engine->play3D(SoundEffectsVec[soundNum], position);
+	//stop sound
+	if (soundON) {
+		if (SoundEffectsOn) {
+			if (soundPosition.x == NULL)
+				engine->play2D(SoundEffectsVec[soundNum]);
+			else
+			{
+				irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
+				engine->play3D(SoundEffectsVec[soundNum], position);
+			}
 		}
 	}
 	return S_OK;
@@ -124,7 +129,7 @@ void Sound::HandleEvent(Event* event)
 					SetMusicVolume(musicVolume* soundVol);
 					SetMusicPause(true);
 					SetSoundEffectsVolume(SoundEffectsVolume* soundVol);
-					
+					//stop all sound
 					if (soundON) {
 						if (musicOn) {
 							SetMusicPause(false);
