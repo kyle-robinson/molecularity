@@ -1,4 +1,7 @@
 #pragma once
+#ifndef UI_H
+#define UI_H
+
 #include<queue>
 #include<vector>
 #include <Utility/JSON_Helper.h>
@@ -25,7 +28,7 @@ public:
 	void SetCb_vs_matrix_2d(ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d) {_cb_vs_matrix_2d = cb_vs_matrix_2d;}
 protected:
 
-	//Grapics Infromation
+	//Graphics Infromation
 	Microsoft::WRL::ComPtr <ID3D11Device>_Device;
 	Microsoft::WRL::ComPtr <ID3D11DeviceContext> _Contex;
 	ConstantBuffer<CB_PS_scene>* _cb_ps_scene;
@@ -37,3 +40,4 @@ protected:
 	unsigned char Key;
 };
 
+#endif

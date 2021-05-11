@@ -28,7 +28,8 @@ namespace Bind
 			viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, width, height );
 			if ( type == Type::Sub )
 			{
-				viewportDesc.TopLeftX = width / 1.333f;
+				//viewportDesc.TopLeftX = width / 1.333f;
+				viewportDesc.TopLeftX = 0.0f;
 				viewportDesc.Width = width / 4.0f;
 				viewportDesc.Height = height / 4.0f;
 				viewportDesc.MaxDepth = 0.1f;

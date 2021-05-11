@@ -22,7 +22,7 @@ void PhysicsModel::Update( const float dt, bool isHeld )
 
 	if ( !mActivated )
 	{
-		if (!mIsHeld)
+		if ( !mIsHeld )
 		{
 			Weight();
 			Friction( dt );

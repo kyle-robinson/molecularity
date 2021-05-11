@@ -82,7 +82,7 @@ void PostProcessing::SpawnControlWindow()
 			static const char* effectList[]{ "None", "Sepia", "Monochrome", "Gaussian Blur", "Down-Scale", "Bloom" };
 			if ( ImGui::BeginCombo( "Overlay Effect", previewValueEffect.c_str() ) )
 			{
-				for ( unsigned int i = 0; i < IM_ARRAYSIZE( effectList ); i++ )
+				for ( uint32_t i = 0; i < IM_ARRAYSIZE( effectList ); i++ )
 				{
 					const bool isSelected = i == activeEffect;
 					if ( ImGui::Selectable( effectList[i], isSelected ) )
@@ -135,7 +135,7 @@ void PostProcessing::SpawnControlWindow()
 			static const char* operatorList[]{ "None", "Saturate", "Reinhard", "ACESFilmic" };
 			if ( ImGui::BeginCombo( "Operator", previewValueOperator.c_str() ) )
 			{
-				for ( unsigned int i = 0; i < IM_ARRAYSIZE( operatorList ); i++ )
+				for ( uint32_t i = 0; i < IM_ARRAYSIZE( operatorList ); i++ )
 				{
 					const bool isSelected = i == activeOperator;
 					if ( ImGui::Selectable( operatorList[i], isSelected ) )
@@ -163,7 +163,7 @@ void PostProcessing::SpawnControlWindow()
 			static const char* transferList[]{ "Linear", "SRGB", "ST2084" };
 			if ( ImGui::BeginCombo( "Transfer Function", previewValueTransfer.c_str() ) )
 			{
-				for ( unsigned int i = 0; i < IM_ARRAYSIZE( transferList ); i++ )
+				for ( uint32_t i = 0; i < IM_ARRAYSIZE( transferList ); i++ )
 				{
 					const bool isSelected = i == activeTransfer;
 					if ( ImGui::Selectable( transferList[i], isSelected ) )

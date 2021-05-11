@@ -30,7 +30,7 @@ public:
     static bool InitializeModelData( ID3D11DeviceContext* context, ID3D11Device* device,
         ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::map<std::string, RenderableGameObject>& renderables )
     {
-        for ( unsigned int i = 0; i < drawables.size(); i++ )
+        for ( uint32_t i = 0; i < drawables.size(); i++ )
         {
             RenderableGameObject model;
             model.SetInitialScale( drawables[i].Scale.x, drawables[i].Scale.y, drawables[i].Scale.z );

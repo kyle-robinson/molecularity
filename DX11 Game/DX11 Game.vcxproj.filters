@@ -201,7 +201,7 @@
     <ClCompile Include="UI\Wigets\widget.cpp">
       <Filter>UI\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\Buttion_Widget.cpp">
+    <ClCompile Include="UI\Wigets\Button_Widget.cpp">
       <Filter>UI\widgets</Filter>
     </ClCompile>
     <ClCompile Include="UI\Wigets\ColourBlock.cpp">
@@ -216,7 +216,7 @@
     <ClCompile Include="UI\Wigets\Energy_Bar_Widget.cpp">
       <Filter>UI\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\Immage_Widget.cpp">
+    <ClCompile Include="UI\Wigets\Image_Widget.cpp">
       <Filter>UI\widgets</Filter>
     </ClCompile>
     <ClCompile Include="UI\Wigets\Input_Widget.cpp">
@@ -497,7 +497,7 @@
     <ClInclude Include="UI\WidgetIncludes.h">
       <Filter>UI\widgets</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\Buttion_Widget.h">
+    <ClInclude Include="UI\Wigets\Button_Widget.h">
       <Filter>UI\widgets</Filter>
     </ClInclude>
     <ClInclude Include="UI\Wigets\ColourBlock.h">
@@ -512,7 +512,7 @@
     <ClInclude Include="UI\Wigets\Energy_Bar_Widget.h">
       <Filter>UI\widgets</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\Immage_Widget.h">
+    <ClInclude Include="UI\Wigets\Image_Widget.h">
       <Filter>UI\widgets</Filter>
     </ClInclude>
     <ClInclude Include="UI\Wigets\Input_Widget.h">
