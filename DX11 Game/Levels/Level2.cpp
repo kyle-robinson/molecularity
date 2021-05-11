@@ -7,7 +7,7 @@
 #include<UI/HUD_UI.h>
 #include<UI/Pause.h>
 #include<UI/Settings_Menu_UI.h>
-#include<UI/Main_Menu_UI.h>
+
 Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
 bool Level2::OnCreate()
@@ -24,17 +24,6 @@ bool Level2::OnCreate()
 			if ( !crosshair.Initialize( graphics->device.Get(), graphics->context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
 			crosshair.SetInitialPosition( graphics->GetWidth() / 2 - crosshair.GetWidth() / 2, graphics->GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
 
-			//add level UI 
-			shared_ptr<HUD_UI> HUD = make_shared<HUD_UI>();
-			_UiManager->AddUi(HUD, "HUD");
-
-			shared_ptr<Pause> PauseUI = make_shared<Pause>();
-			_UiManager->AddUi(PauseUI, "Pause");
-
-			shared_ptr<Settings_Menu_UI> settingsUi = make_shared<Settings_Menu_UI>();
-			_UiManager->AddUi(settingsUi, "Settings");
-
-			_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
 		}
 	}
 	catch ( COMException& exception )

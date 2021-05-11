@@ -3,10 +3,7 @@
 
 HUD_UI::HUD_UI()
 {
-	EventSystem::Instance()->AddClient(EVENTID::EnergyUpdateEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::ToolModeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	
 }
 
 HUD_UI::~HUD_UI()
@@ -16,7 +13,11 @@ HUD_UI::~HUD_UI()
 
 void HUD_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
 {
-	EventSystem::Instance()->ProcessEvents();
+	EventSystem::Instance()->AddClient(EVENTID::EnergyUpdateEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::ToolModeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
 
 	for (auto& setting : SettingsData)
@@ -86,7 +87,7 @@ void HUD_UI::Update()
 	//crosshair
 	HUDImages[1].Function("HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200 * hudScale,200 * hudScale }, { _SizeOfScreen.x / 2 - (200 * hudScale) / 2,  _SizeOfScreen.y / 2 - (200 * hudScale) / 2 });
 	//bar data
-	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12,100 }, "Resources\\Textures\\HUD\\energy_Top.dds", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - (250 * hudScale) }, energy);
+	HUDenergyWidget.Function(Colour{ 0,0,0 }, Colour{ 207, 164, 12 }, "Resources/Textures/HUD/energy_Top.dds", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - (250 * hudScale) }, energy);
 
 
 }

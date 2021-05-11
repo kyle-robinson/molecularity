@@ -3,10 +3,7 @@
 
 Pause::Pause()
 {
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+	
 }
 
 Pause::~Pause()
@@ -15,6 +12,12 @@ Pause::~Pause()
 
 void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
 {
+
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+
 	_isPuased = false;
 	_Device = device;
 	_Contex = contex;
@@ -48,7 +51,7 @@ void Pause::Update()
 		}
 		else if (PuaseButtions[2].Function("Settings", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 			//settings
-			EventSystem::Instance()->AddEvent(EVENTID::GAmeSettingsEvent);
+			EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
 		}
 		else if (PuaseButtions[3].Function("Exit", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 			//exit
@@ -146,4 +149,3 @@ void Pause::CleanUp()
  
 }
 
-//FONTS need to be passed in 

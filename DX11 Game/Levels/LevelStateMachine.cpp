@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "LevelStateMachine.h"
 
-LevelStateMachine::LevelStateMachine() : levels( 0 ), currentLevel( 0 ) { }
+LevelStateMachine::LevelStateMachine() : levels(0), currentLevel(0) { AddToEvent(); }
 
 void LevelStateMachine::Update( const float dt )
 {
@@ -52,8 +52,21 @@ void LevelStateMachine::SwitchTo( uint32_t id )
 
 void LevelStateMachine::AddToEvent()
 {
+	EventSystem::Instance()->AddClient(EVENTID::GameLevelChangeEvent, this);
 }
 
 void LevelStateMachine::HandleEvent(Event* event)
 {
+	//swich level
+	switch (event->GetEventID())
+	{
+	case EVENTID::GameLevelChangeEvent:
+	{
+		
+		SwitchTo(*static_cast<int*>(event->GetData()));
+
+	}
+	
+	}
+
 }

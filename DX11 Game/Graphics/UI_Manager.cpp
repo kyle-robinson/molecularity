@@ -45,10 +45,44 @@ void UI_Manager::Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS
 
 }
 
+std::shared_ptr<UI> UI_Manager::GetCustomUi(std::string UIName)
+{
+
+	for (auto const& UIItem : UiList)
+	{
+		if (UIItem.first == UIName) {
+			return UiList[UIName];
+		}
+	}
+	return nullptr;
+}
+
 void UI_Manager::AddUi(std::shared_ptr < UI> NewUI, string Name)
 {
-	UiList[Name] = NewUI;
+	//check if it is in list
+	bool ToAdd = true;
+	for (auto const& UIItem : UiList)
+	{
+		if (UIItem.first == Name) {
+			ToAdd = false;
+			break;
+		}
+	}
+	if (ToAdd) {
+		UiList[Name] = NewUI;
+	}
 	
+}
+
+void UI_Manager::RemoveUI(std::string Name)
+{
+	for (auto i = UiList.begin(); i != UiList.end(); i++) {
+		if (i->first == Name) {
+				//Delete the client in question. No need to keep going since its a unique and more cant exist
+				i = UiList.erase(i);
+				break;
+		}
+	}
 }
 
 void UI_Manager::HandleEvent(Event* event)

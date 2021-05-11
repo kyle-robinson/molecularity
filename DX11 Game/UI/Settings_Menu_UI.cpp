@@ -6,7 +6,7 @@ Settings_Menu_UI::Settings_Menu_UI()
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
 	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::GAmeSettingsEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameSettingsEvent, this);
 }
 
 Settings_Menu_UI::~Settings_Menu_UI()
@@ -20,10 +20,6 @@ void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* cont
 	_Device = device;
 	_Contex = contex;
 	_cb_vs_matrix_2d = cb_vs_matrix_2d;
-
-
-
-	
 
 	//font
 	HeadderTextRenderer = make_shared<TextRenderer>("OpenSans_50.spritefont", _Device.Get(), _Contex.Get());
@@ -375,7 +371,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 
 	switch (event->GetEventID())
 	{
-	case EVENTID::GAmeSettingsEvent:
+	case EVENTID::GameSettingsEvent:
 	{
 		_isSettings = true;
 	}

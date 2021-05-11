@@ -6,25 +6,27 @@
 class Input;
 
 //ui driver code
-class UI_Manager: public Listener
+class UI_Manager : public Listener
 {
 public:
 	UI_Manager();
-	
 
-	void Initialize( ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d);
+
+	void Initialize(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d);
 	~UI_Manager();
 
 	void Update();
 	void Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
-	
-	
+
+
 	//turn off ui
 	bool GetToDraw()const { return IsToDraw; }
 	void SetToDraw(bool ToDraw) { IsToDraw = ToDraw; }
 
-	std::shared_ptr <UI> GetCustomUi(std::string UIName){return UiList[UIName];}
+	std::shared_ptr <UI> GetCustomUi(std::string UIName);
+
 	void AddUi(std::shared_ptr < UI> NewUI, std::string Name);
+	void RemoveUI(std::string Name);
 	void HandleEvent(Event* event);
 
 

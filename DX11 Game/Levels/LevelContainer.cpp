@@ -18,10 +18,11 @@
 //ui
 #include<Graphics/UI_Manager.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI)
 {
 	graphics = gfx;
 	cameras = camera;
+	_UiManager = UI;
 	this->imgui = imgui;
 	if ( !InitializeScene() )
 		return false;
@@ -92,14 +93,7 @@ bool LevelContainer::InitializeScene()
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
 
-		//UI
-		{
-			_UiManager = std::make_shared<UI_Manager>();
-			
-		}
-
-
-
+	
 	}
 	catch ( COMException& exception )
 	{

@@ -2,12 +2,8 @@
 #include "Level1.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
-//ui
-#include<Graphics/UI_Manager.h>
-#include<UI/HUD_UI.h>
-#include<UI/Pause.h>
-#include<UI/Settings_Menu_UI.h>
-#include<UI/Main_Menu_UI.h>
+
+
 
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
@@ -26,16 +22,9 @@ bool Level1::OnCreate()
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
 
 			//add level UI 
-			shared_ptr<HUD_UI> HUD = make_shared<HUD_UI>();
-			_UiManager->AddUi(HUD,"HUD");
-
-			shared_ptr<Pause> PauseUI = make_shared<Pause>();
-			_UiManager->AddUi(PauseUI, "Pause");
-
-			shared_ptr<Settings_Menu_UI> settingsUi = make_shared<Settings_Menu_UI>();
-			_UiManager->AddUi(settingsUi, "Settings");
-
-			_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
+			 HUD = make_shared<HUD_UI>();
+			 PauseUI = make_shared<Pause>();
+				
 		}
 	}
 	catch ( COMException& exception )
@@ -49,6 +38,14 @@ bool Level1::OnCreate()
 void Level1::OnSwitch()
 {
 	// update items on level switch here...
+	_UiManager->RemoveUI("MainMenu");
+
+
+	//send out editable properties to hud for data
+	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, cubes[0].get()->GetEditableProperties().get());
+	_UiManager->AddUi(HUD, "HUD");
+	_UiManager->AddUi(PauseUI, "Pause");
+	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
 }
 
 void Level1::Render()

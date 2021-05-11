@@ -25,17 +25,24 @@ bool Application::Initialize(
 	{
 		// initialize levels
 		level1 = std::make_shared<Level1>( stateMachine );
-		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui );
+		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui,&_UI_Manager);
 		first.join();
 
 		level2 = std::make_shared<Level2>( stateMachine );
-		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui );
+		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui,&_UI_Manager);
 		second.join();
 
+		//main menu
+		MainMenu = std::make_shared<MainMenu_Level>(stateMachine);
+		std::thread thrird(&MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui,&_UI_Manager);
+		thrird.join();
+		
 		// add levels to state machine
 		level1_ID = stateMachine.Add( level1 );
 		level2_ID = stateMachine.Add( level2 );
-		stateMachine.SwitchTo( level1_ID );
+		MainMenu_ID= stateMachine.Add(MainMenu);
+
+		stateMachine.SwitchTo(MainMenu_ID);
 	}
 
 	// SYSTEMS
@@ -51,7 +58,7 @@ bool Application::Initialize(
 		std::vector<uint32_t> level_IDs;
 		level_IDs.push_back( std::move( level1_ID ) );
 		level_IDs.push_back( std::move( level2_ID ) );
-
+		level_IDs.push_back(std::move(MainMenu_ID));
 		// initialize input
 		input.Initialize( renderWindow, &stateMachine, &cameras, &sound, level_IDs );
 	}
@@ -74,10 +81,8 @@ void Application::Update()
 {
 	// delta time
 	float dt = static_cast< float >( timer.GetMilliSecondsElapsed() );
-
-	if (timer.GetMilliSecondsElapsed() == 60000) {
-		timer.Restart();
-	}
+	timer.Restart();
+	
 
 	// update systems
 	input.Update( dt );
