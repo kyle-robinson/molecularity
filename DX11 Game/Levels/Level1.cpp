@@ -71,7 +71,12 @@ void Level1::RenderFrame()
 
 	// DRAWABLES
 	{
-		hubRoom.Draw();
+		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
+		room.Draw();
+		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
+		
+		if ( levelCompleted )
+			podium.Draw();
 		pressurePlate.Draw();
 
 		// render the cubes
@@ -97,13 +102,28 @@ void Level1::Update( const float dt )
 	LevelContainer::Update( dt );
 	
 	// camera world collisions. Will be player object collisions in the future and ideally not here
-	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
-		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
+	Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
 
-	// update collisions w pressure plate
+	// adjust pressure plate x-position over time
+	static float offset = 0.1f;
+	if ( pressurePlate.GetPositionFloat3().x > 30.0f )
+		offset = -offset;
+	else if ( pressurePlate.GetPositionFloat3().x < -30.0f )
+		offset = 0.1f;
+	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
+	
+	// cube collisions
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
+		// update collisions w pressure plate
+		if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
+		{
+			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
+			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f )
+				levelCompleted = true;
+		}
+
+		// update collisions w other cubes
 		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
 			if ( i != j )
 				cubes[i]->CheckCollisionAABB( cubes[j], dt );

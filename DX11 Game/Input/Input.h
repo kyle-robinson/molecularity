@@ -33,14 +33,14 @@ private:
 	CameraController* cameras;
 	LevelStateMachine* levelSystem;
 	std::vector<uint32_t> level_IDs;
-
+  
 	//key bindes 
 	map<string, unsigned char> KeyBindes;
 	map<string, Mouse::MouseEvent::EventType> MouseBindes;
+  
 	//ui input
 	unsigned char UIChar;
 	MouseData UiMouseData;
-
 };
 
 #endif

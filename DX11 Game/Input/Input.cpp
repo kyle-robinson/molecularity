@@ -127,7 +127,8 @@ void Input::UpdateKeyboard( const float dt )
 	// handle input for single key presses
 	while ( !keyboard.KeyBufferIsEmpty() )
 	{
-		unsigned char keycode = keyboard.ReadKey().GetKeyCode();
+		Keyboard::KeyboardEvent kbe = keyboard.ReadKey();
+		unsigned char keycode = kbe.GetKeyCode();
 
 		// LEVEL SELECTION
 		{
@@ -152,13 +153,13 @@ void Input::UpdateKeyboard( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
+			// set multi-tool type
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				if ( keycode == KeyBindes["Gun_State_One"]) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
 				if ( keycode == KeyBindes["Gun_State_Two"]) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
 			}
 		}
-
 
 		//UI
 		{
@@ -167,13 +168,10 @@ void Input::UpdateKeyboard( const float dt )
 
 
 			if (keycode == KeyBindes["Pause"]) {
-				//puase game
+				// pause game
 				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
-			
 			}
-			
 		}
-		
 	}
 #pragma endregion
 
@@ -203,9 +201,9 @@ void Input::UpdateKeyboard( const float dt )
 	
 		// normalize diagonal movement speed
 		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
-			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
+			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
 		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
-			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
+			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
 
 		// update camera movement
 		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
@@ -227,17 +225,27 @@ void Input::UpdateKeyboard( const float dt )
 			for ( uint32_t j = 0; j < NUM_CUBES; j++ )
 				if ( i != j && level->GetCube()[j]->GetIsHolding() == true )
 					alreadyHeld = true;
-
-			// pick-up cube - set position relative to camera.
-			if ( keyboard.KeyIsPressed(KeyBindes["Action"]) && !alreadyHeld &&
-				 level->GetCube()[i]->GetIsInRange() &&
-				( level->GetCube()[i]->GetIsHovering() ||
-				  level->GetCube()[i]->GetIsHolding() ) )
+      
+			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function
+			if ( ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0 ) &&
+					!alreadyHeld && level->GetCube()[i]->GetIsInRange() &&
+					( level->GetCube()[i]->GetIsHovering() || level->GetCube()[i]->GetIsHolding() ) )
 			{
 				level->GetCube()[i]->SetIsHolding( true );
+
+				// set cube position
+				static int offset = 2;
+				switch ( level->GetCube()[i]->GetEditableProperties()->GetBoxSize() )
+				{
+				case BoxSize::Small:  offset = 1; break;
+				case BoxSize::Normal: offset = 2; break;
+				case BoxSize::Large:  offset = 4; break;
+				}
 				XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
-				cubePosition += cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() * 2;
+				cubePosition += cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() * offset;
 				level->GetCube()[i]->SetPosition( cubePosition );
+
+				// set cube rotation
 				level->GetCube()[i]->SetRotation(
 					level->GetCube()[i]->GetRotationFloat3().x,
 					cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y,
@@ -257,7 +265,19 @@ void Input::UpdateKeyboard( const float dt )
 		if ( keyboard.KeyIsPressed( VK_RIGHT ) )
 			level->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
 		if ( keyboard.KeyIsPressed( VK_LEFT ) )
-			level->GetCube()[0]->GetPhysicsModel()->AddForce( { -0.1f, 0.0f, 0.0f } );
+			level->GetCube()[0]->GetPhysicsModel()->AddForce( -0.1f, 0.0f, 0.0f );
+
+		if ( keyboard.KeyIsPressed( 'R' ) )
+		{
+			//level->GetCube()[0]->AdjustPosition(
+			//	cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() *
+			//	cameras->GetCamera( cameras->GetCurrentCamera() )->GetCameraSpeed() * dt );
+
+			level->GetCube()[0]->GetPhysicsModel()->AddForce(
+				cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector()*
+				cameras->GetCamera( cameras->GetCurrentCamera() )->GetCameraSpeed() * dt
+			);
+		}
 	}
 #pragma endregion
 }
@@ -312,7 +332,7 @@ void Input::UpdateMouse( const float dt )
 				{
 					// change current id of texture to be used on box
 					if ( me.GetType() == MouseBindes["Change_Gun_State_Up"] &&
-						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 3 )
+						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 4 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
 							level->GetCube()[i]->GetEditableProperties()->GetMaterialID() + 1

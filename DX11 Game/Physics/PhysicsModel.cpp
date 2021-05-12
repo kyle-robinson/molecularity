@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PhysicsModel.h"
+#include "CubeProperties.h"
 
 PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 {
@@ -16,7 +17,7 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 	mAcceleration = { 0.0f, 0.0f, 0.0f };
 }
 
-void PhysicsModel::Update( const float dt, bool isHeld )
+void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
 	mIsHeld = isHeld;
 
@@ -31,7 +32,7 @@ void PhysicsModel::Update( const float dt, bool isHeld )
 		Acceleration();
 		Drag();
 		ComputePosition( dt );
-		CheckFloorCollisions();
+		CheckFloorCollisions( properties );
 	}
 	else
 	{
@@ -135,16 +136,28 @@ void PhysicsModel::ComputePosition( const float dt )
 	mTransform->SetPosition( mPosition );
 }
 
-void PhysicsModel::CheckFloorCollisions()
+void PhysicsModel::CheckFloorCollisions( std::shared_ptr<CubeProperties>& properties )
 {
 	mPosition = mTransform->GetPositionFloat3();
 
-	if ( mPosition.y < 0.5f )
+	static float offset = 0.5f;
+	switch ( properties->GetBoxSize() )
+	{
+	case BoxSize::Small:  offset = 0.25f; break;
+	case BoxSize::Normal: offset = 0.5f;  break;
+	case BoxSize::Large:  offset = 1.0f;  break;
+	}
+	if ( mPosition.y < offset )
 	{
 		mVelocity.y = 0.0f;
-		mPosition.y = 0.5f;
+		mPosition.y = offset;
 		mTransform->SetPosition( mPosition );
 	}
+}
+
+void PhysicsModel::AddForce( float x, float y, float z ) noexcept
+{
+	AddForce( XMFLOAT3( x, y, z ) );
 }
 
 void PhysicsModel::AddForce( XMFLOAT3 force ) noexcept
@@ -152,6 +165,13 @@ void PhysicsModel::AddForce( XMFLOAT3 force ) noexcept
 	mNetForce.x += force.x;
 	mNetForce.y += force.y;
 	mNetForce.z += force.z;
+}
+
+void PhysicsModel::AddForce( XMVECTOR force ) noexcept
+{
+	mNetForce.x += XMVectorGetX( force );
+	mNetForce.y += XMVectorGetY( force );
+	mNetForce.z += XMVectorGetZ( force );
 }
 
 void PhysicsModel::ResetForces() noexcept
