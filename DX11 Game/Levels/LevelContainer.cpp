@@ -22,11 +22,12 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui,UI_Manager* UI )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
+	_UiManager = UI;
 	if ( !InitializeScene() )
 		return false;
 	return true;
@@ -102,21 +103,6 @@ bool LevelContainer::InitializeScene()
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
 
-		// UI
-		{
-			_UiManager = std::make_shared<UI_Manager>();
-			
-			shared_ptr<HUD_UI> HUD = make_shared<HUD_UI>();
-			_UiManager->AddUi( HUD, "HUD" );
-
-			shared_ptr<Pause> PauseUI = make_shared<Pause>();
-			_UiManager->AddUi( PauseUI, "Pause" );
-
-			shared_ptr<Settings_Menu_UI> settingsUi = make_shared<Settings_Menu_UI>();
-			_UiManager->AddUi( settingsUi, "Settings" );
-
-			_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
-		}
 	}
 	catch ( COMException& exception )
 	{

@@ -67,7 +67,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		switch ( wParam )
 		{
-		case VK_ESCAPE:
+		case VK_BACK:
 			DestroyWindow( renderWindow.GetHWND() );
 			PostQuitMessage( 0 );
 			return 0;
@@ -267,6 +267,21 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		return DefWindowProc( hWnd, uMsg, wParam, lParam );
 	}
 #pragma endregion
+	case WM_SIZE:
+	{
+		//update screen size
+		RECT windowRect = { 0,0 };
+		if (GetClientRect(renderWindow.GetHWND(), &windowRect)) {
+
+			XMFLOAT2 windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
+			if (windowsize.x == 0 || windowsize.y == 0) {
+				windowsize = { 1280, 720 };
+			}
+			EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
+			
+		}
+		return 0;
+	}
 	default:
 		return DefWindowProc( hWnd, uMsg, wParam, lParam );
 	}

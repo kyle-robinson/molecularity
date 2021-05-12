@@ -15,6 +15,10 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 
+////ui
+//#include<Graphics/UI_Manager.h>
+
+
 class Fog;
 class ImGuiManager;
 class TextRenderer;
@@ -32,7 +36,7 @@ class LevelContainer
 	friend class Application;
 public:
 	virtual ~LevelContainer( void ) = default;
-	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui );
+	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui,UI_Manager* UI );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -75,7 +79,7 @@ protected:
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
 	
 	//UI
-	std::shared_ptr<UI_Manager> _UiManager;
+	UI_Manager* _UiManager;
 private:
 	bool InitializeScene();
 

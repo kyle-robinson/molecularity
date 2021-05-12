@@ -8,10 +8,10 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include <vector>
-
+#include<EventSystem/EventSystem.h>
 using namespace DirectX;
 
-class Sound
+class Sound: public Listener
 {
 public:
 	Sound();
@@ -42,6 +42,13 @@ public:
 		SOUND_COLLISION
 	};
 
+	void SetMusicPause(bool isPause) { for (int i = 0; i < musicVec.size(); i++) { musicVec[i]->setIsPaused(isPause); } } // Sets the ispuase  for music
+
+
+	//eventsystem
+	void AddtoEvent();
+	void HandleEvent(Event* event);
+
 private:
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 
@@ -55,6 +62,12 @@ private:
 
 	float musicVolume = 1.0f;
 	float SoundEffectsVolume = 1.0f;
+
+	//bool for shutting off sound
+	bool musicOn;
+	bool SoundEffectsOn;
+	bool soundON;
+
 };
 
 #endif

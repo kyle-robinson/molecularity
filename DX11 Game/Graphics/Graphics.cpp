@@ -5,7 +5,8 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 {
 	windowWidth = width;
 	windowHeight = height;
-
+	VsynicON = 1;
+	AddtoEvent();
 	if ( !InitializeDirectX( hWnd ) ) return false;
 	if ( !InitializeShaders() ) return false;
 	if ( !InitializeRTT() ) return false;
@@ -138,12 +139,46 @@ void Graphics::PresentScene()
 	backBuffer->BindAsNull( *this );
 
 	// display frame
-	HRESULT hr = swapChain->GetSwapChain()->Present( 1, NULL );
+	HRESULT hr = swapChain->GetSwapChain()->Present(VsynicON, NULL );
 	if ( FAILED( hr ) )
 	{
 		hr == DXGI_ERROR_DEVICE_REMOVED ?
             ErrorLogger::Log( device->GetDeviceRemovedReason(), "Swap Chain. Graphics device removed!" ) :
             ErrorLogger::Log( hr, "Swap Chain failed to render frame!" );
 		exit( -1 );
+	}
+}
+
+void Graphics::AddtoEvent()
+{
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+}
+#include<JSON_Helper.h>
+void Graphics::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+	case EVENTID::WindowSizeChangeEvent:
+	{
+		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
+		windowWidth = _SizeOfScreen.x;
+		windowHeight = _SizeOfScreen.y;
+	}
+	break;
+	case EVENTID::UpdateSettingsEvent: 
+	{
+		//vsysnic
+		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		for (auto& setting : a)
+		{
+			if (setting.Name == "Vsync") {
+				VsynicON = std::get<bool>(setting.Setting);
+			}
+		}
+	}
+	 break;
+	default:
+		break;
 	}
 }

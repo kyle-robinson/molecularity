@@ -30,6 +30,7 @@ public:
 
 	void SetWidthHight(UINT Width, UINT Hight) { width = Width; height = Hight; }
 
+	void AddToEvent();
 	void HandleEvent(Event* event);
 
 	HCURSOR hCursorNormal = NULL;
