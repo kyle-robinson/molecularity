@@ -230,7 +230,7 @@ void Input::UpdateMouse( const float dt )
 			{
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
-					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
+					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, false, XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
 
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( level->GetGraphics()->GetWidth() / 2, level->GetGraphics()->GetHeight() / 2, *level->GetCube()[i] ) )
