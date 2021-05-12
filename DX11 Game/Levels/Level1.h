@@ -4,7 +4,11 @@
 
 #include "Sprite.h"
 #include "LevelStateMachine.h"
-
+//ui
+#include<Graphics/UI_Manager.h>
+#include<UI/HUD_UI.h>
+#include<UI/Pause.h>
+#include<UI/Settings_Menu_UI.h>
 /// <summary>
 /// The first level of the game.
 /// Inherits from Level to render/update objects used in each level.
@@ -24,9 +28,14 @@ private:
 
 	// Scene Objects
 	Sprite crosshair;
-	RenderableGameObject room;
-	RenderableGameObject podium;
+	RenderableGameObject hubRoom;
 	RenderableGameObject pressurePlate;
+
+
+
+	//UI
+	shared_ptr<HUD_UI> HUD;
+	shared_ptr<Pause> PauseUI;
 };
 
 #endif

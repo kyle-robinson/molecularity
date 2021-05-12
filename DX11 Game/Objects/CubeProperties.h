@@ -52,7 +52,7 @@ public:
 
 	void SetBurnable( bool burnable ) noexcept { isBurnable = burnable; }
 	void SetReflective( bool reflective ) noexcept { isReflective = reflective; }
-	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier; EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);}
+	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier;}
 
 private:
 	int sizeID = 1;

@@ -14,15 +14,111 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 
 	keyboard.DisableAutoRepeatKeys();
 	mousePick.Initialize(
-		static_cast< int >( renderWindow.GetWidth() ),
-		static_cast< int >( renderWindow.GetHeight() )
+		static_cast<int>( renderWindow.GetWidth() ),
+		static_cast<int>( renderWindow.GetHeight() )
 	);
+	
+	AddToEvent();
 }
 
 void Input::Update( const float dt )
 {
 	UpdateKeyboard( dt );
 	UpdateMouse( dt );
+}
+
+void Input::AddToEvent()
+{
+	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
+	
+}
+
+void Input::HandleEvent(Event* event)
+{
+	switch (event->GetEventID())
+	{
+	case EVENTID::GamePauseEvent:
+	{
+			EnableCursor();
+	}
+	break;
+	case EVENTID::GameUnPauseEvent:
+	{
+		UiMouseData.LPress = false;
+		UiMouseData.MPress = false;
+		UiMouseData.RPress = false;
+		DisableCursor();
+	}
+	break;
+	case EVENTID::WindowSizeChangeEvent:
+	{
+		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
+		mousePick.SetWidthHight(_SizeOfScreen.x, _SizeOfScreen.y);
+
+		if (
+			mouse.GetPosX() <= 0 &&
+			mouse.GetPosX() >= (0 + _SizeOfScreen.x) &&
+			mouse.GetPosY() <= 0 &&
+			mouse.GetPosY() >= (0 + _SizeOfScreen.y)) {
+			UiMouseData.LPress = false;
+			UiMouseData.MPress = false;
+			UiMouseData.RPress = false;
+		}
+		
+
+	} 
+	break;
+	case EVENTID::UpdateSettingsEvent:
+	{
+		//controlls 
+		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		for (auto& setting : a)
+		{
+			//only for player not debug key changes
+			if (setting.Type == JSON::SettingType::ControllType) {
+				//change controll
+
+				//control map
+				string key =std::get<string>(setting.Setting).c_str();
+
+				//convert to input commands
+				
+				if (key == "SCROLL WHEEL") {
+					MouseBindes[setting.Name+"_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+					MouseBindes[setting.Name+"_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+				}
+				else if (key == "RMB")
+				{
+					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::RPress;
+				}
+				else if (key == "LMB")
+				{
+					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::LPress;
+				}
+				else if (key == "MMB")
+				{
+					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::MPress;
+				}
+				else
+				{
+					unsigned char* valChar= (unsigned char*)key.c_str();
+					KeyBindes[setting.Name]= *valChar;
+				}
+				
+			}
+			//mouse inputs
+				MouseBindes["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+				MouseBindes["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+				MouseBindes["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
+
+		}
+		
+	}
+	break;
+	}
 }
 
 void Input::UpdateKeyboard( const float dt )
@@ -58,56 +154,26 @@ void Input::UpdateKeyboard( const float dt )
 		{
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
-				if ( keycode == '1' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
-				if ( keycode == '2' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
+				if ( keycode == KeyBindes["Gun_State_One"]) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
+				if ( keycode == KeyBindes["Gun_State_Two"]) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
 			}
 		}
 
-		// UI
+
+		//UI
 		{
-			UIChar = keyboard.ReadChar();
-			EventSystem::Instance()->AddEvent( EVENTID::UIKeyInput, &UIChar );
+			UIChar = keycode;
+			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
 
-			if ( keycode == 'P' ) {
+
+			if (keycode == KeyBindes["Pause"]) {
 				//puase game
-				EventSystem::Instance()->AddEvent( EVENTID::GamePauseEvent );
-				EnableCursor();
+				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+			
 			}
-
-			//for ui when exit pause: to be remove when decoupling is complet
-			if ( keycode == 'L' ) {
-				DisableCursor();
-			}
-
-			//full screen
-			WINDOWPLACEMENT g_wpPrev = { sizeof( g_wpPrev ) };
-			DWORD dwStyle = GetWindowLong( renderWindow.GetHWND(), GWL_STYLE );
-			if ( keycode == 'M' ) {
-
-				if ( dwStyle & WS_OVERLAPPEDWINDOW ) {
-					MONITORINFO mi = { sizeof( mi ) };
-					if ( GetWindowPlacement( renderWindow.GetHWND(), &g_wpPrev ) &&
-						GetMonitorInfo( MonitorFromWindow( renderWindow.GetHWND(),
-							MONITOR_DEFAULTTOPRIMARY ), &mi ) ) {
-						SetWindowLong( renderWindow.GetHWND(), GWL_STYLE,
-							dwStyle & ~WS_OVERLAPPEDWINDOW );
-						SetWindowPos( renderWindow.GetHWND(), HWND_TOP,
-							mi.rcMonitor.left, mi.rcMonitor.top,
-							mi.rcMonitor.right - mi.rcMonitor.left,
-							mi.rcMonitor.bottom - mi.rcMonitor.top,
-							SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
-					}
-				}
-			}
-			//not full screen
-			if ( keycode == 'N' ) {
-				SetWindowLong( renderWindow.GetHWND(), GWL_STYLE,
-					dwStyle | WS_OVERLAPPEDWINDOW );
-				SetWindowPlacement( renderWindow.GetHWND(), &g_wpPrev );
-				SetWindowPos( renderWindow.GetHWND(), NULL, 0, 0, 1296, 737, SWP_SHOWWINDOW | SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
-			}
+			
 		}
-
+		
 	}
 #pragma endregion
 
@@ -131,21 +197,21 @@ void Input::UpdateKeyboard( const float dt )
 		else
 		{
 			static bool jumping = false;
-			if ( keyboard.KeyIsPressed( VK_SPACE ) || jumping )
+			if ( keyboard.KeyIsPressed(KeyBindes["Jump"]) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
 		}
-
+	
 		// normalize diagonal movement speed
-		if ( keyboard.KeyIsPressed( 'W' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
+		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
-		if ( keyboard.KeyIsPressed( 'S' ) && ( keyboard.KeyIsPressed( 'A' ) || keyboard.KeyIsPressed( 'D' ) ) )
+		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.005f );
 
 		// update camera movement
-		if ( keyboard.KeyIsPressed( 'W' ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'A' ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'S' ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( 'D' ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Left"]) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBindes["Right"]) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 
 		// set camera speed
 		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
@@ -163,10 +229,10 @@ void Input::UpdateKeyboard( const float dt )
 					alreadyHeld = true;
 
 			// pick-up cube - set position relative to camera.
-			if ( keyboard.KeyIsPressed( 'E' ) && !alreadyHeld &&
-				level->GetCube()[i]->GetIsInRange() &&
+			if ( keyboard.KeyIsPressed(KeyBindes["Action"]) && !alreadyHeld &&
+				 level->GetCube()[i]->GetIsInRange() &&
 				( level->GetCube()[i]->GetIsHovering() ||
-					level->GetCube()[i]->GetIsHolding() ) )
+				  level->GetCube()[i]->GetIsHolding() ) )
 			{
 				level->GetCube()[i]->SetIsHolding( true );
 				XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
@@ -189,7 +255,7 @@ void Input::UpdateKeyboard( const float dt )
 	{
 		// update cube movement
 		if ( keyboard.KeyIsPressed( VK_RIGHT ) )
-			level->GetCube()[0]->GetPhysicsModel()->AddForce( { 1.0f, 0.0f, 0.0f } );
+			level->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
 		if ( keyboard.KeyIsPressed( VK_LEFT ) )
 			level->GetCube()[0]->GetPhysicsModel()->AddForce( { -0.1f, 0.0f, 0.0f } );
 	}
@@ -213,8 +279,8 @@ void Input::UpdateMouse( const float dt )
 				{
 					cameras->GetCamera( cameras->GetCurrentCamera() )->AdjustRotation(
 						XMFLOAT3(
-							static_cast< float >( me.GetPosY() ) * 0.005f,
-							static_cast< float >( me.GetPosX() ) * 0.005f,
+							static_cast<float>( me.GetPosY() ) * 0.005f,
+							static_cast<float>( me.GetPosX() ) * 0.005f,
 							0.0f
 						)
 					);
@@ -230,7 +296,9 @@ void Input::UpdateMouse( const float dt )
 			{
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
-					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
+				{
+					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, XMFLOAT3(0.0f, 0.0f, 0.0f) );
+				}
 
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( level->GetGraphics()->GetWidth() / 2, level->GetGraphics()->GetHeight() / 2, *level->GetCube()[i] ) )
@@ -243,14 +311,14 @@ void Input::UpdateMouse( const float dt )
 				if ( level->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
 				{
 					// change current id of texture to be used on box
-					if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
+					if ( me.GetType() == MouseBindes["Change_Gun_State_Up"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 3 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
 							level->GetCube()[i]->GetEditableProperties()->GetMaterialID() + 1
 						);
 					}
-					else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
+					else if ( me.GetType() == MouseBindes["Change_Gun_State_Down"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetMaterialID() > 0 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetMaterialID(
@@ -259,10 +327,10 @@ void Input::UpdateMouse( const float dt )
 					}
 
 					// update box texture on click while hovering
-					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && level->GetCube()[i]->GetIsHovering() )
+					if ( me.GetType() == MouseBindes["Fire_Tool"] && level->GetCube()[i]->GetIsHovering() )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetBoxType(
-							static_cast< BoxType >( level->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
+							static_cast<BoxType>( level->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
 						);
 					}
 				}
@@ -272,14 +340,14 @@ void Input::UpdateMouse( const float dt )
 				else if ( level->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
 				{
 					// set size multiplier to be applied to the box
-					if ( me.GetType() == Mouse::MouseEvent::EventType::WheelUp &&
+					if ( me.GetType() == MouseBindes["Change_Gun_State_Up"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetSizeID() < 2 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetSizeID(
 							level->GetCube()[i]->GetEditableProperties()->GetSizeID() + 1
 						);
 					}
-					else if ( me.GetType() == Mouse::MouseEvent::EventType::WheelDown &&
+					else if ( me.GetType() == MouseBindes["Change_Gun_State_Down"] &&
 						level->GetCube()[i]->GetEditableProperties()->GetSizeID() > 0 )
 					{
 						level->GetCube()[i]->GetEditableProperties()->SetSizeID(
@@ -288,7 +356,7 @@ void Input::UpdateMouse( const float dt )
 					}
 
 					// set the box scale to use based on the option previously selected
-					if ( me.GetType() == Mouse::MouseEvent::EventType::LPress && level->GetCube()[i]->GetIsHovering() )
+					if ( me.GetType() == MouseBindes["Fire_Tool"] && level->GetCube()[i]->GetIsHovering() )
 					{
 						switch ( level->GetCube()[i]->GetEditableProperties()->GetSizeID() )
 						{
@@ -309,26 +377,32 @@ void Input::UpdateMouse( const float dt )
 				}
 #pragma endregion
 			}
-
-			// UI MOUSE INPUT
+			//UI mouse input
 			{
-				UiMouseData.Pos = { static_cast<float>( me.GetPosX() ),static_cast<float>( me.GetPosY() ) };
-				if ( mouse.IsRightDown() && cursorEnabled )
+				UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
+				if (mouse.IsRightDown() && cursorEnabled) {
 					UiMouseData.RPress = true;
+				}
 				else
+				{
 					UiMouseData.RPress = false;
-
-				if ( mouse.IsLeftDown() && cursorEnabled )
+				}
+				if (mouse.IsLeftDown() && cursorEnabled) {
 					UiMouseData.LPress = true;
+				}
 				else
+				{
 					UiMouseData.LPress = false;
-
-				if ( mouse.IsMiddleDown() && cursorEnabled )
+				}
+				if (mouse.IsMiddleDown() && cursorEnabled) {
 					UiMouseData.MPress = true;
+				}
 				else
+				{
 					UiMouseData.MPress = false;
+				}
 
-				EventSystem::Instance()->AddEvent( EVENTID::UIMouseInput, &UiMouseData );
+				EventSystem::Instance()->AddEvent(EVENTID::UIMouseInput, &UiMouseData);
 
 			}
 		}

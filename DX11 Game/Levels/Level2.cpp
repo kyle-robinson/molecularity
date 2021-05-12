@@ -2,6 +2,11 @@
 #include "Level2.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
+//ui
+#include<Graphics/UI_Manager.h>
+#include<UI/HUD_UI.h>
+#include<UI/Pause.h>
+#include<UI/Settings_Menu_UI.h>
 
 Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
@@ -18,6 +23,7 @@ bool Level2::OnCreate()
 			// sprites
 			if ( !crosshair.Initialize( graphics->device.Get(), graphics->context.Get(), 16, 16, "Resources\\Textures\\crosshair.png", cb_vs_matrix_2d ) ) return false;
 			crosshair.SetInitialPosition( graphics->GetWidth() / 2 - crosshair.GetWidth() / 2, graphics->GetHeight() / 2 - crosshair.GetHeight() / 2, 0 );
+
 		}
 	}
 	catch ( COMException& exception )
@@ -70,7 +76,7 @@ void Level2::RenderFrame()
 			cb_ps_scene.data.useTexture = TRUE;
 			if ( !cb_ps_scene.ApplyChanges() ) return;
 			graphics->context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-			crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
+			//crosshair.Draw( cameras->GetUICamera().GetWorldOrthoMatrix() );
 		}
 	}
 }

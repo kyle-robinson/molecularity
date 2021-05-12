@@ -3,6 +3,8 @@
 #include "Collisions.h"
 #include "Rasterizer.h"
 
+
+
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
 bool Level1::OnCreate()
@@ -12,17 +14,17 @@ bool Level1::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			room.SetInitialPosition( 0.1f, 0.0f, -20.0f );
-
-			if ( !podium.Initialize( "Resources\\Models\\Levels\\Podium.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			podium.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			podium.SetInitialPosition( 0.0f, 0.0f, 10.0f );
+			if ( !hubRoom.Initialize( "Resources\\Models\\Hub\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			hubRoom.SetInitialScale( 4.0f, 4.0f, 4.0f );
 
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 45.0f );
+			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 15.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
+
+			//add level UI 
+			 HUD = make_shared<HUD_UI>();
+			 PauseUI = make_shared<Pause>();
+				
 		}
 	}
 	catch ( COMException& exception )
@@ -36,6 +38,14 @@ bool Level1::OnCreate()
 void Level1::OnSwitch()
 {
 	// update items on level switch here...
+	_UiManager->RemoveUI("MainMenu");
+
+
+	//send out editable properties to hud for data
+	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, cubes[0].get()->GetEditableProperties().get());
+	_UiManager->AddUi(HUD, "HUD");
+	_UiManager->AddUi(PauseUI, "Pause");
+	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
 }
 
 void Level1::Render()
@@ -61,14 +71,10 @@ void Level1::RenderFrame()
 
 	// DRAWABLES
 	{
-		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
-		room.Draw();
-		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
-		
-		podium.Draw();
+		hubRoom.Draw();
 		pressurePlate.Draw();
 
-		// render objects (these are objects that are found in each level)
+		// render the cubes
 		LevelContainer::RenderFrame();
 	}
 
@@ -80,6 +86,8 @@ void Level1::RenderFrame()
 			cb_ps_scene.data.useTexture = TRUE;
 			if ( !cb_ps_scene.ApplyChanges() ) return;
 			graphics->context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+
+			
 		}
 	}
 }
@@ -89,15 +97,8 @@ void Level1::Update( const float dt )
 	LevelContainer::Update( dt );
 	
 	// camera world collisions. Will be player object collisions in the future and ideally not here
-	Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
-
-	// adjust pressure plate x-position over time
-	static float offset = 0.1f;
-	if ( pressurePlate.GetPositionFloat3().x > 30.0f )
-		offset = -offset;
-	else if ( pressurePlate.GetPositionFloat3().x < -30.0f )
-		offset = 0.1f;
-	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
+	if ( !Collisions::CheckCollisionCircle( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, 25.0f ) )
+		cameras->CollisionResolution( cameras->GetCamera( JSON::CameraType::Default ), hubRoom, dt );
 
 	// update collisions w pressure plate
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )

@@ -9,6 +9,8 @@
 #include <wrl/client.h>
 #include <unordered_map>
 
+#include<EventSystem/EventSystem.h>
+
 #include "Shaders.h"
 #include "Quad.h"
 
@@ -28,10 +30,11 @@ namespace Bind
 /// Initializes DirectX components and shaders required by all scenes/levels.
 /// Holds some pipeline functions that clear/present the current frame and bind DirectX components.
 /// </summary>
-class Graphics
+class Graphics:public Listener
 {
 	friend class Level1;
 	friend class Level2;
+	friend class MainMenu_Level;
 	friend class LevelContainer;
 
 	friend class Application;
@@ -50,6 +53,12 @@ public:
 	void UpdateRenderState();
 	void RenderSceneToTexture();
 	void PresentScene();
+
+
+	//eventsystem
+	void AddtoEvent();
+	void HandleEvent(Event* event);
+
 
 	// Pipeline Getters
 	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }
@@ -102,6 +111,10 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 	std::unordered_map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
 	std::unordered_map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
+
+
+	int VsynicON;
+
 };
 
 #endif
