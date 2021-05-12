@@ -28,11 +28,9 @@ private:
 	LevelStateMachine* levelSystem;
 	std::vector<uint32_t> level_IDs;
 
-
-	//ui input
+	// ui input
 	unsigned char UIChar;
 	MouseData UiMouseData;
-
 };
 
 #endif

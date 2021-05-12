@@ -31,7 +31,8 @@ void Input::UpdateKeyboard( const float dt )
 	// handle input for single key presses
 	while ( !keyboard.KeyBufferIsEmpty() )
 	{
-		unsigned char keycode = keyboard.ReadKey().GetKeyCode();
+		Keyboard::KeyboardEvent kbe = keyboard.ReadKey();
+		unsigned char keycode = kbe.GetKeyCode();
 
 		// LEVEL SELECTION
 		{
@@ -56,8 +57,10 @@ void Input::UpdateKeyboard( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
+			// set multi-tool type
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
+				// update tool type for each cube
 				if ( keycode == '1' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
 				if ( keycode == '2' ) level->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
 			}
@@ -68,46 +71,47 @@ void Input::UpdateKeyboard( const float dt )
 			UIChar = keyboard.ReadChar();
 			EventSystem::Instance()->AddEvent( EVENTID::UIKeyInput, &UIChar );
 
-			if ( keycode == 'P' ) {
-				//puase game
+			if ( keycode == 'P' )
+			{
+				// pause game
 				EventSystem::Instance()->AddEvent( EVENTID::GamePauseEvent );
 				EnableCursor();
 			}
 
-			//for ui when exit pause: to be remove when decoupling is complet
-			if ( keycode == 'L' ) {
+			// for ui when exit pause: to be remove when decoupling is complet
+			if ( keycode == 'L' )
 				DisableCursor();
-			}
 
-			//full screen
+			// full screen
 			WINDOWPLACEMENT g_wpPrev = { sizeof( g_wpPrev ) };
 			DWORD dwStyle = GetWindowLong( renderWindow.GetHWND(), GWL_STYLE );
-			if ( keycode == 'M' ) {
-
-				if ( dwStyle & WS_OVERLAPPEDWINDOW ) {
+			if ( keycode == 'M' )
+			{
+				if ( dwStyle & WS_OVERLAPPEDWINDOW )
+				{
 					MONITORINFO mi = { sizeof( mi ) };
 					if ( GetWindowPlacement( renderWindow.GetHWND(), &g_wpPrev ) &&
-						GetMonitorInfo( MonitorFromWindow( renderWindow.GetHWND(),
-							MONITOR_DEFAULTTOPRIMARY ), &mi ) ) {
-						SetWindowLong( renderWindow.GetHWND(), GWL_STYLE,
-							dwStyle & ~WS_OVERLAPPEDWINDOW );
-						SetWindowPos( renderWindow.GetHWND(), HWND_TOP,
+						 GetMonitorInfo( MonitorFromWindow( renderWindow.GetHWND(), MONITOR_DEFAULTTOPRIMARY ), &mi ) )
+					{
+						SetWindowLong( renderWindow.GetHWND(), GWL_STYLE, dwStyle & ~WS_OVERLAPPEDWINDOW );
+						SetWindowPos(
+							renderWindow.GetHWND(), HWND_TOP,
 							mi.rcMonitor.left, mi.rcMonitor.top,
 							mi.rcMonitor.right - mi.rcMonitor.left,
 							mi.rcMonitor.bottom - mi.rcMonitor.top,
-							SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
+							SWP_NOOWNERZORDER | SWP_FRAMECHANGED
+						);
 					}
 				}
 			}
-			//not full screen
-			if ( keycode == 'N' ) {
-				SetWindowLong( renderWindow.GetHWND(), GWL_STYLE,
-					dwStyle | WS_OVERLAPPEDWINDOW );
+			// not full screen
+			if ( keycode == 'N' )
+			{
+				SetWindowLong( renderWindow.GetHWND(), GWL_STYLE, dwStyle | WS_OVERLAPPEDWINDOW );
 				SetWindowPlacement( renderWindow.GetHWND(), &g_wpPrev );
 				SetWindowPos( renderWindow.GetHWND(), NULL, 0, 0, 1296, 737, SWP_SHOWWINDOW | SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
 			}
 		}
-
 	}
 #pragma endregion
 
@@ -162,14 +166,13 @@ void Input::UpdateKeyboard( const float dt )
 				if ( i != j && level->GetCube()[j]->GetIsHolding() == true )
 					alreadyHeld = true;
 
-			// pick-up cube - set position relative to camera.
-			if ( keyboard.KeyIsPressed( 'E' ) && !alreadyHeld &&
-				level->GetCube()[i]->GetIsInRange() &&
-				( level->GetCube()[i]->GetIsHovering() ||
-					level->GetCube()[i]->GetIsHolding() ) )
+			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function
+			if ( ( ( GetKeyState( 'E' ) & 0x0001 ) != 0 ) &&
+					!alreadyHeld && level->GetCube()[i]->GetIsInRange() &&
+					( level->GetCube()[i]->GetIsHovering() || level->GetCube()[i]->GetIsHolding() ) )
 			{
 				level->GetCube()[i]->SetIsHolding( true );
-				
+
 				// set cube position
 				static int offset = 2;
 				switch ( level->GetCube()[i]->GetEditableProperties()->GetBoxSize() )
