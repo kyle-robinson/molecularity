@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include <vector>
+#include <string>
 #include<EventSystem/EventSystem.h>
 using namespace DirectX;
 
@@ -17,34 +18,26 @@ public:
 	Sound();
 	~Sound();
 
-	HRESULT InitialiseSounds();
+	void InitialiseMusicTrack(const char* fileLocation, std::string musicName);
+	void InitialiseSoundEffect(const char* fileLocation, std::string soundName);
 
-	HRESULT UpdatePosition( XMFLOAT3 position, float rotation );
+	void ClearAudio();
+	void RemoveSoundEffects() { engine->removeAllSoundSources(); }
 
-	HRESULT PlayMusic( int musicNum, bool loops = true ); //Plays music
-	HRESULT PlaySoundEffects( int soundNum, bool loops = false, XMFLOAT3 soundPosition = { NULL, NULL, NULL }, float minDistance = 1.0f); //Plays sound effects
+	void UpdatePosition( XMFLOAT3 position, float rotation );
+
+	void PlayMusic( std::string musicName, bool loops = true ); //Plays music
+	void PlaySoundEffects( std::string soundName, bool loops = false, XMFLOAT3 soundPosition = { NULL, NULL, NULL }, float minDistance = 1.0f ); //Plays sound effects
 
 	float GetMusicVolume() { return musicVolume; } // Gets the volume level for music
-	void SetMusicVolume( float volume ) { musicVolume = volume; for ( int i = 0; i < musicVec.size(); i++ ) { musicVec[i]->setVolume( musicVolume ); } } // Sets the volume level for music
+	void SetMusicVolume( float volume ) { musicVolume = volume; for ( auto music : musicTracks ) { music.second->setVolume( musicVolume ); } } // Sets the volume level for music
 
-	int GetMusicTrackNum() { return currentMusicTrack; }
+	std::string GetCurrentMusicTrack() { return currentMusicTrack; }
 
 	float GetSoundEffectsVolume() { return soundEffectsVolume; } // Gets the volume level for sound effects
-	void SetSoundEffectsVolume( float volume ) { soundEffectsVolume = volume; for ( int i = 0; i < soundEffectsVec.size(); i++ ) { soundEffectsVec[i]->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
+	void SetSoundEffectsVolume( float volume ) { soundEffectsVolume = volume; for ( auto sound : soundEffects ) { sound.second->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
 
-	enum MUSIC_NAMES // Names of all the music tracks
-	{
-		MUSIC_LEVEL = 0,
-		MUSIC_MENU
-	};
-
-	enum SOUND_NAMES // Names of all the sound effects
-	{
-		SOUND_TOOLUSE = 0,
-		SOUND_COLLISION
-	};
-
-	void SetMusicPause(bool isPause) { for (int i = 0; i < musicVec.size(); i++) { musicVec[i]->setIsPaused(isPause); } } // Sets the ispuase  for music
+	void SetMusicPause(bool isPause) { for (auto music : musicTracks) { music.second->setIsPaused(isPause); } } // Sets the ispuase  for music
 
 
 	//eventsystem
@@ -57,16 +50,16 @@ private:
 	irrklang::vec3df camPosition; // Camera's position
 	irrklang::vec3df camLookDir; // Camera's rotation around the Y axis, used for look direction
 
-	std::vector<irrklang::ISound*> musicVec; // Stores each music track
-	std::vector<irrklang::ISoundSource*> soundEffectsVec; // Stores each of the sound effects
+	std::map<std::string, irrklang::ISound*> musicTracks; // Stores each music track
+	std::map<std::string, irrklang::ISoundSource*> soundEffects; // Stores each of the sound effects
 
-	float musicVolume = 1.0f;
-	float soundEffectsVolume = 1.0f;
-	int currentMusicTrack;
+	float musicVolume;
+	float soundEffectsVolume;
+	std::string currentMusicTrack;
 
 	//bool for shutting off sound
 	bool musicOn;
-	bool SoundEffectsOn;
+	bool soundEffectsOn;
 	bool soundON;
 };
 

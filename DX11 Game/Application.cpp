@@ -25,16 +25,16 @@ bool Application::Initialize(
 	{
 		// initialize levels
 		level1 = std::make_shared<Level1>( stateMachine );
-		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager );
+		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
 		first.join();
 
 		level2 = std::make_shared<Level2>( stateMachine );
-		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager );
+		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
 		second.join();
 
 		//main menu
 		MainMenu = std::make_shared<MainMenu_Level>( stateMachine );
-		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager );
+		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
 		third.join();
 
 		// add levels to state machine
@@ -48,8 +48,8 @@ bool Application::Initialize(
 	// SYSTEMS
 	{
 		// initialize sound
-		sound.SetMusicVolume( 0.5f );
-		if ( FAILED( sound.PlayMusic( sound.MUSIC_LEVEL ) ) ) return false;
+		//sound.SetMusicVolume( 0.5f );
+		//if ( FAILED( sound.PlayMusic( sound.MUSIC_LEVEL ) ) ) return false;
 
 		// initialize cameras
 		cameras.Initialize( width, height );

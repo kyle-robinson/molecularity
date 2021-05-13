@@ -15,6 +15,8 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 
+#include "..\Utility\Sound.h"
+
 ////ui
 //#include<Graphics/UI_Manager.h>
 
@@ -36,7 +38,7 @@ class LevelContainer
 	friend class Application;
 public:
 	virtual ~LevelContainer( void ) = default;
-	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui,UI_Manager* UI );
+	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -56,6 +58,8 @@ public:
 	CameraController* GetCameraController() const noexcept { return cameras; }
 	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
 	Graphics* GetGraphics() const noexcept { return graphics; }
+
+	std::string GetLevelName() { return levelName; }
 protected:
 	void RenderFrameEarly();
 	bool levelCompleted = false;
@@ -80,6 +84,11 @@ protected:
 	
 	//UI
 	UI_Manager* _UiManager;
+
+	// Sound
+	Sound* soundSystem;
+
+	std::string levelName;
 private:
 	bool InitializeScene();
 
