@@ -11,10 +11,11 @@ enum class ToolType
 
 enum class BoxType
 {
-	Default,
-	Bounce,
-	Arrow,
-	TNT
+	Mesh,
+	Wood,
+	Stone,
+	Iron,
+	Alien
 };
 
 enum class BoxSize
@@ -52,7 +53,7 @@ public:
 
 	void SetBurnable( bool burnable ) noexcept { isBurnable = burnable; }
 	void SetReflective( bool reflective ) noexcept { isReflective = reflective; }
-	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier; EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);}
+	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier;}
 
 private:
 	int sizeID = 1;
@@ -60,8 +61,8 @@ private:
 	bool isBurnable = false;
 	bool isReflective = false;
 	float sizeMultiplier = 1.0f;
+	BoxType boxType = BoxType::Wood;
 	BoxSize boxSize = BoxSize::Normal;
-	BoxType boxType = BoxType::Default;
 	ToolType toolType = ToolType::Convert;
 };
 

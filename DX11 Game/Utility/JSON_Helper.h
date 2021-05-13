@@ -17,6 +17,10 @@
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
+
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
 using namespace rapidjson;
 
 namespace JSON
@@ -36,9 +40,9 @@ namespace JSON
 	{
 		std::string ObjectName;
 		std::string FileName;
-		XMFLOAT3 Position;
-		XMFLOAT3 Scale;
-		XMFLOAT3 Rotation;
+		DirectX::XMFLOAT3 Position;
+		DirectX::XMFLOAT3 Scale;
+		DirectX::XMFLOAT3 Rotation;
 	};
 
 	struct SettingData
@@ -68,7 +72,7 @@ namespace JSON
 	{
 		std::string Name;
 		std::string type;
-		XMFLOAT3 Position;
+		DirectX::XMFLOAT3 Position;
 	};
 
 	enum LightType

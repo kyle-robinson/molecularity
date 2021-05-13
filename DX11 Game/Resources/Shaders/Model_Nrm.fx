@@ -54,11 +54,9 @@ VS_OUTPUT VS( VS_INPUT input )
 // PIXEL SHADER
 cbuffer SceneBuffer : register( b2 )
 {
-   
     bool useTexture;
     float alphaFactor;
     bool useNormalMap;
-
 }
 
 cbuffer PointLightBuffer : register( b3 )
@@ -230,18 +228,23 @@ float4 PS( PS_INPUT input ) : SV_TARGET
         }
     }
     
+    // sample from texture
+    float4 textureColor = useTexture ? objTexture.Sample( samplerState, input.inTexCoord ) : 1.0f;
+    if ( textureColor.a < 0.1f ) discard;
+    
     // Output colour
-    float3 finalColor = saturate( cumulativeColor );
-    finalColor *= useTexture ? objTexture.Sample( samplerState, input.inTexCoord ) : 1.0f;
+    float4 finalColor = saturate( float4( cumulativeColor, 1.0f ) );
+    finalColor *= textureColor;
     
     // FOG FACTOR
     {
         if ( fogEnable )
         {
             float fogValue = input.inFog * finalColor + ( 1.0 - input.inFog );
-            finalColor += fogValue * fogColor;
+            finalColor += fogValue * float4( fogColor, 1.0f );
         }
     }
     
-    return float4( finalColor, alphaFactor );
+    return finalColor;
+    //return float4( finalColor, alphaFactor );
 }

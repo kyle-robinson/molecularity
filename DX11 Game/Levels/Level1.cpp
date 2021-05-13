@@ -23,6 +23,10 @@ bool Level1::OnCreate()
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 45.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
+
+			//add level UI 
+			HUD = make_shared<HUD_UI>();
+			PauseUI = make_shared<Pause>();
 		}
 	}
 	catch ( COMException& exception )
@@ -36,6 +40,13 @@ bool Level1::OnCreate()
 void Level1::OnSwitch()
 {
 	// update items on level switch here...
+	_UiManager->RemoveUI( "MainMenu" );
+
+	//send out editable properties to hud for data
+	EventSystem::Instance()->AddEvent( EVENTID::ToolModeEvent, cubes[0].get()->GetEditableProperties().get() );
+	_UiManager->AddUi( HUD, "HUD" );
+	_UiManager->AddUi( PauseUI, "Pause" );
+	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 }
 
 void Level1::Render()
@@ -64,11 +75,12 @@ void Level1::RenderFrame()
 		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
 		room.Draw();
 		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
-		
-		podium.Draw();
+
+		if ( levelCompleted )
+			podium.Draw();
 		pressurePlate.Draw();
 
-		// render objects (these are objects that are found in each level)
+		// render the cubes
 		LevelContainer::RenderFrame();
 	}
 
@@ -87,7 +99,7 @@ void Level1::RenderFrame()
 void Level1::Update( const float dt )
 {
 	LevelContainer::Update( dt );
-	
+
 	// camera world collisions. Will be player object collisions in the future and ideally not here
 	Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
 
@@ -99,10 +111,18 @@ void Level1::Update( const float dt )
 		offset = 0.1f;
 	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
 
-	// update collisions w pressure plate
+	// cube collisions
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
-		cubes[i]->CheckCollisionAABB( pressurePlate, dt );
+		// update collisions w pressure plate
+		if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
+		{
+			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
+			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f )
+				levelCompleted = true;
+		}
+
+		// update collisions w other cubes
 		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
 			if ( i != j )
 				cubes[i]->CheckCollisionAABB( cubes[j], dt );
