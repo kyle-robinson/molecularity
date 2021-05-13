@@ -1,7 +1,10 @@
 #pragma once
+#ifndef MAINMENU_LEVEL_H
+#define MAINMENU_LEVEL_H
+
 #include "LevelStateMachine.h"
-class MainMenu_Level :
-    public LevelContainer
+
+class MainMenu_Level : public LevelContainer
 {
 public:
 	MainMenu_Level(LevelStateMachine& stateMachine);
@@ -13,6 +16,6 @@ public:
 private:
 	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;
-
 };
 
+#endif

@@ -34,8 +34,8 @@ private:
 	Timer timer;
 	Sound sound;
 	Graphics gfx;
-	UI_Manager _UI_Manager;
 	ImGuiManager imgui;
+	UI_Manager _UI_Manager;
 	CameraController cameras;
 	
 	// Levels

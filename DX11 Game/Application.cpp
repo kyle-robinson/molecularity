@@ -25,24 +25,24 @@ bool Application::Initialize(
 	{
 		// initialize levels
 		level1 = std::make_shared<Level1>( stateMachine );
-		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui,&_UI_Manager);
+		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager );
 		first.join();
 
 		level2 = std::make_shared<Level2>( stateMachine );
-		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui,&_UI_Manager);
+		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager );
 		second.join();
 
 		//main menu
-		MainMenu = std::make_shared<MainMenu_Level>(stateMachine);
-		std::thread thrird(&MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui,&_UI_Manager);
-		thrird.join();
-		
+		MainMenu = std::make_shared<MainMenu_Level>( stateMachine );
+		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager );
+		third.join();
+
 		// add levels to state machine
 		level1_ID = stateMachine.Add( level1 );
 		level2_ID = stateMachine.Add( level2 );
-		MainMenu_ID= stateMachine.Add(MainMenu);
+		MainMenu_ID = stateMachine.Add( MainMenu );
 
-		stateMachine.SwitchTo(MainMenu_ID);
+		stateMachine.SwitchTo( MainMenu_ID );
 	}
 
 	// SYSTEMS
@@ -53,20 +53,20 @@ bool Application::Initialize(
 
 		// initialize cameras
 		cameras.Initialize( width, height );
-		
+
 		// add levels to list
 		std::vector<uint32_t> level_IDs;
 		level_IDs.push_back( std::move( level1_ID ) );
 		level_IDs.push_back( std::move( level2_ID ) );
-		level_IDs.push_back(std::move(MainMenu_ID));
+		level_IDs.push_back( std::move( MainMenu_ID ) );
 		// initialize input
 		input.Initialize( renderWindow, &stateMachine, &cameras, &sound, level_IDs );
 	}
 
 	//load settings
 	_SettingsData = JSON::LoadSettings();
-	EventSystem::Instance()->AddEvent(EVENTID::UpdateSettingsEvent, &_SettingsData);
-	
+	EventSystem::Instance()->AddEvent( EVENTID::UpdateSettingsEvent, &_SettingsData );
+
 	//Process Initialize events 
 	EventSystem::Instance()->ProcessEvents();
 	return true;
@@ -82,7 +82,6 @@ void Application::Update()
 	// delta time
 	float dt = static_cast< float >( timer.GetMilliSecondsElapsed() );
 	timer.Restart();
-	
 
 	// update systems
 	input.Update( dt );
@@ -91,17 +90,16 @@ void Application::Update()
 
 	//update screen size
 	RECT windowRect = { 0,0 };
-	if (GetClientRect(renderWindow.GetHWND(), &windowRect)) {
+	if ( GetClientRect( renderWindow.GetHWND(), &windowRect ) ) {
 
-		XMFLOAT2 windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
-		if (windowsize.x == 0 || windowsize.y == 0) {
+		XMFLOAT2 windowsize = { ( float )( windowRect.right - windowRect.left ),( float )( windowRect.bottom - windowRect.top ) };
+		if ( windowsize.x == 0 || windowsize.y == 0 ) {
 			windowsize = { 1280, 720 };
 		}
-		EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
+		EventSystem::Instance()->AddEvent( EVENTID::WindowSizeChangeEvent, &windowsize );
 
 	}
 
-	
 	// update current level
 	stateMachine.Update( dt );
 	EventSystem::Instance()->ProcessEvents();

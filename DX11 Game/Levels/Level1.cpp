@@ -3,8 +3,6 @@
 #include "Collisions.h"
 #include "Rasterizer.h"
 
-
-
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
 bool Level1::OnCreate()
