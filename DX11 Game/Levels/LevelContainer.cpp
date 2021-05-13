@@ -22,12 +22,13 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui,UI_Manager* UI )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
 	_UiManager = UI;
+	soundSystem = sound;
 	if ( !InitializeScene() )
 		return false;
 	return true;

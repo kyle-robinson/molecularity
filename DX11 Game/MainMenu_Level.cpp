@@ -36,9 +36,21 @@ bool MainMenu_Level::OnCreate()
 void MainMenu_Level::OnSwitch()
 {
 	// update items on level switch here...
+	levelName = "MainMenu";
 
 	//make sure cursor is displayed
 	EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+
+	//sounds
+	soundSystem->ClearAudio();
+
+	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic");
+	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
+
+	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
+	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
+
+	//soundSystem->PlayMusic("MenuMusic");
 	
 }
 

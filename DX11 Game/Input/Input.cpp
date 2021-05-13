@@ -43,6 +43,7 @@ void Input::HandleEvent(Event* event)
 	case EVENTID::GamePauseEvent:
 	{
 			EnableCursor();
+			isPaused = true;
 	}
 	break;
 	case EVENTID::GameUnPauseEvent:
@@ -51,6 +52,7 @@ void Input::HandleEvent(Event* event)
 		UiMouseData.MPress = false;
 		UiMouseData.RPress = false;
 		DisableCursor();
+		isPaused = false;
 	}
 	break;
 	case EVENTID::WindowSizeChangeEvent:
@@ -315,8 +317,14 @@ void Input::UpdateMouse( const float dt )
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				// testing sound, feel free to move or remove
-				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
-					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, false, XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
+				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				{
+					if (levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused)
+						soundSystem->PlaySoundEffects("MenuClick");
+					else
+						soundSystem->PlaySoundEffects("ToolUse");
+				}
+				
 
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( levelSystem->GetCurrentLevel()->GetGraphics()->GetWidth() / 2, levelSystem->GetCurrentLevel()->GetGraphics()->GetHeight() / 2, *levelSystem->GetCurrentLevel()->GetCube()[i] ) )
