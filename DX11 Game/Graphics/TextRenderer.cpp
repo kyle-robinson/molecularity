@@ -101,4 +101,5 @@ void TextRenderer::RenderString( std::string text, XMFLOAT2 position, XMVECTORF3
 void TextRenderer::UpdateViewPort( D3D11_VIEWPORT& NewView )
 {
 	spriteBatch->SetViewport( NewView );
+	
 }

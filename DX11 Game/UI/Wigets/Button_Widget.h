@@ -45,7 +45,7 @@ inline void Button_Widget<ButtonTexType>::Draw( ID3D11DeviceContext* Contex, ID3
     _Background.SetInitialPosition( _Pos.x, _Pos.y, 0 );
     _Background.SetScale( _Size.x, _Size.y );
     _Background.UpdateTex( Device, ButtonColour );
-    cb_ps_scene.data.alphaFactor = _AlphaFactor;
+    cb_ps_scene.data.alphaFactor = _AlfaFactor;
     cb_ps_scene.data.useTexture = false;
 
     if ( !cb_ps_scene.ApplyChanges() ) return;

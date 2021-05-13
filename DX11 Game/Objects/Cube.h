@@ -18,7 +18,7 @@ public:
 	bool Initialize( ID3D11DeviceContext* context, ID3D11Device* device );
 	void Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept;
 	void CheckCollisionAABB( std::shared_ptr<Cube>& object, const float dt ) noexcept;
-	void CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept;
+	bool CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept;
 	
 	// Getters
 	bool GetIsHolding() const noexcept { return isHeld; }

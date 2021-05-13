@@ -2,6 +2,9 @@
 #ifndef WIDGETINCLUDES_H
 #define WIDGETINCLUDES_H
 
+#include<string>
+#include<Sprite.h>
+#include"Graphics/TextRenderer.h"
 //Base
 #include"Wigets/widget.h"
 

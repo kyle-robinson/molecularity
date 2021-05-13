@@ -3,10 +3,7 @@
 
 Pause::Pause()
 {
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+	
 }
 
 Pause::~Pause()
@@ -15,7 +12,13 @@ Pause::~Pause()
 
 void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
 {
-	_isPaused = false;
+
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+
+	_isPuased = false;
 	_Device = device;
 	_Contex = contex;
 	_cb_vs_matrix_2d = cb_vs_matrix_2d;
@@ -23,32 +26,34 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 	HeadderTextRenderer = make_shared<TextRenderer>("OpenSans_50.spritefont", _Device.Get(), _Contex.Get());
 	PGTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont", _Device.Get(), _Contex.Get());
 	_TitleCard.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
-	PauseBackground.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
-	for (uint32_t i = 0; i < 4; i++) {
-		PauseButtons[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+	PuaseBakgtound.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+	for (unsigned int i = 0; i < 4; i++) {
+		PuaseButtions[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
 	
 }
 
 void Pause::Update()
 {
-	if (_isPaused) {
+	if (_isPuased) {
 		//bakground
-		PauseBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
+		PuaseBakgtound.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		_TitleCard.Function("Title_Card\\TitleCard.dds", { static_cast<float>(_SizeOfScreen.x*0.5),static_cast<float>(_SizeOfScreen.y*0.12) }, { 0,0 });
-		//Buttons
-		if (PauseButtons[0].Function("Play", ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>( _SizeOfScreen.y*0.25) },DirectX::Colors::Black, _MouseData)) {
+		//Buttions
+		if (PuaseButtions[0].Function("Play", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>( _SizeOfScreen.y*0.25) },DirectX::Colors::Black, _MouseData)) {
 			//back to game
-			_isPaused = false;
+			_isPuased = false;
+			EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
+			
 		}
-		else if (PauseButtons[1].Function("Reset", ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
+		else if (PuaseButtions[1].Function("Reset", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 			//reset level
 		}
-		else if (PauseButtons[2].Function("Settings", ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+		else if (PuaseButtions[2].Function("Settings", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 			//settings
-			EventSystem::Instance()->AddEvent(EVENTID::GAmeSettingsEvent);
+			EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
 		}
-		else if (PauseButtons[3].Function("Exit", ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
+		else if (PuaseButtions[3].Function("Exit", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 			//exit
 			EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
 		}
@@ -58,41 +63,41 @@ void Pause::Update()
 		puaseText._Colour = Colors::Black;
 		puaseText._Position = { 0,static_cast<float>(_SizeOfScreen.y * 0.12) };
 		puaseText._Text = "Pause";
-		PauseTextTitles.push_back(puaseText);
+		PuaseTextTitles.push_back(puaseText);
 
 		puaseText._Colour = Colors::Black;
 		puaseText._Position = { _SizeOfScreen.x / 2,_SizeOfScreen.y / 3 };
 		puaseText._Text = "Tip";
-		PauseTextTitles.push_back(puaseText);
+		PuaseTextTitles.push_back(puaseText);
 
 		puaseText._Colour = Colors::Black;
 		puaseText._Position = { static_cast<float>(_SizeOfScreen.x * 0.5),static_cast<float>(_SizeOfScreen.y * 0.5) };
 		puaseText._Text = "Tip Text";
-		PauseTextPG.push_back(puaseText);
+		PuaseTextPG.push_back(puaseText);
 	}
 }
 
 void Pause::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
 	Shaders::BindShaders(_Contex.Get(), vert, pix);
-	if (_isPaused) {
-		PauseBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+	if (_isPuased) {
+		PuaseBakgtound.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		_TitleCard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-		for (uint32_t i = 0; i < 4; i++) {
-			PauseButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, PGTextRenderer.get());
+		for (unsigned int i = 0; i < 4; i++) {
+			PuaseButtions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, PGTextRenderer.get());
 			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
 
-		for (UINT i = 0; i < PauseTextTitles.size(); i++)
+		for (UINT i = 0; i < PuaseTextTitles.size(); i++)
 		{
-			HeadderTextRenderer->RenderString(PauseTextTitles[i]._Text, PauseTextTitles[i]._Position, PauseTextTitles[i]._Colour);
+			HeadderTextRenderer->RenderString(PuaseTextTitles[i]._Text, PuaseTextTitles[i]._Position, PuaseTextTitles[i]._Colour);
 		}
-		PauseTextTitles.clear();
-		for (UINT i = 0; i < PauseTextPG.size(); i++)
+		PuaseTextTitles.clear();
+		for (UINT i = 0; i < PuaseTextPG.size(); i++)
 		{
-			PGTextRenderer->RenderString(PauseTextPG[i]._Text, PauseTextPG[i]._Position, PauseTextPG[i]._Colour);
+			PGTextRenderer->RenderString(PuaseTextPG[i]._Text, PuaseTextPG[i]._Position, PuaseTextPG[i]._Colour);
 		}
-		PauseTextPG.clear();
+		PuaseTextPG.clear();
 	}
 }
 
@@ -102,7 +107,10 @@ void Pause::HandleEvent(Event* event)
 	{
 	case EVENTID::GamePauseEvent:
 	{
-		_isPaused = true;
+		
+			_isPuased = true;
+		
+		
 	}
 	break;
 	case EVENTID::UIKeyInput:
@@ -141,4 +149,3 @@ void Pause::CleanUp()
  
 }
 
-//FONTS need to be passed in 

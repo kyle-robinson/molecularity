@@ -241,6 +241,7 @@
     <ClCompile Include="Levels\LevelContainer.cpp" />
     <ClCompile Include="Levels\Level2.cpp" />
     <ClCompile Include="Levels\LevelStateMachine.cpp" />
+    <ClCompile Include="MainMenu_Level.cpp" />
     <ClCompile Include="Model\Colour.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -384,6 +385,7 @@
     <ClInclude Include="Levels\LevelContainer.h" />
     <ClInclude Include="Levels\Level2.h" />
     <ClInclude Include="Levels\LevelStateMachine.h" />
+    <ClInclude Include="MainMenu_Level.h" />
     <ClInclude Include="Model\Colour.h" />
     <ClInclude Include="Model\Mesh.h" />
     <ClInclude Include="Model\Model.h" />
@@ -527,6 +529,7 @@
     <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
     <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
     <None Include="Resources\JSON\Objects.json" />
+    <None Include="Resources\JSON\Settings.json" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Audio\Music.wav" />

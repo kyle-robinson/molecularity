@@ -228,6 +228,9 @@
     <ClCompile Include="Graphics\UI_Manager.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu_Level.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -521,6 +524,9 @@
     <ClInclude Include="Graphics\UI_Manager.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="MainMenu_Level.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">
@@ -635,6 +641,9 @@
     </None>
     <None Include="Resources\Cursors\NightDiamond\Precision Select.ani">
       <Filter>Resources\Cursors</Filter>
+    </None>
+    <None Include="Resources\JSON\Settings.json">
+      <Filter>Resources\JSON</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

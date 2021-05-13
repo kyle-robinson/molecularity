@@ -22,11 +22,12 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui,UI_Manager* UI )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
+	_UiManager = UI;
 	if ( !InitializeScene() )
 		return false;
 	return true;
@@ -94,28 +95,14 @@ bool LevelContainer::InitializeScene()
 
 		// TEXTURES
 		{
-			HRESULT hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\basic_crate.png", nullptr, boxTextures[BoxType::Default].GetAddressOf() );
-			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\bounce_crate.png", nullptr, boxTextures[BoxType::Bounce].GetAddressOf() );
-			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\arrow_crate.png", nullptr, boxTextures[BoxType::Arrow].GetAddressOf() );
-			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\tnt_crate.png", nullptr, boxTextures[BoxType::TNT].GetAddressOf() );
+			HRESULT hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\mesh.png", nullptr, boxTextures[BoxType::Mesh].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\wood.png", nullptr, boxTextures[BoxType::Wood].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\stone.jpg", nullptr, boxTextures[BoxType::Stone].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\iron.jpg", nullptr, boxTextures[BoxType::Iron].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\alien.jpg", nullptr, boxTextures[BoxType::Alien].GetAddressOf() );
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
 
-		// UI
-		{
-			_UiManager = std::make_shared<UI_Manager>();
-			
-			shared_ptr<HUD_UI> HUD = make_shared<HUD_UI>();
-			_UiManager->AddUi( HUD, "HUD" );
-
-			shared_ptr<Pause> PauseUI = make_shared<Pause>();
-			_UiManager->AddUi( PauseUI, "Pause" );
-
-			shared_ptr<Settings_Menu_UI> settingsUi = make_shared<Settings_Menu_UI>();
-			_UiManager->AddUi( settingsUi, "Settings" );
-
-			_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
-		}
 	}
 	catch ( COMException& exception )
 	{
@@ -186,8 +173,13 @@ void LevelContainer::RenderFrame()
 		// CUBES
 		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 		{
+			// render backfaces
+			if ( cubes[i]->GetEditableProperties()->GetBoxType() == BoxType::Mesh )
+				graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
+
 			if ( cubes[i]->GetIsHovering() )
-			{
+			{				
+				// render with outline
 				GetStencilOutline()->DrawWithOutline( *graphics, *cubes[i], cb_vs_matrix,
 					pointLight.GetConstantBuffer(), boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
 			}
@@ -195,6 +187,9 @@ void LevelContainer::RenderFrame()
 			{
 				cubes[i]->Draw( cb_vs_matrix, boxTextures[cubes[i]->GetEditableProperties()->GetBoxType()].Get() );
 			}
+
+			// re-enable back-face culling
+			graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 		}
 	}
 }

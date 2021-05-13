@@ -5,31 +5,28 @@
 bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
 {
     this->context = context;
-   
+
     try
     {
         HRESULT hr = vb_cube.Initialize( device, Vtx::verticesCube, ARRAYSIZE( Vtx::verticesCube ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create cube vertex buffer!" );
         hr = ib_cube.Initialize( device, Idx::indicesCube, ARRAYSIZE( Idx::indicesCube ) );
         COM_ERROR_IF_FAILED( hr, "Failed to create cube index buffer!" );
-        
+
         editableProperties = std::make_shared<CubeProperties>();
         physicsModel = std::make_shared<PhysicsModel>( this );
 
-        //send out editable properties to hud for data
-        EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, editableProperties.get());
-        
         SetPosition( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
-	    SetRotation( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
+        SetRotation( XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
         SetScale( 1.0f, 1.0f, 1.0f );
-	    UpdateMatrix();
+        UpdateMatrix();
     }
     catch ( COMException& exception )
     {
         ErrorLogger::Log( exception );
         return false;
     }
-    
+
     delay = 0;
 
     return true;
@@ -37,7 +34,7 @@ bool Cube::Initialize( ID3D11DeviceContext* context, ID3D11Device* device )
 
 void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourceView* texture ) noexcept
 {
-	UINT offset = 0;
+    UINT offset = 0;
     context->IASetVertexBuffers( 0, 1, vb_cube.GetAddressOf(), vb_cube.StridePtr(), &offset );
     context->IASetIndexBuffer( ib_cube.Get(), DXGI_FORMAT_R16_UINT, 0 );
     context->PSSetShaderResources( 0, 1, &texture );
@@ -49,52 +46,88 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 
 void Cube::Update( const float deltaTime ) noexcept
 {
-    if ( !isHeld ) physicsModel->Update( deltaTime / 20.0f );
+    // update properties
+    physicsModel->SetMass( 0.0f );
+    switch ( editableProperties->GetBoxType() )
+    {
+    case BoxType::Mesh:  physicsModel->SetMass( 10.0f );  break;
+    case BoxType::Wood:  physicsModel->SetMass( 30.0f );  break;
+    case BoxType::Stone: physicsModel->SetMass( 50.0f );  break;
+    case BoxType::Iron:  physicsModel->SetMass( 70.0f );  break;
+    case BoxType::Alien: physicsModel->SetMass( 100.0f ); break;
+    }
+    switch ( editableProperties->GetBoxSize() )
+    {
+    case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); break;
+    case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() + 25.0f ); break;
+    case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); break;
+    }
 
-    else 
-        physicsModel->Update(deltaTime / 20.0f, true);
+    // update physics
+    if ( !isHeld )
+        physicsModel->Update( deltaTime / 20.0f, editableProperties );
+    else
+        physicsModel->Update( deltaTime / 20.0f, editableProperties, true );
 
+    // update positioning
     pos = GetPositionFloat3();
 
-    if (heldLastFrame && !isHeld && (pos.x != prevPos.x || pos.z != prevPos.z))
-        physicsModel->AddForce(XMFLOAT3((pos.x - prevPos.x) * 5.0f, 0.0f, (pos.z - prevPos.z) * 5.0f));
+    if ( heldLastFrame && !isHeld && ( pos.x != prevPos.x || pos.z != prevPos.z ) )
+        physicsModel->AddForce( XMFLOAT3( ( pos.x - prevPos.x ) * 5.0f, 0.0f, ( pos.z - prevPos.z ) * 5.0f ) );
 
-    if (delay == 5)
+    if ( delay == 5 )
         prevPos = pos;
     delay++;
-    if (delay > 5)
+    if ( delay > 5 )
         delay = 0;
     heldLastFrame = isHeld;
 }
 
 #pragma region Collisions
-void Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept
+bool Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) noexcept
 {
-    static float offset = 2.0f;
+    // set collision offset
+    static float offset = 1.0f;
+    switch ( editableProperties->GetBoxSize() )
+    {
+    case BoxSize::Small:  offset = 0.75f; break;
+    case BoxSize::Normal: offset = 1.0f;  break;
+    case BoxSize::Large:  offset = 1.5f;  break;
+    default: break;
+    }
 
     // test collision between cube and given object
-    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + offset && // x collision
+    if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + offset &&  // x collision
            position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - offset ) &&
-         ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y && // y collision
-           position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y ) &&
-         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + offset && // z collision
+         ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y + offset &&  // y collision
+           position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y - offset ) &&
+         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + offset &&  // z collision
            position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - offset )
         )
     {
         // collision with pressure plate
-        position.y = object.GetPositionFloat3().y + object.GetScaleFloat3().y + 1.0f;
+        position.y = object.GetPositionFloat3().y + object.GetScaleFloat3().y + offset;
         physicsModel->SetActivated( true );
+        return true;
     }
     else
     {
         physicsModel->SetActivated( false );
+        return false;
     }
 }
 
 void Cube::CheckCollisionAABB( std::shared_ptr<Cube>& object, const float dt ) noexcept
 {
-    // adjust x/z collision scaling for pressure plate
+    // set collision offset
     static float offset = 0.5f;
+    switch ( editableProperties->GetBoxSize() )
+    {
+    case BoxSize::Small:  offset = -0.25f; break;
+    case BoxSize::Normal: offset = 0.5f;   break;
+    case BoxSize::Large:  offset = 0.75f;  break;
+    default: break;
+    }
 
     // test collision between cube and given object
     if ( ( position.x - offset <= object->GetPositionFloat3().x + offset && // x collision

@@ -3,24 +3,29 @@
 //Holds the list of possible events
 enum class EVENTID {
 	
-	//UI
+	
 	//HUD
 	ToolModeEvent,
 	EnergyUpdateEvent,
 
-	//input
+	//UIinput
 	UIMouseInput,
 	UIKeyInput,
 
 	//UICam
 	WorldOrthMatrixEvent,
 
+	//game Events
 	GamePauseEvent,
-	GAmeSettingsEvent,
+	GameUnPauseEvent,
+	GameSettingsEvent,
+	GameLevelChangeEvent,
 	//utitlity
 	WindowSizeChangeEvent,
 	QuitGameEvent,
 	UpdateSettingsEvent
+
+
 };
 
 class Event {
