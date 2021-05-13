@@ -119,7 +119,7 @@ void Sound::HandleEvent(Event* event)
 					continue;
 				}
 				if (setting.Name == "BackgroundSoundsVolume") {
-					SoundEffectsVolume = (float)std::get<int>(setting.Setting) / 100;
+					soundEffectsVolume = (float)std::get<int>(setting.Setting) / 100;
 					continue;
 				}
 
@@ -128,7 +128,7 @@ void Sound::HandleEvent(Event* event)
 		}
 					SetMusicVolume(musicVolume* soundVol);
 					SetMusicPause(true);
-					SetSoundEffectsVolume(SoundEffectsVolume* soundVol);
+					SetSoundEffectsVolume(soundEffectsVolume* soundVol);
 					//stop all sound
 					if (soundON) {
 						if (musicOn) {
