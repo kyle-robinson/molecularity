@@ -263,7 +263,7 @@ void Input::UpdateKeyboard( const float dt )
 	{
 		// update cube movement
 		if ( keyboard.KeyIsPressed( VK_RIGHT ) )
-			level->GetCube()[0]->GetPhysicsModel()->AddForce( { 0.1f, 0.0f, 0.0f } );
+			level->GetCube()[0]->GetPhysicsModel()->AddForce( 0.1f, 0.0f, 0.0f );
 		if ( keyboard.KeyIsPressed( VK_LEFT ) )
 			level->GetCube()[0]->GetPhysicsModel()->AddForce( -0.1f, 0.0f, 0.0f );
 
