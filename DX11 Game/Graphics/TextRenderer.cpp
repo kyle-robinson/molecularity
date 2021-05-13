@@ -38,43 +38,6 @@ void TextRenderer::RenderCubeMoveText( LevelContainer& level )
 	}
 }
 
-void TextRenderer::RenderMultiToolText( LevelContainer& level )
-{
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-	{
-		if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
-		{
-			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-			static std::wstring boxType;
-			switch ( level.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
-			{
-			case 0: boxType = L"Default Box"; break;
-			case 1: boxType = L"Bounce Box"; break;
-			case 2: boxType = L"Jump Box"; break;
-			case 3: boxType = L"TNT Box"; break;
-			}
-
-			DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::Orange );
-		}
-		else if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
-		{
-			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-			static std::wstring sizeType;
-			switch ( level.GetCube()[i]->GetEditableProperties()->GetSizeID() )
-			{
-			case 0: sizeType = L"Shrink Ray"; break;
-			case 1: sizeType = L"Reset Ray"; break;
-			case 2: sizeType = L"Growth Ray"; break;
-			}
-
-			DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
-		}
-	}
-}
 
 void TextRenderer::RenderCameraText( LevelContainer& manager )
 {

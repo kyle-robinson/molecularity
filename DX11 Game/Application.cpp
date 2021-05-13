@@ -26,15 +26,19 @@ bool Application::Initialize(
 		// initialize levels
 		level1 = std::make_shared<Level1>( stateMachine );
 		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager );
+		
+		level1.get()->SetTool(&tool);
 		first.join();
 
 		level2 = std::make_shared<Level2>( stateMachine );
 		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager );
+		level2.get()->SetTool(&tool);
 		second.join();
 
 		//main menu
 		MainMenu = std::make_shared<MainMenu_Level>( stateMachine );
 		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager );
+		MainMenu.get()->SetTool(&tool);
 		third.join();
 
 		// add levels to state machine

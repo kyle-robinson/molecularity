@@ -43,7 +43,8 @@ void Level1::OnSwitch()
 	_UiManager->RemoveUI( "MainMenu" );
 
 	//send out editable properties to hud for data
-	EventSystem::Instance()->AddEvent( EVENTID::ToolModeEvent, cubes[0].get()->GetEditableProperties().get() );
+	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
+
 	_UiManager->AddUi( HUD, "HUD" );
 	_UiManager->AddUi( PauseUI, "Pause" );
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );

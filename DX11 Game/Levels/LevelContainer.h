@@ -15,8 +15,7 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 
-////ui
-//#include<Graphics/UI_Manager.h>
+#include <Tool_Class.h>
 
 
 class Fog;
@@ -56,6 +55,10 @@ public:
 	CameraController* GetCameraController() const noexcept { return cameras; }
 	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
 	Graphics* GetGraphics() const noexcept { return graphics; }
+
+	void SetTool(Tool_Class* Tool) { tool = Tool; }
+
+
 protected:
 	void RenderFrameEarly();
 	bool levelCompleted = false;
@@ -65,6 +68,7 @@ protected:
 	ImGuiManager* imgui;
 	CameraController* cameras;
 	RenderableGameObject skysphere;
+	Tool_Class* tool;
 	//RenderableGameObject securityCamera;
 	std::vector<std::shared_ptr<Cube>> cubes;
 

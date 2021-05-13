@@ -2,29 +2,7 @@
 #include<Utility/stdafx.h>
 #ifndef CUBEPROPERTIES_H
 #define CUBEPROPERTIES_H
-
-enum class ToolType
-{
-	Convert,
-	Resize
-};
-
-enum class BoxType
-{
-	Mesh,
-	Wood,
-	Stone,
-	Iron,
-	Alien
-};
-
-enum class BoxSize
-{
-	Small,
-	Normal,
-	Large
-};
-
+#include<Tool_Structs.h>
 /// <summary>
 /// Editable object properties by the multitool.
 /// </summary>
@@ -32,7 +10,6 @@ class CubeProperties
 {
 public:
 	// Getters	
-	ToolType GetToolType() const noexcept { return toolType; }
 	BoxType GetBoxType() const noexcept { return boxType; }
 	BoxSize GetBoxSize() const noexcept { return boxSize; }
 	
@@ -44,9 +21,21 @@ public:
 	float GetSizeMultiplier() const noexcept { return sizeMultiplier; }
 
 	// Setters
-	void SetToolType( ToolType type ) { toolType = type;}
+	
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
-	void SetBoxSize( BoxSize size ) noexcept { boxSize = size;}
+	void SetBoxSize( BoxSize size ) noexcept {
+		
+		boxSize = size;
+		if (boxSize == BoxSize::Small) {
+			SetSizeMultiplier(0.5f);
+		}
+		else if (boxSize == BoxSize::Normal) {
+			SetSizeMultiplier(1.0f);
+		}
+		else if (boxSize == BoxSize::Large) {
+			SetSizeMultiplier(2.0f);
+		}
+	}
 	
 	void SetSizeID( int id ) noexcept { sizeID = id; }
 	void SetMaterialID( int id ) noexcept { materialID = id; }
@@ -63,7 +52,7 @@ private:
 	float sizeMultiplier = 1.0f;
 	BoxType boxType = BoxType::Wood;
 	BoxSize boxSize = BoxSize::Normal;
-	ToolType toolType = ToolType::Convert;
+	
 };
 
 #endif
