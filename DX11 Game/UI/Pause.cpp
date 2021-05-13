@@ -107,10 +107,7 @@ void Pause::HandleEvent(Event* event)
 	{
 	case EVENTID::GamePauseEvent:
 	{
-		
-			_isPuased = true;
-		
-		
+		_isPuased = true;
 	}
 	break;
 	case EVENTID::UIKeyInput:
@@ -125,27 +122,11 @@ void Pause::HandleEvent(Event* event)
 	break;
 	case EVENTID::WindowSizeChangeEvent:
 	{
-		_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
-		
-
-		D3D11_VIEWPORT a;
-		a.TopLeftX = 0;
-		a.TopLeftY = 0;
-		a.Width = _SizeOfScreen.x;
-		a.Height = _SizeOfScreen.y;
-		a.MaxDepth = 1.0f;
-		a.MinDepth = 0.0f;
-
-		HeadderTextRenderer->UpdateViewPort(a);
-		PGTextRenderer->UpdateViewPort(a);
+		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
+		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );
+		HeadderTextRenderer->UpdateViewPort( newViewport );
+		PGTextRenderer->UpdateViewPort( newViewport );
 	}
 	break;
-
 	}
 }
-
-void Pause::CleanUp()
-{
- 
-}
-

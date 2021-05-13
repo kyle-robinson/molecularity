@@ -2,6 +2,7 @@
 #ifndef LEVELCONTAINER_H
 #define LEVELCONTAINER_H
 
+#include "Sound.h"
 #include "Graphics.h"
 #include "JSON_Helper.h"
 #include "MultiViewport.h"
@@ -14,12 +15,6 @@
 #include "SpotLight.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
-
-#include "..\Utility\Sound.h"
-
-////ui
-//#include<Graphics/UI_Manager.h>
-
 
 class Fog;
 class ImGuiManager;

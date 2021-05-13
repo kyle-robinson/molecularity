@@ -65,23 +65,17 @@ void Main_Menu_UI::Update()
 			EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
 		}
 	}
-
-
 }
 
 void Main_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
-
-	
+	Shaders::BindShaders(_Contex.Get(), vert, pix);
+	MainMenuBackGround.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+	Titlecard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+	for (unsigned int i = 0; i < 5; i++) {
+		MainMenuButtions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, PGTextRenderer.get());
 		Shaders::BindShaders(_Contex.Get(), vert, pix);
-	
-		MainMenuBackGround.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-			Titlecard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-			for (unsigned int i = 0; i < 5; i++) {
-				MainMenuButtions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, PGTextRenderer.get());
-				Shaders::BindShaders(_Contex.Get(), vert, pix);
-			}
-
+	}
 }
 
 void Main_Menu_UI::HandleEvent(Event* event)
@@ -104,19 +98,9 @@ void Main_Menu_UI::HandleEvent(Event* event)
 	break;
 	case EVENTID::WindowSizeChangeEvent:
 	{
-		_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
-
-
-		D3D11_VIEWPORT a;
-		a.TopLeftX = 0;
-		a.TopLeftY = 0;
-		a.Width = _SizeOfScreen.x;
-		a.Height = _SizeOfScreen.y;
-		a.MaxDepth = 1.0f;
-		a.MinDepth = 0.0f;
-
-		
-		PGTextRenderer->UpdateViewPort(a);
+		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
+		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );		
+		PGTextRenderer->UpdateViewPort( newViewport );
 	}
 	break;
 	}

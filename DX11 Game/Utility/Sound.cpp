@@ -152,15 +152,15 @@ void Sound::HandleEvent(Event* event)
 			}
 
 		}
-					SetMusicVolume(musicVolume* soundVol);
-					SetMusicPause(true);
-					SetSoundEffectsVolume(soundEffectsVolume* soundVol);
-					//stop all sound
-					if (soundON) {
-						if (musicOn) {
-							PlayMusic(GetCurrentMusicTrack());
-						}
-					}
+    SetMusicVolume(musicVolume* soundVol);
+    SetMusicPause(true);
+    SetSoundEffectsVolume(soundEffectsVolume* soundVol);
+    //stop all sound
+    if (soundON) {
+      if (musicOn) {
+        PlayMusic(GetCurrentMusicTrack());
+      }
+    }
 	}
 	break;
 	}
