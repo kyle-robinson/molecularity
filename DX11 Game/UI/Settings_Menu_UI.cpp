@@ -59,7 +59,7 @@ void Settings_Menu_UI::Update()
 	
 
 		//set tabs
-		SettingsScrollBar.Function({ 30,_SizeOfScreen.y}, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.x * 0.20) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
+		SettingsScrollBar.Function({ 30,_SizeOfScreen.y}, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.x * 0.18) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
 
 		if (SettingsButtions[0].GetIsPressed()) {
 			CurrentTab = GenralTab;
@@ -135,7 +135,9 @@ void Settings_Menu_UI::Update()
 						continue;
 					}
 					else if (setting.Name == "WindowHight") {
-
+						if (currentY >= boxPos.y &&
+							currentY <= (boxPos.y + boxSize.y))
+						{
 						TextToDraw._Colour = Colors::Black;
 						TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
 						TextToDraw._Text = "Window Size";
@@ -155,7 +157,7 @@ void Settings_Menu_UI::Update()
 							}
 
 
-							SettingsDropdowns[SettingsDropCount].Function(WinSize, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, 
+							SettingsDropdowns[SettingsDropCount].Function(WinSize, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY },
 								ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, WinSize[current], _MouseData);
 
 
@@ -171,6 +173,8 @@ void Settings_Menu_UI::Update()
 							}
 							SettingsDropCount++;
 							currentY += static_cast<float>(_SizeOfScreen.y * 0.1);
+							
+							}
 							continue;
 						}
 					}

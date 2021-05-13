@@ -243,7 +243,7 @@ void LevelContainer::LateUpdate( const float dt )
 	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 	{
 		// update cube scale multiplier
-		if ( cubes[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
+		if ( tool->GetTooltype() == ToolType::Resize )
 			cubes[i]->SetScale( static_cast<float>( cubes[i]->GetEditableProperties()->GetSizeMultiplier() ) );
 
 		// cube range collision check

@@ -50,11 +50,11 @@ void HUD_UI::Update()
 	string ToolInformationTexture = "";
 
 	//TODO add background and borders
-	switch ( Mode->GetToolType() )
+	switch (Mode->GetTooltype())
 	{
 	case ToolType::Convert: {
 		TextFile = "HUD\\Tool_Assets\\ConvertSelect_500x500.dds";
-		switch ( Mode->GetMaterialID() )
+		switch (static_cast<int>(Mode->GetCurrentOption().boxtype))
 		{
 		case 0: ToolInformationTexture = "crates\\mesh.png"; break;
 		case 1: ToolInformationTexture = "crates\\wood.png"; break;
@@ -66,7 +66,7 @@ void HUD_UI::Update()
 						  break;
 	case ToolType::Resize: {
 		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
-		switch ( Mode->GetSizeID() )
+		switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
 		{
 		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Down.png"; break;
 		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Reset.png"; break;
@@ -125,7 +125,7 @@ void HUD_UI::HandleEvent( Event* event )
 	break;
 	case EVENTID::ToolModeEvent:
 	{
-		Mode = ( CubeProperties* )event->GetData();
+		Mode = (Tool_Class*)event->GetData();
 	}
 	break;
 	case EVENTID::WindowSizeChangeEvent:

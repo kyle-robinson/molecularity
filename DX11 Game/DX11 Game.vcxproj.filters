@@ -231,6 +231,10 @@
     <ClCompile Include="MainMenu_Level.cpp">
       <Filter>Source\Levels</Filter>
     </ClCompile>
+    <ClCompile Include="Tool_Class.cpp" />
+    <ClCompile Include="Tool_Function.cpp" />
+    <ClCompile Include="Tool_Convert.cpp" />
+    <ClCompile Include="Tool_Resize.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -526,6 +530,13 @@
     </ClInclude>
     <ClInclude Include="MainMenu_Level.h">
       <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Class.h" />
+    <ClInclude Include="Tool_Function.h" />
+    <ClInclude Include="Tool_Convert.h" />
+    <ClInclude Include="Tool_Resize.h" />
+    <ClInclude Include="Tool_Structs.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

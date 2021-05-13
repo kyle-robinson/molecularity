@@ -1,7 +1,7 @@
 #pragma once
 #include "UI.h"
 #include<Objects/CubeProperties.h>
-
+#include<Tool_Class.h>
 using namespace std;
 class HUD_UI :
     public UI
@@ -25,7 +25,7 @@ private:
 	ColourBlock HudBakgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
 	int energy = 100;
-	CubeProperties* Mode= nullptr;
+	Tool_Class* Mode= nullptr;
 	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 };
 
