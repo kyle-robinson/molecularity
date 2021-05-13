@@ -45,6 +45,7 @@ private:
 	//ui input
 	unsigned char UIChar;
 	MouseData UiMouseData;
+	bool isPaused;
 };
 
 #endif

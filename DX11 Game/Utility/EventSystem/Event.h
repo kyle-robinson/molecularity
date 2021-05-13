@@ -6,6 +6,7 @@ enum class EVENTID {
 	
 	//HUD
 	ToolModeEvent,
+	CubePickupEvent,
 	EnergyUpdateEvent,
 
 	//UIinput

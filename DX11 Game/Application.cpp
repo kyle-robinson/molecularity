@@ -25,19 +25,18 @@ bool Application::Initialize(
 	{
 		// initialize levels
 		level1 = std::make_shared<Level1>( stateMachine );
-		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager );
-		
+		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
 		level1.get()->SetTool(&tool);
 		first.join();
 
 		level2 = std::make_shared<Level2>( stateMachine );
-		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager );
+		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
 		level2.get()->SetTool(&tool);
 		second.join();
 
 		//main menu
 		MainMenu = std::make_shared<MainMenu_Level>( stateMachine );
-		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager );
+		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
 		MainMenu.get()->SetTool(&tool);
 		third.join();
 
@@ -51,10 +50,6 @@ bool Application::Initialize(
 
 	// SYSTEMS
 	{
-		// initialize sound
-		sound.SetMusicVolume( 0.5f );
-		if ( FAILED( sound.PlayMusic( sound.MUSIC_LEVEL ) ) ) return false;
-
 		// initialize cameras
 		cameras.Initialize( width, height );
 
@@ -63,6 +58,7 @@ bool Application::Initialize(
 		level_IDs.push_back( std::move( level1_ID ) );
 		level_IDs.push_back( std::move( level2_ID ) );
 		level_IDs.push_back( std::move( MainMenu_ID ) );
+    
 		// initialize input
 		input.Initialize( renderWindow, &stateMachine, &cameras, &sound, level_IDs );
 	}

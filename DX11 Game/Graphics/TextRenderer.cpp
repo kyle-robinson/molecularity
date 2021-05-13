@@ -17,7 +17,6 @@ TextRenderer::TextRenderer( std::string Font, ID3D11Device* device, ID3D11Device
 		std::wstring( L"Resources\\Fonts\\" ).append( fileName ).c_str() );
 }
 
-
 void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color )
 {
 	spriteBatch->Begin();
@@ -32,8 +31,10 @@ void TextRenderer::RenderCubeMoveText( LevelContainer& level )
 	{
 		if ( level.GetCube()[i]->GetIsInRange() && level.GetCube()[i]->GetIsHovering() && !level.GetCube()[i]->GetIsHolding() )
 		{
-			DrawString( L"Press 'E' to pick up cube.",
-				XMFLOAT2( level.GetGraphics()->GetWidth() / 2 - 120.0f, level.GetGraphics()->GetHeight() / 2 - 40.0f ), Colors::LightGreen );
+			float halfWidth = static_cast<float>( level.GetGraphics()->GetWidth() ) / 2.0f;
+			float halfHeight = static_cast<float>( level.GetGraphics()->GetHeight() ) / 2.0f;
+			DrawString( L"Press 'E' to pick up cube.", XMFLOAT2( halfWidth, halfHeight ), Colors::LightGreen );
+				//XMFLOAT2( level.GetGraphics()->GetWidth() / 2, level.GetGraphics()->GetHeight() / 2 ), Colors::LightGreen );
 		}
 	}
 }
@@ -64,5 +65,4 @@ void TextRenderer::RenderString( std::string text, XMFLOAT2 position, XMVECTORF3
 void TextRenderer::UpdateViewPort( D3D11_VIEWPORT& NewView )
 {
 	spriteBatch->SetViewport( NewView );
-	
 }

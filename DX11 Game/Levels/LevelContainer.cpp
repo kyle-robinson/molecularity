@@ -22,12 +22,13 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui,UI_Manager* UI )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
 	_UiManager = UI;
+	soundSystem = sound;
 	if ( !InitializeScene() )
 		return false;
 	return true;
@@ -102,7 +103,6 @@ bool LevelContainer::InitializeScene()
 			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\alien.jpg", nullptr, boxTextures[BoxType::Alien].GetAddressOf() );
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
-
 	}
 	catch ( COMException& exception )
 	{
@@ -203,7 +203,7 @@ void LevelContainer::EndFrame()
 	postProcessing->Bind( *graphics );
 
 	// render text
-	textRenderer->RenderCubeMoveText( *this );
+	//textRenderer->RenderCubeMoveText( *this );
 
 	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
@@ -233,6 +233,7 @@ void LevelContainer::Update( const float dt )
 	// update skysphere
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
 
+	// update ui components
 	_UiManager->Update();
 }
 
@@ -243,13 +244,24 @@ void LevelContainer::LateUpdate( const float dt )
 	{
 		// update cube scale multiplier
 		if ( tool->GetTooltype() == ToolType::Resize )
-			cubes[i]->SetScale( static_cast< float >( cubes[i]->GetEditableProperties()->GetSizeMultiplier() ) );
+			cubes[i]->SetScale( static_cast<float>( cubes[i]->GetEditableProperties()->GetSizeMultiplier() ) );
 
 		// cube range collision check
 		cubes[i]->SetIsInRange( Collisions::CheckCollisionCircle( cameras->GetCamera( cameras->GetCurrentCamera() ), *cubes[i], 5.0f ) );
 
 		// update objects
 		cubes[i]->Update( dt );
+
+		// cube pickup text
+		if ( cubes[i]->GetIsInRange() && cubes[i]->GetIsHovering() && !cubes[i]->GetIsHolding() )
+		{
+			EventSystem::Instance()->AddEvent( EVENTID::CubePickupEvent, ( void* )true );
+			break;
+		}
+		else
+		{
+			EventSystem::Instance()->AddEvent( EVENTID::CubePickupEvent, ( void* )false );
+		}
 	}
 
 	// set rotation of security camera
