@@ -13,7 +13,7 @@ Sound::Sound()
 	InitialiseSounds();
 	AddtoEvent();
 	musicVolume = 1.0f;
-	SoundEffectsVolume = 1.0f;
+	soundEffectsVolume = 1.0f;
 }
 
 Sound::~Sound()
@@ -24,13 +24,12 @@ Sound::~Sound()
 HRESULT Sound::InitialiseSounds()
 {
 	// Music
-	//musicVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Music.wav" ) );
-
-	musicVec.push_back(engine->play2D("Resources\\Audio\\Music.wav", true, true, true));
+	musicVec.push_back( engine->play2D( "Resources\\Audio\\Music\\LevelMusic.mp3", true, true, true ) );
+	musicVec.push_back( engine->play2D( "Resources\\Audio\\Music\\MenuMusic.mp3", true, true, true ) );
 
 	// Sound effects
-	SoundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Shot.wav" ) );
-	SoundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Collision.wav" ) );
+	soundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Sounds\\Shot.wav" ) );
+	soundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Sounds\\Collision.wav" ) );
 
 	return S_OK;
 }
@@ -38,7 +37,7 @@ HRESULT Sound::InitialiseSounds()
 HRESULT Sound::UpdatePosition( XMFLOAT3 position, float rotation )
 {
 	camPosition = irrklang::vec3df( position.x, position.y, position.z );
-	camLookDir = irrklang::vec3df( sin( rotation ), 0.0f, cos( rotation ) ); // Gets look direction from camera's rotation
+	camLookDir = irrklang::vec3df( sin( rotation ), 0.0f, cos( rotation ) ); // Gets the player's look direction from the camera's rotation
 
 	engine->setListenerPosition( camPosition, camLookDir, irrklang::vec3df( 0.0f, 0.0f, 0.0f ), irrklang::vec3df( 0.0f, 1.0f, 0.0f ) );
 
@@ -47,28 +46,29 @@ HRESULT Sound::UpdatePosition( XMFLOAT3 position, float rotation )
 
 HRESULT Sound::PlayMusic( int musicNum, bool loops )
 {
-	//stop sound
-	if (soundON) {
-		//engine->play2D( musicVec[musicNum], loops, false, false, true );
-		musicVec[musicNum]->setIsLooped(loops);
-		musicVec[musicNum]->setIsPaused(false);
+	for (int i = 0; i < musicVec.size(); i++) // Stops music overlapping
+	{
+		if ( musicVec[i]->getIsPaused() == false )
+			musicVec[i]->setIsPaused( true );
 	}
+
+	currentMusicTrack = musicNum;
+
+	musicVec[musicNum]->setPlayPosition( 0 );
+	musicVec[musicNum]->setIsLooped( loops );
+	musicVec[musicNum]->setIsPaused( false );
+  
 	return S_OK;
 }
 
-HRESULT Sound::PlaySoundEffects(int soundNum, XMFLOAT3 soundPosition)
+HRESULT Sound::PlaySoundEffects( int soundNum, bool loops, XMFLOAT3 soundPosition, float minDistance )
 {
-	//stop sound
-	if (soundON) {
-		if (SoundEffectsOn) {
-			if (soundPosition.x == NULL)
-				engine->play2D(SoundEffectsVec[soundNum]);
-			else
-			{
-				irrklang::vec3df position = { soundPosition.x, soundPosition.y, soundPosition.z };
-				engine->play3D(SoundEffectsVec[soundNum], position);
-			}
-		}
+	if ( soundPosition.x == NULL && soundPosition.y == NULL && soundPosition.z == NULL)
+		engine->play2D( soundEffectsVec[soundNum] );
+	else
+	{
+		soundEffectsVec[soundNum]->setDefaultMinDistance( minDistance );
+		engine->play3D( soundEffectsVec[soundNum], irrklang::vec3df( soundPosition.x, soundPosition.y, soundPosition.z ), loops );
 	}
 	return S_OK;
 }
