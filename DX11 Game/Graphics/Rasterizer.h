@@ -22,6 +22,7 @@ namespace Bind
 			{
 				CD3D11_RASTERIZER_DESC rasterizerDesc = CD3D11_RASTERIZER_DESC( CD3D11_DEFAULT{} );
 				rasterizerDesc.MultisampleEnable = TRUE;
+				rasterizerDesc.AntialiasedLineEnable = TRUE;
 				rasterizerDesc.FillMode = isSolid ? D3D11_FILL_SOLID : D3D11_FILL_WIREFRAME;
 				rasterizerDesc.CullMode = isTwoSided ? D3D11_CULL_NONE : D3D11_CULL_BACK;
 				HRESULT hr = GetDevice( gfx )->CreateRasterizerState( &rasterizerDesc, pRasterizer.GetAddressOf() );
@@ -40,6 +41,7 @@ namespace Bind
 			{
 				CD3D11_RASTERIZER_DESC rasterizerDesc = CD3D11_RASTERIZER_DESC( CD3D11_DEFAULT{} );
 				rasterizerDesc.MultisampleEnable = TRUE;
+				rasterizerDesc.AntialiasedLineEnable = TRUE;
 				rasterizerDesc.FillMode = isSolid ? D3D11_FILL_SOLID : D3D11_FILL_WIREFRAME;
 				rasterizerDesc.CullMode = isTwoSided ? D3D11_CULL_NONE : D3D11_CULL_BACK;
 				HRESULT hr = GetDevice( gfx )->CreateRasterizerState( &rasterizerDesc, &pRasterizer );
