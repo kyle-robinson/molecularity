@@ -14,9 +14,6 @@ public:
 	bool GetPause() { return _isPuased; }
 
 	void HandleEvent(Event* event);
-
-private:
-	void CleanUp();
 private:
 
 	bool _isPuased;
@@ -32,7 +29,4 @@ private:
 	//fonts
 	std::shared_ptr<TextRenderer>  HeadderTextRenderer;
 	std::shared_ptr<TextRenderer>  PGTextRenderer;
-
-	
 };
-

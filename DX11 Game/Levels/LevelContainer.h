@@ -15,10 +15,6 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 
-////ui
-//#include<Graphics/UI_Manager.h>
-
-
 class Fog;
 class ImGuiManager;
 class TextRenderer;
