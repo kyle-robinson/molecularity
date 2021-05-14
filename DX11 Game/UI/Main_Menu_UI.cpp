@@ -101,6 +101,9 @@ void Main_Menu_UI::HandleEvent(Event* event)
 		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
 		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );		
 		PGTextRenderer->UpdateViewPort( newViewport );
+
+		_MouseData.LPress = false;
+
 	}
 	break;
 	}

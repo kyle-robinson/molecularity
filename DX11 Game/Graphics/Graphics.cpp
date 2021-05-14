@@ -164,6 +164,8 @@ void Graphics::HandleEvent(Event* event)
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
 		windowWidth = _SizeOfScreen.x;
 		windowHeight = _SizeOfScreen.y;
+		
+		
 	}
 	break;
 	case EVENTID::UpdateSettingsEvent: 

@@ -67,6 +67,7 @@ bool Application::Initialize(
 	_SettingsData = JSON::LoadSettings();
 	EventSystem::Instance()->AddEvent( EVENTID::UpdateSettingsEvent, &_SettingsData );
 
+
 	//Process Initialize events 
 	EventSystem::Instance()->ProcessEvents();
 	return true;
@@ -87,18 +88,6 @@ void Application::Update()
 	input.Update( dt );
 	sound.UpdatePosition( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3(), cameras.GetCamera( cameras.GetCurrentCamera() )->GetRotationFloat3().y ); // Update to make this every few frames
 	cameras.Update();
-
-	//update screen size
-	RECT windowRect = { 0,0 };
-	if ( GetClientRect( renderWindow.GetHWND(), &windowRect ) ) {
-
-		XMFLOAT2 windowsize = { ( float )( windowRect.right - windowRect.left ),( float )( windowRect.bottom - windowRect.top ) };
-		if ( windowsize.x == 0 || windowsize.y == 0 ) {
-			windowsize = { 1280, 720 };
-		}
-		EventSystem::Instance()->AddEvent( EVENTID::WindowSizeChangeEvent, &windowsize );
-
-	}
 
 	// update current level
 	stateMachine.Update( dt );

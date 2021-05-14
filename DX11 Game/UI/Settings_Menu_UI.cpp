@@ -28,6 +28,7 @@ void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* cont
 	//init sprites
 	SettingsBakgtound.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	SettingsScrollBar.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+	SettingsScrollBar.setPY(0);
 	for (unsigned int i = 0; i < 10; i++) {
 		SettingsDropdowns[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 		SettingsSliders[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
@@ -37,6 +38,10 @@ void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* cont
 	for (unsigned int i = 0; i < 20; i++) {
 		ControllInput[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
+
+	CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
+	HeadderTextRenderer->UpdateViewPort(newViewport);
+	PGTextRenderer->UpdateViewPort(newViewport);
 }
 
 void Settings_Menu_UI::Update()
@@ -59,7 +64,9 @@ void Settings_Menu_UI::Update()
 	
 
 		//set tabs
-		SettingsScrollBar.Function({ 30,_SizeOfScreen.y}, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.x * 0.18) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
+		//{ 30, static_cast<float>(_SizeOfScreen.y * 0.60) }
+		SettingsScrollBar.SetPageSize(_SizeOfScreen.y);
+		SettingsScrollBar.Function({ 30, static_cast<float>(_SizeOfScreen.y * 0.60) }, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.y * 0.30) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
 
 		if (SettingsButtions[0].GetIsPressed()) {
 			CurrentTab = GenralTab;
@@ -79,19 +86,17 @@ void Settings_Menu_UI::Update()
 			SettingsScrollBar.setPY(0);
 		}
 
-		
-
-		currentY = (static_cast<float>(_SizeOfScreen.x * 0.20) - SettingsScrollBar.getPY())+20;
+		currentY = (static_cast<float>(_SizeOfScreen.y * 0.37)  )-SettingsScrollBar.getPagePos();
 		if (currentPY != SettingsScrollBar.getPY()) {
 			currentPY = SettingsScrollBar.getPY();
 			LoadFlag = false;
 		}
 
-		TabTextPos = { static_cast<float>(_SizeOfScreen.x * 0.01),static_cast<float>(_SizeOfScreen.x * 0.12) };
+		TabTextPos = { static_cast<float>(_SizeOfScreen.x * 0.01),static_cast<float>(_SizeOfScreen.y * 0.22) };
 		//box for colision 
-		XMFLOAT2 boxPos = { 0,static_cast<float>(_SizeOfScreen.x * 0.20) };
-		XMFLOAT2 boxSize = { _SizeOfScreen.x, _SizeOfScreen.y-160};
-
+		 boxPos = { 0,static_cast<float>(_SizeOfScreen.y * 0.30) };
+		 boxSize = { _SizeOfScreen.x, static_cast<float>(_SizeOfScreen.y * 0.60) };
+		
 		//swich settings tabs
 		switch (CurrentTab)
 		{
@@ -208,7 +213,7 @@ void Settings_Menu_UI::Update()
 		}
 		case ControlsTab:
 		{
-
+			
 			TextToDraw._Colour = Colors::Black;
 			TextToDraw._Position = TabTextPos;
 			TextToDraw._Text = "Controls";
@@ -252,7 +257,7 @@ void Settings_Menu_UI::Update()
 		}
 
 		//update file
-		if (SettingsButtions[4].Function("Accept", AcceptButtion, { _SizeOfScreen.x / 9, _SizeOfScreen.y / 9 }, XMFLOAT2{ static_cast<float>(_SizeOfScreen.x*0.89) ,  static_cast<float>(_SizeOfScreen.y * 0.22) }, DirectX::Colors::Black, _MouseData))
+		if (SettingsButtions[4].Function("Accept", AcceptButtion, { _SizeOfScreen.x / 9, _SizeOfScreen.y / 9 }, XMFLOAT2{ static_cast<float>(_SizeOfScreen.x*0.89) ,  static_cast<float>(_SizeOfScreen.y * 0) }, DirectX::Colors::Black, _MouseData))
 		{
 
 
@@ -309,6 +314,7 @@ void Settings_Menu_UI::Update()
 
 			_isSettings = false;
 			CurrentTab = GenralTab;
+			SettingsScrollBar.setPY(0);
 			LoadFlag = false;
 			return;
 		}
@@ -396,6 +402,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );
 		HeadderTextRenderer->UpdateViewPort( newViewport );
 		PGTextRenderer->UpdateViewPort( newViewport );
+		_MouseData.LPress = false;
 	}
 	break;
 
@@ -406,8 +413,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 {
 	TextToDraw TextToDraw;
-	XMFLOAT2 boxPos = { 0,static_cast<float>(_SizeOfScreen.x * 0.20) };
-	XMFLOAT2 boxSize = { _SizeOfScreen.x, _SizeOfScreen.y - 160 };
+	
 
 	if (currentY >= boxPos.y &&
 		currentY <= (boxPos.y + boxSize.y))

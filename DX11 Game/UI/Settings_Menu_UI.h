@@ -72,5 +72,9 @@ private:
 	bool LoadFlag = false;
 	float currentPY;
 	float currentY;
+
+	//for checkig wether setting is on screen;
+	XMFLOAT2 boxPos;
+	XMFLOAT2 boxSize;
 };
 

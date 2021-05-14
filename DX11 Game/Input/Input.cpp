@@ -35,7 +35,7 @@ void Input::AddToEvent()
 	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
 	
 }
-
+static bool MouseEventStop;
 void Input::HandleEvent(Event* event)
 {
 	switch (event->GetEventID())
@@ -56,7 +56,8 @@ void Input::HandleEvent(Event* event)
 	}
 	break;
 	case EVENTID::WindowSizeChangeEvent:
-	{
+
+	{	
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
 		mousePick.SetWidthHight(_SizeOfScreen.x, _SizeOfScreen.y);
 
@@ -75,6 +76,7 @@ void Input::HandleEvent(Event* event)
 	break;
 	case EVENTID::UpdateSettingsEvent:
 	{
+		MouseEventStop = true;
 		//controlls 
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 		for (auto& setting : a)
@@ -117,6 +119,8 @@ void Input::HandleEvent(Event* event)
 				MouseBindes["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
 
 		}
+
+		
 		
 	}
 	break;
@@ -335,7 +339,7 @@ void Input::UpdateMouse( const float dt )
 		{
 			
 			
-			
+					//swap gun state with scroll
 					if (me.GetType() == MouseBindes["Change_Gun_State_Up"])
 					{
 						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
@@ -366,10 +370,10 @@ void Input::UpdateMouse( const float dt )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( false );
 #pragma region Tool_Picking
 				
-					// update box texture on click while hovering
+					// pick cube
 					if (me.GetType() == MouseBindes["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering())
 					{
-						//set 
+						//send cube to be changed 
 						EventSystem::Instance()->AddEvent(EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get());
 					}
 #pragma endregion
@@ -377,6 +381,9 @@ void Input::UpdateMouse( const float dt )
 #pragma region UI_Input
 			//UI mouse input
 			{
+
+				
+
 				UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
 				if (mouse.IsRightDown() && cursorEnabled) {
 					UiMouseData.RPress = true;
@@ -399,6 +406,9 @@ void Input::UpdateMouse( const float dt )
 				{
 					UiMouseData.MPress = false;
 				}
+
+				
+				
 
 				EventSystem::Instance()->AddEvent(EVENTID::UIMouseInput, &UiMouseData);
 

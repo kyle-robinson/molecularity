@@ -48,6 +48,16 @@ void CameraController::HandleEvent(Event* event)
 		case EVENTID::WindowSizeChangeEvent:
 			XMFLOAT2 _SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
 		
+
+			if (_SizeOfScreen.x < 500) {
+				_SizeOfScreen.x = 1260;
+			}
+
+			if (_SizeOfScreen.y < 400) {
+				_SizeOfScreen.y = 500;
+			}
+
+
 			UICamera.SetProjectionValues(_SizeOfScreen.x, _SizeOfScreen.y, 0.0f, 1.0f);
 			for (const auto& cam : cameras)
 				cam.second->SetProjectionValues(70.0f, _SizeOfScreen.x / _SizeOfScreen.y, 0.1f, 1000.0f);

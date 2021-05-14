@@ -10,6 +10,7 @@
 UI_Manager::UI_Manager()
 {
 	EventSystem::Instance()->AddClient(EVENTID::WorldOrthMatrixEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 }
 
 void UI_Manager::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d)
@@ -18,7 +19,9 @@ void UI_Manager::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, 
 
 	for (auto const& UIItem : UiList) {
 
+		UIItem.second->SetSizeOfScreen(WinSize);
 		UIItem.second->Inizalize(device, context, _cb_vs_matrix_2d);
+		
 	}
 	
 }
@@ -95,7 +98,11 @@ void UI_Manager::HandleEvent(Event* event)
 		WorldOrthMatrix = *(XMFLOAT4X4*)event->GetData();
 	}
 	break;
-
+	case EVENTID::WindowSizeChangeEvent:
+	{
+		WinSize = *static_cast<XMFLOAT2*>(event->GetData());
+	}
+	break;
 
 	}
 

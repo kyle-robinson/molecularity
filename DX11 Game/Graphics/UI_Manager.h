@@ -37,6 +37,6 @@ private:
 	XMFLOAT4X4 WorldOrthMatrix;
 
 	std::map<std::string, std::shared_ptr <UI>> UiList;
-
+	XMFLOAT2 WinSize;
 };
 

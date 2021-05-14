@@ -3,7 +3,6 @@
 
 HUD_UI::HUD_UI()
 {
-
 }
 
 HUD_UI::~HUD_UI()
@@ -16,7 +15,7 @@ void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, Const
 	EventSystem::Instance()->AddClient( EVENTID::CubePickupEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::EnergyUpdateEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::ToolModeEvent, this );
-	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
@@ -41,6 +40,8 @@ void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, Const
 		HUDImages[i].INITSprite( contex, device, *_cb_vs_matrix_2d );
 
 	HUDTextRenderer = make_shared<TextRenderer>( "OpenSans_Bold_14.spritefont", device, contex );
+	CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
+	HUDTextRenderer->UpdateViewPort(newViewport);
 }
 
 void HUD_UI::Update()
