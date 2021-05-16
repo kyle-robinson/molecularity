@@ -16,7 +16,7 @@ public:
 
 private:
 
-	Immage_Widget Images[2];
+	Immage_Widget Images;
 	ColourBlock Bakground;
 	Buttion_Widget<string> Buttions[2];
 	vector<TextToDraw> Text;

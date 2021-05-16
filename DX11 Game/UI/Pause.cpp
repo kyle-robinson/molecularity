@@ -36,7 +36,7 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 	PGTextRenderer->UpdateViewPort(newViewport);
 }
 
-void Pause::Update()
+void Pause::Update(float dt)
 {
 	if (_isPuased) {
 		//bakground

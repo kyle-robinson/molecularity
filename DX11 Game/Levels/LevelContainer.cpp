@@ -234,7 +234,7 @@ void LevelContainer::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
 
 	// update ui components
-	_UiManager->Update();
+	_UiManager->Update(dt);
 }
 
 void LevelContainer::LateUpdate( const float dt )

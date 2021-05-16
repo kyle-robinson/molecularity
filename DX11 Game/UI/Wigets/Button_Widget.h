@@ -52,7 +52,8 @@ inline void Button_Widget<ButtonTexType>::Draw( ID3D11DeviceContext* Contex, ID3
     Contex->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
     _Background.Draw( WorldOrthoMatrix );
 
-    XMFLOAT2 textpos = { _Pos.x + 10 ,_Pos.y + ( _Size.y / 2 ) - 12 };
+    XMVECTOR textsize = textrender->GetSpriteFont()->MeasureString(ButtonTex.c_str());
+    XMFLOAT2 textpos = { _Pos.x + (_Size.x / 2) - DirectX::XMVectorGetX(textsize) / 2 ,_Pos.y + (_Size.y / 2) - DirectX::XMVectorGetY(textsize) / 2 };
     textrender->RenderString( ButtonTex, textpos, TextColour );
 }
 

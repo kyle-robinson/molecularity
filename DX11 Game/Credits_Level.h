@@ -3,6 +3,9 @@
 
 #include "LevelStateMachine.h"
 
+#include<Graphics/UI_Manager.h>
+#include<UI/Credits_UI.h>
+
 class Credits_Level :
     public LevelContainer
 {
@@ -18,7 +21,7 @@ private:
 	LevelStateMachine& levelStateMachine;
 
 
-
+	shared_ptr<Credits_UI> credits;
 
 
 };

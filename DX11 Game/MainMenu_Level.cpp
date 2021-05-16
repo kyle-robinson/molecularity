@@ -2,10 +2,7 @@
 #include "MainMenu_Level.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
-//ui
-#include<Graphics/UI_Manager.h>
-#include<UI/Settings_Menu_UI.h>
-#include<UI/Main_Menu_UI.h>
+
 
 MainMenu_Level::MainMenu_Level(LevelStateMachine& stateMachine) : levelStateMachine(stateMachine){}
 
@@ -16,13 +13,12 @@ bool MainMenu_Level::OnCreate()
 		// DRAWABLES
 		{
 			//add level UI 
-			shared_ptr<Main_Menu_UI> Menu = make_shared<Main_Menu_UI>();
-			_UiManager->AddUi(Menu, "MainMenu");
+			 Menu = make_shared<Main_Menu_UI>();
+		
+			 settingsUi = make_shared<Settings_Menu_UI>();
+			
 
-			shared_ptr<Settings_Menu_UI> settingsUi = make_shared<Settings_Menu_UI>();
-			_UiManager->AddUi(settingsUi, "Settings");
-
-			_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
+			
 		}
 	}
 	catch (COMException& exception)
@@ -52,6 +48,12 @@ void MainMenu_Level::OnSwitch()
 
 	//soundSystem->PlayMusic("MenuMusic");
 	
+
+	//UI
+	_UiManager->RemoveAllUI();
+	_UiManager->AddUi(Menu, "MainMenu");
+	_UiManager->AddUi(settingsUi, "Settings");
+	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
 }
 
 void MainMenu_Level::Render()

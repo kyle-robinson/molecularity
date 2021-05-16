@@ -15,7 +15,7 @@ public:
 	void Initialize(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d);
 	~UI_Manager();
 
-	void Update();
+	void Update(float dt);
 	void Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
 
 
@@ -27,6 +27,7 @@ public:
 
 	void AddUi(std::shared_ptr < UI> NewUI, std::string Name);
 	void RemoveUI(std::string Name);
+	void RemoveAllUI();
 	void HandleEvent(Event* event);
 
 

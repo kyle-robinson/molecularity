@@ -20,7 +20,7 @@ public:
 	UI() {};
 
 	virtual void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)=0;
-	virtual void Update()=0;
+	virtual void Update(float dt)=0;
 	virtual void BeginDraw(VertexShader& vert, PixelShader& pix,XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)=0;
 	virtual void HandleEvent(Event* event)=0;
 

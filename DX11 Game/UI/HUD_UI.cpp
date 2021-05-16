@@ -7,7 +7,12 @@ HUD_UI::HUD_UI()
 
 HUD_UI::~HUD_UI()
 {
-	delete Mode;
+	EventSystem::Instance()->RemoveClient(EVENTID::CubePickupEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::EnergyUpdateEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ToolModeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
+
 }
 
 void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d )
@@ -44,7 +49,7 @@ void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, Const
 	HUDTextRenderer->UpdateViewPort(newViewport);
 }
 
-void HUD_UI::Update()
+void HUD_UI::Update(float dt)
 {
 	//tool type ui change
 	string TextFile;

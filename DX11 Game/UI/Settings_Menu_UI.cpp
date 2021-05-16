@@ -3,18 +3,23 @@
 
 Settings_Menu_UI::Settings_Menu_UI()
 {
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::GameSettingsEvent, this);
 }
 
 Settings_Menu_UI::~Settings_Menu_UI()
 {
+	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UIKeyInput, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UIMouseInput, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GameSettingsEvent, this);
 }
 
 void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
 {
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameSettingsEvent, this);
+
 	_isSettings = false;
 	_SettingsData = JSON::LoadSettings();
 	_Device = device;
@@ -39,12 +44,14 @@ void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* cont
 		ControllInput[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
 
+
+
 	CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
 	HeadderTextRenderer->UpdateViewPort(newViewport);
 	PGTextRenderer->UpdateViewPort(newViewport);
 }
 
-void Settings_Menu_UI::Update()
+void Settings_Menu_UI::Update(float dt)
 {
 	if (_isSettings) {
 		TextToDraw TextToDraw;

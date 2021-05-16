@@ -40,10 +40,17 @@ bool Application::Initialize(
 		MainMenu.get()->SetTool(&tool);
 		third.join();
 
+		//credits
+		Credits = std::make_shared<Credits_Level>(stateMachine);
+		std::thread fouth(&Credits_Level::Initialize, Credits, &gfx, &cameras, &imgui, &_UI_Manager, &sound);
+		Credits.get()->SetTool(&tool);
+		fouth.join();
+
 		// add levels to state machine
 		level1_ID = stateMachine.Add( level1 );
 		level2_ID = stateMachine.Add( level2 );
 		MainMenu_ID = stateMachine.Add( MainMenu );
+		Credits_ID = stateMachine.Add(Credits);
 
 		stateMachine.SwitchTo( MainMenu_ID );
 	}
@@ -58,7 +65,8 @@ bool Application::Initialize(
 		level_IDs.push_back( std::move( level1_ID ) );
 		level_IDs.push_back( std::move( level2_ID ) );
 		level_IDs.push_back( std::move( MainMenu_ID ) );
-    
+		level_IDs.push_back(std::move(Credits_ID));
+
 		// initialize input
 		input.Initialize( renderWindow, &stateMachine, &cameras, &sound, level_IDs );
 	}

@@ -30,11 +30,11 @@ UI_Manager::~UI_Manager()
 {
 }
 
-void UI_Manager::Update()
+void UI_Manager::Update(float dt)
 {
 	for (auto const& UIItem : UiList)
 	{
-		UIItem.second->Update();
+		UIItem.second->Update(dt);
 	}
 }
 
@@ -86,6 +86,11 @@ void UI_Manager::RemoveUI(std::string Name)
 				break;
 		}
 	}
+}
+
+void UI_Manager::RemoveAllUI()
+{
+	UiList.clear();
 }
 
 void UI_Manager::HandleEvent(Event* event)
