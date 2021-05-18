@@ -46,6 +46,9 @@ private:
 	unsigned char UIChar;
 	MouseData UiMouseData;
 	bool isPaused;
+
+	bool canHover = true;
+	float delay = 0.0f;
 };
 
 #endif

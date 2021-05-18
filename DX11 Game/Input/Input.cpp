@@ -249,9 +249,9 @@ void Input::UpdateKeyboard( const float dt )
 				if ( i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true )
 					alreadyHeld = true;
       
-			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function
-			if ( ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0 ) &&
-					!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() &&
+			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
+			if ( ( keyboard.KeyIsPressed(KeyBindes["Action"] ) ) &&
+					!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
 					( levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() ) )
 			{
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( true );
@@ -274,11 +274,26 @@ void Input::UpdateKeyboard( const float dt )
 					cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y,
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
 				);
+
+				if (keyboard.KeyIsPressed('R'))
+				{
+					canHover = false;
+				}
+
 			}
+
 			else
 			{
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( false );
 			}
+		}
+
+		if (!canHover && delay < 100.0f)
+			delay += 1.0f;
+		else
+		{
+			canHover = true;
+			delay = 0.0f;
 		}
 	}
 
