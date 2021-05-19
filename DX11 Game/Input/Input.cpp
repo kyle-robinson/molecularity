@@ -278,6 +278,12 @@ void Input::UpdateKeyboard( const float dt )
 				if (keyboard.KeyIsPressed('R'))
 				{
 					canHover = false;
+
+					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
+						sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * 45.0f,
+						-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
+						cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * 45.0f
+					);
 				}
 
 			}
