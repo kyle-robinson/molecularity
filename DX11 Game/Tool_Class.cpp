@@ -57,6 +57,18 @@ void Tool_Class::Update()
 {
 	// manage multi-tool options
 	
+
+
+
+	//energy regen
+	if (_Energy < _EnergyMax && timer.GetMilliSecondsElapsed()>=1000) {
+		_Energy += 1;
+	}
+	else if (_Energy == _EnergyMax) {
+		timer.Stop();
+		timer.Restart();
+	}
+
 }
 
 void Tool_Class::AddToEvent()
@@ -99,19 +111,25 @@ void Tool_Class::HandleEvent(Event* event)
 	break;
 	case EVENTID::ChangeCubeEvent:
 	{
-	 CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
+		
+		timer.Restart();
+		if (_Energy >= 0) {
+			_Energy -= 25;
+			timer.Start();
+		}
+		 CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
 
-	 switch (_ToolType)
-	 {
-	 case ToolType::Convert:
-		 cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
-		 break;
-	 case ToolType::Resize:
-		 cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
-		 break;
-	 default:
-		 break;
-	 }
+		 switch (_ToolType)
+		 {
+		 case ToolType::Convert:
+			 cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
+			 break;
+		 case ToolType::Resize:
+			 cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
+			 break;
+		 default:
+			 break;
+		 }
 	
 
 	}

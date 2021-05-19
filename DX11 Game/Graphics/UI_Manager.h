@@ -30,7 +30,11 @@ public:
 	void RemoveAllUI();
 	void HandleEvent(Event* event);
 
-
+	//for hideing and showing ui
+	void HideAllUI();
+	void ShowAllUi();
+	void ShowUi(string Name);
+	void HideUi(string Name);
 private:
 	//draw all
 	bool IsToDraw = true;
@@ -38,6 +42,7 @@ private:
 	XMFLOAT4X4 WorldOrthMatrix;
 
 	std::map<std::string, std::shared_ptr <UI>> UiList;
+	vector<string>UiToDraw;
 	XMFLOAT2 WinSize;
 };
 

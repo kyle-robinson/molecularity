@@ -8,7 +8,6 @@ HUD_UI::HUD_UI()
 HUD_UI::~HUD_UI()
 {
 	EventSystem::Instance()->RemoveClient(EVENTID::CubePickupEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::EnergyUpdateEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::ToolModeEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
@@ -18,7 +17,6 @@ HUD_UI::~HUD_UI()
 void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d )
 {
 	EventSystem::Instance()->AddClient( EVENTID::CubePickupEvent, this );
-	EventSystem::Instance()->AddClient( EVENTID::EnergyUpdateEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::ToolModeEvent, this );
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
@@ -91,7 +89,7 @@ void HUD_UI::Update(float dt)
 	//crosshair
 	HUDImages[1].Function( "HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200 * hudScale,200 * hudScale }, { _SizeOfScreen.x / 2 - ( 200 * hudScale ) / 2,  _SizeOfScreen.y / 2 - ( 200 * hudScale ) / 2 } );
 	//bar data
-	HUDenergyWidget.Function( Colour{ 0,0,0 }, Colour{ 207, 164, 12 }, "Resources/Textures/HUD/energy_Top.dds", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - ( 250 * hudScale ) }, energy );
+	HUDenergyWidget.Function( Colour{ 0,0,0 }, Colour{ 207, 164, 12 }, "Resources/Textures/HUD/energy_Top.dds", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - ( 250 * hudScale ) }, Mode->GetEnergy() );
 
 	// cube pickup text
 	PickupText._Colour = Colors::White;
@@ -122,11 +120,6 @@ void HUD_UI::HandleEvent( Event* event )
 	case EVENTID::CubePickupEvent:
 	{
 		canHoldCube = ( bool )event->GetData();
-	}
-	break;
-	case EVENTID::EnergyUpdateEvent:
-	{
-		energy = ( int )event->GetData();
 	}
 	break;
 	case EVENTID::ToolModeEvent:

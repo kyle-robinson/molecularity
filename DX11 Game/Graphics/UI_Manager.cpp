@@ -11,6 +11,7 @@ UI_Manager::UI_Manager()
 {
 	EventSystem::Instance()->AddClient(EVENTID::WorldOrthMatrixEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::RemoveUIItemEvent, this);
 }
 
 void UI_Manager::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d)
@@ -42,7 +43,17 @@ void UI_Manager::Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS
 {
 	for (auto const& UIItem : UiList)
 	{
-		UIItem.second->BeginDraw(vert,pix, XMLoadFloat4x4(&WorldOrthMatrix), _cb_ps_scene);
+		bool ToDraw=false;
+		for (int i = 0; i < UiToDraw.size(); i++)
+		{
+			if (UIItem.first == UiToDraw[i]) {
+				ToDraw = true;
+			}
+
+		}
+		if (ToDraw) {
+			UIItem.second->BeginDraw(vert, pix, XMLoadFloat4x4(&WorldOrthMatrix), _cb_ps_scene);
+		}
 	}
 		
 
@@ -73,6 +84,7 @@ void UI_Manager::AddUi(std::shared_ptr < UI> NewUI, string Name)
 	}
 	if (ToAdd) {
 		UiList[Name] = NewUI;
+		UiToDraw.push_back(Name);
 	}
 	
 }
@@ -108,11 +120,64 @@ void UI_Manager::HandleEvent(Event* event)
 		WinSize = *static_cast<XMFLOAT2*>(event->GetData());
 	}
 	break;
+	case EVENTID::RemoveUIItemEvent:
+	{
+		RemoveUI(*static_cast<string*>(event->GetData()));
+	}
+	break;
 
 	}
 
 
 
+
+}
+
+void UI_Manager::HideAllUI()
+{
+	for (auto const& UIItem : UiList)
+	{
+
+		vector<string>::iterator iter = UiToDraw.begin();
+		while (iter != UiToDraw.end()) {
+			if (*iter == UIItem.first) {
+				iter = UiToDraw.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+	}
+}
+
+void UI_Manager::ShowAllUi()
+{
+	for (auto const& UIItem : UiList)
+	{
+		UiToDraw.push_back(UIItem.first);
+	}
+
+}
+
+void UI_Manager::ShowUi(string Name)
+{
+	UiToDraw.push_back(Name);
+}
+
+void UI_Manager::HideUi(string Name)
+{
+
+	vector<string>::iterator iter = UiToDraw.begin();
+	while (iter != UiToDraw.end()) {
+		if (*iter == Name) {
+			iter = UiToDraw.erase(iter);
+		}
+		else
+		{
+			++iter;
+		}
+	}
 
 }
 

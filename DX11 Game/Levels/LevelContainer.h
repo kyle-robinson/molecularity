@@ -61,6 +61,7 @@ public:
   
 protected:
 	void RenderFrameEarly();
+	void ShowEndLeveLScreen();
 	bool levelCompleted = false;
 
 	// Objects
@@ -88,7 +89,10 @@ protected:
 	// Sound
 	Sound* soundSystem;
 
+	//level name
 	std::string levelName;
+	//next level data
+	UINT32 NextLevel;
 private:
 	bool InitializeScene();
 
@@ -101,6 +105,8 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+
+	
 };
 
 #endif

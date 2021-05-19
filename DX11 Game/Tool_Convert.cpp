@@ -33,7 +33,7 @@ void Tool_Convert::ChangeCurrent(std::string name)
 void Tool_Convert::addoneTOCurrent()
 {
 	current++;
-	if (current > 5) {
+	if (current > 4) {
 		current = 0;
 	}
 	else if (current < 0)

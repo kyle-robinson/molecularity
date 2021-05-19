@@ -23,7 +23,7 @@ private:
 	Immage_Widget HUDImages[3];
 	ColourBlock HudBakgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
-	int energy = 100;
+
 	Tool_Class* Mode= nullptr;
 	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 };

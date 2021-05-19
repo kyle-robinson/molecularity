@@ -32,7 +32,7 @@ void Credits_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Co
 	
 
 	//credits data
-	
+	//TODO Load fromn json
 	//genral
 	CreditsINFO.push_back(make_pair("Lead programmer", "Kyle ROBINSON "));
 	CreditsINFO.push_back(make_pair("engine programmer", "Daniel WILSON"));
