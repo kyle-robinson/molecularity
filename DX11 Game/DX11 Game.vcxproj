@@ -294,6 +294,9 @@
     <ClCompile Include="Objects\Sprite.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ParticleBase.cpp" />
+    <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Physics\Collisions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -406,6 +409,9 @@
     <ClInclude Include="Objects\RenderableGameObject.h" />
     <ClInclude Include="Objects\SpotLight.h" />
     <ClInclude Include="Objects\Sprite.h" />
+    <ClInclude Include="ParticleBase.h" />
+    <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Physics\Billboard.h" />
     <ClInclude Include="Physics\Collisions.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />

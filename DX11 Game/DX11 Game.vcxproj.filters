@@ -231,6 +231,9 @@
     <ClCompile Include="MainMenu_Level.cpp">
       <Filter>Source\Levels</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="ParticleBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -527,6 +530,9 @@
     <ClInclude Include="MainMenu_Level.h">
       <Filter>Headers\Levels</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="ParticleBase.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">
