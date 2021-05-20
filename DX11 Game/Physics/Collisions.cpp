@@ -136,7 +136,7 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 			}
 			else if ( cube->GetPositionFloat3().z >= 13.0f && cube->GetPositionFloat3().z < 38.0f ) // sludge area collisions
 			{
-				if ( cube->GetPositionFloat3().y <= 0.1f )
+				if ( cube->GetPositionFloat3().y <= 0.5f )
 				{
 					cube->ResetPosition();
 					RESET_FORCES;
