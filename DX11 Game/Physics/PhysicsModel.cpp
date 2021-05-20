@@ -97,12 +97,14 @@ void PhysicsModel::Drag()
 {
 	mUseLaminar ? LaminarDrag() : TurbulentDrag();
 
-	// add to velocity and adjust for negative values
-	if ( mNetForce.x < 0.0f ) mVelocity.x *= 1.0f + mNetForce.x;
-	else mVelocity.x *= 1.0f - mNetForce.x;
+	// This bit is breaking drag so I've temporarily commented it out
 
-	if ( mNetForce.z < 0.0f ) mVelocity.z *= 1.0f + mNetForce.z;
-	else mVelocity.z *= 1.0f - mNetForce.z;
+	// add to velocity and adjust for negative values
+	//if ( mNetForce.x < 0.0f ) mVelocity.x *= 1.0f + mNetForce.x;
+	//else mVelocity.x *= 1.0f - mNetForce.x;
+
+	//if ( mNetForce.z < 0.0f ) mVelocity.z *= 1.0f + mNetForce.z;
+	//else mVelocity.z *= 1.0f - mNetForce.z;
 }
 
 void PhysicsModel::LaminarDrag()
@@ -165,6 +167,14 @@ void PhysicsModel::AddForce( XMFLOAT3 force ) noexcept
 	mNetForce.x += force.x;
 	mNetForce.y += force.y;
 	mNetForce.z += force.z;
+
+	std::string dMessage = std::to_string(mNetForce.x);
+	std::string dMessage2 = std::to_string(mNetForce.z);
+	char sz[1024] = { 0 };
+	dMessage = "x: " + dMessage + " z: " + dMessage2 + "\n";
+	const char* c = dMessage.c_str();
+	sprintf_s(sz, c);
+	OutputDebugStringA(sz);
 }
 
 void PhysicsModel::AddForce( XMVECTOR force ) noexcept
