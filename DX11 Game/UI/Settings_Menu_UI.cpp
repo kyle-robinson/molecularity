@@ -59,7 +59,7 @@ void Settings_Menu_UI::Update()
 	
 
 		//set tabs
-		SettingsScrollBar.Function({ 30,_SizeOfScreen.y}, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.x * 0.20) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
+		SettingsScrollBar.Function({ 30,_SizeOfScreen.y}, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.x * 0.18) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
 
 		if (SettingsButtions[0].GetIsPressed()) {
 			CurrentTab = GenralTab;
@@ -135,7 +135,9 @@ void Settings_Menu_UI::Update()
 						continue;
 					}
 					else if (setting.Name == "WindowHight") {
-
+						if (currentY >= boxPos.y &&
+							currentY <= (boxPos.y + boxSize.y))
+						{
 						TextToDraw._Colour = Colors::Black;
 						TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
 						TextToDraw._Text = "Window Size";
@@ -155,7 +157,7 @@ void Settings_Menu_UI::Update()
 							}
 
 
-							SettingsDropdowns[SettingsDropCount].Function(WinSize, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, 
+							SettingsDropdowns[SettingsDropCount].Function(WinSize, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY },
 								ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, WinSize[current], _MouseData);
 
 
@@ -171,6 +173,8 @@ void Settings_Menu_UI::Update()
 							}
 							SettingsDropCount++;
 							currentY += static_cast<float>(_SizeOfScreen.y * 0.1);
+							
+							}
 							continue;
 						}
 					}
@@ -388,18 +392,10 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 	break;
 	case EVENTID::WindowSizeChangeEvent:
 	{
-		_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
-		
-		D3D11_VIEWPORT a;
-		a.TopLeftX = 0;
-		a.TopLeftY = 0;
-		a.Width = _SizeOfScreen.x;
-		a.Height = _SizeOfScreen.y;
-		a.MaxDepth = 1.0f;
-		a.MinDepth = 0.0f;
-
-		HeadderTextRenderer->UpdateViewPort(a);
-		PGTextRenderer->UpdateViewPort(a);
+		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
+		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );
+		HeadderTextRenderer->UpdateViewPort( newViewport );
+		PGTextRenderer->UpdateViewPort( newViewport );
 	}
 	break;
 

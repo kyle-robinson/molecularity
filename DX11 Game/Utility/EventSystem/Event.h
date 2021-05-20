@@ -6,6 +6,7 @@ enum class EVENTID {
 	
 	//HUD
 	ToolModeEvent,
+	CubePickupEvent,
 	EnergyUpdateEvent,
 
 	//UIinput
@@ -20,12 +21,19 @@ enum class EVENTID {
 	GameUnPauseEvent,
 	GameSettingsEvent,
 	GameLevelChangeEvent,
+	
 	//utitlity
 	WindowSizeChangeEvent,
 	QuitGameEvent,
-	UpdateSettingsEvent
+	UpdateSettingsEvent,
 
-
+	//Tool
+	ChangeToolEvent,
+	ChangeToolOptionEvent,
+	ChangeToolOptionUpEvent,
+	ChangeToolOptionDownEvent,
+	ChangeCubeEvent,
+	
 };
 
 class Event {

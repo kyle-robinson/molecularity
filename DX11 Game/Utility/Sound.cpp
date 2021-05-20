@@ -10,10 +10,14 @@ Sound::Sound()
 
 	engine->setListenerPosition( camPosition, camLookDir, irrklang::vec3df( 0.0f, 0.0f, 0.0f ), irrklang::vec3df( 0.0f, 1.0f, 0.0f ) );
 
-	InitialiseSounds();
 	AddtoEvent();
 	musicVolume = 1.0f;
 	soundEffectsVolume = 1.0f;
+	currentMusicTrack = "MenuMusic";
+
+	musicOn = true;
+	soundEffectsOn = true;
+	soundON = true;
 }
 
 Sound::~Sound()
@@ -21,56 +25,78 @@ Sound::~Sound()
 	engine->drop();
 }
 
-HRESULT Sound::InitialiseSounds()
+void Sound::InitialiseMusicTrack( const char* fileLocation, std::string musicName )
 {
-	// Music
-	musicVec.push_back( engine->play2D( "Resources\\Audio\\Music\\LevelMusic.mp3", true, true, true ) );
-	musicVec.push_back( engine->play2D( "Resources\\Audio\\Music\\MenuMusic.mp3", true, true, true ) );
-
-	// Sound effects
-	soundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Sounds\\Shot.wav" ) );
-	soundEffectsVec.push_back( engine->addSoundSourceFromFile( "Resources\\Audio\\Sounds\\Collision.wav" ) );
-
-	return S_OK;
+	musicTracks.emplace(musicName, engine->play2D(fileLocation, true, true, true));
 }
 
-HRESULT Sound::UpdatePosition( XMFLOAT3 position, float rotation )
+void Sound::InitialiseSoundEffect( const char* fileLocation, std::string soundName )
+{
+	soundEffects.emplace(soundName, engine->addSoundSourceFromFile(fileLocation));
+}
+
+void Sound::ClearAudio()
+{
+	if (musicTracks.size() > 0)
+	{
+		for (auto name : musicTracks)
+		{
+			name.second->setIsPaused(true);
+			name.second->drop();
+		}
+
+		musicTracks.clear();
+	}
+
+	if (soundEffects.size() > 0)
+	{
+		RemoveSoundEffects();
+		soundEffects.clear();
+	}
+}
+
+void Sound::UpdatePosition( XMFLOAT3 position, float rotation )
 {
 	camPosition = irrklang::vec3df( position.x, position.y, position.z );
 	camLookDir = irrklang::vec3df( sin( rotation ), 0.0f, cos( rotation ) ); // Gets the player's look direction from the camera's rotation
 
 	engine->setListenerPosition( camPosition, camLookDir, irrklang::vec3df( 0.0f, 0.0f, 0.0f ), irrklang::vec3df( 0.0f, 1.0f, 0.0f ) );
-
-	return S_OK;
 }
 
-HRESULT Sound::PlayMusic( int musicNum, bool loops )
+void Sound::PlayMusic( std::string musicName, bool loops )
 {
-	for (int i = 0; i < musicVec.size(); i++) // Stops music overlapping
+	if (soundON)
 	{
-		if ( musicVec[i]->getIsPaused() == false )
-			musicVec[i]->setIsPaused( true );
+		for (auto music : musicTracks)
+		{
+			if (music.second->getIsPaused() == false)
+				music.second->setIsPaused(true);
+		}
+
+		currentMusicTrack = musicName;
+
+		std::string temp = musicName;
+
+		musicTracks[musicName]->setIsLooped(loops);
+		musicTracks[musicName]->setIsPaused(false);
 	}
-
-	currentMusicTrack = musicNum;
-
-	musicVec[musicNum]->setPlayPosition( 0 );
-	musicVec[musicNum]->setIsLooped( loops );
-	musicVec[musicNum]->setIsPaused( false );
-  
-	return S_OK;
 }
 
-HRESULT Sound::PlaySoundEffects( int soundNum, bool loops, XMFLOAT3 soundPosition, float minDistance )
+void Sound::PlaySoundEffects( std::string soundName, bool loops, XMFLOAT3 soundPosition, float minDistance)
 {
-	if ( soundPosition.x == NULL && soundPosition.y == NULL && soundPosition.z == NULL)
-		engine->play2D( soundEffectsVec[soundNum] );
-	else
+	if (soundON)
 	{
-		soundEffectsVec[soundNum]->setDefaultMinDistance( minDistance );
-		engine->play3D( soundEffectsVec[soundNum], irrklang::vec3df( soundPosition.x, soundPosition.y, soundPosition.z ), loops );
+		if (soundEffectsOn)
+		{
+			if (soundPosition.x == NULL && soundPosition.y == NULL && soundPosition.z == NULL)
+				engine->play2D(soundEffects[soundName]);
+			else
+			{
+				soundEffects[soundName]->setDefaultMinDistance(minDistance);
+				engine->play3D(soundEffects[soundName], irrklang::vec3df(soundPosition.x, soundPosition.y, soundPosition.z), loops);
+			}
+		}
 	}
-	return S_OK;
 }
 void Sound::AddtoEvent()
 {
@@ -86,7 +112,7 @@ void Sound::HandleEvent(Event* event)
 
 	case EVENTID::UpdateSettingsEvent:
 	{
-		//controlls 
+		//controls 
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 		float soundVol=1.0f;
 		bool MusicOn=false;
@@ -115,7 +141,7 @@ void Sound::HandleEvent(Event* event)
 					continue;
 				}
 				if (setting.Name == "BackgroundSoundsOn") {
-					SoundEffectsOn = std::get<bool>(setting.Setting);
+					soundEffectsOn = std::get<bool>(setting.Setting);
 					continue;
 				}
 				if (setting.Name == "BackgroundSoundsVolume") {
@@ -126,20 +152,15 @@ void Sound::HandleEvent(Event* event)
 			}
 
 		}
-					SetMusicVolume(musicVolume* soundVol);
-					SetMusicPause(true);
-					SetSoundEffectsVolume(soundEffectsVolume* soundVol);
-					//stop all sound
-					if (soundON) {
-						if (musicOn) {
-							SetMusicPause(false);
-							
-						}
-					}
-
-
-
-
+    SetMusicVolume(musicVolume* soundVol);
+    SetMusicPause(true);
+    SetSoundEffectsVolume(soundEffectsVolume* soundVol);
+    //stop all sound
+    if (soundON) {
+      if (musicOn) {
+        PlayMusic(GetCurrentMusicTrack());
+      }
+    }
 	}
 	break;
 	}

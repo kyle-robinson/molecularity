@@ -17,7 +17,6 @@ TextRenderer::TextRenderer( std::string Font, ID3D11Device* device, ID3D11Device
 		std::wstring( L"Resources\\Fonts\\" ).append( fileName ).c_str() );
 }
 
-
 void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVECTORF32 color )
 {
 	spriteBatch->Begin();
@@ -32,49 +31,14 @@ void TextRenderer::RenderCubeMoveText( LevelContainer& level )
 	{
 		if ( level.GetCube()[i]->GetIsInRange() && level.GetCube()[i]->GetIsHovering() && !level.GetCube()[i]->GetIsHolding() )
 		{
-			DrawString( L"Press 'E' to pick up cube.",
-				XMFLOAT2( level.GetGraphics()->GetWidth() / 2 - 120.0f, level.GetGraphics()->GetHeight() / 2 - 40.0f ), Colors::LightGreen );
+			float halfWidth = static_cast<float>( level.GetGraphics()->GetWidth() ) / 2.0f;
+			float halfHeight = static_cast<float>( level.GetGraphics()->GetHeight() ) / 2.0f;
+			DrawString( L"Press 'E' to pick up cube.", XMFLOAT2( halfWidth, halfHeight ), Colors::LightGreen );
+				//XMFLOAT2( level.GetGraphics()->GetWidth() / 2, level.GetGraphics()->GetHeight() / 2 ), Colors::LightGreen );
 		}
 	}
 }
 
-void TextRenderer::RenderMultiToolText( LevelContainer& level )
-{
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-	{
-		if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
-		{
-			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-			static std::wstring boxType;
-			switch ( level.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
-			{
-			case 0: boxType = L"Default Box"; break;
-			case 1: boxType = L"Bounce Box"; break;
-			case 2: boxType = L"Jump Box"; break;
-			case 3: boxType = L"TNT Box"; break;
-			}
-
-			DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::Orange );
-		}
-		else if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
-		{
-			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-			static std::wstring sizeType;
-			switch ( level.GetCube()[i]->GetEditableProperties()->GetSizeID() )
-			{
-			case 0: sizeType = L"Shrink Ray"; break;
-			case 1: sizeType = L"Reset Ray"; break;
-			case 2: sizeType = L"Growth Ray"; break;
-			}
-
-			DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
-		}
-	}
-}
 
 void TextRenderer::RenderCameraText( LevelContainer& manager )
 {
@@ -101,5 +65,4 @@ void TextRenderer::RenderString( std::string text, XMFLOAT2 position, XMVECTORF3
 void TextRenderer::UpdateViewPort( D3D11_VIEWPORT& NewView )
 {
 	spriteBatch->SetViewport( NewView );
-	
 }

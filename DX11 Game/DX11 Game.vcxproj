@@ -301,6 +301,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Physics\PhysicsModel.cpp" />
+    <ClCompile Include="Tool_Class.cpp" />
+    <ClCompile Include="Tool_Convert.cpp" />
+    <ClCompile Include="Tool_Function.cpp" />
+    <ClCompile Include="Tool_Resize.cpp" />
     <ClCompile Include="UI\HUD_UI.cpp" />
     <ClCompile Include="UI\Main_Menu_UI.cpp" />
     <ClCompile Include="UI\Pause.cpp" />
@@ -416,6 +420,11 @@
     <ClInclude Include="Physics\Collisions.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
+    <ClInclude Include="Tool_Class.h" />
+    <ClInclude Include="Tool_Convert.h" />
+    <ClInclude Include="Tool_Function.h" />
+    <ClInclude Include="Tool_Resize.h" />
+    <ClInclude Include="Tool_Structs.h" />
     <ClInclude Include="UI\HUD_UI.h" />
     <ClInclude Include="UI\Main_Menu_UI.h" />
     <ClInclude Include="UI\Pause.h" />

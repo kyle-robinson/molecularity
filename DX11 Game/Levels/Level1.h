@@ -32,8 +32,6 @@ private:
 	RenderableGameObject podium;
 	RenderableGameObject pressurePlate;
 
-
-
 	//UI
 	shared_ptr<HUD_UI> HUD;
 	shared_ptr<Pause> PauseUI;

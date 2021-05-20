@@ -43,6 +43,7 @@ void Input::HandleEvent(Event* event)
 	case EVENTID::GamePauseEvent:
 	{
 			EnableCursor();
+			isPaused = true;
 	}
 	break;
 	case EVENTID::GameUnPauseEvent:
@@ -51,6 +52,7 @@ void Input::HandleEvent(Event* event)
 		UiMouseData.MPress = false;
 		UiMouseData.RPress = false;
 		DisableCursor();
+		isPaused = false;
 	}
 	break;
 	case EVENTID::WindowSizeChangeEvent:
@@ -153,13 +155,34 @@ void Input::UpdateKeyboard( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
+			
 			// set multi-tool type
-			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-			{
-				if ( keycode == KeyBindes["Gun_State_One"]) levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Convert );
-				if ( keycode == KeyBindes["Gun_State_Two"]) levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetToolType( ToolType::Resize );
-			}
+			
+				if ( keycode == KeyBindes["Gun_State_One"]) {
+					currentTool = ToolType::Convert;;
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+				}
+				if ( keycode == KeyBindes["Gun_State_Two"]) {
+					currentTool = ToolType::Resize;
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);;
+				}
+				if (keycode == KeyBindes["Gun_State_Three"]) {
+					
+				}
+				if (keycode == KeyBindes["Gun_State_Four"]) { 
+					 }
+				if (keycode == KeyBindes["Gun_State_Five"]) ;
+				if (keycode == KeyBindes["Gun_State_Six"]) ;
+
+				if (keycode == KeyBindes["Change_Gun_State_Up"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+				}
+				if (keycode == KeyBindes["Change_Gun_State_Down"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+				}
+
 		}
+		
 
 		//UI
 		{
@@ -310,91 +333,48 @@ void Input::UpdateMouse( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
+			
+			
+			
+					if (me.GetType() == MouseBindes["Change_Gun_State_Up"])
+					{
+						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+					}
+					else if (me.GetType() == MouseBindes["Change_Gun_State_Down"] )
+					{
+						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+					}
+
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				// testing sound, feel free to move or remove
-				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
-					soundSystem->PlaySoundEffects( soundSystem->SOUND_TOOLUSE, false, XMFLOAT3( 0.0f, 0.0f, 0.0f ) );
+				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				{
+					if (levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused)
+						soundSystem->PlaySoundEffects("MenuClick");
+					else
+						soundSystem->PlaySoundEffects("ToolUse");
+				}
+				
 
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( levelSystem->GetCurrentLevel()->GetGraphics()->GetWidth() / 2, levelSystem->GetCurrentLevel()->GetGraphics()->GetHeight() / 2, *levelSystem->GetCurrentLevel()->GetCube()[i] ) )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( true );
 				else
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( false );
-
-#pragma region Tool_Convert
-				// manage multi-tool options
-				if ( levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
-				{
-					// change current id of texture to be used on box
-					if ( me.GetType() == MouseBindes["Change_Gun_State_Up"] &&
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetMaterialID() < 4 )
-					{
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetMaterialID(
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetMaterialID() + 1
-						);
-					}
-					else if ( me.GetType() == MouseBindes["Change_Gun_State_Down"] &&
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetMaterialID() > 0 )
-					{
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetMaterialID(
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetMaterialID() - 1
-						);
-					}
-
+#pragma region Tool_Picking
+				
 					// update box texture on click while hovering
-					if ( me.GetType() == MouseBindes["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() )
+					if (me.GetType() == MouseBindes["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering())
 					{
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetBoxType(
-							static_cast<BoxType>( levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetMaterialID() )
-						);
+						//set 
+						EventSystem::Instance()->AddEvent(EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get());
 					}
-				}
-#pragma endregion
-
-#pragma region Tool_Resize
-				else if ( levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
-				{
-					// set size multiplier to be applied to the box
-					if ( me.GetType() == MouseBindes["Change_Gun_State_Up"] &&
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetSizeID() < 2 )
-					{
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetSizeID(
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetSizeID() + 1
-						);
-					}
-					else if ( me.GetType() == MouseBindes["Change_Gun_State_Down"] &&
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetSizeID() > 0 )
-					{
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetSizeID(
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetSizeID() - 1
-						);
-					}
-
-					// set the box scale to use based on the option previously selected
-					if ( me.GetType() == MouseBindes["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() )
-					{
-						switch ( levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetSizeID() )
-						{
-						case 0:
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 0.5f );
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Small );
-							break;
-						case 1:
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 1.0f );
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Normal );
-							break;
-						case 2:
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetSizeMultiplier( 2.0f );
-							levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->SetBoxSize( BoxSize::Large );
-							break;
-						}
-					}
-				}
 #pragma endregion
 			}
+#pragma region UI_Input
 			//UI mouse input
 			{
 				UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
@@ -423,6 +403,7 @@ void Input::UpdateMouse( const float dt )
 				EventSystem::Instance()->AddEvent(EVENTID::UIMouseInput, &UiMouseData);
 
 			}
+#pragma endregion
 		}
 	}
 }

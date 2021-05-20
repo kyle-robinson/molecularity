@@ -40,13 +40,27 @@ bool Level1::OnCreate()
 void Level1::OnSwitch()
 {
 	// update items on level switch here...
+	levelName = "Level1";
 	_UiManager->RemoveUI( "MainMenu" );
 
 	//send out editable properties to hud for data
-	EventSystem::Instance()->AddEvent( EVENTID::ToolModeEvent, cubes[0].get()->GetEditableProperties().get() );
+	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
+
 	_UiManager->AddUi( HUD, "HUD" );
 	_UiManager->AddUi( PauseUI, "Pause" );
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
+
+	// initialise sounds
+	soundSystem->ClearAudio();
+
+	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic");
+	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Shot.wav", "ToolUse");
+	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
+
+	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
+	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
+
+	soundSystem->PlayMusic("LevelMusic");
 }
 
 void Level1::Render()
@@ -92,6 +106,8 @@ void Level1::RenderFrame()
 			cb_ps_scene.data.useTexture = TRUE;
 			if ( !cb_ps_scene.ApplyChanges() ) return;
 			graphics->context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+
+			// render sprites here...
 		}
 	}
 }

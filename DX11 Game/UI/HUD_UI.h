@@ -1,7 +1,7 @@
 #pragma once
 #include "UI.h"
 #include<Objects/CubeProperties.h>
-
+#include<Tool_Class.h>
 using namespace std;
 class HUD_UI :
     public UI
@@ -17,13 +17,15 @@ public:
 	 void HandleEvent(Event* event);
 private:
 	//HUD
+	bool canHoldCube = false;
 	float hudScale = 1;
 	bool isHudActive=true;
+	TextToDraw PickupText;
 	Immage_Widget HUDImages[3];
 	ColourBlock HudBakgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
 	int energy = 100;
-	CubeProperties* Mode= nullptr;
+	Tool_Class* Mode= nullptr;
 	std::shared_ptr<TextRenderer>  HUDTextRenderer;
 };
 
