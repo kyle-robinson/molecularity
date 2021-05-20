@@ -134,7 +134,7 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 					RESET_FORCES;
 				}
 			}
-			else if ( cube->GetPositionFloat3().z >= 13.0f && cube->GetPositionFloat3().z < 54.0f ) // sludge area collisions
+			else if ( cube->GetPositionFloat3().z >= 13.0f && cube->GetPositionFloat3().z < 38.0f ) // sludge area collisions
 			{
 				if ( cube->GetPositionFloat3().y <= 0.1f )
 				{
@@ -144,9 +144,9 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 			}
 			else // pressure plate platform collisions
 			{
-				if ( cube->GetPositionFloat3().z >= 54.0f )
+				if ( cube->GetPositionFloat3().z >= 53.0f )
 				{
-					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 54.0f );
+					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 53.0f );
 					RESET_FORCES;
 				}
 			}
