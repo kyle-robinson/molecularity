@@ -3,10 +3,9 @@
 #include "CameraMovement.h"
 
 void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
-	CameraController* camera, Sound* sound, std::vector<uint32_t> level_IDs )
+	CameraController* camera, std::vector<uint32_t> level_IDs )
 {
 	cameras = camera;
-	soundSystem = sound;
 	renderWindow = window;
 	this->level_IDs = level_IDs;
 	this->levelSystem = stateMachine;
@@ -331,10 +330,11 @@ void Input::UpdateMouse( const float dt )
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
-					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" || isPaused )
-						soundSystem->PlaySoundEffect( "MenuClick" );
+					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
+						Sound::Instance()->PlaySoundEffect( "MenuClick" );
+
 					else
-						soundSystem->PlaySoundEffect( "ToolUse" );
+						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
 
 

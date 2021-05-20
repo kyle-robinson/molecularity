@@ -6,7 +6,6 @@
 
 Tool_Class::Tool_Class()
 {
-	
 	SetCurrentTool(ToolType::Convert);
 	AddToEvent();
 	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);

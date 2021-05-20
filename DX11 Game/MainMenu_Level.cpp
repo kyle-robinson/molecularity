@@ -42,13 +42,12 @@ void MainMenu_Level::OnSwitch()
 	EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 
 	//sounds
-	soundSystem->ClearAudio();
+	Sound::Instance()->ClearAudio();
 
-	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
+	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
 
-	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
-	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
+	Sound::Instance()->PlayMusic( "MenuMusic" );
 }
 
 void MainMenu_Level::Render()

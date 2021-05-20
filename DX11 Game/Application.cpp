@@ -25,18 +25,18 @@ bool Application::Initialize(
 	{
 		// initialize levels
 		level1 = std::make_shared<Level1>( stateMachine );
-		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
+		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager );
 		level1.get()->SetTool(&tool);
 		first.join();
 
 		level2 = std::make_shared<Level2>( stateMachine );
-		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
+		std::thread second( &Level2::Initialize, level2, &gfx, &cameras, &imgui, &_UI_Manager );
 		level2.get()->SetTool(&tool);
 		second.join();
 
 		//main menu
 		MainMenu = std::make_shared<MainMenu_Level>( stateMachine );
-		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager, &sound );
+		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager );
 		MainMenu.get()->SetTool(&tool);
 		third.join();
 
@@ -60,7 +60,7 @@ bool Application::Initialize(
 		level_IDs.push_back( std::move( MainMenu_ID ) );
     
 		// initialize input
-		input.Initialize( renderWindow, &stateMachine, &cameras, &sound, level_IDs );
+		input.Initialize( renderWindow, &stateMachine, &cameras, level_IDs );
 	}
 
 	//load settings
@@ -85,7 +85,6 @@ void Application::Update()
 
 	// update systems
 	input.Update( dt );
-	sound.UpdatePosition( cameras.GetCamera( cameras.GetCurrentCamera() )->GetPositionFloat3(), cameras.GetCamera( cameras.GetCurrentCamera() )->GetRotationFloat3().y ); // Update to make this every few frames
 	cameras.Update();
 
 	//update screen size

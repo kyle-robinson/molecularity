@@ -51,16 +51,13 @@ void Level1::OnSwitch()
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 
 	// initialise sounds
-	soundSystem->ClearAudio();
+	Sound::Instance()->ClearAudio();
 
-	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
+	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
 
-	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
-	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
-
-	soundSystem->PlayMusic( "LevelMusic" );
+	Sound::Instance()->PlayMusic( "LevelMusic" );
 }
 
 void Level1::Render()
