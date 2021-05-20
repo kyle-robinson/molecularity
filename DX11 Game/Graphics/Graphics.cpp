@@ -13,11 +13,12 @@ bool Graphics::Initialize( HWND hWnd, int width, int height )
 
 	return true;
 }
-
+static HWND* _hWnd;
 bool Graphics::InitializeDirectX( HWND hWnd )
 {
 	try
 	{
+		_hWnd = &hWnd;
 		// pipeline - main components
 		swapChain = std::make_shared<Bind::SwapChain>( *this, context.GetAddressOf(), device.GetAddressOf(), hWnd );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );
@@ -164,6 +165,7 @@ void Graphics::HandleEvent(Event* event)
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
 		windowWidth = _SizeOfScreen.x;
 		windowHeight = _SizeOfScreen.y;
+			
 	}
 	break;
 	case EVENTID::UpdateSettingsEvent: 

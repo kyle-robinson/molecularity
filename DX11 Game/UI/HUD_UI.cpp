@@ -3,20 +3,22 @@
 
 HUD_UI::HUD_UI()
 {
-
 }
 
 HUD_UI::~HUD_UI()
 {
-	delete Mode;
+	EventSystem::Instance()->RemoveClient(EVENTID::CubePickupEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ToolModeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
+
 }
 
 void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d )
 {
 	EventSystem::Instance()->AddClient( EVENTID::CubePickupEvent, this );
-	EventSystem::Instance()->AddClient( EVENTID::EnergyUpdateEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::ToolModeEvent, this );
-	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
@@ -41,20 +43,22 @@ void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, Const
 		HUDImages[i].INITSprite( contex, device, *_cb_vs_matrix_2d );
 
 	HUDTextRenderer = make_shared<TextRenderer>( "OpenSans_Bold_14.spritefont", device, contex );
+	CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
+	HUDTextRenderer->UpdateViewPort(newViewport);
 }
 
-void HUD_UI::Update()
+void HUD_UI::Update(float dt)
 {
 	//tool type ui change
 	string TextFile;
 	string ToolInformationTexture = "";
 
 	//TODO add background and borders
-	switch ( Mode->GetToolType() )
+	switch (Mode->GetTooltype())
 	{
 	case ToolType::Convert: {
 		TextFile = "HUD\\Tool_Assets\\ConvertSelect_500x500.dds";
-		switch ( Mode->GetMaterialID() )
+		switch (static_cast<int>(Mode->GetCurrentOption().boxtype))
 		{
 		case 0: ToolInformationTexture = "crates\\mesh.png"; break;
 		case 1: ToolInformationTexture = "crates\\wood.png"; break;
@@ -66,7 +70,7 @@ void HUD_UI::Update()
 						  break;
 	case ToolType::Resize: {
 		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
-		switch ( Mode->GetSizeID() )
+		switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
 		{
 		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Down.png"; break;
 		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Reset.png"; break;
@@ -85,7 +89,7 @@ void HUD_UI::Update()
 	//crosshair
 	HUDImages[1].Function( "HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200 * hudScale,200 * hudScale }, { _SizeOfScreen.x / 2 - ( 200 * hudScale ) / 2,  _SizeOfScreen.y / 2 - ( 200 * hudScale ) / 2 } );
 	//bar data
-	HUDenergyWidget.Function( Colour{ 0,0,0 }, Colour{ 207, 164, 12 }, "Resources/Textures/HUD/energy_Top.dds", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - ( 250 * hudScale ) }, energy );
+	HUDenergyWidget.Function( Colour{ 0,0,0 }, Colour{ 207, 164, 12 }, "Resources/Textures/HUD/energy_Top.dds", { 1000 * hudScale,250 * hudScale }, XMFLOAT2{ 0, _SizeOfScreen.y - ( 250 * hudScale ) }, Mode->GetEnergy() );
 
 	// cube pickup text
 	PickupText._Colour = Colors::White;
@@ -118,14 +122,9 @@ void HUD_UI::HandleEvent( Event* event )
 		canHoldCube = ( bool )event->GetData();
 	}
 	break;
-	case EVENTID::EnergyUpdateEvent:
-	{
-		energy = ( int )event->GetData();
-	}
-	break;
 	case EVENTID::ToolModeEvent:
 	{
-		Mode = ( CubeProperties* )event->GetData();
+		Mode = (Tool_Class*)event->GetData();
 	}
 	break;
 	case EVENTID::WindowSizeChangeEvent:

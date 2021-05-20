@@ -2,7 +2,6 @@
 #ifndef LEVELCONTAINER_H
 #define LEVELCONTAINER_H
 
-#include "Sound.h"
 #include "Graphics.h"
 #include "JSON_Helper.h"
 #include "MultiViewport.h"
@@ -15,6 +14,8 @@
 #include "SpotLight.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
+
+#include <Tool_Class.h>
 
 class Fog;
 class ImGuiManager;
@@ -33,7 +34,7 @@ class LevelContainer
 	friend class Application;
 public:
 	virtual ~LevelContainer( void ) = default;
-	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound );
+	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -45,7 +46,6 @@ public:
 	virtual void RenderFrame();
 	virtual void Update( const float dt );
 	void LateUpdate( const float dt );
-	virtual void ProcessInput();
 
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<StencilOutline> GetStencilOutline() const noexcept { return stencilOutline; }
@@ -54,17 +54,21 @@ public:
 	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
 	Graphics* GetGraphics() const noexcept { return graphics; }
 
+	void SetTool(Tool_Class* Tool) { tool = Tool; }
 	std::string GetLevelName() { return levelName; }
+  
 protected:
 	void RenderFrameEarly();
+	void ShowEndLeveLScreen();
 	bool levelCompleted = false;
 
 	// Objects
+	Tool_Class* tool;
 	Graphics* graphics;
 	ImGuiManager* imgui;
 	CameraController* cameras;
 	RenderableGameObject skysphere;
-	//RenderableGameObject securityCamera;
+	RenderableGameObject securityCamera;
 	std::vector<std::shared_ptr<Cube>> cubes;
 
 	// Lights
@@ -80,10 +84,10 @@ protected:
 	//UI
 	UI_Manager* _UiManager;
 
-	// Sound
-	Sound* soundSystem;
-
+  //Next level data
 	std::string levelName;
+	UINT32 NextLevel;
+  
 private:
 	bool InitializeScene();
 
@@ -96,6 +100,8 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+
+	
 };
 
 #endif

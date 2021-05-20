@@ -8,7 +8,8 @@
 #include<Graphics/UI_Manager.h>
 #include<UI/HUD_UI.h>
 #include<UI/Pause.h>
-#include<UI/Settings_Menu_UI.h>
+#include<UI/Tutorial_UI.h>
+#include<UI/EndLevelScreen_UI.h>
 /// <summary>
 /// The first level of the game.
 /// Inherits from Level to render/update objects used in each level.
@@ -21,7 +22,6 @@ public:
 	void OnSwitch() override;
 	void Render() override;
 	void Update( const float dt ) override;
-	void ProcessInput() override;
 private:
 	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;
@@ -35,6 +35,9 @@ private:
 	//UI
 	shared_ptr<HUD_UI> HUD;
 	shared_ptr<Pause> PauseUI;
+	shared_ptr<Tutorial_UI> TutorialUI;
+	shared_ptr<EndLevelScreen_UI> EndLevelUI;
+
 };
 
 #endif

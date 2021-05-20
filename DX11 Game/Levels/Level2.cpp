@@ -37,16 +37,15 @@ bool Level2::OnCreate()
 void Level2::OnSwitch()
 {
 	// update items on level switch here...
-	soundSystem->ClearAudio();
+	levelName = "Level2";
 
-	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Shot.wav", "ToolUse");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
+	Sound::Instance()->ClearAudio();
 
-	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
-	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
-	
-	soundSystem->PlayMusic("LevelMusic");
+	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\MenuClick.mp3", "MenuClick" );
+
+	Sound::Instance()->PlayMusic( "LevelMusic" );
 }
 
 void Level2::Render()
@@ -102,13 +101,4 @@ void Level2::Update( const float dt )
 
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
-}
-
-void Level2::ProcessInput()
-{
-	// update main input
-	LevelContainer::ProcessInput();
-
-	// update level input here...
-	// NOTE: not currently using
 }

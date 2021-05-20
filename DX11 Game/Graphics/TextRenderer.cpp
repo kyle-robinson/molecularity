@@ -21,7 +21,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 {
 	spriteBatch->Begin();
 	spriteFont->DrawString( spriteBatch.get(), text.c_str(), position, color, 0.0f,
-		XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
+		XMFLOAT2( 0.0f, 0.0f ), Scale);
 	spriteBatch->End();
 }
 
@@ -34,45 +34,6 @@ void TextRenderer::RenderCubeMoveText( LevelContainer& level )
 			float halfWidth = static_cast<float>( level.GetGraphics()->GetWidth() ) / 2.0f;
 			float halfHeight = static_cast<float>( level.GetGraphics()->GetHeight() ) / 2.0f;
 			DrawString( L"Press 'E' to pick up cube.", XMFLOAT2( halfWidth, halfHeight ), Colors::LightGreen );
-				//XMFLOAT2( level.GetGraphics()->GetWidth() / 2, level.GetGraphics()->GetHeight() / 2 ), Colors::LightGreen );
-		}
-	}
-}
-
-void TextRenderer::RenderMultiToolText( LevelContainer& level )
-{
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-	{
-		if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Convert )
-		{
-			DrawString( L"Multi-Tool: CONVERT", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-			static std::wstring boxType;
-			switch ( level.GetCube()[i]->GetEditableProperties()->GetMaterialID() )
-			{
-			case 0: boxType = L"Default Box"; break;
-			case 1: boxType = L"Bounce Box"; break;
-			case 2: boxType = L"Jump Box"; break;
-			case 3: boxType = L"TNT Box"; break;
-			}
-
-			DrawString( std::wstring( L"Texture: " ).append( boxType ).c_str(),
-				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::Orange );
-		}
-		else if ( level.GetCube()[i]->GetEditableProperties()->GetToolType() == ToolType::Resize )
-		{
-			DrawString( L"Multi-Tool: RESIZE", XMFLOAT2( level.GetGraphics()->GetWidth() - 760.0f, 0.0f ), Colors::White );
-
-			static std::wstring sizeType;
-			switch ( level.GetCube()[i]->GetEditableProperties()->GetSizeID() )
-			{
-			case 0: sizeType = L"Shrink Ray"; break;
-			case 1: sizeType = L"Reset Ray"; break;
-			case 2: sizeType = L"Growth Ray"; break;
-			}
-
-			DrawString( std::wstring( L"Size: " ).append( sizeType ).c_str(),
-				XMFLOAT2( level.GetGraphics()->GetWidth() - 260.0f, 0.0f ), Colors::BlueViolet );
 		}
 	}
 }
@@ -102,4 +63,39 @@ void TextRenderer::RenderString( std::string text, XMFLOAT2 position, XMVECTORF3
 void TextRenderer::UpdateViewPort( D3D11_VIEWPORT& NewView )
 {
 	spriteBatch->SetViewport( NewView );
+
+	//scale text
+	float xScale = 1, yScale = 1;
+	if (NewView.Width <= 2560 && NewView.Width > 1920) {
+		xScale = 2.0f;
+	}
+	else if (NewView.Width <= 1920 && NewView.Width > 1600) {
+		xScale = 1.5f;
+	}
+	else if (NewView.Width <= 1600 && NewView.Width > 1024) {
+		xScale = 1.0f;
+	}
+	else if (NewView.Width <= 1024) {
+		xScale = 0.9f;
+	}
+	else {
+		xScale = 1.0f;
+	}
+
+	if (NewView.Height <= 1440 && NewView.Height > 1080) {
+		yScale = 2.0f;
+	}
+	else if (NewView.Height <= 1080 && NewView.Height > 900) {
+		yScale = 1.5f;
+	}
+	else if (NewView.Height <= 900 && NewView.Height > 576) {
+		yScale = 1.0f;
+	}
+	else if (NewView.Height <= 576) {
+		yScale = 0.9f;
+	}
+	else {
+		yScale = 1.0f;
+	}
+	SetScale({ xScale,yScale });
 }

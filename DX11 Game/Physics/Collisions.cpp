@@ -2,6 +2,8 @@
 #include "Camera.h"
 #include "Cube.h"
 
+#define RESET_FORCES cube->GetPhysicsModel()->ResetForces_NoY()
+
 bool Collisions::CheckCollisionCircle( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept
 {
 	if (( camera->GetPositionFloat3().x - object.GetPositionFloat3().x ) *
@@ -26,6 +28,7 @@ bool Collisions::CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObje
 		return false;
 }
 
+#pragma region Level1_Collisions
 void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObject3D& object, float offset ) noexcept
 {
 	if ( camera->GetPositionFloat3().z < -7.0f ) // entrance collisions
@@ -69,3 +72,85 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObje
 		}
 	}
 }
+
+void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept
+{
+	if ( cube->GetPositionFloat3().z < -7.0f ) // entrance collisions
+	{
+		// X-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().x >= 2.5f )
+			{
+				cube->SetPosition( 2.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+
+			if ( cube->GetPositionFloat3().x <= -2.5f )
+			{
+				cube->SetPosition( -2.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+		}
+
+		// Z-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().z <= -20.0f )
+			{
+				cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -20.0f );
+				RESET_FORCES;
+			}
+		}
+	}
+	else
+	{
+		// X-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().x <= object.GetPositionFloat3().x - offset )
+			{
+				cube->SetPosition( object.GetPositionFloat3().x - offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+
+			if ( cube->GetPositionFloat3().x >= object.GetPositionFloat3().x + offset )
+			{
+				cube->SetPosition( object.GetPositionFloat3().x + offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+		}
+
+		// Z-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().z < 13.0f ) // main area collisions
+			{
+				if ( cube->GetPositionFloat3().x >= 2.5f && cube->GetPositionFloat3().z <= -6.5f )
+				{
+					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.5f );
+					RESET_FORCES;
+				}
+
+				if ( cube->GetPositionFloat3().x <= -2.5f && cube->GetPositionFloat3().z <= -6.5f )
+				{
+					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.5f );
+					RESET_FORCES;
+				}
+			}
+			else if ( cube->GetPositionFloat3().z >= 13.0f && cube->GetPositionFloat3().z < 38.0f ) // sludge area collisions
+			{
+				if ( cube->GetPositionFloat3().y <= 0.5f )
+				{
+					cube->ResetPosition();
+					RESET_FORCES;
+				}
+			}
+			else // pressure plate platform collisions
+			{
+				if ( cube->GetPositionFloat3().z >= 53.0f )
+				{
+					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 53.0f );
+					RESET_FORCES;
+				}
+			}
+		}
+	}
+}
+#pragma endregion

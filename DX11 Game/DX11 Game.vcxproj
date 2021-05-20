@@ -214,6 +214,8 @@
     <ClCompile Include="Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Credits_Level.cpp" />
+    <ClCompile Include="UI\EndLevelScreen_UI.cpp" />
     <ClCompile Include="Graphics\Fog.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -298,12 +300,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Physics\PhysicsModel.cpp" />
+    <ClCompile Include="Tool_Class.cpp" />
+    <ClCompile Include="Tool_Convert.cpp" />
+    <ClCompile Include="Tool_Function.cpp" />
+    <ClCompile Include="Tool_Resize.cpp" />
+    <ClCompile Include="UI\Credits_UI.cpp" />
     <ClCompile Include="UI\HUD_UI.cpp" />
     <ClCompile Include="UI\Main_Menu_UI.cpp" />
     <ClCompile Include="UI\Pause.cpp" />
     <ClCompile Include="UI\Settings_Menu_UI.cpp" />
+    <ClCompile Include="UI\Tutorial_UI.cpp" />
     <ClCompile Include="UI\UI.cpp" />
-    <ClCompile Include="UI\Wigets\Button_Widget.cpp" />
     <ClCompile Include="UI\Wigets\ColourBlock.cpp" />
     <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp" />
     <ClCompile Include="UI\Wigets\DropDown_Widget.cpp" />
@@ -343,6 +350,8 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Credits_Level.h" />
+    <ClInclude Include="UI\EndLevelScreen_UI.h" />
     <ClInclude Include="Graphics\Bindables.h" />
     <ClInclude Include="Graphics\Blender.h" />
     <ClInclude Include="Graphics\ConstantBuffer.h" />
@@ -410,13 +419,20 @@
     <ClInclude Include="Physics\Collisions.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
+    <ClInclude Include="Tool_Class.h" />
+    <ClInclude Include="Tool_Convert.h" />
+    <ClInclude Include="Tool_Function.h" />
+    <ClInclude Include="Tool_Resize.h" />
+    <ClInclude Include="Tool_Structs.h" />
+    <ClInclude Include="UI\Credits_UI.h" />
     <ClInclude Include="UI\HUD_UI.h" />
     <ClInclude Include="UI\Main_Menu_UI.h" />
     <ClInclude Include="UI\Pause.h" />
     <ClInclude Include="UI\Settings_Menu_UI.h" />
+    <ClInclude Include="UI\Tutorial_UI.h" />
     <ClInclude Include="UI\UI.h" />
     <ClInclude Include="UI\WidgetIncludes.h" />
-    <ClInclude Include="UI\Wigets\Button_Widget.h" />
+    <ClInclude Include="UI\Wigets\Buttion_Widget.h" />
     <ClInclude Include="UI\Wigets\ColourBlock.h" />
     <ClInclude Include="UI\Wigets\DataSlider_Widget.h" />
     <ClInclude Include="UI\Wigets\DropDown_Widget.h" />

@@ -19,7 +19,7 @@ private:
 
     Sprite _Immage;
     std::string _TexFile;
-    
+   
 
 
 };
