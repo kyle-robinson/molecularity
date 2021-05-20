@@ -12,7 +12,6 @@ public:
 	void OnSwitch() override;
 	void Render() override;
 	void Update(const float dt) override;
-	void ProcessInput() override;
 private:
 	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;

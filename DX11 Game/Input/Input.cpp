@@ -255,6 +255,7 @@ void Input::UpdateKeyboard( const float dt )
 					( levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() ) )
 			{
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( true );
+				levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->ResetForces();
 
 				// set cube position
 				static int offset = 2;
@@ -275,6 +276,7 @@ void Input::UpdateKeyboard( const float dt )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
 				);
 
+				// cube throwing
 				if (keyboard.KeyIsPressed('R'))
 				{
 					canHover = false;
