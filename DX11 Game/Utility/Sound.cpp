@@ -122,14 +122,14 @@ void Sound::HandleEvent( Event* event )
 			if ( setting.Type == JSON::SettingType::SoundType )
 			{
 				//change sound
-				if ( setting.Name == "SoundOn" ) {
+				if (setting.Name == "MasterSoundOn") {
 					//music
 					masterOn = std::get<bool>( setting.Setting );
 					continue;
 					
 				}
-				if ( setting.Name == "SoundVolume" ) {
-					 soundVol = ( float )std::get<int>( setting.Setting ) / 100;
+				if (setting.Name == "MasterSoundVolume") {
+					 soundVol = (float)std::get<int>(setting.Setting) / 100;
 					 continue;
 				}
 				if ( setting.Name == "MusicOn" ) {
@@ -141,12 +141,12 @@ void Sound::HandleEvent( Event* event )
 					musicVolume = ( float )std::get<int>( setting.Setting ) / 100;
 					continue;
 				}
-				if ( setting.Name == "BackgroundSoundsOn" ) {
-					soundEffectsOn = std::get<bool>( setting.Setting );
+				if (setting.Name == "SoundEffectsEfOn") {
+					soundEffectsOn = std::get<bool>(setting.Setting);
 					continue;
 				}
-				if ( setting.Name == "BackgroundSoundsVolume" ) {
-					soundEffectsVolume = ( float )std::get<int>( setting.Setting ) / 100;
+				if (setting.Name == "SoundEffectVolume") {
+					soundEffectsVolume = (float)std::get<int>(setting.Setting) / 100;
 					continue;
 				}
 

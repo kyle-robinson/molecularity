@@ -30,10 +30,13 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 	for (unsigned int i = 0; i < 4; i++) {
 		PuaseButtions[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
-	
+
+	CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
+	HeadderTextRenderer->UpdateViewPort(newViewport);
+	PGTextRenderer->UpdateViewPort(newViewport);
 }
 
-void Pause::Update()
+void Pause::Update(float dt)
 {
 	if (_isPuased) {
 		//bakground
@@ -126,6 +129,7 @@ void Pause::HandleEvent(Event* event)
 		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );
 		HeadderTextRenderer->UpdateViewPort( newViewport );
 		PGTextRenderer->UpdateViewPort( newViewport );
+		_MouseData.LPress = false;
 	}
 	break;
 	}

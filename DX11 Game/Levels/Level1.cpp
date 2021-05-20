@@ -27,6 +27,9 @@ bool Level1::OnCreate()
 			//add level UI 
 			HUD = make_shared<HUD_UI>();
 			PauseUI = make_shared<Pause>();
+			TutorialUI= make_shared<Tutorial_UI>();
+			EndLevelUI= make_shared<EndLevelScreen_UI>();
+
 		}
 	}
 	catch ( COMException& exception )
@@ -41,15 +44,20 @@ void Level1::OnSwitch()
 {
 	// update items on level switch here...
 	levelName = "Level1";
+	NextLevel = 1;
+	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
+
 	_UiManager->RemoveUI( "MainMenu" );
 
 	//send out editable properties to hud for data
 	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
 
 	_UiManager->AddUi( HUD, "HUD" );
+	_UiManager->AddUi(TutorialUI, "Tutorial");
 	_UiManager->AddUi( PauseUI, "Pause" );
+	_UiManager->AddUi(EndLevelUI, "EndLevel");
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
-
+	_UiManager->HideUi("EndLevel");
 	// initialise sounds
 	Sound::Instance()->ClearAudio();
 
@@ -147,5 +155,7 @@ void Level1::Update( const float dt )
 		}
 	}
 
+	
+	//levelCompleted = true;
 	LevelContainer::LateUpdate( dt );
 }

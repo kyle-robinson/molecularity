@@ -1,24 +1,16 @@
 #include "stdafx.h"
-#include "MainMenu_Level.h"
-#include "Collisions.h"
-#include "Rasterizer.h"
+#include "Credits_Level.h"
 
+Credits_Level::Credits_Level(LevelStateMachine& stateMachine) : levelStateMachine(stateMachine) {}
 
-MainMenu_Level::MainMenu_Level(LevelStateMachine& stateMachine) : levelStateMachine(stateMachine){}
-
-bool MainMenu_Level::OnCreate()
-{
+bool Credits_Level::OnCreate()
+{	
 	try
 	{
 		// DRAWABLES
 		{
-			//add level UI 
-			 Menu = make_shared<Main_Menu_UI>();
-		
-			 settingsUi = make_shared<Settings_Menu_UI>();
-			
-
-			
+				//add level UI 
+				credits = make_shared<Credits_UI>();
 		}
 	}
 	catch (COMException& exception)
@@ -27,31 +19,20 @@ bool MainMenu_Level::OnCreate()
 		return false;
 	}
 	return true;
+
 }
 
-void MainMenu_Level::OnSwitch()
-{
-	// update items on level switch here...
-	levelName = "MainMenu";
+void Credits_Level::OnSwitch()
+{	
+	levelName = "Credits";
 
-	//make sure cursor is displayed
-	EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
-
-	//sounds
-	Sound::Instance()->ClearAudio();
-
-	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
-
-	//UI
+	//new UI
 	_UiManager->RemoveAllUI();
-	_UiManager->AddUi(Menu, "MainMenu");
-	_UiManager->AddUi(settingsUi, "Settings");
+	_UiManager->AddUi(credits, "Credits");
 	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
-	Sound::Instance()->PlayMusic( "MenuMusic" );
 }
 
-void MainMenu_Level::Render()
+void Credits_Level::Render()
 {
 	// Render to sub viewport first using static camera
 	GetMultiViewport()->SetUsingSub();
@@ -66,7 +47,7 @@ void MainMenu_Level::Render()
 	// Render UI and present the complete frame
 	EndFrame();
 }
-void MainMenu_Level::RenderFrame()
+void Credits_Level::RenderFrame()
 {
 	// render ligths/skysphere
 	LevelContainer::RenderFrameEarly();
@@ -81,7 +62,7 @@ void MainMenu_Level::RenderFrame()
 		graphics->context->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
 	}
 }
-void MainMenu_Level::Update(const float dt)
+void Credits_Level::Update(const float dt)
 {
 	// update lights/skysphere
 	LevelContainer::Update(dt);
@@ -89,3 +70,5 @@ void MainMenu_Level::Update(const float dt)
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate(dt);
 }
+
+

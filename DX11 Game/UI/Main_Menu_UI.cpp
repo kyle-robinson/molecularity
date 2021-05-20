@@ -1,13 +1,9 @@
 #include "stdafx.h"
 #include "Main_Menu_UI.h"
-
+#include <shellapi.h>
 Main_Menu_UI::Main_Menu_UI()
 {
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
-	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
-	IsSettings = false;
+	
 }
 
 Main_Menu_UI::~Main_Menu_UI()
@@ -19,22 +15,38 @@ Main_Menu_UI::~Main_Menu_UI()
 }
 
 void Main_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
-{
+{	
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIKeyInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	IsSettings = false;
+
+
+
+
 	_Device = device;
 	_Contex = contex;
 	_cb_vs_matrix_2d = cb_vs_matrix_2d;
 
 	
+	
+
 	PGTextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont", _Device.Get(), _Contex.Get());
 	Titlecard.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+
+	CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
+	PGTextRenderer->UpdateViewPort(newViewport);
+
 	MainMenuBackGround.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 5; i++) {
 		MainMenuButtions[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
 
 }
-
-void Main_Menu_UI::Update()
+	static bool openlink=false;
+		static bool open=true;
+void Main_Menu_UI::Update(float dt)
 {
 	if (!IsSettings)
 	{
@@ -47,11 +59,15 @@ void Main_Menu_UI::Update()
 		if (MainMenuButtions[0].Function("Play", ButtionTex, size, XMFLOAT2{ ButtionXPos, static_cast<float>(_SizeOfScreen.y * ButtionYPos) }, DirectX::Colors::Black, _MouseData)) {
 			//go to hub/save
 			EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
+			LevelTo = 0;
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 		}
 		ButtionYPos += 0.20;
+	
 		if (MainMenuButtions[1].Function("place holder", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 			//place holder
+			LevelTo = 3;
+			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 		}
 		 ButtionYPos += 0.20;
 		if (MainMenuButtions[2].Function("Settings", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
@@ -63,6 +79,23 @@ void Main_Menu_UI::Update()
 		if (MainMenuButtions[3].Function("Exit", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 			//exit
 			EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
+		}
+		
+
+		//link to git hub
+		if (MainMenuButtions[4].Function("", ButtionTex2, { static_cast<float>(_SizeOfScreen.x * 0.055), static_cast<float>(_SizeOfScreen.y * 0.075) }, XMFLOAT2{ 2,  2 }, DirectX::Colors::Black, _MouseData)) {
+			if (!openlink && open) {
+				openlink = true;
+			}
+
+		}
+		if (MainMenuButtions[4].GetIsPressed() == false) {
+			open = true;
+		}
+		if (openlink) {
+			ShellExecute(0, 0, L"https://github.com/kyle-robinson/directx-game", 0, 0, SW_SHOW);
+			open = false;
+			openlink = false;
 		}
 	}
 }
@@ -101,6 +134,10 @@ void Main_Menu_UI::HandleEvent(Event* event)
 		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
 		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );		
 		PGTextRenderer->UpdateViewPort( newViewport );
+		
+
+		_MouseData.LPress = false;
+
 	}
 	break;
 	}

@@ -156,6 +156,16 @@ void LevelContainer::RenderFrameEarly()
 	}
 }
 
+void LevelContainer::ShowEndLeveLScreen()
+{
+	if (levelCompleted) {
+		//game end
+		_UiManager->HideAllUI();
+		_UiManager->ShowUi("EndLevel");
+		EventSystem::Instance()->AddEvent(EVENTID::GameEndLevelEvent);
+	}
+}
+
 void LevelContainer::RenderFrame()
 {
 	// CYBERGUN / SPOTLIGHT
@@ -233,10 +243,16 @@ void LevelContainer::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
 
 	// update ui components
-	_UiManager->Update();
+
+	_UiManager->Update(dt);
+
+	tool->Update();
 
 	// update camera position for 3D sound
 	Sound::Instance()->UpdatePosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3(), cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y );
+	ShowEndLeveLScreen();
+
+
 }
 
 void LevelContainer::LateUpdate( const float dt )

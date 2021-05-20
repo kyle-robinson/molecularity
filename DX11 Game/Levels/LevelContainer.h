@@ -59,6 +59,7 @@ public:
   
 protected:
 	void RenderFrameEarly();
+	void ShowEndLeveLScreen();
 	bool levelCompleted = false;
 
 	// Objects
@@ -84,6 +85,8 @@ protected:
 	UI_Manager* _UiManager;
 
 	std::string levelName;
+	//next level data
+	UINT32 NextLevel;
 private:
 	bool InitializeScene();
 
@@ -96,6 +99,8 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+
+	
 };
 
 #endif
