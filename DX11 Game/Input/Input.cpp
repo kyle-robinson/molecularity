@@ -317,12 +317,12 @@ void Input::UpdateMouse( const float dt )
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				// testing sound, feel free to move or remove
-				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
-					if (levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused)
-						soundSystem->PlaySoundEffects("MenuClick");
+					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
+						soundSystem->PlaySoundEffects( "MenuClick" );
 					else
-						soundSystem->PlaySoundEffects("ToolUse");
+						soundSystem->PlaySoundEffects( "ToolUse" );
 				}
 				
 

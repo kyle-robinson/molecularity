@@ -17,7 +17,7 @@ Sound::Sound()
 
 	musicOn = true;
 	soundEffectsOn = true;
-	soundON = true;
+	masterOn = true;
 }
 
 Sound::~Sound()
@@ -27,12 +27,12 @@ Sound::~Sound()
 
 void Sound::InitialiseMusicTrack( const char* fileLocation, std::string musicName )
 {
-	musicTracks.emplace(musicName, engine->play2D(fileLocation, true, true, true));
+	musicTracks.emplace( musicName, engine->play2D( fileLocation, true, true, true ) );
 }
 
 void Sound::InitialiseSoundEffect( const char* fileLocation, std::string soundName )
 {
-	soundEffects.emplace(soundName, engine->addSoundSourceFromFile(fileLocation));
+	soundEffects.emplace( soundName, engine->addSoundSourceFromFile( fileLocation ) );
 }
 
 void Sound::ClearAudio()
@@ -41,14 +41,14 @@ void Sound::ClearAudio()
 	{
 		for (auto name : musicTracks)
 		{
-			name.second->setIsPaused(true);
+			name.second->setIsPaused( true );
 			name.second->drop();
 		}
 
 		musicTracks.clear();
 	}
 
-	if (soundEffects.size() > 0)
+	if ( soundEffects.size() > 0 )
 	{
 		RemoveSoundEffects();
 		soundEffects.clear();
@@ -65,46 +65,47 @@ void Sound::UpdatePosition( XMFLOAT3 position, float rotation )
 
 void Sound::PlayMusic( std::string musicName, bool loops )
 {
-	if (soundON)
+	if ( masterOn )
 	{
-		for (auto music : musicTracks)
+		for ( auto music : musicTracks )
 		{
-			if (music.second->getIsPaused() == false)
-				music.second->setIsPaused(true);
+			if ( music.second->getIsPaused() == false )
+				music.second->setIsPaused( true );
 		}
 
 		currentMusicTrack = musicName;
 
-		std::string temp = musicName;
-
-		musicTracks[musicName]->setIsLooped(loops);
-		musicTracks[musicName]->setIsPaused(false);
+		if ( musicTracks.size() > 0 )
+		{
+			musicTracks[musicName]->setIsLooped( loops );
+			musicTracks[musicName]->setIsPaused( false );
+		}
 	}
 }
 
-void Sound::PlaySoundEffects( std::string soundName, bool loops, XMFLOAT3 soundPosition, float minDistance)
+void Sound::PlaySoundEffects( std::string soundName, bool loops, XMFLOAT3 soundPosition, float minDistance )
 {
-	if (soundON)
+	if ( masterOn )
 	{
-		if (soundEffectsOn)
+		if ( soundEffectsOn )
 		{
-			if (soundPosition.x == NULL && soundPosition.y == NULL && soundPosition.z == NULL)
-				engine->play2D(soundEffects[soundName]);
+			if ( soundPosition.x == NULL && soundPosition.y == NULL && soundPosition.z == NULL )
+				engine->play2D( soundEffects[soundName] );
 			else
 			{
-				soundEffects[soundName]->setDefaultMinDistance(minDistance);
-				engine->play3D(soundEffects[soundName], irrklang::vec3df(soundPosition.x, soundPosition.y, soundPosition.z), loops);
+				soundEffects[soundName]->setDefaultMinDistance( minDistance );
+				engine->play3D( soundEffects[soundName], irrklang::vec3df( soundPosition.x, soundPosition.y, soundPosition.z ), loops );
 			}
 		}
 	}
 }
 void Sound::AddtoEvent()
 {
-	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 }
 #include<JSON_Helper.h>
 
-void Sound::HandleEvent(Event* event)
+void Sound::HandleEvent( Event* event )
 {
 	
 	switch (event->GetEventID())
@@ -113,54 +114,54 @@ void Sound::HandleEvent(Event* event)
 	case EVENTID::UpdateSettingsEvent:
 	{
 		//controls 
-		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
-		float soundVol=1.0f;
-		bool MusicOn=false;
-		for (auto& setting : a)
+		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>( event->GetData() );
+		float soundVol = 1.0f;
+		bool MusicOn = false;
+		for ( auto& setting : a )
 		{
-			if (setting.Type == JSON::SettingType::SoundType)
+			if ( setting.Type == JSON::SettingType::SoundType )
 			{
 				//change sound
-				if (setting.Name == "SoundOn") {
+				if ( setting.Name == "SoundOn" ) {
 					//music
-					soundON = std::get<bool>(setting.Setting);
+					masterOn = std::get<bool>( setting.Setting );
 					continue;
 					
 				}
-				if (setting.Name == "SoundVolume") {
-					 soundVol = (float)std::get<int>(setting.Setting) / 100;
+				if ( setting.Name == "SoundVolume" ) {
+					 soundVol = ( float )std::get<int>( setting.Setting ) / 100;
 					 continue;
 				}
-				if (setting.Name == "MusicOn") {
-					musicOn = std::get<bool>(setting.Setting);
-					MusicOn= std::get<bool>(setting.Setting);
+				if ( setting.Name == "MusicOn" ) {
+					musicOn = std::get<bool>( setting.Setting );
+					MusicOn = std::get<bool>( setting.Setting );
 					continue;
 				}
-				if (setting.Name == "MusicVolume") {
-					musicVolume = (float)std::get<int>(setting.Setting) / 100;
+				if ( setting.Name == "MusicVolume" ) {
+					musicVolume = ( float )std::get<int>( setting.Setting ) / 100;
 					continue;
 				}
-				if (setting.Name == "BackgroundSoundsOn") {
-					soundEffectsOn = std::get<bool>(setting.Setting);
+				if ( setting.Name == "BackgroundSoundsOn" ) {
+					soundEffectsOn = std::get<bool>( setting.Setting );
 					continue;
 				}
-				if (setting.Name == "BackgroundSoundsVolume") {
-					soundEffectsVolume = (float)std::get<int>(setting.Setting) / 100;
+				if ( setting.Name == "BackgroundSoundsVolume" ) {
+					soundEffectsVolume = ( float )std::get<int>( setting.Setting ) / 100;
 					continue;
 				}
 
 			}
 
 		}
-    SetMusicVolume(musicVolume* soundVol);
-    SetMusicPause(true);
-    SetSoundEffectsVolume(soundEffectsVolume* soundVol);
-    //stop all sound
-    if (soundON) {
-      if (musicOn) {
-        PlayMusic(GetCurrentMusicTrack());
-      }
-    }
+		SetMusicVolume( musicVolume* soundVol );
+		SetMusicPause( true );
+		SetSoundEffectsVolume( soundEffectsVolume* soundVol );
+		//stop all sound
+		if ( masterOn ) {
+			if ( musicOn ) {
+				PlayMusic( GetCurrentMusicTrack() );
+			}
+		}
 	}
 	break;
 	}

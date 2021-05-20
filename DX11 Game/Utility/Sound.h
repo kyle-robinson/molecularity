@@ -37,7 +37,7 @@ public:
 	float GetSoundEffectsVolume() { return soundEffectsVolume; } // Gets the volume level for sound effects
 	void SetSoundEffectsVolume( float volume ) { soundEffectsVolume = volume; for ( auto sound : soundEffects ) { sound.second->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
 
-	void SetMusicPause(bool isPause) { for (auto music : musicTracks) { music.second->setIsPaused(isPause); } } // Sets the ispuase  for music
+	void SetMusicPause(bool isPause) { for (auto music : musicTracks) { music.second->setIsPaused(isPause); } } // Sets the isPaused for music
 
 
 	//eventsystem
@@ -60,7 +60,7 @@ private:
 	//bool for shutting off sound
 	bool musicOn;
 	bool soundEffectsOn;
-	bool soundON;
+	bool masterOn; // Was soundOn, changed to master so it is less confusing
 };
 
 #endif

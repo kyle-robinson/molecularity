@@ -2,7 +2,6 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "Sound.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
 #include "LevelStateMachine.h"
