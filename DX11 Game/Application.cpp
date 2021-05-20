@@ -47,6 +47,10 @@ bool Application::Initialize(
 
 	// SYSTEMS
 	{
+		// initialize sound
+		//sound.SetMusicVolume( 0.5f );
+		//if ( FAILED( sound.PlayMusic( sound.MUSIC_LEVEL ) ) ) return false;
+
 		// initialize cameras
 		cameras.Initialize( width, height );
 

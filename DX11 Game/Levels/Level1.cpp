@@ -52,14 +52,14 @@ void Level1::OnSwitch()
 	// initialise sounds
 	soundSystem->ClearAudio();
 
-	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Shot.wav", "ToolUse" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.wav", "MenuClick" );
+	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic");
+	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Shot.wav", "ToolUse");
+	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
 
-	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
-	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
+	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
+	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
 
-	soundSystem->PlayMusic( "LevelMusic" );
+	soundSystem->PlayMusic("LevelMusic");
 }
 
 void Level1::Render()
