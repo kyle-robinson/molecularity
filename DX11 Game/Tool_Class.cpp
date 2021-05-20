@@ -20,10 +20,7 @@ Tool_Class::~Tool_Class()
 	EventSystem::Instance()->RemoveClient(EVENTID::ChangeCubeEvent, this);
 }
 
-void Tool_Class::SetCurrentTool(Tool_Function* CurrentTool)
-{
-	_CurrentTool = std::make_shared <Tool_Function>(CurrentTool);
-}
+
 
 void Tool_Class::SetCurrentTool(ToolType CurrentTool)
 {

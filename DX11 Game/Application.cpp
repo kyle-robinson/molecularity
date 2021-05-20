@@ -42,7 +42,7 @@ bool Application::Initialize(
 
 		//credits
 		Credits = std::make_shared<Credits_Level>(stateMachine);
-		std::thread fouth(&Credits_Level::Initialize, Credits, &gfx, &cameras, &imgui, &_UI_Manager, &sound);
+		std::thread fouth(&Credits_Level::Initialize, Credits, &gfx, &cameras, &imgui, &_UI_Manager);
 		Credits.get()->SetTool(&tool);
 		fouth.join();
 

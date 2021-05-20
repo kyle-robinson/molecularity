@@ -98,9 +98,9 @@ void Tutorial_UI::Update(float dt)
 		_TextList.push_back(text);
 
 		yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
-		text._Text = KeyBindes["Gun_State_One"]+":  Tool 1   " + KeyBindes["Gun_State_Four"] + ":  Tool 4";;
-		text._Text +="\n"+ KeyBindes["Gun_State_Two"] + ":  Tool 2   " + KeyBindes["Gun_State_Five"] + ":  Tool 5";;
-		text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Tool 3   " + KeyBindes["Gun_State_Six"] + ":  Tool 6";;
+		text._Text = KeyBindes["Gun_State_One"]+":  Tool 1          " + KeyBindes["Gun_State_Four"] + ":  Tool 4";;
+		text._Text +="\n"+ KeyBindes["Gun_State_Two"] + ":  Tool 2          " + KeyBindes["Gun_State_Five"] + ":  Tool 5";;
+		text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Tool 3          " + KeyBindes["Gun_State_Six"] + ":  Tool 6";;
 		
 		text._Position = { xpos,yPos };
 		_TextList.push_back(text);

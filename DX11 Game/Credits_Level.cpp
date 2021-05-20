@@ -71,8 +71,4 @@ void Credits_Level::Update(const float dt)
 	LevelContainer::LateUpdate(dt);
 }
 
-void Credits_Level::ProcessInput()
-{
-	LevelContainer::ProcessInput();
-}
 
