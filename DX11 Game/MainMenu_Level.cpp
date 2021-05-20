@@ -45,7 +45,10 @@ void MainMenu_Level::OnSwitch()
 	soundSystem->ClearAudio();
 
 	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.wav", "MenuClick" );
+	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
+
+	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
+	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
 }
 
 void MainMenu_Level::Render()

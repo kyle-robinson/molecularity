@@ -40,8 +40,11 @@ void Level2::OnSwitch()
 	soundSystem->ClearAudio();
 
 	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Shot.wav", "ToolUse" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.wav", "MenuClick" );
+	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
+	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
+
+	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
+	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
 	
 	soundSystem->PlayMusic( "LevelMusic" );
 }
