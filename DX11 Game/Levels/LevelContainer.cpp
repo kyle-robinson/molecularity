@@ -24,13 +24,12 @@
 
 // "CCTV Camera" (https://skfb.ly/6SD7C) by Smoggybeard is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
 	_UiManager = UI;
-	soundSystem = sound;
 	if ( !InitializeScene() )
 		return false;
 	return true;
@@ -159,6 +158,16 @@ void LevelContainer::RenderFrameEarly()
 	}
 }
 
+void LevelContainer::ShowEndLeveLScreen()
+{
+	if (levelCompleted) {
+		//game end
+		_UiManager->HideAllUI();
+		_UiManager->ShowUi("EndLevel");
+		EventSystem::Instance()->AddEvent(EVENTID::GameEndLevelEvent);
+	}
+}
+
 void LevelContainer::RenderFrame()
 {
 	// CYBERGUN / SPOTLIGHT
@@ -233,7 +242,14 @@ void LevelContainer::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
 
 	// update ui components
-	_UiManager->Update();
+
+	_UiManager->Update(dt);
+
+	tool->Update();
+
+	// update camera position for 3D sound
+	Sound::Instance()->UpdatePosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3(), cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y );
+	ShowEndLeveLScreen();
 }
 
 void LevelContainer::LateUpdate( const float dt )

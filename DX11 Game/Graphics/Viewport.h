@@ -36,6 +36,7 @@ namespace Bind
 				viewportDesc.MinDepth = 0.0f;
 			}
 		}
+
 		void Bind( Graphics& gfx ) noexcept override
 		{
 			GetContext( gfx )->RSSetViewports( 1u, &viewportDesc );

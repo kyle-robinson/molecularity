@@ -2,30 +2,36 @@
 
 //Holds the list of possible events
 enum class EVENTID {
-	
-	
+
+
 	//HUD
 	ToolModeEvent,
 	CubePickupEvent,
-	EnergyUpdateEvent,
 
 	//UIinput
 	UIMouseInput,
 	UIKeyInput,
 
+	//Tut
+	UITutorialEnd,
 	//UICam
 	WorldOrthMatrixEvent,
 
+	//UIEndLevel
+	SetNextLevelEvent,
+	
 	//game Events
 	GamePauseEvent,
 	GameUnPauseEvent,
 	GameSettingsEvent,
 	GameLevelChangeEvent,
-	
+	GameEndLevelEvent,
+
 	//utitlity
 	WindowSizeChangeEvent,
 	QuitGameEvent,
 	UpdateSettingsEvent,
+	RemoveUIItemEvent,
 
 	//Tool
 	ChangeToolEvent,

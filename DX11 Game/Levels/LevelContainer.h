@@ -2,7 +2,6 @@
 #ifndef LEVELCONTAINER_H
 #define LEVELCONTAINER_H
 
-#include "Sound.h"
 #include "Graphics.h"
 #include "JSON_Helper.h"
 #include "MultiViewport.h"
@@ -35,7 +34,7 @@ class LevelContainer
 	friend class Application;
 public:
 	virtual ~LevelContainer( void ) = default;
-	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound );
+	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -60,6 +59,7 @@ public:
   
 protected:
 	void RenderFrameEarly();
+	void ShowEndLeveLScreen();
 	bool levelCompleted = false;
 
 	// Objects
@@ -84,10 +84,10 @@ protected:
 	//UI
 	UI_Manager* _UiManager;
 
-	// Sound
-	Sound* soundSystem;
+  //Next level data
 	std::string levelName;
-
+	UINT32 NextLevel;
+  
 private:
 	bool InitializeScene();
 
@@ -100,6 +100,8 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+
+	
 };
 
 #endif

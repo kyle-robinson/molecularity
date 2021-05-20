@@ -3,10 +3,9 @@
 #include "CameraMovement.h"
 
 void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
-	CameraController* camera, Sound* sound, std::vector<uint32_t> level_IDs )
+	CameraController* camera, std::vector<uint32_t> level_IDs )
 {
 	cameras = camera;
-	soundSystem = sound;
 	renderWindow = window;
 	this->level_IDs = level_IDs;
 	this->levelSystem = stateMachine;
@@ -14,10 +13,10 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 
 	keyboard.DisableAutoRepeatKeys();
 	mousePick.Initialize(
-		static_cast<int>( renderWindow.GetWidth() ),
-		static_cast<int>( renderWindow.GetHeight() )
+		static_cast< int >( renderWindow.GetWidth() ),
+		static_cast< int >( renderWindow.GetHeight() )
 	);
-	
+
 	AddToEvent();
 }
 
@@ -29,21 +28,20 @@ void Input::Update( const float dt )
 
 void Input::AddToEvent()
 {
-	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
-	
+	EventSystem::Instance()->AddClient( EVENTID::GamePauseEvent, this );
+	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
+	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
+	EventSystem::Instance()->AddClient( EVENTID::GameUnPauseEvent, this );
 }
 
-void Input::HandleEvent(Event* event)
+void Input::HandleEvent( Event* event )
 {
-	switch (event->GetEventID())
+	switch ( event->GetEventID() )
 	{
 	case EVENTID::GamePauseEvent:
 	{
-			EnableCursor();
-			isPaused = true;
+		EnableCursor();
+		isPaused = true;
 	}
 	break;
 	case EVENTID::GameUnPauseEvent:
@@ -57,67 +55,64 @@ void Input::HandleEvent(Event* event)
 	break;
 	case EVENTID::WindowSizeChangeEvent:
 	{
-		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
-		mousePick.SetWidthHight(_SizeOfScreen.x, _SizeOfScreen.y);
+		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast< DirectX::XMFLOAT2* >( event->GetData() );
+		mousePick.SetWidthHight( _SizeOfScreen.x, _SizeOfScreen.y );
 
 		if (
 			mouse.GetPosX() <= 0 &&
-			mouse.GetPosX() >= (0 + _SizeOfScreen.x) &&
+			mouse.GetPosX() >= ( 0 + _SizeOfScreen.x ) &&
 			mouse.GetPosY() <= 0 &&
-			mouse.GetPosY() >= (0 + _SizeOfScreen.y)) {
+			mouse.GetPosY() >= ( 0 + _SizeOfScreen.y ) ) {
 			UiMouseData.LPress = false;
 			UiMouseData.MPress = false;
 			UiMouseData.RPress = false;
 		}
-		
-
-	} 
+	}
 	break;
 	case EVENTID::UpdateSettingsEvent:
 	{
-		//controlls 
-		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
-		for (auto& setting : a)
+		//controls 
+		std::vector<JSON::SettingData> a = *static_cast< std::vector<JSON::SettingData>* >( event->GetData() );
+		for ( auto& setting : a )
 		{
 			//only for player not debug key changes
-			if (setting.Type == JSON::SettingType::ControllType) {
+			if ( setting.Type == JSON::SettingType::ControllType ) {
 				//change controll
 
 				//control map
-				string key =std::get<string>(setting.Setting).c_str();
+				string key = std::get<string>( setting.Setting ).c_str();
 
 				//convert to input commands
-				
-				if (key == "SCROLL WHEEL") {
-					MouseBindes[setting.Name+"_Up"] = Mouse::MouseEvent::EventType::WheelUp;
-					MouseBindes[setting.Name+"_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+
+				if ( key == "SCROLL WHEEL" ) {
+					MouseBinds[setting.Name + "_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+					MouseBinds[setting.Name + "_Down"] = Mouse::MouseEvent::EventType::WheelDown;
 				}
-				else if (key == "RMB")
+				else if ( key == "RMB" )
 				{
-					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::RPress;
+					MouseBinds[setting.Name] = Mouse::MouseEvent::EventType::RPress;
 				}
-				else if (key == "LMB")
+				else if ( key == "LMB" )
 				{
-					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::LPress;
+					MouseBinds[setting.Name] = Mouse::MouseEvent::EventType::LPress;
 				}
-				else if (key == "MMB")
+				else if ( key == "MMB" )
 				{
-					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::MPress;
+					MouseBinds[setting.Name] = Mouse::MouseEvent::EventType::MPress;
 				}
 				else
 				{
-					unsigned char* valChar= (unsigned char*)key.c_str();
-					KeyBindes[setting.Name]= *valChar;
+					unsigned char* valChar = ( unsigned char* )key.c_str();
+					KeyBinds[setting.Name] = *valChar;
 				}
-				
-			}
-			//mouse inputs
-				MouseBindes["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
-				MouseBindes["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
-				MouseBindes["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
 
+			}
+
+			//mouse inputs
+			MouseBinds["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+			MouseBinds["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+			MouseBinds["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
 		}
-		
 	}
 	break;
 	}
@@ -155,45 +150,35 @@ void Input::UpdateKeyboard( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
-			
 			// set multi-tool type
-			
-				if ( keycode == KeyBindes["Gun_State_One"]) {
-					currentTool = ToolType::Convert;;
-					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
-				}
-				if ( keycode == KeyBindes["Gun_State_Two"]) {
-					currentTool = ToolType::Resize;
-					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);;
-				}
-				if (keycode == KeyBindes["Gun_State_Three"]) {
-					
-				}
-				if (keycode == KeyBindes["Gun_State_Four"]) { 
-					 }
-				if (keycode == KeyBindes["Gun_State_Five"]) ;
-				if (keycode == KeyBindes["Gun_State_Six"]) ;
+			if ( keycode == KeyBinds["Gun_State_One"] ) {
+				currentTool = ToolType::Convert;;
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
+			}
+			if ( keycode == KeyBinds["Gun_State_Two"] ) {
+				currentTool = ToolType::Resize;
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );;
+			}
 
-				if (keycode == KeyBindes["Change_Gun_State_Up"]) {
-					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
-				}
-				if (keycode == KeyBindes["Change_Gun_State_Down"]) {
-					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
-				}
+			if ( keycode == KeyBinds["Gun_State_Three"] );
+			if ( keycode == KeyBinds["Gun_State_Four"] );
+			if ( keycode == KeyBinds["Gun_State_Five"] );
+			if ( keycode == KeyBinds["Gun_State_Six"] );
 
+			if ( keycode == KeyBinds["Change_Gun_State_Up"] )
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionUpEvent );
+
+			if ( keycode == KeyBinds["Change_Gun_State_Down"] )
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionDownEvent );
 		}
-		
 
 		//UI
 		{
 			UIChar = keycode;
-			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
+			EventSystem::Instance()->AddEvent( EVENTID::UIKeyInput, &UIChar );
 
-
-			if (keycode == KeyBindes["Pause"]) {
-				// pause game
-				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
-			}
+			if ( keycode == KeyBinds["Pause"] )
+				EventSystem::Instance()->AddEvent( EVENTID::GamePauseEvent );
 		}
 	}
 #pragma endregion
@@ -218,21 +203,21 @@ void Input::UpdateKeyboard( const float dt )
 		else
 		{
 			static bool jumping = false;
-			if ( keyboard.KeyIsPressed(KeyBindes["Jump"]) || jumping )
+			if ( keyboard.KeyIsPressed( KeyBinds["Jump"] ) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
 		}
-	
+
 		// normalize diagonal movement speed
-		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
+		if ( keyboard.KeyIsPressed( KeyBinds["Forward"] ) && ( keyboard.KeyIsPressed( KeyBinds["Left"] ) || keyboard.KeyIsPressed( KeyBinds["Back"] ) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
-		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
+		if ( keyboard.KeyIsPressed( KeyBinds["Back"] ) && ( keyboard.KeyIsPressed( KeyBinds["Left"] ) || keyboard.KeyIsPressed( KeyBinds["Back"] ) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
 
 		// update camera movement
-		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed(KeyBindes["Left"]) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed(KeyBindes["Right"]) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed( KeyBinds["Forward"] ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed( KeyBinds["Left"] ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed( KeyBinds["Back"] ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed( KeyBinds["Right"] ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 
 		// set camera speed
 		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
@@ -248,11 +233,11 @@ void Input::UpdateKeyboard( const float dt )
 			for ( uint32_t j = 0; j < NUM_CUBES; j++ )
 				if ( i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true )
 					alreadyHeld = true;
-      
+
 			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
-			if ( ( keyboard.KeyIsPressed(KeyBindes["Action"] ) ) &&
-					!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
-					( levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() ) )
+			if ( ( keyboard.KeyIsPressed( KeyBinds["Action"] ) ) &&
+				!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
+				( levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() ) )
 			{
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( true );
 				levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->ResetForces();
@@ -277,52 +262,29 @@ void Input::UpdateKeyboard( const float dt )
 				);
 
 				// cube throwing
-				if (keyboard.KeyIsPressed('R'))
+				if ( keyboard.KeyIsPressed( 'R' ) )
 				{
 					canHover = false;
 
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
-						sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * 45.0f,
-						-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
-						cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * 45.0f
+						sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * 45.0f,
+						-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
+						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * 45.0f
 					);
 				}
-
 			}
-
 			else
 			{
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( false );
 			}
 		}
 
-		if (!canHover && delay < 100.0f)
+		if ( !canHover && delay < 100.0f )
 			delay += 1.0f;
 		else
 		{
 			canHover = true;
 			delay = 0.0f;
-		}
-	}
-
-	// CUBE INPUT
-	{
-		// update cube movement
-		if ( keyboard.KeyIsPressed( VK_RIGHT ) )
-			levelSystem->GetCurrentLevel()->GetCube()[0]->GetPhysicsModel()->AddForce( 0.1f, 0.0f, 0.0f );
-		if ( keyboard.KeyIsPressed( VK_LEFT ) )
-			levelSystem->GetCurrentLevel()->GetCube()[0]->GetPhysicsModel()->AddForce( -0.1f, 0.0f, 0.0f );
-
-		if ( keyboard.KeyIsPressed( 'R' ) )
-		{
-			//level->GetCube()[0]->AdjustPosition(
-			//	cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() *
-			//	cameras->GetCamera( cameras->GetCurrentCamera() )->GetCameraSpeed() * dt );
-
-			levelSystem->GetCurrentLevel()->GetCube()[0]->GetPhysicsModel()->AddForce(
-				cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector()*
-				cameras->GetCamera( cameras->GetCurrentCamera() )->GetCameraSpeed() * dt
-			);
 		}
 	}
 #pragma endregion
@@ -345,8 +307,8 @@ void Input::UpdateMouse( const float dt )
 				{
 					cameras->GetCamera( cameras->GetCurrentCamera() )->AdjustRotation(
 						XMFLOAT3(
-							static_cast<float>( me.GetPosY() ) * 0.005f,
-							static_cast<float>( me.GetPosX() ) * 0.005f,
+							static_cast< float >( me.GetPosY() ) * 0.005f,
+							static_cast< float >( me.GetPosX() ) * 0.005f,
 							0.0f
 						)
 					);
@@ -356,31 +318,25 @@ void Input::UpdateMouse( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
-			
-			
-			
-					if (me.GetType() == MouseBindes["Change_Gun_State_Up"])
-					{
-						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
-					}
-					else if (me.GetType() == MouseBindes["Change_Gun_State_Down"] )
-					{
-						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
-					}
+			if ( me.GetType() == MouseBinds["Change_Gun_State_Up"] )
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionUpEvent );
+			else if ( me.GetType() == MouseBinds["Change_Gun_State_Down"] )
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionDownEvent );
 
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				// testing sound, feel free to move or remove
-				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
-					if (levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused)
-						soundSystem->PlaySoundEffects("MenuClick");
+					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
+						Sound::Instance()->PlaySoundEffect( "MenuClick" );
+
 					else
-						soundSystem->PlaySoundEffects("ToolUse");
+						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
-				
+
 
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( levelSystem->GetCurrentLevel()->GetGraphics()->GetWidth() / 2, levelSystem->GetCurrentLevel()->GetGraphics()->GetHeight() / 2, *levelSystem->GetCurrentLevel()->GetCube()[i] ) )
@@ -388,43 +344,32 @@ void Input::UpdateMouse( const float dt )
 				else
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( false );
 #pragma region Tool_Picking
-				
-					// update box texture on click while hovering
-					if (me.GetType() == MouseBindes["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering())
-					{
-						//set 
-						EventSystem::Instance()->AddEvent(EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get());
-					}
+
+				// update box texture on click while hovering
+				if ( me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() )
+					EventSystem::Instance()->AddEvent( EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get() );
 #pragma endregion
 			}
 #pragma region UI_Input
 			//UI mouse input
 			{
-				UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
-				if (mouse.IsRightDown() && cursorEnabled) {
+				UiMouseData.Pos = { static_cast< float >( me.GetPosX() ),static_cast< float >( me.GetPosY() ) };
+				if ( mouse.IsRightDown() && cursorEnabled )
 					UiMouseData.RPress = true;
-				}
 				else
-				{
 					UiMouseData.RPress = false;
-				}
-				if (mouse.IsLeftDown() && cursorEnabled) {
+
+				if ( mouse.IsLeftDown() && cursorEnabled )
 					UiMouseData.LPress = true;
-				}
 				else
-				{
 					UiMouseData.LPress = false;
-				}
-				if (mouse.IsMiddleDown() && cursorEnabled) {
+
+				if ( mouse.IsMiddleDown() && cursorEnabled )
 					UiMouseData.MPress = true;
-				}
 				else
-				{
 					UiMouseData.MPress = false;
-				}
 
-				EventSystem::Instance()->AddEvent(EVENTID::UIMouseInput, &UiMouseData);
-
+				EventSystem::Instance()->AddEvent( EVENTID::UIMouseInput, &UiMouseData );
 			}
 #pragma endregion
 		}

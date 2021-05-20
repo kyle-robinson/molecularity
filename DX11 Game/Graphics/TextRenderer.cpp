@@ -21,7 +21,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 {
 	spriteBatch->Begin();
 	spriteFont->DrawString( spriteBatch.get(), text.c_str(), position, color, 0.0f,
-		XMFLOAT2( 0.0f, 0.0f ), XMFLOAT2( 1.0f, 1.0f ) );
+		XMFLOAT2( 0.0f, 0.0f ), Scale);
 	spriteBatch->End();
 }
 
@@ -63,4 +63,39 @@ void TextRenderer::RenderString( std::string text, XMFLOAT2 position, XMVECTORF3
 void TextRenderer::UpdateViewPort( D3D11_VIEWPORT& NewView )
 {
 	spriteBatch->SetViewport( NewView );
+
+	//scale text
+	float xScale = 1, yScale = 1;
+	if (NewView.Width <= 2560 && NewView.Width > 1920) {
+		xScale = 2.0f;
+	}
+	else if (NewView.Width <= 1920 && NewView.Width > 1600) {
+		xScale = 1.5f;
+	}
+	else if (NewView.Width <= 1600 && NewView.Width > 1024) {
+		xScale = 1.0f;
+	}
+	else if (NewView.Width <= 1024) {
+		xScale = 0.9f;
+	}
+	else {
+		xScale = 1.0f;
+	}
+
+	if (NewView.Height <= 1440 && NewView.Height > 1080) {
+		yScale = 2.0f;
+	}
+	else if (NewView.Height <= 1080 && NewView.Height > 900) {
+		yScale = 1.5f;
+	}
+	else if (NewView.Height <= 900 && NewView.Height > 576) {
+		yScale = 1.0f;
+	}
+	else if (NewView.Height <= 576) {
+		yScale = 0.9f;
+	}
+	else {
+		yScale = 1.0f;
+	}
+	SetScale({ xScale,yScale });
 }

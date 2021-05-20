@@ -176,6 +176,7 @@ void RenderWindow::HandleEvent(Event* event)
 									mi.rcMonitor.right - mi.rcMonitor.left,
 									mi.rcMonitor.bottom - mi.rcMonitor.top,
 									SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+								
 							}
 						}
 					}
@@ -190,6 +191,9 @@ void RenderWindow::HandleEvent(Event* event)
 						SetWindowPos(hWnd, NULL, ((mi.rcMonitor.right - mi.rcMonitor.left)/2)- width/2,
 							((mi.rcMonitor.bottom - mi.rcMonitor.top)/2)- hight/2, width, hight, SWP_SHOWWINDOW |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 					}
+
+
+					SetActiveWindow(hWnd);
 				}
 				
 			}

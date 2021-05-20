@@ -27,6 +27,9 @@ bool Level1::OnCreate()
 			//add level UI 
 			HUD = make_shared<HUD_UI>();
 			PauseUI = make_shared<Pause>();
+			TutorialUI= make_shared<Tutorial_UI>();
+			EndLevelUI= make_shared<EndLevelScreen_UI>();
+
 		}
 	}
 	catch ( COMException& exception )
@@ -41,26 +44,28 @@ void Level1::OnSwitch()
 {
 	// update items on level switch here...
 	levelName = "Level1";
+	NextLevel = 1;
+	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
+
 	_UiManager->RemoveUI( "MainMenu" );
 
 	//send out editable properties to hud for data
 	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
 
 	_UiManager->AddUi( HUD, "HUD" );
+	_UiManager->AddUi(TutorialUI, "Tutorial");
 	_UiManager->AddUi( PauseUI, "Pause" );
+	_UiManager->AddUi(EndLevelUI, "EndLevel");
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
-
+	_UiManager->HideUi("EndLevel");
 	// initialise sounds
-	soundSystem->ClearAudio();
+	Sound::Instance()->ClearAudio();
 
-	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Shot.wav", "ToolUse");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
+	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
 
-	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
-	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
-
-	soundSystem->PlayMusic("LevelMusic");
+	Sound::Instance()->PlayMusic( "LevelMusic" );
 }
 
 void Level1::Render()
@@ -150,5 +155,7 @@ void Level1::Update( const float dt )
 		}
 	}
 
+	
+	//levelCompleted = true;
 	LevelContainer::LateUpdate( dt );
 }

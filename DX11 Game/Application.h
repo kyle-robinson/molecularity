@@ -9,6 +9,7 @@
 #include "Level1.h"
 #include "Level2.h"
 #include"MainMenu_Level.h"
+#include"Credits_Level.h"
 
 #include"Graphics\\UI_Manager.h"
 #include<Tool_Class.h>
@@ -32,7 +33,6 @@ public:
 private:
 	Input input;
 	Timer timer;
-	Sound sound;
 	Graphics gfx;
 	ImGuiManager imgui;
 	UI_Manager _UI_Manager;
@@ -42,9 +42,12 @@ private:
 	uint32_t level1_ID;
 	uint32_t level2_ID;
 	uint32_t MainMenu_ID;
+	uint32_t Credits_ID;
+
 	std::shared_ptr<Level1> level1;
 	std::shared_ptr<Level2> level2;
 	std::shared_ptr<MainMenu_Level> MainMenu;
+	std::shared_ptr<Credits_Level> Credits;
 	LevelStateMachine stateMachine;
 
 	std::vector<JSON::SettingData> _SettingsData;

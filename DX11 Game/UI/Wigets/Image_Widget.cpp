@@ -11,9 +11,15 @@ Immage_Widget::~Immage_Widget()
 
 bool Immage_Widget::Function(std::string texture, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos)
 {
+
 	string TexFile = "Resources\\Textures\\";
 	TexFile.append(texture);
-	_TexFile = TexFile;
+
+
+	if (_TexFile != TexFile) {
+		_TexFile = TexFile;
+		updateText = true;
+	}
 	_Size = size;
 	_Pos = pos;
 	_AlfaFactor = 1.0f;
@@ -31,7 +37,11 @@ void Immage_Widget::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, Cons
 {
 	_Immage.SetInitialPosition(_Pos.x, _Pos.y, 0);
 	_Immage.SetScale(_Size.x, _Size.y);
-	_Immage.UpdateTex(Device, _TexFile);
+
+	if (updateText) {
+		_Immage.UpdateTex(Device, _TexFile);
+		updateText = false;
+	}
 
 	cb_ps_scene.data.useTexture = true;
 	cb_ps_scene.data.alphaFactor = _AlfaFactor;
