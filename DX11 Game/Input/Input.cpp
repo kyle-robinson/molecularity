@@ -89,32 +89,32 @@ void Input::HandleEvent(Event* event)
 				//convert to input commands
 				
 				if (key == "SCROLL WHEEL") {
-					MouseBindes[setting.Name+"_Up"] = Mouse::MouseEvent::EventType::WheelUp;
-					MouseBindes[setting.Name+"_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+					MouseBinds[setting.Name+"_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+					MouseBinds[setting.Name+"_Down"] = Mouse::MouseEvent::EventType::WheelDown;
 				}
 				else if (key == "RMB")
 				{
-					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::RPress;
+					MouseBinds[setting.Name] = Mouse::MouseEvent::EventType::RPress;
 				}
 				else if (key == "LMB")
 				{
-					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::LPress;
+					MouseBinds[setting.Name] = Mouse::MouseEvent::EventType::LPress;
 				}
 				else if (key == "MMB")
 				{
-					MouseBindes[setting.Name] = Mouse::MouseEvent::EventType::MPress;
+					MouseBinds[setting.Name] = Mouse::MouseEvent::EventType::MPress;
 				}
 				else
 				{
 					unsigned char* valChar= (unsigned char*)key.c_str();
-					KeyBindes[setting.Name]= *valChar;
+					KeyBinds[setting.Name]= *valChar;
 				}
 				
 			}
 			//mouse inputs
-				MouseBindes["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
-				MouseBindes["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
-				MouseBindes["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
+				MouseBinds["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
+				MouseBinds["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
+				MouseBinds["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
 
 		}
 		
@@ -158,26 +158,26 @@ void Input::UpdateKeyboard( const float dt )
 			
 			// set multi-tool type
 			
-				if ( keycode == KeyBindes["Gun_State_One"]) {
+				if ( keycode == KeyBinds["Gun_State_One"]) {
 					currentTool = ToolType::Convert;;
 					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
 				}
-				if ( keycode == KeyBindes["Gun_State_Two"]) {
+				if ( keycode == KeyBinds["Gun_State_Two"]) {
 					currentTool = ToolType::Resize;
 					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);;
 				}
-				if (keycode == KeyBindes["Gun_State_Three"]) {
+				if (keycode == KeyBinds["Gun_State_Three"]) {
 					
 				}
-				if (keycode == KeyBindes["Gun_State_Four"]) { 
+				if (keycode == KeyBinds["Gun_State_Four"]) { 
 					 }
-				if (keycode == KeyBindes["Gun_State_Five"]) ;
-				if (keycode == KeyBindes["Gun_State_Six"]) ;
+				if (keycode == KeyBinds["Gun_State_Five"]) ;
+				if (keycode == KeyBinds["Gun_State_Six"]) ;
 
-				if (keycode == KeyBindes["Change_Gun_State_Up"]) {
+				if (keycode == KeyBinds["Change_Gun_State_Up"]) {
 					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
 				}
-				if (keycode == KeyBindes["Change_Gun_State_Down"]) {
+				if (keycode == KeyBinds["Change_Gun_State_Down"]) {
 					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
 				}
 
@@ -190,7 +190,7 @@ void Input::UpdateKeyboard( const float dt )
 			EventSystem::Instance()->AddEvent(EVENTID::UIKeyInput, &UIChar);
 
 
-			if (keycode == KeyBindes["Pause"]) {
+			if (keycode == KeyBinds["Pause"]) {
 				// pause game
 				EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 			}
@@ -218,21 +218,21 @@ void Input::UpdateKeyboard( const float dt )
 		else
 		{
 			static bool jumping = false;
-			if ( keyboard.KeyIsPressed(KeyBindes["Jump"]) || jumping )
+			if ( keyboard.KeyIsPressed(KeyBinds["Jump"]) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
 		}
 	
 		// normalize diagonal movement speed
-		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
+		if ( keyboard.KeyIsPressed(KeyBinds["Forward"]) && ( keyboard.KeyIsPressed(KeyBinds["Left"]) || keyboard.KeyIsPressed(KeyBinds["Back"]) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
-		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) && ( keyboard.KeyIsPressed(KeyBindes["Left"]) || keyboard.KeyIsPressed(KeyBindes["Back"]) ) )
+		if ( keyboard.KeyIsPressed(KeyBinds["Back"]) && ( keyboard.KeyIsPressed(KeyBinds["Left"]) || keyboard.KeyIsPressed(KeyBinds["Back"]) ) )
 			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
 
 		// update camera movement
-		if ( keyboard.KeyIsPressed(KeyBindes["Forward"]) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed(KeyBindes["Left"]) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed(KeyBindes["Back"]) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed(KeyBindes["Right"]) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBinds["Forward"]) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBinds["Left"]) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBinds["Back"]) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+		if ( keyboard.KeyIsPressed(KeyBinds["Right"]) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
 
 		// set camera speed
 		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
@@ -250,7 +250,7 @@ void Input::UpdateKeyboard( const float dt )
 					alreadyHeld = true;
       
 			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
-			if ( ( keyboard.KeyIsPressed(KeyBindes["Action"] ) ) &&
+			if ( ( keyboard.KeyIsPressed(KeyBinds["Action"] ) ) &&
 					!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
 					( levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() ) )
 			{
@@ -359,11 +359,11 @@ void Input::UpdateMouse( const float dt )
 			
 			
 			
-					if (me.GetType() == MouseBindes["Change_Gun_State_Up"])
+					if (me.GetType() == MouseBinds["Change_Gun_State_Up"])
 					{
 						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
 					}
-					else if (me.GetType() == MouseBindes["Change_Gun_State_Down"] )
+					else if (me.GetType() == MouseBinds["Change_Gun_State_Down"] )
 					{
 						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
 					}
@@ -373,12 +373,12 @@ void Input::UpdateMouse( const float dt )
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
 				// testing sound, feel free to move or remove
-				if (me.GetType() == Mouse::MouseEvent::EventType::LPress)
+				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
-					if (levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused)
-						soundSystem->PlaySoundEffects("MenuClick");
+					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
+						soundSystem->PlaySoundEffect( "MenuClick" );
 					else
-						soundSystem->PlaySoundEffects("ToolUse");
+						soundSystem->PlaySoundEffect( "ToolUse" );
 				}
 				
 
@@ -390,7 +390,7 @@ void Input::UpdateMouse( const float dt )
 #pragma region Tool_Picking
 				
 					// update box texture on click while hovering
-					if (me.GetType() == MouseBindes["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering())
+					if (me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering())
 					{
 						//set 
 						EventSystem::Instance()->AddEvent(EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get());

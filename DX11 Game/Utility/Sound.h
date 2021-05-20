@@ -26,8 +26,8 @@ public:
 
 	void UpdatePosition( XMFLOAT3 position, float rotation );
 
-	void PlayMusic( std::string musicName, bool loops = true ); //Plays music
-	void PlaySoundEffects( std::string soundName, bool loops = false, XMFLOAT3 soundPosition = { NULL, NULL, NULL }, float minDistance = 1.0f ); //Plays sound effects
+	void PlayMusic( std::string musicName, bool loops = true ); // Plays music
+	void PlaySoundEffect( std::string soundName, bool loops = false, XMFLOAT3 soundPosition = { NULL, NULL, NULL }, float minDistance = 1.0f ); // Plays sound effects
 
 	float GetMusicVolume() { return musicVolume; } // Gets the volume level for music
 	void SetMusicVolume( float volume ) { musicVolume = volume; for ( auto music : musicTracks ) { music.second->setVolume( musicVolume ); } } // Sets the volume level for music
@@ -37,7 +37,7 @@ public:
 	float GetSoundEffectsVolume() { return soundEffectsVolume; } // Gets the volume level for sound effects
 	void SetSoundEffectsVolume( float volume ) { soundEffectsVolume = volume; for ( auto sound : soundEffects ) { sound.second->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
 
-	void SetMusicPause(bool isPause) { for (auto music : musicTracks) { music.second->setIsPaused(isPause); } } // Sets the ispuase  for music
+	void SetMusicPause(bool isPause) { for (auto music : musicTracks) { music.second->setIsPaused( isPause ); } } // Sets the ispuase  for music
 
 
 	//eventsystem
@@ -57,10 +57,10 @@ private:
 	float soundEffectsVolume;
 	std::string currentMusicTrack;
 
-	//bool for shutting off sound
+	// Bools for shutting off sound
 	bool musicOn;
 	bool soundEffectsOn;
-	bool soundON;
+	bool masterOn;
 };
 
 #endif
