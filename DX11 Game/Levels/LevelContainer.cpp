@@ -273,8 +273,3 @@ void LevelContainer::LateUpdate( const float dt )
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
 }
-
-void LevelContainer::ProcessInput()
-{
-	// update main input here...
-}

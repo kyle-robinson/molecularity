@@ -69,3 +69,73 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObje
 		}
 	}
 }
+
+void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept
+{
+#define RESET_FORCES cube->GetPhysicsModel()->ResetForces_NoY()
+
+	if ( cube->GetPositionFloat3().z < -7.0f ) // entrance collisions
+	{
+		// X-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().x >= 2.5f )
+			{
+				cube->SetPosition( 2.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+
+			if ( cube->GetPositionFloat3().x <= -2.5f )
+			{
+				cube->SetPosition( -2.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+		}
+
+		// Z-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().z <= -20.0f )
+			{
+				cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -20.0f );
+				RESET_FORCES;
+			}
+		}
+	}
+	else // main area collisions
+	{
+		// X-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().x <= object.GetPositionFloat3().x - offset )
+			{
+				cube->SetPosition( object.GetPositionFloat3().x - offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+
+			if ( cube->GetPositionFloat3().x >= object.GetPositionFloat3().x + offset )
+			{
+				cube->SetPosition( object.GetPositionFloat3().x + offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				RESET_FORCES;
+			}
+		}
+
+		// Z-COLLISIONS
+		{
+			if ( cube->GetPositionFloat3().z >= 13.0f )
+			{
+				cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 13.0f );
+				RESET_FORCES;
+			}
+
+			if ( cube->GetPositionFloat3().x >= 2.5f && cube->GetPositionFloat3().z <= -6.5f )
+			{
+				cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.5f );
+				RESET_FORCES;
+			}
+
+			if ( cube->GetPositionFloat3().x <= -2.5f && cube->GetPositionFloat3().z <= -6.5f )
+			{
+				cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.5f );
+				RESET_FORCES;
+			}
+		}
+	}
+}
