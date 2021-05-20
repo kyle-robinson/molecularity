@@ -48,7 +48,7 @@ void Level1::OnSwitch()
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
 
 	_UiManager->RemoveUI( "MainMenu" );
-
+	
 	//send out editable properties to hud for data
 	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
 

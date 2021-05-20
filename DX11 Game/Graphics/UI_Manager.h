@@ -2,7 +2,7 @@
 #include<EventSystem/Listener.h>
 #include <UI/UI.h>
 #include<map>;
-
+#include<Input.h>
 class Input;
 
 //ui driver code
@@ -38,7 +38,7 @@ public:
 private:
 	//draw all
 	bool IsToDraw = true;
-
+	
 	XMFLOAT4X4 WorldOrthMatrix;
 
 	std::map<std::string, std::shared_ptr <UI>> UiList;

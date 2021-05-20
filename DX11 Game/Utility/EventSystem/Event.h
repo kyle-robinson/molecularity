@@ -32,7 +32,7 @@ enum class EVENTID {
 	QuitGameEvent,
 	UpdateSettingsEvent,
 	RemoveUIItemEvent,
-
+	InputPassEvent,
 	//Tool
 	ChangeToolEvent,
 	ChangeToolOptionEvent,

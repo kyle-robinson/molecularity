@@ -18,6 +18,8 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 	);
 
 	AddToEvent();
+
+	
 }
 
 void Input::Update( const float dt )

@@ -12,6 +12,7 @@ UI_Manager::UI_Manager()
 	EventSystem::Instance()->AddClient(EVENTID::WorldOrthMatrixEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::RemoveUIItemEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::InputPassEvent, this);
 }
 
 void UI_Manager::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d)
@@ -47,6 +48,8 @@ void UI_Manager::Update(float dt)
 			UIItem.second->Update(dt);
 		}
 	}
+
+
 }
 
 void UI_Manager::Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
