@@ -63,12 +63,12 @@ protected:
 	bool levelCompleted = false;
 
 	// Objects
+	Tool_Class* tool;
 	Graphics* graphics;
 	ImGuiManager* imgui;
 	CameraController* cameras;
 	RenderableGameObject skysphere;
-	Tool_Class* tool;
-	//RenderableGameObject securityCamera;
+	RenderableGameObject securityCamera;
 	std::vector<std::shared_ptr<Cube>> cubes;
 
 	// Lights
@@ -86,8 +86,8 @@ protected:
 
 	// Sound
 	Sound* soundSystem;
-
 	std::string levelName;
+
 private:
 	bool InitializeScene();
 

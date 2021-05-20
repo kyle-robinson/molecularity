@@ -34,11 +34,9 @@ void TextRenderer::RenderCubeMoveText( LevelContainer& level )
 			float halfWidth = static_cast<float>( level.GetGraphics()->GetWidth() ) / 2.0f;
 			float halfHeight = static_cast<float>( level.GetGraphics()->GetHeight() ) / 2.0f;
 			DrawString( L"Press 'E' to pick up cube.", XMFLOAT2( halfWidth, halfHeight ), Colors::LightGreen );
-				//XMFLOAT2( level.GetGraphics()->GetWidth() / 2, level.GetGraphics()->GetHeight() / 2 ), Colors::LightGreen );
 		}
 	}
 }
-
 
 void TextRenderer::RenderCameraText( LevelContainer& manager )
 {

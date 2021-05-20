@@ -18,7 +18,6 @@ public:
 	TextRenderer(Graphics& gfx );
 	TextRenderer(std::string Font, ID3D11Device* device, ID3D11DeviceContext* contex);
 	void RenderCubeMoveText(LevelContainer& level);
-	void RenderMultiToolText(LevelContainer& level);
 	void RenderCameraText(LevelContainer& level);
 
 	void RenderString(std::string text, XMFLOAT2 position, XMVECTORF32 color);

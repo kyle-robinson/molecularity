@@ -22,6 +22,8 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
+// "CCTV Camera" (https://skfb.ly/6SD7C) by Smoggybeard is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
 bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound )
 {
 	graphics = gfx;
@@ -58,9 +60,9 @@ bool LevelContainer::InitializeScene()
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
 
 			// security camera
-			//if ( !securityCamera.Initialize( "Resources\\Models\\SecurityCam.FBX", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			//securityCamera.SetInitialPosition( 0.0f, 15.0f, 15.0f );
-			//securityCamera.SetInitialScale( 1.0f, 1.0f, 1.0f );
+			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			securityCamera.SetInitialPosition( 37.0f, 25.0f, 53.0f );
+			securityCamera.SetInitialScale( 4.0f, 4.0f, 4.0f );
 		}
 
 		// LIGHTS
@@ -168,7 +170,7 @@ void LevelContainer::RenderFrame()
 	// DRAWABLES
 	{
 		// SECURITY CAMERA
-		//securityCamera.Draw();
+		securityCamera.Draw();
 
 		// CUBES
 		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
@@ -201,9 +203,6 @@ void LevelContainer::EndFrame()
 	// setup RTT and update post-processing
 	graphics->RenderSceneToTexture();
 	postProcessing->Bind( *graphics );
-
-	// render text
-	//textRenderer->RenderCubeMoveText( *this );
 
 	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
@@ -265,10 +264,8 @@ void LevelContainer::LateUpdate( const float dt )
 	}
 
 	// set rotation of security camera
-	//float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
-	//securityCamera.SetRotation( -0.2f + XM_PIDIV2, -0.25f + rotation, 0.0f );
-	//securityCamera.SetRotation( -0.75f - rotation, -0.25f + rotation - XM_PIDIV2, 0.0f );
-	//securityCamera.SetRotation( rotation, XM_PIDIV2, 0.0f );
+	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
+	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
