@@ -46,7 +46,7 @@ void MainMenu_Level::OnSwitch()
 	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
 	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
 
-	//soundSystem->PlayMusic("MenuMusic");
+	soundSystem->PlayMusic("MenuMusic");
 	
 
 	//UI

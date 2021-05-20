@@ -40,7 +40,7 @@ protected:
 	XMFLOAT2 _Size;
 	XMFLOAT2 _Pos;
 	float _AlfaFactor = 1.0f;
-
+	bool updateText = true;
 	
 };
 

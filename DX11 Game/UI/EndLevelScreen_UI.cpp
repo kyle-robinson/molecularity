@@ -49,7 +49,7 @@ void EndLevelScreen_UI::Update(float dt)
 		//title card
 		Images[0].Function("Title_Card\\TitleCard.dds", { static_cast<float>(_SizeOfScreen.x * 0.5),static_cast<float>(_SizeOfScreen.y * 0.12) }, { (_SizeOfScreen.x / 2) - (static_cast<float>(_SizeOfScreen.x * 0.5) / 2),0 });
 		//buttions
-		if (Buttions[0].Function("Home", ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x/2)- (_SizeOfScreen.x / 7)-50, static_cast<float>(_SizeOfScreen.y * 0.25) }, DirectX::Colors::Black, _MouseData)) {
+		if (Buttions[0].Function("Main Menu", ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x/2)- (_SizeOfScreen.x / 7)-50, static_cast<float>(_SizeOfScreen.y * 0.25) }, DirectX::Colors::Black, _MouseData)) {
 			//go to hub
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
 			ToShow = false;

@@ -328,8 +328,9 @@ void Settings_Menu_UI::Update(float dt)
 		SettingsButtionCount++;
 		//Headding text
 		TextToDraw._Colour = Colors::Black;
-		TextToDraw._Position = { 10,0 };
 		TextToDraw._Text = "Settings";
+		TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0),static_cast<float>(_SizeOfScreen.y * 0)- static_cast<float>(_SizeOfScreen.y * 0.03) };
+		
 
 		PuaseTextTitles.push_back(TextToDraw);
 	}
@@ -410,6 +411,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 		HeadderTextRenderer->UpdateViewPort( newViewport );
 		PGTextRenderer->UpdateViewPort( newViewport );
 		_MouseData.LPress = false;
+		LoadFlag = true;
 	}
 	break;
 

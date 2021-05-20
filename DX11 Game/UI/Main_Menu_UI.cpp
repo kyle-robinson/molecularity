@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Main_Menu_UI.h"
-
+#include <shellapi.h>
 Main_Menu_UI::Main_Menu_UI()
 {
 	
@@ -44,7 +44,8 @@ void Main_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, 
 	}
 
 }
-
+	static bool openlink=false;
+		static bool open=true;
 void Main_Menu_UI::Update(float dt)
 {
 	if (!IsSettings)
@@ -62,6 +63,7 @@ void Main_Menu_UI::Update(float dt)
 			EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 		}
 		ButtionYPos += 0.20;
+	
 		if (MainMenuButtions[1].Function("place holder", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 			//place holder
 			LevelTo = 3;
@@ -77,6 +79,23 @@ void Main_Menu_UI::Update(float dt)
 		if (MainMenuButtions[3].Function("Exit", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 			//exit
 			EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
+		}
+		
+
+		//link to git hub
+		if (MainMenuButtions[4].Function("", ButtionTex2, { static_cast<float>(_SizeOfScreen.x * 0.055), static_cast<float>(_SizeOfScreen.y * 0.075) }, XMFLOAT2{ 2,  2 }, DirectX::Colors::Black, _MouseData)) {
+			if (!openlink && open) {
+				openlink = true;
+			}
+
+		}
+		if (MainMenuButtions[4].GetIsPressed() == false) {
+			open = true;
+		}
+		if (openlink) {
+			ShellExecute(0, 0, L"https://github.com/kyle-robinson/directx-game", 0, 0, SW_SHOW);
+			open = false;
+			openlink = false;
 		}
 	}
 }
@@ -115,6 +134,7 @@ void Main_Menu_UI::HandleEvent(Event* event)
 		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
 		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT( 0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y );		
 		PGTextRenderer->UpdateViewPort( newViewport );
+		
 
 		_MouseData.LPress = false;
 

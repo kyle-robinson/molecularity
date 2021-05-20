@@ -26,5 +26,12 @@ private:
 	vector<string> ButtionTex = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds",
 		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds",
 		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
+
+
+
+	//Logo from https://github.com/logos
+	vector<string> ButtionTex2 = { "Resources\\Textures\\UI_Buttions\\GitHubLogo.png",
+		"Resources\\Textures\\UI_Buttions\\GitHubLogo.png",
+		"Resources\\Textures\\UI_Buttions\\GitHubLogo.png" };
 };
 

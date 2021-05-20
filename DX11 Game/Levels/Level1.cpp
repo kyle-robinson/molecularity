@@ -57,7 +57,7 @@ void Level1::OnSwitch()
 	_UiManager->AddUi( PauseUI, "Pause" );
 	_UiManager->AddUi(EndLevelUI, "EndLevel");
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
-
+	_UiManager->HideUi("EndLevel");
 	// initialise sounds
 	soundSystem->ClearAudio();
 
@@ -153,7 +153,7 @@ void Level1::Update( const float dt )
 	}
 
 	
-	levelCompleted = true;
+	//levelCompleted = true;
 	LevelContainer::LateUpdate( dt );
 }
 

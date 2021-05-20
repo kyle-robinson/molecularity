@@ -62,16 +62,20 @@ void Tutorial_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, C
 void Tutorial_UI::Update(float dt)
 {
 	float yPos=0;
-	float xpos = _SizeOfScreen.x - 500;
-	TextBackground.Function({ 225,225,225 }, { 500,225 }, { _SizeOfScreen.x-500,0 }, 0.8f);
+	float xpos = _SizeOfScreen.x - static_cast<float>(_SizeOfScreen.x * 0.30);
 	
+	XMFLOAT2 size{ static_cast<float>(_SizeOfScreen.x * 0.30), static_cast<float>(_SizeOfScreen.y * 0.13) };
+	TextBackground.Function({ 225,225,225 }, { static_cast<float>(_SizeOfScreen.x * 0.30),static_cast<float>(_SizeOfScreen.y * 0.35) }, { _SizeOfScreen.x- static_cast<float>(_SizeOfScreen.x * 0.30),0 }, 0.8f);
+	
+	
+	XMVECTOR textsize;
 	TextToDraw text;
 	text._Colour = DirectX::Colors::Black;
 	//Game instruction
 	if (CurrentState == TutorialState::GameTut)
 	{
 		//get to exsit
-		text._Text = "The aim for you is to puzzle you way\nthrought the rooms that are given to you.";
+		text._Text = "The aim for you is to puzzle you way\nthrough the rooms that are given to you.";
 		text._Position = { xpos,yPos };
 		_TextList.push_back(text);
 	}
@@ -81,23 +85,23 @@ void Tutorial_UI::Update(float dt)
 	{
 
 		//genral information
-		text._Text = "The tool allows for you to change the propites of the cubes \nyou will find in the levels.";
+		text._Text = "The tool allows for you to change the\nproperties of the cubes you will find in\nthe levels.";
+		textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
 		text._Position = { xpos,yPos };
 		_TextList.push_back(text);
 
 		//tool controlls 
-		yPos += 50;
-		text._Text = "Mouse Wheel scroll: Change Tool mode";
+		yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
+		text._Text = "Scroll Wheel : Change Tool mode";
+		textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
 		text._Position = { xpos,yPos };
 		_TextList.push_back(text);
-		yPos += 20;
-		text._Text = KeyBindes["Gun_State_One"]+":  Tool 1";
-		text._Text +="\n"+ KeyBindes["Gun_State_Two"] + ":  Tool 2";
-		text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Tool 3";
-		text._Text += "\n" + KeyBindes["Gun_State_Four"] + ":  Tool 4";
-		text._Text += "\n" + KeyBindes["Gun_State_Five"] + ":  Tool 5";
-		text._Text += "\n" + KeyBindes["Gun_State_Six"] + ":  Tool 6";
 
+		yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
+		text._Text = KeyBindes["Gun_State_One"]+":  Tool 1   " + KeyBindes["Gun_State_Four"] + ":  Tool 4";;
+		text._Text +="\n"+ KeyBindes["Gun_State_Two"] + ":  Tool 2   " + KeyBindes["Gun_State_Five"] + ":  Tool 5";;
+		text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Tool 3   " + KeyBindes["Gun_State_Six"] + ":  Tool 6";;
+		
 		text._Position = { xpos,yPos };
 		_TextList.push_back(text);
 
@@ -110,18 +114,20 @@ void Tutorial_UI::Update(float dt)
 		{
 		case ToolType::Convert: {
 			//tool 1
-
+			
 			text._Text = "Convert";
-			text._Position = { xpos,yPos };
-			_TextList.push_back(text);
-			yPos += 20;
-			text._Text = "This tool alows you to change the cubes material.";
+			textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
 			text._Position = { xpos,yPos };
 			_TextList.push_back(text);
 
-			yPos += 20;
+			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
+			text._Text = "This tool alows you to change the cubes\nmaterial.";
 			text._Position = { xpos,yPos };
-			text._Text = "This Turns the object into ";
+			_TextList.push_back(text);
+
+			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y)*2;
+			text._Position = { xpos,yPos };
+			text._Text = "This turns the object into ";
 			switch (static_cast<int>(Mode->GetCurrentOption().boxtype))
 			{
 			case 0:
@@ -147,15 +153,16 @@ void Tutorial_UI::Update(float dt)
 			//tool 2
 
 			text._Text = "Resize:";
+			textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
 			text._Position = { xpos,yPos };
 			_TextList.push_back(text);
 
-			yPos += 20;
-			text._Text = "This tool allows you to change the cubes size.";
+			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
+			text._Text = "This tool allows you to change the cubes'\nsize.";
 			text._Position = { xpos,yPos };
 			_TextList.push_back(text);
 
-			yPos += 20;
+			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y)*2;
 			switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
 			{
 			case 0:
@@ -214,7 +221,7 @@ void Tutorial_UI::Update(float dt)
 
 
 			text._Text = "press enter to continue";
-			text._Position = { _SizeOfScreen.x - 500,200 };
+			text._Position = { xpos,static_cast<float>(_SizeOfScreen.y * 0.30) };
 			_TextList.push_back(text);
 			//get is enter key down
 			if ((1 << 15) & GetAsyncKeyState(VK_RETURN) ) {

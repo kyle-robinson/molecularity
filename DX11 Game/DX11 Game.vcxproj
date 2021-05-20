@@ -311,7 +311,6 @@
     <ClCompile Include="UI\Settings_Menu_UI.cpp" />
     <ClCompile Include="UI\Tutorial_UI.cpp" />
     <ClCompile Include="UI\UI.cpp" />
-    <ClCompile Include="UI\Wigets\Button_Widget.cpp" />
     <ClCompile Include="UI\Wigets\ColourBlock.cpp" />
     <ClCompile Include="UI\Wigets\DataSlider_Widget.cpp" />
     <ClCompile Include="UI\Wigets\DropDown_Widget.cpp" />
@@ -433,7 +432,7 @@
     <ClInclude Include="UI\Tutorial_UI.h" />
     <ClInclude Include="UI\UI.h" />
     <ClInclude Include="UI\WidgetIncludes.h" />
-    <ClInclude Include="UI\Wigets\Button_Widget.h" />
+    <ClInclude Include="UI\Wigets\Buttion_Widget.h" />
     <ClInclude Include="UI\Wigets\ColourBlock.h" />
     <ClInclude Include="UI\Wigets\DataSlider_Widget.h" />
     <ClInclude Include="UI\Wigets\DropDown_Widget.h" />

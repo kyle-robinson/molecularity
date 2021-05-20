@@ -35,7 +35,17 @@ void UI_Manager::Update(float dt)
 {
 	for (auto const& UIItem : UiList)
 	{
-		UIItem.second->Update(dt);
+		bool ToDraw = false;
+		for (int i = 0; i < UiToDraw.size(); i++)
+		{
+			if (UIItem.first == UiToDraw[i]) {
+				ToDraw = true;
+			}
+
+		}
+		if (ToDraw) {
+			UIItem.second->Update(dt);
+		}
 	}
 }
 

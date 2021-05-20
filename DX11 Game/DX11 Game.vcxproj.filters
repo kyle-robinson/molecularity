@@ -201,9 +201,6 @@
     <ClCompile Include="UI\Wigets\widget.cpp">
       <Filter>UI\widgets</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\Button_Widget.cpp">
-      <Filter>UI\widgets</Filter>
-    </ClCompile>
     <ClCompile Include="UI\Wigets\ColourBlock.cpp">
       <Filter>UI\widgets</Filter>
     </ClCompile>
@@ -513,9 +510,6 @@
     <ClInclude Include="UI\WidgetIncludes.h">
       <Filter>UI\widgets</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\Button_Widget.h">
-      <Filter>UI\widgets</Filter>
-    </ClInclude>
     <ClInclude Include="UI\Wigets\ColourBlock.h">
       <Filter>UI\widgets</Filter>
     </ClInclude>
@@ -561,6 +555,9 @@
     </ClInclude>
     <ClInclude Include="Credits_Level.h">
       <Filter>Headers\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Wigets\Buttion_Widget.h">
+      <Filter>UI\widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

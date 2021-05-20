@@ -14,12 +14,16 @@ Tool_Class::Tool_Class()
 
 Tool_Class::~Tool_Class()
 {
-	
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionDownEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionUpEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeCubeEvent, this);
 }
 
 void Tool_Class::SetCurrentTool(Tool_Function* CurrentTool)
 {
-	//_CurrentTool = std::make_shared <Tool_Function>(CurrentTool);
+	_CurrentTool = std::make_shared <Tool_Function>(CurrentTool);
 }
 
 void Tool_Class::SetCurrentTool(ToolType CurrentTool)

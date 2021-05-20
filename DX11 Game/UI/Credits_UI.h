@@ -1,6 +1,16 @@
 #pragma once
 #include "UI.h"
 using namespace std;
+
+
+struct ImmageData
+{
+	string Name;
+	string FileName;
+	XMFLOAT2 Size;
+};
+
+
 class Credits_UI :
     public UI
 {
@@ -17,15 +27,16 @@ public:
 	 
 private:
 
-	Immage_Widget Images[3];
+	Immage_Widget Images[10];
 	ColourBlock Background;
 	vector<TextToDraw> _TextList;
-
+	vector<ImmageData> _ImmageList;
 	std::shared_ptr<TextRenderer>  _TextRenderer;
 	
 	vector < pair < string, string > > CreditsINFO;
 	UINT32 LevelTo = 2;
 	int minus = 0;
 	float YPos;
+	int imagecount = 0;
 };
 
