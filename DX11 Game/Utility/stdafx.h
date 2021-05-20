@@ -34,5 +34,6 @@ using namespace DirectX;
 #include "Timer.h"
 #include "ErrorLogger.h"
 #include "EventSystem/EventSystem.h"
+#include "Sound.h"
 
 #endif

@@ -26,11 +26,13 @@ Sound::~Sound()
 void Sound::InitialiseMusicTrack( const char* fileLocation, std::string musicName )
 {
 	musicTracks.emplace( musicName, engine->play2D( fileLocation, true, true, true ) );
+	musicTracks[musicName]->setVolume(musicVolume);
 }
 
 void Sound::InitialiseSoundEffect( const char* fileLocation, std::string soundName )
 {
 	soundEffects.emplace( soundName, engine->addSoundSourceFromFile( fileLocation ) );
+	soundEffects[soundName]->setDefaultVolume(soundEffectsVolume);
 }
 
 void Sound::ClearAudio()
@@ -144,16 +146,18 @@ void Sound::HandleEvent( Event* event )
 					continue;
 				}
 				if ( setting.Name == "BackgroundSoundsVolume" ) {
-					soundEffectsVolume = (float)std::get<int>( setting.Setting ) / 100;
+					soundEffectsVolume = ( float )std::get<int>( setting.Setting ) / 100;
 					continue;
 				}
 
 			}
 
 		}
-		SetMusicVolume( musicVolume* soundVol );
+		float mVol = musicVolume * soundVol;
+		SetMusicVolume( mVol );
 		SetMusicPause( true );
-		SetSoundEffectsVolume( soundEffectsVolume* soundVol );
+		float sEVol = soundEffectsVolume * soundVol;
+		SetSoundEffectsVolume( sEVol );
 		//stop all sound
 		if (masterOn) {
 			if (musicOn) {
@@ -163,4 +167,10 @@ void Sound::HandleEvent( Event* event )
 	}
 	break;
 	}
+}
+
+Sound* Sound::Instance()
+{
+	static Sound instance;
+	return &instance;
 }

@@ -22,13 +22,12 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
 	_UiManager = UI;
-	soundSystem = sound;
 	if ( !InitializeScene() )
 		return false;
 	return true;
@@ -235,6 +234,9 @@ void LevelContainer::Update( const float dt )
 
 	// update ui components
 	_UiManager->Update();
+
+	// update camera position for 3D sound
+	Sound::Instance()->UpdatePosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3(), cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y );
 }
 
 void LevelContainer::LateUpdate( const float dt )

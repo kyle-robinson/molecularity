@@ -32,7 +32,6 @@ public:
 private:
 	Input input;
 	Timer timer;
-	Sound sound;
 	Graphics gfx;
 	ImGuiManager imgui;
 	UI_Manager _UI_Manager;

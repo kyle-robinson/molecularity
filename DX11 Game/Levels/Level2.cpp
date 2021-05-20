@@ -37,16 +37,15 @@ bool Level2::OnCreate()
 void Level2::OnSwitch()
 {
 	// update items on level switch here...
-	soundSystem->ClearAudio();
+	levelName = "Level2";
 
-	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
-	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
+	Sound::Instance()->ClearAudio();
 
-	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
-	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
-	
-	soundSystem->PlayMusic( "LevelMusic" );
+	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\MenuClick.mp3", "MenuClick" );
+
+	Sound::Instance()->PlayMusic( "LevelMusic" );
 }
 
 void Level2::Render()

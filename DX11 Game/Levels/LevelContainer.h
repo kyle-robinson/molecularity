@@ -2,7 +2,6 @@
 #ifndef LEVELCONTAINER_H
 #define LEVELCONTAINER_H
 
-#include "Sound.h"
 #include "Graphics.h"
 #include "JSON_Helper.h"
 #include "MultiViewport.h"
@@ -35,7 +34,7 @@ class LevelContainer
 	friend class Application;
 public:
 	virtual ~LevelContainer( void ) = default;
-	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound );
+	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -84,9 +83,6 @@ protected:
 	
 	//UI
 	UI_Manager* _UiManager;
-
-	// Sound
-	Sound* soundSystem;
 
 	std::string levelName;
 private:
