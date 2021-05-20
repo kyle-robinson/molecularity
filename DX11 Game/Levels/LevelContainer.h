@@ -46,7 +46,6 @@ public:
 	virtual void RenderFrame();
 	virtual void Update( const float dt );
 	void LateUpdate( const float dt );
-	virtual void ProcessInput();
 
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<StencilOutline> GetStencilOutline() const noexcept { return stencilOutline; }

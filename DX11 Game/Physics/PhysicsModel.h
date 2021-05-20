@@ -24,6 +24,7 @@ public:
 	void AddForce( XMFLOAT3 force ) noexcept;
 	void AddForce( XMVECTOR force ) noexcept;
 	void ResetForces() noexcept;
+	void ResetForces_NoY() noexcept;
 
 	// Get Forces
 	float GetMass() const noexcept { return mMass; }

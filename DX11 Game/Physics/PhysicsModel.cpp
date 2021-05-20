@@ -191,6 +191,13 @@ void PhysicsModel::ResetForces() noexcept
 	mAcceleration = { 0.0f, 0.0f, 0.0f };
 }
 
+void PhysicsModel::ResetForces_NoY() noexcept
+{
+	mNetForce = { 0.0f, mNetForce.y, 0.0f };
+	mVelocity = { 0.0f, mVelocity.y, 0.0f };
+	mAcceleration = { 0.0f, mAcceleration.y, 0.0f };
+}
+
 float PhysicsModel::Magnitude( XMFLOAT3 vec ) const noexcept
 {
 	return ( sqrtf(

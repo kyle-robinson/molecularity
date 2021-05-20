@@ -102,12 +102,3 @@ void Level2::Update( const float dt )
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
 }
-
-void Level2::ProcessInput()
-{
-	// update main input
-	LevelContainer::ProcessInput();
-
-	// update level input here...
-	// NOTE: not currently using
-}

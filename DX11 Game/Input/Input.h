@@ -22,31 +22,28 @@ public:
 	void AddToEvent();
 	void HandleEvent(Event* event);
 
-
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
 
+	ToolType currentTool;
 	LevelContainer* level;
 	MousePicking mousePick;
 	CameraController* cameras;
 	LevelStateMachine* levelSystem;
 	std::vector<uint32_t> level_IDs;
 	
-	//key binds 
-	map<string, unsigned char> KeyBinds;
-	map<string, Mouse::MouseEvent::EventType> MouseBinds;
-  
+	float delay = 0.0f;
+	bool canHover = true;
 
-
-	ToolType currentTool;
 	//ui input
+	bool isPaused;
 	unsigned char UIChar;
 	MouseData UiMouseData;
-	bool isPaused;
 
-	bool canHover = true;
-	float delay = 0.0f;
+	//key binds 
+	std::unordered_map<string, unsigned char> KeyBinds;
+	std::unordered_map<string, Mouse::MouseEvent::EventType> MouseBinds;
 };
 
 #endif

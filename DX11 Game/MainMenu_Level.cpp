@@ -88,10 +88,3 @@ void MainMenu_Level::Update(const float dt)
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate(dt);
 }
-
-void MainMenu_Level::ProcessInput()
-{
-	LevelContainer::ProcessInput();
-}
-
-
