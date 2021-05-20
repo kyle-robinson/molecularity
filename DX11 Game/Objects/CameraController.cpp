@@ -62,6 +62,4 @@ void CameraController::HandleEvent( Event* event )
 				cam.second->SetProjectionValues(70.0f, _SizeOfScreen.x / _SizeOfScreen.y, 0.1f, 1000.0f);
 			break;
 	}
-	break;
-	}
 }
