@@ -44,14 +44,11 @@ void MainMenu_Level::OnSwitch()
 	//sounds
 	soundSystem->ClearAudio();
 
-	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
+	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic" );
+	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
 
-	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
-	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
-
-	//soundSystem->PlayMusic("MenuMusic");
-	
+	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
+	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
 }
 
 void MainMenu_Level::Render()
@@ -92,10 +89,3 @@ void MainMenu_Level::Update(const float dt)
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate(dt);
 }
-
-void MainMenu_Level::ProcessInput()
-{
-	LevelContainer::ProcessInput();
-}
-
-

@@ -53,14 +53,14 @@ void Level1::OnSwitch()
 	// initialise sounds
 	soundSystem->ClearAudio();
 
-	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Shot.wav", "ToolUse");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
+	soundSystem->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
+	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
+	soundSystem->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
 
-	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
-	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
+	soundSystem->SetMusicVolume( soundSystem->GetMusicVolume() );
+	soundSystem->SetSoundEffectsVolume( soundSystem->GetSoundEffectsVolume() );
 
-	soundSystem->PlayMusic("LevelMusic");
+	soundSystem->PlayMusic( "LevelMusic" );
 }
 
 void Level1::Render()
@@ -116,9 +116,6 @@ void Level1::Update( const float dt )
 {
 	LevelContainer::Update( dt );
 
-	// camera world collisions. Will be player object collisions in the future and ideally not here
-	Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
-
 	// adjust pressure plate x-position over time
 	static float offset = 0.1f;
 	if ( pressurePlate.GetPositionFloat3().x > 30.0f )
@@ -127,30 +124,31 @@ void Level1::Update( const float dt )
 		offset = 0.1f;
 	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
 
-	// cube collisions
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	// COLLISIONS
 	{
-		// update collisions w pressure plate
-		if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
-		{
-			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
-			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f )
-				levelCompleted = true;
-		}
+		// camera collisions w room
+		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
 
-		// update collisions w other cubes
-		for ( uint32_t j = 0; j < NUM_CUBES; j++ )
-			if ( i != j )
-				cubes[i]->CheckCollisionAABB( cubes[j], dt );
+		// cube collisions
+		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+		{
+			// update collisions w pressure plate
+			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
+			{
+				cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
+				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f )
+					levelCompleted = true;
+			}
+
+			// update collisions w other cubes
+			for ( uint32_t j = 0; j < NUM_CUBES; j++ )
+				if ( i != j )
+					cubes[i]->CheckCollisionAABB( cubes[j], dt );
+
+			// update collisions w room
+			Collisions::CheckCollisionLevel1( cubes[i], room, 37.0f );
+		}
 	}
 
 	LevelContainer::LateUpdate( dt );
-}
-
-void Level1::ProcessInput()
-{
-	LevelContainer::ProcessInput();
-
-	// update level input here...
-	// NOTE: not currently using
 }
