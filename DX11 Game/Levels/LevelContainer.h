@@ -2,7 +2,6 @@
 #ifndef LEVELCONTAINER_H
 #define LEVELCONTAINER_H
 
-#include "Sound.h"
 #include "Graphics.h"
 #include "JSON_Helper.h"
 #include "MultiViewport.h"
@@ -35,7 +34,7 @@ class LevelContainer
 	friend class Application;
 public:
 	virtual ~LevelContainer( void ) = default;
-	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound );
+	bool Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI );
 
 	// Render/Update Scene Functions
 	void BeginFrame();
@@ -47,7 +46,6 @@ public:
 	virtual void RenderFrame();
 	virtual void Update( const float dt );
 	void LateUpdate( const float dt );
-	virtual void ProcessInput();
 
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<StencilOutline> GetStencilOutline() const noexcept { return stencilOutline; }
@@ -86,10 +84,6 @@ protected:
 	//UI
 	UI_Manager* _UiManager;
 
-	// Sound
-	Sound* soundSystem;
-
-	//level name
 	std::string levelName;
 	//next level data
 	UINT32 NextLevel;

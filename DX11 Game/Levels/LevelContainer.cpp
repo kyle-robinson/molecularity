@@ -22,13 +22,12 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound )
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
 	_UiManager = UI;
-	soundSystem = sound;
 	if ( !InitializeScene() )
 		return false;
 	return true;
@@ -244,11 +243,16 @@ void LevelContainer::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
 
 	// update ui components
+
 	_UiManager->Update(dt);
 
 	tool->Update();
 
+	// update camera position for 3D sound
+	Sound::Instance()->UpdatePosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3(), cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y );
 	ShowEndLeveLScreen();
+
+
 }
 
 void LevelContainer::LateUpdate( const float dt )
@@ -286,9 +290,4 @@ void LevelContainer::LateUpdate( const float dt )
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
-}
-
-void LevelContainer::ProcessInput()
-{
-	// update main input here...
 }

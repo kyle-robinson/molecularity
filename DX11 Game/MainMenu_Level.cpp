@@ -38,22 +38,17 @@ void MainMenu_Level::OnSwitch()
 	EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 
 	//sounds
-	soundSystem->ClearAudio();
+	Sound::Instance()->ClearAudio();
 
-	soundSystem->InitialiseMusicTrack("Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic");
-	soundSystem->InitialiseSoundEffect("Resources\\Audio\\Sounds\\Collision.wav", "MenuClick");
-
-	soundSystem->SetMusicVolume(soundSystem->GetMusicVolume());
-	soundSystem->SetSoundEffectsVolume(soundSystem->GetSoundEffectsVolume());
-
-	soundSystem->PlayMusic("MenuMusic");
-	
+	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic" );
+	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
 
 	//UI
 	_UiManager->RemoveAllUI();
 	_UiManager->AddUi(Menu, "MainMenu");
 	_UiManager->AddUi(settingsUi, "Settings");
 	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
+	Sound::Instance()->PlayMusic( "MenuMusic" );
 }
 
 void MainMenu_Level::Render()
@@ -94,10 +89,3 @@ void MainMenu_Level::Update(const float dt)
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate(dt);
 }
-
-void MainMenu_Level::ProcessInput()
-{
-	LevelContainer::ProcessInput();
-}
-
-

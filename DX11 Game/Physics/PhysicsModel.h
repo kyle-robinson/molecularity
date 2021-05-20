@@ -24,6 +24,7 @@ public:
 	void AddForce( XMFLOAT3 force ) noexcept;
 	void AddForce( XMVECTOR force ) noexcept;
 	void ResetForces() noexcept;
+	void ResetForces_NoY() noexcept;
 
 	// Get Forces
 	float GetMass() const noexcept { return mMass; }
@@ -54,7 +55,7 @@ private:
 	// Constants
 	static constexpr float mGravity = 9.81f;
 	static constexpr float mDragFactor = 2.0f;
-	static constexpr float mFrictionFactor = 0.0002f;
+	static constexpr float mFrictionFactor = 0.002f;
 
 	// Local Variables
 	float mMass;
