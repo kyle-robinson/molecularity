@@ -59,15 +59,16 @@ public:
   
 protected:
 	void RenderFrameEarly();
+	void ShowEndLeveLScreen();
 	bool levelCompleted = false;
 
 	// Objects
+	Tool_Class* tool;
 	Graphics* graphics;
 	ImGuiManager* imgui;
 	CameraController* cameras;
 	RenderableGameObject skysphere;
-	Tool_Class* tool;
-	//RenderableGameObject securityCamera;
+	RenderableGameObject securityCamera;
 	std::vector<std::shared_ptr<Cube>> cubes;
 
 	// Lights
@@ -83,7 +84,10 @@ protected:
 	//UI
 	UI_Manager* _UiManager;
 
+  //Next level data
 	std::string levelName;
+	UINT32 NextLevel;
+  
 private:
 	bool InitializeScene();
 
@@ -96,6 +100,8 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
+
+	
 };
 
 #endif

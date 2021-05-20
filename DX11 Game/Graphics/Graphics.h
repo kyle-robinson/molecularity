@@ -35,6 +35,7 @@ class Graphics:public Listener
 	friend class Level1;
 	friend class Level2;
 	friend class MainMenu_Level;
+	friend class Credits_Level;
 	friend class LevelContainer;
 
 	friend class Application;

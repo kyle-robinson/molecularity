@@ -15,9 +15,10 @@ public:
     void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix);
     void Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, int start, BarTex bar, SliderTex slider, MouseData MData);
     
-	int getPagePos() { return PagePos; }
+	float getPagePos() { return PagePos; }
 	float getPY() { return PY; }
 	void setPY(float py) { PY = py; }
+	void SetPageSize(float pageSize) { PageSize = pageSize; }
 private:
 	Sprite Bar;
     BarTex _BarColour;
@@ -25,7 +26,8 @@ private:
     SliderTex _SliderColour;
 
 	float PY=0;
-	int PagePos=0;
+	float PagePos=0;
+	float PageSize;
 };
 
 template<typename BarTex, typename SliderTex>
@@ -46,7 +48,7 @@ template<typename BarTex, typename SliderTex>
 inline void PageSlider_Widget<BarTex, SliderTex>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix)
 {
 	Bar.UpdateTex(Device, _BarColour);
-	Bar.SetScale(_Size.x, _Size.y);
+	Bar.SetScale(_Size.x, _Size.y+100);
 	Bar.SetInitialPosition(_Pos.x, _Pos.y, 0);
 
 	cb_ps_scene.data.alphaFactor = 0.8;
@@ -72,6 +74,7 @@ template<typename BarTex, typename SliderTex>
 inline void PageSlider_Widget<BarTex, SliderTex>::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, int start, BarTex bar, SliderTex slider, MouseData MData)
 {
 	_Size = size;
+	
 	_Pos = pos;
 	_BarColour = bar;
 	_SliderColour = slider;
@@ -82,13 +85,13 @@ inline void PageSlider_Widget<BarTex, SliderTex>::Function(DirectX::XMFLOAT2 siz
 		MData.Pos.y >= pos.y &&
 		MData.Pos.y <= (pos.y + size.y)) {
 		if (MData.LPress) {
-			PY = MData.Pos.y- pos.y;
+			PY = MData.Pos.y- (pos.y);
 
 		}
 	}
 
 	//return data
-	PagePos=(PY / _Size.y) * 100;
+	PagePos= PageSize *(PY / size.y);;
 }
 
 #endif
