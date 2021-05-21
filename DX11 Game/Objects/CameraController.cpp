@@ -5,10 +5,11 @@ void CameraController::Initialize( int width, int height )
 {
 	// CAMERAS
 	{
-		XMFLOAT2 aspectRatio = { static_cast<float>( width ), static_cast<float>( height ) };
+		XMFLOAT2 aspectRatio = { static_cast< float >( width ), static_cast< float >( height ) };
 		cameras.emplace( JSON::CameraType::Default, std::make_unique<Camera>( 0.0f, 9.0f, -15.0f ) );
-		cameras.emplace( JSON::CameraType::Static, std::make_unique<Camera>( 35.0f, 15.0f, 50.0f ) );
+		cameras.emplace( JSON::CameraType::Static, std::make_unique<Camera>( 35.0f, 20.0f, 50.0f ) );
 		cameras.emplace( JSON::CameraType::Debug, std::make_unique<Camera>( 0.0f, 9.0f, -10.0f ) );
+
 		for ( const auto& cam : cameras )
 			cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
 		UICamera.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
@@ -38,16 +39,15 @@ void CameraController::CollisionResolution( std::unique_ptr<Camera>& camera, Gam
 
 void CameraController::AddToEvent()
 {
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
 }
 
-void CameraController::HandleEvent(Event* event)
+void CameraController::HandleEvent( Event* event )
 {
-	switch (event->GetEventID())
+	switch ( event->GetEventID() )
 	{
 		case EVENTID::WindowSizeChangeEvent:
 			XMFLOAT2 _SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
-		
 
 			if (_SizeOfScreen.x < 500) {
 				_SizeOfScreen.x = 1260;
@@ -57,11 +57,9 @@ void CameraController::HandleEvent(Event* event)
 				_SizeOfScreen.y = 500;
 			}
 
-
 			UICamera.SetProjectionValues(_SizeOfScreen.x, _SizeOfScreen.y, 0.0f, 1.0f);
 			for (const auto& cam : cameras)
 				cam.second->SetProjectionValues(70.0f, _SizeOfScreen.x / _SizeOfScreen.y, 0.1f, 1000.0f);
 			break;
-
 	}
 }
