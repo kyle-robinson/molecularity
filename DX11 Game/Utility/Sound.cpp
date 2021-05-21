@@ -26,13 +26,30 @@ Sound::~Sound()
 void Sound::InitialiseMusicTrack( const char* fileLocation, std::string musicName )
 {
 	musicTracks.emplace( musicName, engine->play2D( fileLocation, true, true, true ) );
-	musicTracks[musicName]->setVolume(musicVolume);
+	musicTracks[musicName]->setVolume( musicVolume );
 }
 
 void Sound::InitialiseSoundEffect( const char* fileLocation, std::string soundName )
 {
 	soundEffects.emplace( soundName, engine->addSoundSourceFromFile( fileLocation ) );
-	soundEffects[soundName]->setDefaultVolume(soundEffectsVolume);
+	soundEffects[soundName]->setDefaultVolume( soundEffectsVolume );
+}
+
+void Sound::InitialiseSoundGroup( std::string groupName )
+{
+	if ( groupName == "Player" )
+	{
+		Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
+		Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolNoEnergy.mp3", "ToolNoEnergy" );
+		Sound::Instance()->InitialiseSoundEffect( "Resources\\AUdio\\Sounds\\ToolChange.mp3", "ToolChange" );
+		Sound::Instance()->InitialiseSoundEffect( "Resources\\AUdio\\Sounds\\ToolSwitchMode.mp3", "ToolSwitchMode" );
+	}
+
+	else if ( groupName == "Cube" )
+	{
+		Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Pickup.mp3", "CubePickup" );
+		Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Throw.mp3", "CubeThrow" );
+	}
 }
 
 void Sound::ClearAudio()

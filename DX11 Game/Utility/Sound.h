@@ -15,8 +15,10 @@ using namespace DirectX;
 class Sound: public Listener
 {
 public:
-	void InitialiseMusicTrack(const char* fileLocation, std::string musicName);
-	void InitialiseSoundEffect(const char* fileLocation, std::string soundName);
+	void InitialiseMusicTrack( const char* fileLocation, std::string musicName );
+	void InitialiseSoundEffect( const char* fileLocation, std::string soundName );
+
+	void InitialiseSoundGroup( std::string groupName );
 
 	void ClearAudio();
 	void RemoveSoundEffects() { engine->removeAllSoundSources(); }

@@ -84,7 +84,7 @@ void Tool_Class::AddToEvent()
 
 void Tool_Class::HandleEvent(Event* event)
 {
-	//chnage tool
+	//change tool
 	switch (event->GetEventID())
 	{
 	case EVENTID::ChangeToolOptionEvent:
