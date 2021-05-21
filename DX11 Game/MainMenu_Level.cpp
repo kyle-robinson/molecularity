@@ -35,7 +35,7 @@ void MainMenu_Level::OnSwitch()
 	levelName = "MainMenu";
 
 	//make sure cursor is displayed
-	EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+	EventSystem::Instance()->AddEvent(EVENTID::ShowCursorEvent);
 
 	//sounds
 	Sound::Instance()->ClearAudio();

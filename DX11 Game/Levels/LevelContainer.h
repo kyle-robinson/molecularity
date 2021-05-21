@@ -87,7 +87,7 @@ protected:
   //Next level data
 	std::string levelName;
 	UINT32 NextLevel;
-  
+	UINT32 CurrentLevel;
 private:
 	bool InitializeScene();
 
@@ -101,7 +101,7 @@ private:
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
-	
+	bool ToShowEnd=true;
 };
 
 #endif

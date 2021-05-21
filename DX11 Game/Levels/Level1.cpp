@@ -41,12 +41,16 @@ bool Level1::OnCreate()
 }
 
 void Level1::OnSwitch()
-{
+{	
+	
+	CurrentLevel = 0;
+	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 	// update items on level switch here...
 	levelName = "Level1";
 	NextLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
-
+	
+	//UI
 	_UiManager->RemoveUI( "MainMenu" );
 	
 	//send out editable properties to hud for data
@@ -58,6 +62,7 @@ void Level1::OnSwitch()
 	_UiManager->AddUi(EndLevelUI, "EndLevel");
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 	_UiManager->HideUi("EndLevel");
+
 	// initialise sounds
 	Sound::Instance()->ClearAudio();
 
@@ -156,6 +161,6 @@ void Level1::Update( const float dt )
 	}
 
 	
-	//levelCompleted = true;
+
 	LevelContainer::LateUpdate( dt );
 }

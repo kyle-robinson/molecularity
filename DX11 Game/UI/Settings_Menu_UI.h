@@ -16,7 +16,7 @@ public:
 	Settings_Menu_UI();
 	~Settings_Menu_UI();
 
-	void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d);
+	void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts);
 	void Update(float dt);
 	void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
 
@@ -24,11 +24,21 @@ public:
 
 private:
 	void CreateSettings(JSON::SettingData& settingData);
+	void AddtoEvent();
+	void RemoveFromEvent();
+
+	void PageSlider();
+	void TabButtions();
+	void TabContent();
+	void Accept();
+
+	void ControllsCreate(JSON::SettingData& settingData);
+	void WindowSizeCreate(JSON::SettingData& settingData);
 private:
 	bool _isSettings;
 	std::vector<JSON::SettingData> _SettingsData;
 	//Settings
-	Immage_Widget SettingsBakgtound;
+	Immage_Widget SettingsBackground;
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;
 	DropDown_Widget<std::string, std::string, std::string> SettingsDropdowns[10];
 	DataSlider_Widget<std::string, std::string> SettingsSliders[10];
@@ -58,22 +68,21 @@ private:
 
 	XMFLOAT2 TabTextPos;
 
+	//settings counts
 	UINT SettingsDropCount = 0;
 	UINT SettingSliderCount = 0;
 	UINT SettingsButtionCount = 0;
 	UINT SettingsInputCount = 0;
 
+	//current tab open
 	Tabs CurrentTab = GenralTab;
 
-
-	std::shared_ptr<TextRenderer>  HeadderTextRenderer;
-	std::shared_ptr<TextRenderer>  PGTextRenderer;
-
-	bool LoadFlag = false;
+	bool LoadFlag = true;
+	bool mouseLoad = true;
 	float currentPY;
 	float currentY;
-
-	//for checkig wether setting is on screen;
+	XMFLOAT2 curretJsonWinsize = { 0,0 };
+	//for checkig whether setting is on screen;
 	XMFLOAT2 boxPos;
 	XMFLOAT2 boxSize;
 };

@@ -244,6 +244,9 @@
     <ClCompile Include="Credits_Level.cpp">
       <Filter>Source\Levels</Filter>
     </ClCompile>
+    <ClCompile Include="UI\Fonts.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -558,6 +561,9 @@
     </ClInclude>
     <ClInclude Include="UI\Wigets\Buttion_Widget.h">
       <Filter>UI\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Fonts.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

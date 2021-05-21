@@ -58,7 +58,7 @@ template<typename ListData, typename BakgroundType, typename ButtionBacktype>
 inline bool DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
 	Flag = FlagMax;
-	_Bakground.Initialize(Device, Contex, _Size.x, _Size.y, BakgroungColour, cb_vs_matrix_2d);
+	_Bakground.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
 	ButtionDrop.INITSprite(Contex, Device, cb_vs_matrix_2d);
 	for (UINT i = 0; i < 10; i++)
 	{

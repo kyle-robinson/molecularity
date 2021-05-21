@@ -39,8 +39,8 @@ inline PageSlider_Widget<BarTex, SliderTex>::PageSlider_Widget(DirectX::XMFLOAT2
 template<typename BarTex, typename SliderTex>
 inline bool PageSlider_Widget<BarTex, SliderTex>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {	
-	Bar.Initialize(Device, Contex, _Size.x, _Size.y, _BarColour, cb_vs_matrix_2d);
-	Slider.Initialize(Device, Contex, _Size.x, _Size.y, _SliderColour, cb_vs_matrix_2d);
+	Bar.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
+	Slider.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
 	return true;
 }
 

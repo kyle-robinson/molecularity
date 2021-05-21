@@ -34,12 +34,26 @@ void Input::AddToEvent()
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::GameUnPauseEvent, this );
+	EventSystem::Instance()->AddClient(EVENTID::ShowCursorEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::HideCursorEvent, this);
 }
 
 void Input::HandleEvent( Event* event )
 {
 	switch ( event->GetEventID() )
 	{
+
+
+	case EVENTID::ShowCursorEvent:
+	{
+		EnableCursor();
+	}
+	break;
+	case EVENTID::HideCursorEvent:
+	{
+		DisableCursor();
+	}
+	break;
 	case EVENTID::GamePauseEvent:
 	{
 		EnableCursor();
@@ -60,15 +74,11 @@ void Input::HandleEvent( Event* event )
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast< DirectX::XMFLOAT2* >( event->GetData() );
 		mousePick.SetWidthHight( _SizeOfScreen.x, _SizeOfScreen.y );
 
-		if (
-			mouse.GetPosX() <= 0 &&
-			mouse.GetPosX() >= ( 0 + _SizeOfScreen.x ) &&
-			mouse.GetPosY() <= 0 &&
-			mouse.GetPosY() >= ( 0 + _SizeOfScreen.y ) ) {
+		
 			UiMouseData.LPress = false;
 			UiMouseData.MPress = false;
 			UiMouseData.RPress = false;
-		}
+		
 	}
 	break;
 	case EVENTID::UpdateSettingsEvent:
@@ -355,7 +365,10 @@ void Input::UpdateMouse( const float dt )
 #pragma region UI_Input
 			//UI mouse input
 			{
-				UiMouseData.Pos = { static_cast< float >( me.GetPosX() ),static_cast< float >( me.GetPosY() ) };
+				if (me.GetType() == Mouse::MouseEvent::EventType::Move) {
+					UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
+				}
+
 				if ( mouse.IsRightDown() && cursorEnabled )
 					UiMouseData.RPress = true;
 				else
@@ -370,6 +383,8 @@ void Input::UpdateMouse( const float dt )
 					UiMouseData.MPress = true;
 				else
 					UiMouseData.MPress = false;
+
+
 
 				EventSystem::Instance()->AddEvent( EVENTID::UIMouseInput, &UiMouseData );
 			}
