@@ -2,6 +2,7 @@
 #include "Tool_Class.h"
 #include<Tool_Convert.h>
 #include<Tool_Resize.h>
+#include<Tool_Magnetism.h>
 #include<Objects/CubeProperties.h>
 
 Tool_Class::Tool_Class()
@@ -9,7 +10,7 @@ Tool_Class::Tool_Class()
 	_ToolType = ToolType::Convert;
 	SetCurrentTool(ToolType::Convert);
 	AddToEvent();
-	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);
+	
 }
 
 Tool_Class::~Tool_Class()
@@ -37,6 +38,14 @@ void Tool_Class::SetCurrentTool(ToolType CurrentTool)
 		_CurrentTool = std::make_shared<Tool_Resize>();
 		_ToolType = CurrentTool;
 		break;
+
+	case ToolType::Magnetism:
+	{
+		_CurrentTool = std::make_shared<Tool_Magnetism>();
+		_ToolType = CurrentTool;
+		break;
+	}
+	break;
 	default:
 		break;
 	}
@@ -79,6 +88,7 @@ void Tool_Class::AddToEvent()
 	EventSystem::Instance()->AddClient(EVENTID::ChangeToolOptionDownEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::ChangeToolOptionUpEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::ChangeCubeEvent, this);
+	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);
 }
 
 
@@ -96,13 +106,13 @@ void Tool_Class::HandleEvent(Event* event)
 	case EVENTID::ChangeToolOptionUpEvent:
 	{
 	
-		_CurrentTool->addoneTOCurrent();
+		_CurrentTool->AddOneToCurrent();
 	}
 	break;
 	case EVENTID::ChangeToolOptionDownEvent:
 	{
 		
-		_CurrentTool->minusoneTOCurrent();
+		_CurrentTool->MinusOneTOCurrent();
 	}
 	break;
 	case EVENTID::ChangeToolEvent:
@@ -114,23 +124,33 @@ void Tool_Class::HandleEvent(Event* event)
 	{
 		
 		timer.Restart();
-		if (_Energy >= 0) {
+		if (_Energy > 0) {
 			_Energy -= 25;
-			timer.Start();
-		}
-		 CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
+			timer.Start(); 
+			
+			
+			CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
 
-		 switch (_ToolType)
-		 {
-		 case ToolType::Convert:
-			 cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
-			 break;
-		 case ToolType::Resize:
-			 cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
-			 break;
-		 default:
-			 break;
-		 }
+			 switch (_ToolType)
+			 {
+			 case ToolType::Convert:
+				 cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
+				 break;
+			 case ToolType::Resize:
+				 cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
+				 break;
+			 case ToolType::Magnetism:
+				 if (_CurrentTool->GetToolData().MagMode == MagnetismMode::OneCube) {
+					 cube->SetBoxMagneticMove(true);
+				 }
+				 break;
+			 default:
+				 break;
+			 }
+		}
+		else if (_Energy <= 0) {
+
+		}
 	
 
 	}
@@ -140,6 +160,3 @@ void Tool_Class::HandleEvent(Event* event)
 
 }
 
-
-//TODO Get Cubes
-//TODO Get Picking

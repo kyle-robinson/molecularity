@@ -228,10 +228,6 @@
     <ClCompile Include="MainMenu_Level.cpp">
       <Filter>Source\Levels</Filter>
     </ClCompile>
-    <ClCompile Include="Tool_Class.cpp" />
-    <ClCompile Include="Tool_Function.cpp" />
-    <ClCompile Include="Tool_Convert.cpp" />
-    <ClCompile Include="Tool_Resize.cpp" />
     <ClCompile Include="UI\Credits_UI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -246,6 +242,21 @@
     </ClCompile>
     <ClCompile Include="UI\Fonts.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool_Class.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool_Convert.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool_Function.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool_Magnetism.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tool_Resize.cpp">
+      <Filter>Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -540,13 +551,6 @@
     <ClInclude Include="MainMenu_Level.h">
       <Filter>Headers\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="Tool_Class.h" />
-    <ClInclude Include="Tool_Function.h" />
-    <ClInclude Include="Tool_Convert.h" />
-    <ClInclude Include="Tool_Structs.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Tool_Resize.h" />
     <ClInclude Include="UI\Tutorial_UI.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -564,6 +568,24 @@
     </ClInclude>
     <ClInclude Include="UI\Fonts.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Resize.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Class.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Convert.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Function.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Magnetism.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="Tool_Structs.h">
+      <Filter>Tool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -843,6 +865,9 @@
     </Filter>
     <Filter Include="UI\widgets">
       <UniqueIdentifier>{e28dbb1f-b36f-448d-8172-bc55867379d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tool">
+      <UniqueIdentifier>{b97bc070-86e4-4382-b33c-3295a77391ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

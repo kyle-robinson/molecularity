@@ -156,6 +156,15 @@ void HUD_UI::CreateToolHud()
 		case 2: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_UP.png"; break;
 		}
 	}
+	 break;
+	case ToolType::Magnetism: {
+		TextFile = "HUD\\Tool_Assets\\Mag_500x500.dds";
+		switch (static_cast<int>(Mode->GetCurrentOption().MagMode))
+		{
+		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\MagAll.png"; break;
+		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\MagOne.png"; break;
+		}
+	}
 						 break;
 	default:
 		TextFile = "";

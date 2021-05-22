@@ -1,22 +1,26 @@
 #pragma once
 #include "Tool_Function.h"
-#include<Tool_Structs.h>
-
-class Tool_Resize :
+class Tool_Magnetism :
     public Tool_Function
 {
-
 public:
-	Tool_Resize();
-	~Tool_Resize();
+	Tool_Magnetism();
+	~Tool_Magnetism();
 
 	void ChangeCurrent(int number)override;
 	void ChangeCurrent(std::string name)override;
 	void  AddOneToCurrent() override;
 	void  MinusOneTOCurrent() override;
-	BoxSize GetSize() { return CurrentSize; }
+
+	MagnetismMode GetMagMode() { return CurrentMode; }
 	ToolData GetToolData() override;
+
 private:
-	BoxSize CurrentSize;
+
+	MagnetismMode CurrentMode;
+
+
+
+
 };
 

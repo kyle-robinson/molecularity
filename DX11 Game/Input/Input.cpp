@@ -124,6 +124,7 @@ void Input::HandleEvent( Event* event )
 			MouseBinds["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
 			MouseBinds["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
 			MouseBinds["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
+			MouseBinds["Fire_Tool_Alt"] = Mouse::MouseEvent::EventType::RPress;
 		}
 	}
 	break;
@@ -172,7 +173,10 @@ void Input::UpdateKeyboard( const float dt )
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );;
 			}
 
-			if ( keycode == KeyBinds["Gun_State_Three"] );
+			if (keycode == KeyBinds["Gun_State_Three"]) {
+				currentTool = ToolType::Magnetism;
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);;
+			}
 			if ( keycode == KeyBinds["Gun_State_Four"] );
 			if ( keycode == KeyBinds["Gun_State_Five"] );
 			if ( keycode == KeyBinds["Gun_State_Six"] );
@@ -273,17 +277,17 @@ void Input::UpdateKeyboard( const float dt )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
 				);
 
-				// cube throwing
-				if ( keyboard.KeyIsPressed( 'R' ) )
-				{
-					canHover = false;
+				//// cube throwing
+				//if ( keyboard.KeyIsPressed( 'R' ) )
+				//{
+				//	canHover = false;
 
-					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
-						sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
-						-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
-						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt
-					);
-				}
+				//	levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
+				//		sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
+				//		-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
+				//		cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt
+				//	);
+				//}
 			}
 			else
 			{
@@ -328,6 +332,11 @@ void Input::UpdateMouse( const float dt )
 			}
 		}
 
+
+
+		
+
+
 		// MULTI-TOOL INPUT
 		{
 			if ( me.GetType() == MouseBinds["Change_Gun_State_Up"] )
@@ -339,6 +348,30 @@ void Input::UpdateMouse( const float dt )
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
+				
+				//cube mouse input
+				{
+					float alreadyHeld = false;
+					for (uint32_t j = 0; j < NUM_CUBES; j++) {
+						if (i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true) {
+							alreadyHeld = true;
+						}
+					}
+					// cube throwing
+					if (me.GetType() == MouseBinds["Fire_Tool_Alt"] && !alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
+						(levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding()))
+					{
+						canHover = false;
+
+						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
+							sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
+							-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
+							cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt
+						);
+					}
+					
+				}
+
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
@@ -349,13 +382,13 @@ void Input::UpdateMouse( const float dt )
 						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
 
-
+#pragma region Tool_Picking
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( levelSystem->GetCurrentLevel()->GetGraphics()->GetWidth() / 2, levelSystem->GetCurrentLevel()->GetGraphics()->GetHeight() / 2, *levelSystem->GetCurrentLevel()->GetCube()[i] ) )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( true );
 				else
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( false );
-#pragma region Tool_Picking
+
 
 				// update box texture on click while hovering
 				if ( me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() )

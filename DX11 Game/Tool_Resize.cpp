@@ -3,7 +3,10 @@
 
 Tool_Resize::Tool_Resize()
 {
-	ChangeCurrent(0);
+	MaxNumber = 2;
+	MinNumber = 0;
+	ChangeCurrent(1);
+	
 }
 
 Tool_Resize::~Tool_Resize()
@@ -12,12 +15,12 @@ Tool_Resize::~Tool_Resize()
 
 void Tool_Resize::ChangeCurrent(int number)
 {
-	if (number >= 3) {
-		number = 0;
+	if (number > MaxNumber) {
+		number = MinNumber;
 	}
-	else if (number < 0)
+	else if (number < MinNumber)
 	{
-		number = 2;
+		number = MaxNumber;
 	}
 	CurrentSize = static_cast<BoxSize>(number);
 
@@ -27,30 +30,30 @@ void Tool_Resize::ChangeCurrent(std::string name)
 {
 }
 
-void Tool_Resize::addoneTOCurrent()
+void Tool_Resize::AddOneToCurrent()
 {
-	current++;
-	if (current >= 3) {
-		current = 0;
+	Current++;
+	if (Current > MaxNumber) {
+		Current = MinNumber;
 	}
-	else if (current < 0)
+	else if (Current < MinNumber)
 	{
-		current = 2;
+		Current = MaxNumber;
 	}
-	CurrentSize = static_cast<BoxSize>(current);
+	CurrentSize = static_cast<BoxSize>(Current);
 }
 
-void Tool_Resize::minusoneTOCurrent()
+void Tool_Resize::MinusOneTOCurrent()
 {
-	current--;
-	if (current >= 3) {
-		current = 0;
+	Current--;
+	if (Current > MaxNumber) {
+		Current = MinNumber;
 	}
-	else if (current < 0)
+	else if (Current < MinNumber)
 	{
-		current = 2;
+		Current = MaxNumber;
 	}
-	CurrentSize = static_cast<BoxSize>(current);
+	CurrentSize = static_cast<BoxSize>(Current);
 }
 
 ToolData Tool_Resize::GetToolData()

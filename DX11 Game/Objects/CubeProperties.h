@@ -19,7 +19,7 @@ public:
 	bool GetBurnable() const noexcept { return isBurnable; }
 	bool GetReflective() const noexcept { return isReflective; }
 	float GetSizeMultiplier() const noexcept { return sizeMultiplier; }
-
+	bool GetBoxMagneticMove() { return isMagneticMove; }
 	// Setters
 	
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
@@ -36,7 +36,7 @@ public:
 			SetSizeMultiplier(2.0f);
 		}
 	}
-	
+	void SetBoxMagneticMove(bool isMove) noexcept { isMagneticMove = isMove; }
 	void SetSizeID( int id ) noexcept { sizeID = id; }
 	void SetMaterialID( int id ) noexcept { materialID = id; }
 
@@ -49,6 +49,8 @@ private:
 	int materialID = 0;
 	bool isBurnable = false;
 	bool isReflective = false;
+	bool isMagnetic = false;
+	bool isMagneticMove = false;
 	float sizeMultiplier = 1.0f;
 	BoxType boxType = BoxType::Wood;
 	BoxSize boxSize = BoxSize::Normal;

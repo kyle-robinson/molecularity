@@ -492,9 +492,9 @@ void Tutorial_UI::ToolTutorialText()
 	_TextList.push_back(text);
 
 	yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
-	text._Text = KeyBindes["Gun_State_One"] + ":  Tool 1          " + KeyBindes["Gun_State_Four"] + ":  Tool 4";;
-	text._Text += "\n" + KeyBindes["Gun_State_Two"] + ":  Tool 2          " + KeyBindes["Gun_State_Five"] + ":  Tool 5";;
-	text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Tool 3          " + KeyBindes["Gun_State_Six"] + ":  Tool 6";;
+	text._Text = KeyBindes["Gun_State_One"] + ": Convert";
+	text._Text += "\n" + KeyBindes["Gun_State_Two"] + ":  Resize";
+	text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Magnetism";
 
 	text._Position = { xpos,yPos };
 	_TextList.push_back(text);
@@ -509,7 +509,7 @@ void Tutorial_UI::ToolTutorialText()
 	case ToolType::Convert: {
 		//tool 1
 
-		text._Text = "Convert";
+		text._Text = "Convert:";
 		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
 		text._Position = { xpos,yPos };
 		_TextList.push_back(text);
@@ -575,6 +575,36 @@ void Tutorial_UI::ToolTutorialText()
 		text._Position = { xpos,yPos };
 		_TextList.push_back(text);
 	}
+	break;
+	case ToolType::Magnetism: {
+		//tool 3
+
+		text._Text = "Magnetism:";
+		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+
+		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+		text._Text = "This tool allows you to pull the cubes'\nto you.";
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+
+		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y) * 2;
+		switch (static_cast<int>(Mode->GetCurrentOption().MagMode))
+		{
+		case 0:
+
+			text._Text = "This pulls all the cubes to you.";
+
+			break;
+		case 1:
+			text._Text = "This pulls the cube the tool is aimed at.";
+			break;
+		
+		}
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+	}
 						 break;
 
 	}
@@ -589,6 +619,7 @@ void Tutorial_UI::OtherTutorialText()
 	text._Text += "\n" + KeyBindes["Pause"] + ": Pause";
 	text._Text += "\n" + KeyBindes["Change_Gun_State_Up"] + ": Change tool up";
 	text._Text += "\n" + KeyBindes["Change_Gun_State_Down"] + ": Change tool up";
+	text._Text += "\nRMB : throw cube";
 	text._Position = { xpos,yPos };
 	_TextList.push_back(text);
 }

@@ -25,7 +25,9 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	{
 		if ( !mIsHeld )
 		{
-			Weight();
+			if (useWeight) {
+				Weight();
+			}
 			Friction( dt );
 			Velocity(dt);
 		}

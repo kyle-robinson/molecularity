@@ -29,6 +29,7 @@ public:
 	void SetIsHolding( bool isHolding ) noexcept { isHeld = isHolding; }
 	void SetIsHovering( bool hover ) noexcept { cubeHover = hover; }
 	void SetIsInRange( bool range ) noexcept { cubeInRange = range; }
+	void SetCamPos(XMFLOAT3 newcampos)noexcept { CamPos = newcampos; }
 
 	void Update( const float deltaTime ) noexcept;
 	std::shared_ptr<PhysicsModel> GetPhysicsModel() const noexcept { return physicsModel; }
@@ -52,6 +53,8 @@ private:
 	XMFLOAT3 prevPos;
 	XMFLOAT3 pos;
 
+	//for magnetic data
+	XMFLOAT3 CamPos;
 };
 
 #endif

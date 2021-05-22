@@ -43,7 +43,7 @@ private:
 	
 	vector < pair < string, string > > CreditsINFO;
 	UINT32 LevelTo = 2;
-	int NextY = 0;
+	float NextY = 0;
 	float CurrentYPos;
 	int imagecount = 0;
 };
