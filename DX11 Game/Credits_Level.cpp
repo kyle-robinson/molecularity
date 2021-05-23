@@ -32,9 +32,7 @@ void Credits_Level::OnSwitch()
 	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
 
 	//sounds
-	Sound::Instance()->ClearAudio();
-
-	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\Credits.mp3", "Credits" );
+	Sound::Instance()->InitialiseMusicTrack( "Credits" );
 
 	Sound::Instance()->PlayMusic( "Credits" );
 }

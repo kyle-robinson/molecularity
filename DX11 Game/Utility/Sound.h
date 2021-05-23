@@ -15,8 +15,8 @@ using namespace DirectX;
 class Sound: public Listener
 {
 public:
-	void InitialiseMusicTrack( const char* fileLocation, std::string musicName );
-	void InitialiseSoundEffect( const char* fileLocation, std::string soundName );
+	void InitialiseMusicTrack( std::string fileName, std::string fileType = ".mp3" );
+	void InitialiseSoundEffect( std::string fileName, std::string fileType = ".mp3" );
 
 	void InitialiseSoundGroup( std::string groupName );
 

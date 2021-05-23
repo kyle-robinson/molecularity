@@ -60,14 +60,12 @@ void Level1::OnSwitch()
 	_UiManager->HideUi("EndLevel");
 
 	// initialise sounds
-	Sound::Instance()->ClearAudio();
-
-	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\TutorialMusic.mp3", "TutorialMusic" );
+	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\PressurePlateClick.mp3", "PressurePlateClick" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Notification.mp3", "Notification" );
+	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
+	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
+	Sound::Instance()->InitialiseSoundEffect( "Notification" );
 
 	Sound::Instance()->PlayMusic( "TutorialMusic" );
 	Sound::Instance()->PlaySoundEffect( "Notification" );
@@ -149,7 +147,7 @@ void Level1::Update( const float dt )
 				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
 				{
 					levelCompleted = true;
-					Sound::Instance()->PlaySoundEffect( "PressurePlateClick", false, pressurePlate.GetPositionFloat3() );
+					Sound::Instance()->PlaySoundEffect( "PressurePlateClick", false, pressurePlate.GetPositionFloat3(), 15.0f );
 				}
 			}
 
