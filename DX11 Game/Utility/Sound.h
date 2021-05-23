@@ -15,9 +15,6 @@ using namespace DirectX;
 class Sound: public Listener
 {
 public:
-	Sound();
-	~Sound();
-
 	void InitialiseMusicTrack(const char* fileLocation, std::string musicName);
 	void InitialiseSoundEffect(const char* fileLocation, std::string soundName);
 
@@ -28,23 +25,29 @@ public:
 
 	void PlayMusic( std::string musicName, bool loops = true ); // Plays music
 	void PlaySoundEffect( std::string soundName, bool loops = false, XMFLOAT3 soundPosition = { NULL, NULL, NULL }, float minDistance = 1.0f ); // Plays sound effects
+	std::map<std::string, irrklang::ISound*>& GetMusicTracks() { return musicTracks; }
 
-	float GetMusicVolume() { return musicVolume; } // Gets the volume level for music
-	void SetMusicVolume( float volume ) { musicVolume = volume; for ( auto music : musicTracks ) { music.second->setVolume( musicVolume ); } } // Sets the volume level for music
+	float& GetMusicVolume() { return musicVolume; } // Gets the volume level for music
+	void SetMusicVolume( float &volume ) { musicVolume = volume; for ( auto music : musicTracks ) { music.second->setVolume( musicVolume ); } } // Sets the volume level for music
 
 	std::string GetCurrentMusicTrack() { return currentMusicTrack; }
 
-	float GetSoundEffectsVolume() { return soundEffectsVolume; } // Gets the volume level for sound effects
-	void SetSoundEffectsVolume( float volume ) { soundEffectsVolume = volume; for ( auto sound : soundEffects ) { sound.second->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
+	float& GetSoundEffectsVolume() { return soundEffectsVolume; } // Gets the volume level for sound effects
+	void SetSoundEffectsVolume( float &volume ) { soundEffectsVolume = volume; for ( auto sound : soundEffects ) { sound.second->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
 
 	void SetMusicPause(bool isPause) { for (auto music : musicTracks) { music.second->setIsPaused( isPause ); } } // Sets the ispuase  for music
-
 
 	//eventsystem
 	void AddtoEvent();
 	void HandleEvent(Event* event);
 
+	static Sound* Instance();
+
 private:
+
+	Sound();
+	~Sound();
+
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 
 	irrklang::vec3df camPosition; // Camera's position

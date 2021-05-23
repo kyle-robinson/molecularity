@@ -100,7 +100,7 @@ inline void DropDown_Widget<ListData, BakgroundType, ButtionBacktype>::Draw(ID3D
 	}
 	
 	XMVECTOR textsize = textrender->GetSpriteFont()->MeasureString(_ListData[Selected].c_str());
-	XMFLOAT2 textpos = { _Pos.x + (_Size.x / 2) - DirectX::XMVectorGetX(textsize) / 2 ,_Pos.y + (_Size.y / 2) - DirectX::XMVectorGetY(textsize) / 2 };
+	XMFLOAT2 textpos = { _Pos.x + (_Size.x / 2) - (DirectX::XMVectorGetX(textsize) * textrender->GetScale().x) / 2 ,_Pos.y + (_Size.y / 2) - (DirectX::XMVectorGetY(textsize) * textrender->GetScale().y) / 2 };
 	//text	
 	textrender->RenderString(_ListData[Selected], textpos, TextColour);
 	

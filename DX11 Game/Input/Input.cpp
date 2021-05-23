@@ -3,10 +3,9 @@
 #include "CameraMovement.h"
 
 void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
-	CameraController* camera, Sound* sound, std::vector<uint32_t> level_IDs )
+	CameraController* camera, std::vector<uint32_t> level_IDs )
 {
 	cameras = camera;
-	soundSystem = sound;
 	renderWindow = window;
 	this->level_IDs = level_IDs;
 	this->levelSystem = stateMachine;
@@ -268,9 +267,9 @@ void Input::UpdateKeyboard( const float dt )
 					canHover = false;
 
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
-						sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * 45.0f,
+						sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
 						-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
-						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * 45.0f
+						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt
 					);
 				}
 			}
@@ -331,10 +330,11 @@ void Input::UpdateMouse( const float dt )
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
-					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" || isPaused )
-						soundSystem->PlaySoundEffect( "MenuClick" );
+					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
+						Sound::Instance()->PlaySoundEffect( "MenuClick" );
+
 					else
-						soundSystem->PlaySoundEffect( "ToolUse" );
+						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
 
 

@@ -65,7 +65,7 @@ void Input_Widget<background>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* D
 	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
 	Background.Draw(WorldOrthoMatrix);
 	XMVECTOR textsize = textrender->GetSpriteFont()->MeasureString(CurrentText.c_str());
-	XMFLOAT2 textpos = { _Pos.x + (_Size.x / 2) - DirectX::XMVectorGetX(textsize) / 2 ,_Pos.y + (_Size.y / 2) - DirectX::XMVectorGetY(textsize) / 2 };
+	XMFLOAT2 textpos = { _Pos.x + (_Size.x / 2) - (DirectX::XMVectorGetX(textsize) * textrender->GetScale().x) / 2 ,_Pos.y + (_Size.y / 2) - (DirectX::XMVectorGetY(textsize) * textrender->GetScale().y) / 2 };
 	textrender->RenderString(CurrentText, textpos, TextColour);
 }
 

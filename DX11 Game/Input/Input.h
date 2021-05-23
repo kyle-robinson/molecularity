@@ -15,7 +15,7 @@ class Input : public WindowContainer, public Listener
 {
 public:
 	void Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
-		CameraController* camera, Sound* sound, std::vector<uint32_t> level_IDs );
+		CameraController* camera, std::vector<uint32_t> level_IDs );
 	void Update( const float dt );
 
 	//eventsystem
@@ -26,7 +26,6 @@ private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
 
-	Sound* soundSystem;
 	ToolType currentTool;
 	LevelContainer* level;
 	MousePicking mousePick;

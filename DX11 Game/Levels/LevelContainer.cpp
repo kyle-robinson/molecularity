@@ -22,13 +22,14 @@
 #include <UI/Pause.h>
 #include <UI/Settings_Menu_UI.h>
 
-bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI, Sound* sound )
+// "CCTV Camera" (https://skfb.ly/6SD7C) by Smoggybeard is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+bool LevelContainer::Initialize( Graphics* gfx, CameraController* camera, ImGuiManager* imgui, UI_Manager* UI )
 {
 	graphics = gfx;
 	cameras = camera;
 	this->imgui = imgui;
 	_UiManager = UI;
-	soundSystem = sound;
 	if ( !InitializeScene() )
 		return false;
 	return true;
@@ -58,9 +59,9 @@ bool LevelContainer::InitializeScene()
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
 
 			// security camera
-			//if ( !securityCamera.Initialize( "Resources\\Models\\SecurityCam.FBX", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			//securityCamera.SetInitialPosition( 0.0f, 15.0f, 15.0f );
-			//securityCamera.SetInitialScale( 1.0f, 1.0f, 1.0f );
+			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			securityCamera.SetInitialPosition( 37.0f, 25.0f, 53.0f );
+			securityCamera.SetInitialScale( 4.0f, 4.0f, 4.0f );
 		}
 
 		// LIGHTS
@@ -157,6 +158,16 @@ void LevelContainer::RenderFrameEarly()
 	}
 }
 
+void LevelContainer::ShowEndLeveLScreen()
+{
+	if (levelCompleted) {
+		//game end
+		_UiManager->HideAllUI();
+		_UiManager->ShowUi("EndLevel");
+		EventSystem::Instance()->AddEvent(EVENTID::GameEndLevelEvent);
+	}
+}
+
 void LevelContainer::RenderFrame()
 {
 	// CYBERGUN / SPOTLIGHT
@@ -168,7 +179,7 @@ void LevelContainer::RenderFrame()
 	// DRAWABLES
 	{
 		// SECURITY CAMERA
-		//securityCamera.Draw();
+		securityCamera.Draw();
 
 		// CUBES
 		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
@@ -202,9 +213,6 @@ void LevelContainer::EndFrame()
 	graphics->RenderSceneToTexture();
 	postProcessing->Bind( *graphics );
 
-	// render text
-	//textRenderer->RenderCubeMoveText( *this );
-
 	// spawn imgui windows
 	if ( cameras->GetCurrentCamera() == JSON::CameraType::Debug )
 	{
@@ -234,7 +242,14 @@ void LevelContainer::Update( const float dt )
 	skysphere.SetPosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );	
 
 	// update ui components
-	_UiManager->Update();
+
+	_UiManager->Update(dt);
+
+	tool->Update();
+
+	// update camera position for 3D sound
+	Sound::Instance()->UpdatePosition( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3(), cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y );
+	ShowEndLeveLScreen();
 }
 
 void LevelContainer::LateUpdate( const float dt )
@@ -265,10 +280,8 @@ void LevelContainer::LateUpdate( const float dt )
 	}
 
 	// set rotation of security camera
-	//float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
-	//securityCamera.SetRotation( -0.2f + XM_PIDIV2, -0.25f + rotation, 0.0f );
-	//securityCamera.SetRotation( -0.75f - rotation, -0.25f + rotation - XM_PIDIV2, 0.0f );
-	//securityCamera.SetRotation( rotation, XM_PIDIV2, 0.0f );
+	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
+	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );

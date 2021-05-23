@@ -6,6 +6,10 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
+
+#include <d3d11_1.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
 /// <summary>
 /// Contains a WindowProc which is used to defer window messages to Keyboard.h/Mouse.h for handling.
 /// Initialzes and defers raw mouse input to Mouse.h
@@ -32,6 +36,8 @@ protected:
 	RenderWindow renderWindow;
 	Keyboard keyboard;
 	Mouse mouse;
+
+	DirectX::XMFLOAT2 windowsize;
 };
 
 #endif
