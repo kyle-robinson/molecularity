@@ -1,14 +1,13 @@
 #pragma once
 
-
-
 #include<Tool_Structs.h>
 #include<Timer.h>
+#include<Tool_Function.h>
+
 /// <summary>
 /// hold the current tool data to then pass to cube when picked
 /// </summary>
-#include<Tool_Function.h>
-
+class CubeProperties;
 class Tool_Class:public Listener
 {
 public:
@@ -31,13 +30,14 @@ public:
 	void setEnergyMax(float energyMax) { _EnergyMax = energyMax; }
 
 	//eventsystem
-	void AddToEvent();
+	
 	void HandleEvent(Event* event);
 
 
 private:
-	
-
+	void ChangeCube(CubeProperties* Cube);
+	void AddToEvent();
+	void RemoveFromEvent();
 private:
 	//currently selected
 	std::shared_ptr<Tool_Function> _CurrentTool;

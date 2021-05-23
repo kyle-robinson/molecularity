@@ -3,6 +3,7 @@
 
 Tool_Resize::Tool_Resize()
 {
+	EnergyCost = 25;
 	MaxNumber = 2;
 	MinNumber = 0;
 	ChangeCurrent(1);

@@ -3,8 +3,8 @@
 
 Tool_Magnetism::Tool_Magnetism()
 {
-	CurrentMode = MagnetismMode::OneCube;
 	
+	EnergyCost = 25;
 	MaxNumber = 1;
 	MinNumber = 0;
 	ChangeCurrent(0);

@@ -99,7 +99,7 @@ inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Draw(ID3D11De
 			Front.UpdateTex(Device, _TypeFront);
 		
 		Front.SetInitialPosition(_Pos.x, _Pos.y, 0);
-		Front.SetScale(_Size.x+15, _Size.y, 0);
+		Front.SetScale(_Size.x+13.5f, _Size.y, 0);
 
 		cb_ps_scene.data.alphaFactor = 1.0f;
 		cb_ps_scene.data.useTexture = true;

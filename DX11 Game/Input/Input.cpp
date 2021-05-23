@@ -181,11 +181,12 @@ void Input::UpdateKeyboard( const float dt )
 			if ( keycode == KeyBinds["Gun_State_Five"] );
 			if ( keycode == KeyBinds["Gun_State_Six"] );
 
-			if ( keycode == KeyBinds["Change_Gun_State_Up"] )
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionUpEvent );
-
-			if ( keycode == KeyBinds["Change_Gun_State_Down"] )
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionDownEvent );
+			if (keycode == KeyBinds["Change_Gun_State_Up"]) {
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+			}
+			else if (keycode == KeyBinds["Change_Gun_State_Down"]) {
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+			}
 		}
 
 		//UI
@@ -332,23 +333,27 @@ void Input::UpdateMouse( const float dt )
 			}
 		}
 
-
-
-		
-
-
 		// MULTI-TOOL INPUT
 		{
+
+			
+
+			//change tool state mouse wheel
 			if ( me.GetType() == MouseBinds["Change_Gun_State_Up"] )
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionUpEvent );
 			else if ( me.GetType() == MouseBinds["Change_Gun_State_Down"] )
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionDownEvent );
 
+
+			
+			bool checkAll = false;
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
+
 				
+
 				//cube mouse input
 				{
 					float alreadyHeld = false;
@@ -390,11 +395,20 @@ void Input::UpdateMouse( const float dt )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( false );
 
 
-				// update box texture on click while hovering
-				if ( me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() )
-					EventSystem::Instance()->AddEvent( EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get() );
+				// update box on click while hovering
+				if (me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering()) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get());
+				}
+				else {
+					checkAll = true;
+				}
 #pragma endregion
-			}
+			}	
+			
+			//mag mode all
+				if (me.GetType() == MouseBinds["Fire_Tool"] && checkAll) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeAllCubeEvent, &levelSystem->GetCurrentLevel()->GetCube());
+				}
 #pragma region UI_Input
 			//UI mouse input
 			{

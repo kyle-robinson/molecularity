@@ -15,9 +15,10 @@ public:
 	void virtual AddOneToCurrent() = 0;
 	void virtual MinusOneTOCurrent() = 0;
 	ToolData virtual GetToolData() { return ToolData(); };
-
-
+	float GetEnergyCost() { return EnergyCost; }
+	void SetEnergyCost(float cost) { EnergyCost = cost; }
 protected:
+	float EnergyCost = 0;
 	 int Current = 0;
 	 int MaxNumber;
 	 int MinNumber;

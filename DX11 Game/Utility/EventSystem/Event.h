@@ -20,6 +20,7 @@ enum class EVENTID {
 	//UIEndLevel
 	SetNextLevelEvent,
 	SetCurrentLevelEvent,
+
 	//game Events
 	GamePauseEvent,
 	GameUnPauseEvent,
@@ -40,6 +41,7 @@ enum class EVENTID {
 	ChangeToolOptionUpEvent,
 	ChangeToolOptionDownEvent,
 	ChangeCubeEvent,
+	ChangeAllCubeEvent
 	
 };
 

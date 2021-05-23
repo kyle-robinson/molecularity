@@ -3,6 +3,7 @@
 
 Tool_Convert::Tool_Convert()
 {
+	EnergyCost = 25;
 	CurrentType = BoxType::Mesh;
 	MaxNumber = 4;
 	MinNumber = 0;
