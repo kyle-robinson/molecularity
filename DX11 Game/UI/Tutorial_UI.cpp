@@ -229,7 +229,7 @@ void Tutorial_UI::Update(float dt)
 				stateNo++;
 				CurrentState = static_cast<TutorialState>(stateNo);
 				timer.Restart();
-
+        
 				Sound::Instance()->PlaySoundEffect("Notification");
 			}
 			
