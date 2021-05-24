@@ -181,11 +181,13 @@ void Input::UpdateKeyboard( const float dt )
 			if ( keycode == KeyBinds["Gun_State_Five"] );
 			if ( keycode == KeyBinds["Gun_State_Six"] );
 
-			if (keycode == KeyBinds["Change_Gun_State_Up"]) {
-				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
-			}
-			else if (keycode == KeyBinds["Change_Gun_State_Down"]) {
-				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+			if (kbe.IsPress()) {
+				if (keycode == KeyBinds["Change_Gun_State_Up"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+				}
+				else if (keycode == KeyBinds["Change_Gun_State_Down"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+				}
 			}
 		}
 
@@ -278,17 +280,6 @@ void Input::UpdateKeyboard( const float dt )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
 				);
 
-				//// cube throwing
-				//if ( keyboard.KeyIsPressed( 'R' ) )
-				//{
-				//	canHover = false;
-
-				//	levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
-				//		sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
-				//		-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
-				//		cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt
-				//	);
-				//}
 			}
 			else
 			{
@@ -344,16 +335,15 @@ void Input::UpdateMouse( const float dt )
 			else if ( me.GetType() == MouseBinds["Change_Gun_State_Down"] )
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionDownEvent );
 
-
-			
-			bool checkAll = false;
+			//mag mode all
+				if (me.GetType() == MouseBinds["Fire_Tool"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeAllCubeEvent, &levelSystem->GetCurrentLevel()->GetCube());
+					
+				}
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
-
-				
-
 				//cube mouse input
 				{
 					float alreadyHeld = false;
@@ -399,16 +389,11 @@ void Input::UpdateMouse( const float dt )
 				if (me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering()) {
 					EventSystem::Instance()->AddEvent(EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get());
 				}
-				else {
-					checkAll = true;
-				}
+				
 #pragma endregion
 			}	
 			
-			//mag mode all
-				if (me.GetType() == MouseBinds["Fire_Tool"] && checkAll) {
-					EventSystem::Instance()->AddEvent(EVENTID::ChangeAllCubeEvent, &levelSystem->GetCurrentLevel()->GetCube());
-				}
+		
 #pragma region UI_Input
 			//UI mouse input
 			{

@@ -64,17 +64,7 @@ void Cube::Update( const float deltaTime ) noexcept
     }
 
     //Magnetic pull
-    if (editableProperties->GetBoxMagneticMove()) {
-        if (!cubeInRange) {
-            physicsModel->AddForce(XMFLOAT3((CamPos.x - pos.x), (CamPos.y - pos.y) , (CamPos.z - pos.z)));
-            physicsModel->UseWeight(false);
-        }
-        else {
-            physicsModel->ResetForces();
-            editableProperties->SetBoxMagneticMove(false);
-            physicsModel->UseWeight(true);
-        }
-    }
+    MagneticForce();
 
     // update physics
     if (!isHeld) {
@@ -183,5 +173,21 @@ void Cube::CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) 
 
     physicsModel->AddForce( force2 );
     object->GetPhysicsModel()->AddForce( force );
+}
+void Cube::MagneticForce()
+{
+    if (editableProperties->GetBoxMagneticMove()) {
+        if (!cubeInRange) {
+            XMFLOAT3 force = physicsModel->Normalization(XMFLOAT3((CamPos.x - pos.x), (CamPos.y - pos.y), (CamPos.z - pos.z)));
+            
+            physicsModel->AddForce(XMFLOAT3{ force.x * MagPower,force.y * MagPower,force.z * MagPower });
+            physicsModel->UseWeight(false);
+        }
+        else {
+            physicsModel->ResetForces();
+            editableProperties->SetBoxMagneticMove(false);
+            physicsModel->UseWeight(true);
+        }
+    }
 }
 #pragma endregion

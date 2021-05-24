@@ -36,4 +36,5 @@ private:
 		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
 	
 	int currentLevel=0;
+	UINT32 Hub = 2;
 };

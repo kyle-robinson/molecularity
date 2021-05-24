@@ -550,6 +550,7 @@
     <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
     <None Include="Resources\JSON\Objects.json" />
     <None Include="Resources\JSON\Settings.json" />
+    <None Include="Resources\JSON\Text_Eng.json" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Audio\Music.wav" />

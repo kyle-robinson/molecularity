@@ -125,7 +125,7 @@ void Credits_UI::LoadText()
 	CreditsINFO.push_back(make_pair("", "UI"));
 	CreditsINFO.push_back(make_pair("UI programmer", "Thomas MILLARD"));
 	CreditsINFO.push_back(make_pair("UI art", "Thomas MILLARD"));
-	CreditsINFO.push_back(make_pair("UI desigp", "Thomas MILLARD"));
+	CreditsINFO.push_back(make_pair("UI design", "Thomas MILLARD"));
 
 	CreditsINFO.push_back(make_pair("", "Physics"));
 	CreditsINFO.push_back(make_pair("Physics", "Jacob J DEXTER"));

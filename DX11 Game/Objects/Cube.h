@@ -36,7 +36,7 @@ public:
 	std::shared_ptr<CubeProperties> GetEditableProperties() const noexcept { return editableProperties; }
 private:
 	void CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) noexcept;
-
+	void MagneticForce();
 	std::shared_ptr<CubeProperties> editableProperties;
 	std::shared_ptr<PhysicsModel> physicsModel;
 	ID3D11DeviceContext* context;
@@ -55,6 +55,7 @@ private:
 
 	//for magnetic data
 	XMFLOAT3 CamPos;
+	float MagPower = 5;
 };
 
 #endif

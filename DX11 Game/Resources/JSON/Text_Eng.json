@@ -1,32 +1,474 @@
 {
+  "Description": "The Eng Text File",
+  "Main_Menu_Text": [
+    {
+      "Name": "Buttion_1",
+      "Text": "Play"
+    },
+    {
+      "Name": "Buttion_2",
+      "Text": "Credits"
+    },
+    {
+      "Name": "Buttion_3",
+      "Text": "Settings"
+    },
+    {
+      "Name": "Buttion_4",
+      "Text": "Exit"
+    }
+  ],
+  "EndLevel_Text": [
+    {
+      "Name": "Level_End_Text",
+      "Text": "Level complet"
+    }
+  ],
+  "Gen_Text": [
+    {
+      "Name": "Start_Text",
+      "Text": "The aim for you is to puzzle you way\nthrough the rooms that are given to you."
+
+    },
+    {
+      "Name": "Move_Next_Text",
+      "Text": "press enter to continue"
+    }
+  ],
+  "Movement_Controlls": [
+    {
+      "Name": "Title",
+      "Text": "Movement Controls:"
+
+    },
+    {
+      "Name": "Controll_1",
+      "Text": ": Forward "
+
+    },
+    {
+      "Name": "Controll_2",
+      "Text": ": Left"
+
+    },
+    {
+      "Name": "Controll_3",
+      "Text": ": Back"
+
+    },
+    {
+      "Name": "Controll_4",
+      "Text": ": Right"
+
+    },
+    {
+      "Name": "Controll_5",
+      "Text": ": Jump"
+
+    },
+    {
+      "Name": "Controll_6",
+      "Text": "Mouse: Look around"
+
+    }
+  ],
   "TOOL_TIPS": [
     {
-      "Name": "Gravity_Tool",
-      "Text": "This Chnages the gravity of the object",
-      "Loation": "b",
-      "Dyscription": "c"
+      "Name": "Title",
+      "Text": "Tool infromation"
+    },
+    {
+      "Name": "Convert_Tool",
+      "Text": "Convert:\nThis Changes the material of the cube.This turns the object into "
     },
     {
       "Name": "Size_Tool",
-      "Text": "This Changes the size of the object",
-      "Loation": "b",
-      "Dyscription": "c"
+      "Text": "Resize:\nThisChanges the size of the cube."
+    },
+    {
+      "Name": "Magnatism_Tool",
+      "Text": "Magnetism:\nThis pulls the cube to you"
     }
   ],
-  "Title": [
+  "TooL_Controlls": [
     {
-      "Name": "2",
-      "Text": "aa",
-      "Loation": "",
-      "Dyscription": ""
+      "Name": "Title",
+      "Text": "Tool Controls"
+    },
+    {
+      "Name": "Infromation",
+      "Text": "The tool allows for you to change the\nproperties of the cubes you will find in\nthe levels."
+    },
+    {
+      "Name": "Tool_Mode_Switch",
+      "Text": "Scroll Wheel : Change Tool mode"
+    },
+    {
+      "Name": "Tool_1",
+      "Text": ": Convert"
+    },
+    {
+      "Name": "Tool_2",
+      "Text": ":  Resize"
+    },
+    {
+      "Name": "Tool_3",
+      "Text": ":  Magnetism"
     }
   ],
-  "Paragraph": [
+  "Other_Controlls": [
     {
-      "Name": "2",
-      "Text": "",
-      "Loation": "",
-      "Dyscription": ""
+      "Name": "Title",
+      "Text": "Other Controls"
+    },
+    {
+      "Name": "Controll_1",
+      "Text": ": Pause"
+    },
+    {
+      "Name": "Controll_2",
+      "Text": ": Change tool up"
+    },
+    {
+      "Name": "Controll_3",
+      "Text": ": Change tool up"
+    },
+    {
+      "Name": "Controll_4",
+      "Text": "\nRMB : throw cube"
     }
-  ]
+  ],
+  "Pause_Text": [
+    {
+      "Name": "Title",
+      "Text": "Pause"
+
+    },
+    {
+      "Name": "Tip_Title",
+      "Text": "Tip"
+    }
+  ],
+  "Tip_Pause": [
+    {
+      "Name": "Tip_Level_1",
+      "Text": "Use the Buttion on the other side"
+
+    },
+    {
+      "Name": "Tip_Level_2",
+      "Text": "Use the tool"
+
+    },
+    {
+      "Name": "Tip_Level_3",
+      "Text": "aa"
+
+    }
+  ],
+  "Pause_Buttions": [
+    {
+      "Name": "Buttion_1",
+      "Text": "Play"
+    },
+    {
+      "Name": "Buttion_2",
+      "Text": "Main Menu"
+    },
+    {
+      "Name": "Buttion_3",
+      "Text": "Settings"
+    },
+    {
+      "Name": "Buttion_4",
+      "Text": "Exit"
+    }
+  ],
+  "Settings_Names": [
+    {
+      "Name": "Vsync",
+      "Text": "Vsync"
+    },
+    {
+      "Name": "WindowWidth",
+      "Text": "Window Size"
+    },
+    {
+      "Name": "WindowHight",
+      "Text": "Window Size"
+    },
+    {
+      "Name": "FullScreen",
+      "Text": "FullScreen"
+    },
+    {
+      "Name": "Language",
+      "Text": "Language"
+    },
+    {
+      "Name": "Forward",
+      "Text": "Forward"
+    },
+    {
+      "Name": "Back",
+      "Text": "Back"
+    },
+    {
+      "Name": "Left",
+      "Text": "Left"
+    },
+    {
+      "Name": "Right",
+      "Text": "Right"
+    },
+    {
+      "Name": "Jump",
+      "Text": "Jump"
+    },
+    {
+      "Name": "Action",
+      "Text": "Action"
+    },
+    {
+      "Name": "Change_Gun_State_Up",
+      "Text": "Change tool State Up"
+    },
+    {
+      "Name": "Change_Gun_State_Down",
+      "Text": "Change tool State Down"
+    },
+    {
+      "Name": "Gun_State_One",
+      "Text": "tool State One"
+    },
+    {
+      "Name": "Gun_State_Two",
+      "Text": "tool State Two"
+    },
+    {
+      "Name": "Gun_State_Three",
+      "Text": "tool State Three"
+    },
+    {
+      "Name": "Gun_State_Four",
+      "Text": "tool State Four"
+    },
+    {
+      "Name": "Gun_State_Five",
+      "Text": "tool State Five"
+    },
+    {
+      "Name": "Gun_State_Six",
+      "Text": "tool State Six"
+    },
+    {
+      "Name": "Pause",
+      "Text": "Pause"
+    },
+    {
+      "Name": "MasterSoundOn",
+      "Text": "Master Sound"
+    },
+    {
+      "Name": "MasterSoundVolume",
+      "Text": "Master Volume"
+    },
+    {
+      "Name": "MusicOn",
+      "Text": "Music"
+    },
+    {
+      "Name": "MusicVolume",
+      "Text": "Music Volume"
+    },
+    {
+      "Name": "SoundEffectsEfOn",
+      "Text": "SoundEffects"
+    },
+    {
+      "Name": "SoundEffectVolume",
+      "Text": "SoundEffect Volume"
+    },
+    {
+      "Name": "HUD_ON",
+      "Text": "HUD Show"
+    },
+    {
+      "Name": "Hud_Scale",
+      "Text": "Hud size"
+    }
+
+
+
+  ],
+  "Settings_Buttions": [
+    {
+      "Name": "Buttion_1",
+      "Text": "Gen"
+    },
+    {
+      "Name": "Buttion_2",
+      "Text": "Grapics"
+    },
+    {
+      "Name": "Buttion_3",
+      "Text": "Sound"
+    },
+    {
+      "Name": "Buttion_4",
+      "Text": "Controlls"
+    },
+    {
+      "Name": "Buttion_4",
+      "Text": "Accept"
+    }
+  ],
+  "Credits": [
+    {
+      "Name": "",
+      "Text": "Engine"
+
+    },
+    {
+      "Name": "Lead programmer",
+      "Text": "Lead programmer"
+
+    },
+    {
+      "Name": "Engine programmer",
+      "Text": "Kyle ROBINSON"
+
+    },
+    {
+      "Name": "Engine programmer",
+      "Text": "Daniel WILSON"
+
+    },
+    {
+      "Name": "Engine programmer",
+      "Text": "Ben SHAW"
+
+    },
+    {
+      "Name": "Engine programmer",
+      "Text": "Jacob J DEXTER"
+
+    },
+    {
+      "Name": "Engine programmer",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "",
+      "Text": "Sound"
+
+    },
+    {
+      "Name": "Sound",
+      "Text": "Ben SHAW"
+
+    },
+    {
+      "Name": "",
+      "Text": "Game design"
+
+    },
+    {
+      "Name": "Game design",
+      "Text": "Jacob J DEXTER"
+
+    },
+    {
+      "Name": "Game design",
+      "Text": "Kyle ROBINSON"
+
+    },
+    {
+      "Name": "Game design",
+      "Text": "Daniel WILSON"
+
+    },
+    {
+      "Name": "Game design",
+      "Text": "Ben SHAW"
+
+    },
+    {
+      "Name": "",
+      "Text": "Graphics"
+
+    },
+    {
+      "Name": "Graphics Programmer",
+      "Text": "Kyle ROBINSON"
+
+    },
+    {
+      "Name": "",
+      "Text": "UI"
+
+    },
+    {
+      "Name": "UI programmer",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "UI art",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "UI design",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "",
+      "Text": "Physics"
+
+    },
+    {
+      "Name": "Physics",
+      "Text": "Jacob J DEXTER"
+
+    },
+    {
+      "Name": "",
+      "Text": "3D Models"
+
+    },
+    {
+      "Name": "3D Models",
+      "Text": "Daniel WILSON"
+
+    },
+    {
+      "Name": "",
+      "Text": "Other"
+
+    },
+    {
+      "Name": "???",
+      "Text": "Lorcan B ENGLEDOW"
+
+    },
+    {
+      "Name": "Thank",
+      "Text": "You"
+
+    },
+    {
+      "Name": "For",
+      "Text": "Playing"
+
+    },
+    {
+      "Name": "",
+      "Text": "Molecularity"
+
+    }
+  ],
+  "Verson": 2.0
 }

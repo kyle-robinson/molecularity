@@ -137,8 +137,10 @@ void Pause::ButtionCreate()
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
 
 	}
-	else if (PuaseButtions[1].Function("Reset", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
+	else if (PuaseButtions[1].Function("Main Menu", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//reset level
+		_isPuased = false;
+		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
 	}
 	else if (PuaseButtions[2].Function("Settings", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings

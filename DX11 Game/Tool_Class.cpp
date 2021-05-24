@@ -130,26 +130,27 @@ void Tool_Class::HandleEvent(Event* event)
 	break;
 	case EVENTID::ChangeCubeEvent:
 	{
+		if (_CurrentTool->GetToolData().MagMode != MagnetismMode::AllCubes) {
+			timer.Restart();
+			if (_Energy > 0) {
 
-		timer.Restart();
-		if (_Energy > 0) {
+				_Energy -= _CurrentTool->GetEnergyCost();
+				timer.Start();
 
-			_Energy -= _CurrentTool->GetEnergyCost();
-			timer.Start();
+				CubeProperties* cube = static_cast<CubeProperties*>(event->GetData());
+				ChangeCube(cube);
 
-			CubeProperties* cube = static_cast<CubeProperties*>(event->GetData());
-			ChangeCube(cube);
+			}
+			else if (_Energy <= 0) {
 
+			}
 		}
-		else if (_Energy <= 0) {
-
-		}
-
 
 	}
 	break;
 	case EVENTID::ChangeAllCubeEvent:
 	{
+		timer.Restart();
 		if (_CurrentTool->GetToolData().MagMode == MagnetismMode::AllCubes) {
 			_Energy -= _CurrentTool->GetEnergyCost()*2;
 			//change all cubes propites

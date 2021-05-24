@@ -158,7 +158,7 @@ void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 	{
 		TextToDraw._Colour = Colors::Black;
 		TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
-		TextToDraw._Text = settingData.Name;
+		TextToDraw._Text = settingData.Text;
 		PuaseTextPG.push_back(TextToDraw);
 		//scaling number input
 		if (int* input = std::get_if<int>(&settingData.Setting)) {
@@ -466,7 +466,7 @@ void Settings_Menu_UI::ControllsCreate(JSON::SettingData& settingData)
 
 	TextToDraw._Colour = Colors::Black;
 	TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
-	TextToDraw._Text = settingData.Name;
+	TextToDraw._Text = settingData.Text;
 	PuaseTextPG.push_back(TextToDraw);
 
 	if (LoadFlag) {
@@ -501,7 +501,7 @@ void Settings_Menu_UI::WindowSizeCreate(JSON::SettingData& settingData)
 		{
 			TextToDraw._Colour = Colors::Black;
 			TextToDraw._Position = { static_cast<float>(_SizeOfScreen.x * 0.01),currentY };
-			TextToDraw._Text = "Window Size";
+			TextToDraw._Text = settingData.Text;
 			PuaseTextPG.push_back(TextToDraw);
 
 			if (int* input = std::get_if<int>(&settingData.Setting)) {
