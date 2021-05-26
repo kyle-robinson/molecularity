@@ -17,6 +17,9 @@ void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* cont
 
 	_isSettings = false;
 	_SettingsData = JSON::LoadSettings();
+
+	TextLoad();
+
 	LoadFlag = true;
 	//font
 	FontsList->AddFont("OpenSans_50", "OpenSans_50.spritefont");
@@ -111,6 +114,12 @@ void Settings_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX 
 		SettingSliderCount = 0;
 		SettingsInputCount = 0;
 	}
+}
+
+void Settings_Menu_UI::TextLoad()
+{
+	vector<JSON::TextData>ButtionsText = TextLoader::Instance()->LoadText("Settings_Buttions");
+	LoadedTextMap = TextLoader::Instance()->ConvertToMap(ButtionsText);
 }
 
 void Settings_Menu_UI::HandleEvent(Event* event)
@@ -213,7 +222,7 @@ void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 		//language input
 		else if (string* input = std::get_if<string>(&settingData.Setting)) {
 
-			vector<string>Language = { "Eng", "Fr"};
+			vector<string>Language = { "Eng", "Fr","Es"};
 			SettingsDropdowns[SettingsDropCount].Function(Language, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, *input, _MouseData);
 			settingData.Setting = SettingsDropdowns[SettingsDropCount].getSelected();
 			SettingsDropCount++;
@@ -258,30 +267,30 @@ void Settings_Menu_UI::TabButtions()
 {
 	float PosXButtion = 0;
 
-	for (UINT i = 0; i < 4; i++)
-	{
-		SettingsButtions[i].Function(TabNames[i], ButtionTex, { _SizeOfScreen.x / 14, _SizeOfScreen.y / 14 }, XMFLOAT2{ PosXButtion ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::Black, _MouseData);
-		PosXButtion += _SizeOfScreen.x / 14;
-		SettingsButtionCount++;
-	}
-
-	if (SettingsButtions[0].GetIsPressed()) {
+	if (SettingsButtions[SettingsButtionCount].Function(LoadedTextMap["Buttion_1"], ButtionTex, { _SizeOfScreen.x / 14, _SizeOfScreen.y / 14 }, XMFLOAT2{ PosXButtion ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::Black, _MouseData)) {
 		CurrentTab = GenralTab;
 		SettingsScrollBar.setPY(0);
 	}
-	if (SettingsButtions[1].GetIsPressed()) {
+	PosXButtion += _SizeOfScreen.x / 14;
+	SettingsButtionCount++;
+	if (SettingsButtions[SettingsButtionCount].Function(LoadedTextMap["Buttion_2"], ButtionTex, { _SizeOfScreen.x / 14, _SizeOfScreen.y / 14 }, XMFLOAT2{ PosXButtion ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::Black, _MouseData)) {
 		CurrentTab = GrapicsTab;
 		SettingsScrollBar.setPY(0);
 
 	}
-	if (SettingsButtions[2].GetIsPressed()) {
+	PosXButtion += _SizeOfScreen.x / 14;
+	SettingsButtionCount++;
+	if (SettingsButtions[SettingsButtionCount].Function(LoadedTextMap["Buttion_3"], ButtionTex, { _SizeOfScreen.x / 14, _SizeOfScreen.y / 14 }, XMFLOAT2{ PosXButtion ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::Black, _MouseData)) {
 		CurrentTab = SoundTab;
 		SettingsScrollBar.setPY(0);
 	}
-	if (SettingsButtions[3].GetIsPressed()) {
+	PosXButtion += _SizeOfScreen.x / 14;
+	SettingsButtionCount++;
+	if (SettingsButtions[SettingsButtionCount].Function(LoadedTextMap["Buttion_4"], ButtionTex, { _SizeOfScreen.x / 14, _SizeOfScreen.y / 14 }, XMFLOAT2{ PosXButtion ,  (float)(_SizeOfScreen.y * 0.13) }, DirectX::Colors::Black, _MouseData)) {
 		CurrentTab = ControlsTab;
 		SettingsScrollBar.setPY(0);
 	}
+	SettingsButtionCount++;
 }
 
 void Settings_Menu_UI::TabContent()
@@ -297,7 +306,7 @@ void Settings_Menu_UI::TabContent()
 	{
 
 		TextToDraw._Position = TabTextPos;
-		TextToDraw._Text = "Graphics";
+		TextToDraw._Text = LoadedTextMap["Buttion_2"];
 		PuaseTextTitles.push_back(TextToDraw);
 
 		for (auto& setting : _SettingsData)
@@ -317,7 +326,7 @@ void Settings_Menu_UI::TabContent()
 
 		TextToDraw._Colour = Colors::Black;
 		TextToDraw._Position = TabTextPos;
-		TextToDraw._Text = "General";
+		TextToDraw._Text = LoadedTextMap["Buttion_1"];
 		PuaseTextTitles.push_back(TextToDraw);
 
 		
@@ -346,7 +355,7 @@ void Settings_Menu_UI::TabContent()
 
 		TextToDraw._Colour = Colors::Black;
 		TextToDraw._Position = TabTextPos;
-		TextToDraw._Text = "Sound";
+		TextToDraw._Text = LoadedTextMap["Buttion_3"];
 		PuaseTextTitles.push_back(TextToDraw);
 
 
@@ -365,7 +374,7 @@ void Settings_Menu_UI::TabContent()
 
 		TextToDraw._Colour = Colors::Black;
 		TextToDraw._Position = TabTextPos;
-		TextToDraw._Text = "Controls";
+		TextToDraw._Text = LoadedTextMap["Buttion_4"];
 		PuaseTextTitles.push_back(TextToDraw);
 
 		for (auto& setting : _SettingsData)
@@ -393,7 +402,7 @@ void Settings_Menu_UI::TabContent()
 void Settings_Menu_UI::Accept()
 {
 	//update file
-	if (SettingsButtions[4].Function("Accept", AcceptButtion, { _SizeOfScreen.x / 9, _SizeOfScreen.y / 9 }, XMFLOAT2{ static_cast<float>(_SizeOfScreen.x * 0.89) ,  static_cast<float>(_SizeOfScreen.y * 0) }, DirectX::Colors::Black, _MouseData))
+	if (SettingsButtions[SettingsButtionCount].Function(LoadedTextMap["Buttion_Accept"], AcceptButtion, { _SizeOfScreen.x / 9, _SizeOfScreen.y / 9 }, XMFLOAT2{ static_cast<float>(_SizeOfScreen.x * 0.89) ,  static_cast<float>(_SizeOfScreen.y * 0) }, DirectX::Colors::Black, _MouseData))
 	{
 
 
@@ -439,6 +448,11 @@ void Settings_Menu_UI::Accept()
 			{
 				JSON::UpdateJSONItemEX<string>("Settings.json", type, setting.Name, *input, "");
 
+			}
+
+
+			if (setting.Name == "Language") {
+				TextLoader::Instance()->ChangeLang(std::get<string>(setting.Setting));
 			}
 		}
 

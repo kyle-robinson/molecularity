@@ -258,6 +258,7 @@
     <ClCompile Include="Tool_Resize.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="TextLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -587,6 +588,7 @@
     <ClInclude Include="Tool_Structs.h">
       <Filter>Tool</Filter>
     </ClInclude>
+    <ClInclude Include="TextLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">
@@ -706,6 +708,9 @@
       <Filter>Resources\JSON</Filter>
     </None>
     <None Include="Resources\JSON\Text_Eng.json">
+      <Filter>Resources\JSON</Filter>
+    </None>
+    <None Include="Resources\JSON\Text_Fr.json">
       <Filter>Resources\JSON</Filter>
     </None>
   </ItemGroup>

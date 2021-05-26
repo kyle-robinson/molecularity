@@ -65,6 +65,7 @@ inline void Buttion_Widget<ButtionTexType>::Draw(ID3D11DeviceContext* Contex, ID
         XMVECTOR textsize = textrender->GetSpriteFont()->MeasureString(ButtionTex.c_str());
 
         XMFLOAT2 textpos = { _Pos.x + (_Size.x / 2) - (DirectX::XMVectorGetX(textsize) * textrender->GetScale().x) / 2 ,_Pos.y + (_Size.y / 2) - (DirectX::XMVectorGetY(textsize) * textrender->GetScale().y) / 2 };
+ 
         textrender->RenderString(ButtionTex, textpos, TextColour);
         
 

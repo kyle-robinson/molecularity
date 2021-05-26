@@ -35,6 +35,7 @@ enum class EVENTID {
 	RemoveUIItemEvent,
 	ShowCursorEvent,
 	HideCursorEvent,
+	ChangeLanguageEvent,
 	//Tool
 	ChangeToolEvent,
 	ChangeToolOptionEvent,

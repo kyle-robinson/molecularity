@@ -5,6 +5,7 @@
 #include<string>
 #include<Sprite.h>
 #include"Graphics/TextRenderer.h"
+#include<TextLoader.h>
 //Base
 #include"Wigets/widget.h"
 

@@ -24,14 +24,14 @@ public:
 	virtual void Update(float dt)=0;
 	virtual void BeginDraw(VertexShader& vert, PixelShader& pix,XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)=0;
 	virtual void HandleEvent(Event* event)=0;
-
+	virtual void TextLoad() = 0;
 	void SetCb_ps_scene(ConstantBuffer<CB_PS_scene>* cb_ps_scene) { _cb_ps_scene = cb_ps_scene; }
 	void SetCb_vs_matrix_2d(ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d) {_cb_vs_matrix_2d = cb_vs_matrix_2d;}
 
 	void SetSizeOfScreen(XMFLOAT2 screensize) { _SizeOfScreen = screensize; }
 
 protected:
-
+	string ConvertFromUnsignedCharTostring(unsigned char input);
 	//Graphics Infromation
 	Microsoft::WRL::ComPtr <ID3D11Device>_Device;
 	Microsoft::WRL::ComPtr <ID3D11DeviceContext> _Contex;
