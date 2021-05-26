@@ -39,11 +39,9 @@ void Level2::OnSwitch()
 	// update items on level switch here...
 	levelName = "Level2";
 
-	Sound::Instance()->ClearAudio();
-
-	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\MenuClick.mp3", "MenuClick" );
+	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
+	Sound::Instance()->InitialiseSoundGroup( "Player" );
+	Sound::Instance()->InitialiseSoundGroup( "Cube" );
 
 	Sound::Instance()->PlayMusic( "LevelMusic" );
 }
