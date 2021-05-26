@@ -166,10 +166,12 @@ void Input::UpdateKeyboard( const float dt )
 			if ( keycode == KeyBinds["Gun_State_One"] ) {
 				currentTool = ToolType::Convert;;
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
+				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
 			}
 			if ( keycode == KeyBinds["Gun_State_Two"] ) {
 				currentTool = ToolType::Resize;
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );;
+				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
 			}
 
 			if ( keycode == KeyBinds["Gun_State_Three"] );
@@ -254,6 +256,9 @@ void Input::UpdateKeyboard( const float dt )
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( true );
 				levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->ResetForces();
 
+				if (!heldLastFrame[i])
+					Sound::Instance()->PlaySoundEffect("CubePickup");
+
 				// set cube position
 				static int offset = 2;
 				switch ( levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetBoxSize() )
@@ -273,6 +278,8 @@ void Input::UpdateKeyboard( const float dt )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
 				);
 
+				heldLastFrame[i] = true;
+
 				// cube throwing
 				if ( keyboard.KeyIsPressed( 'R' ) )
 				{
@@ -283,11 +290,16 @@ void Input::UpdateKeyboard( const float dt )
 						-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
 						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt
 					);
+
+					Sound::Instance()->PlaySoundEffect( "CubeThrow" );
+
+					heldLastFrame[i] = false;
 				}
 			}
 			else
 			{
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( false );
+				heldLastFrame[i] = false;
 			}
 		}
 
@@ -330,10 +342,16 @@ void Input::UpdateMouse( const float dt )
 
 		// MULTI-TOOL INPUT
 		{
-			if ( me.GetType() == MouseBinds["Change_Gun_State_Up"] )
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionUpEvent );
-			else if ( me.GetType() == MouseBinds["Change_Gun_State_Down"] )
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionDownEvent );
+			if (me.GetType() == MouseBinds["Change_Gun_State_Up"])
+			{
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+				Sound::Instance()->PlaySoundEffect( "ToolChange" );
+			}
+			else if (me.GetType() == MouseBinds["Change_Gun_State_Down"])
+			{
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+				Sound::Instance()->PlaySoundEffect("ToolChange");
+			}
 
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
@@ -344,7 +362,6 @@ void Input::UpdateMouse( const float dt )
 				{
 					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
 						Sound::Instance()->PlaySoundEffect( "MenuClick" );
-
 					else
 						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}

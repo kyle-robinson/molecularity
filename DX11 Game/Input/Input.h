@@ -43,6 +43,8 @@ private:
 	//key binds 
 	std::unordered_map<string, unsigned char> KeyBinds;
 	std::unordered_map<string, Mouse::MouseEvent::EventType> MouseBinds;
+
+	bool heldLastFrame[2] = { false };
 };
 
 #endif

@@ -45,6 +45,7 @@ void HUD_UI::Update(float dt)
 	string ToolInformationTexture = "";
 
 	CreateToolHud();
+
 	//crosshair
 	HUDImages[1].Function( "HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200 * hudScale,200 * hudScale }, { _SizeOfScreen.x / 2 - ( 200 * hudScale ) / 2,  _SizeOfScreen.y / 2 - ( 200 * hudScale ) / 2 } );
 

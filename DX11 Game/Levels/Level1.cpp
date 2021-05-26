@@ -64,13 +64,15 @@ void Level1::OnSwitch()
 	_UiManager->HideUi("EndLevel");
 
 	// initialise sounds
-	Sound::Instance()->ClearAudio();
+	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
+	Sound::Instance()->InitialiseSoundGroup( "Player" );
+	Sound::Instance()->InitialiseSoundGroup( "Cube" );
+	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
+	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
+	Sound::Instance()->InitialiseSoundEffect( "Notification" );
 
-	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
-
-	Sound::Instance()->PlayMusic( "LevelMusic" );
+	Sound::Instance()->PlayMusic( "TutorialMusic" );
+	Sound::Instance()->PlaySoundEffect( "Notification" );
 }
 
 void Level1::Render()
@@ -146,8 +148,11 @@ void Level1::Update( const float dt )
 			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
 			{
 				cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
-				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f )
+				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
+				{
 					levelCompleted = true;
+					Sound::Instance()->PlaySoundEffect( "PressurePlateClick", false, pressurePlate.GetPositionFloat3(), 15.0f );
+				}
 			}
 
 			// update collisions w other cubes

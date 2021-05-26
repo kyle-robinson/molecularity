@@ -61,7 +61,7 @@ void Tutorial_UI::Update(float dt)
 	default:
 		break;
 	}
-
+  
 	MoveToNextPannle();
 	
 	//end Tutorial
