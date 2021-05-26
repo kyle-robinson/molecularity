@@ -24,12 +24,23 @@ bool Level1::OnCreate()
 			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 45.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
 
+			//particle system
+			if (!pSystem.Initialize(XMFLOAT3(0.0f, 5.0f, 10.0f), XMFLOAT3(0.0f, 0.0f, 0.0f))) return false;
+			pSystem.SetInitialScale(0.0f, 0.0f, 0.0f);
+			pSystem.SetInitialRotation(0.0f, 0.0f, 0.0f);
+
+			//particle
+			ParticleBase testParticle;
+			if (!testParticle.Initialize("Resources\\Models\\Sphere\\sphere.obj", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix)) return false;
+			testParticle.SetInitialPosition(0.0f, 5.0f, 10.0f);
+			testParticle.SetInitialScale(1.0f, 1.0f, 1.0f);
+			if (!pSystem.InitializeParticles(testParticle, 1)) return false;
+
 			//add level UI 
 			HUD = make_shared<HUD_UI>();
 			PauseUI = make_shared<Pause>();
-			TutorialUI= make_shared<Tutorial_UI>();
-			EndLevelUI= make_shared<EndLevelScreen_UI>();
-
+			TutorialUI  = make_shared<Tutorial_UI>();
+			EndLevelUI = make_shared<EndLevelScreen_UI>();
 		}
 	}
 	catch ( COMException& exception )
@@ -99,6 +110,9 @@ void Level1::RenderFrame()
 			podium.Draw();
 		pressurePlate.Draw();
 
+		//particle system
+		pSystem.Draw();
+
 		// render the cubes
 		LevelContainer::RenderFrame();
 	}
@@ -128,6 +142,8 @@ void Level1::Update( const float dt )
 	else if ( pressurePlate.GetPositionFloat3().x < -30.0f )
 		offset = 0.1f;
 	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
+
+	pSystem.Update(dt);
 
 	// COLLISIONS
 	{

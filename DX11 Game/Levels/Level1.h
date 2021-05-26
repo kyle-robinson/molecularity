@@ -4,6 +4,7 @@
 
 #include "Sprite.h"
 #include "LevelStateMachine.h"
+#include "ParticleSystem.h"
 //ui
 #include<Graphics/UI_Manager.h>
 #include<UI/HUD_UI.h>
@@ -38,6 +39,7 @@ private:
 	shared_ptr<Tutorial_UI> TutorialUI;
 	shared_ptr<EndLevelScreen_UI> EndLevelUI;
 
+	ParticleSystem pSystem;
 };
 
 #endif

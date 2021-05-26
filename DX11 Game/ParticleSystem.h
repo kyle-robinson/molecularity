@@ -10,12 +10,14 @@ class ParticleSystem : public GameObject3D
 public:
 	bool Initialize(XMFLOAT3 pos, XMFLOAT3 rot);
 	bool InitializeParticles(ParticleBase particle, int maxParticles);
+
 	void Draw();
+	void Update(const float deltaTime) noexcept;
 
 protected:
 	void UpdateMatrix() override;
 
-	std::list<ParticleBase*> particles;
+	std::list<ParticleBase> particles;
 	XMMATRIX worldMatrix = XMMatrixIdentity();
 };
 

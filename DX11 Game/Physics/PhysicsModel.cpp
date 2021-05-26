@@ -27,7 +27,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 		{
 			Weight();
 			Friction( dt );
-			Velocity(dt);
+			Velocity( dt );
 		}
 		Acceleration();
 		Drag();
@@ -39,6 +39,18 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 		mVelocity = { 0.0f, 0.0f, 0.0f };
 		mAcceleration = { 0.0f, 0.0f, 0.0f };
 	}
+
+	mNetForce = { 0.0f, 0.0f, 0.0f };
+}
+
+void PhysicsModel::Update(const float dt)
+{
+	Weight();
+	Friction(dt);
+	Velocity(dt);
+	Acceleration();
+	Drag();
+	ComputePosition(dt);
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 }

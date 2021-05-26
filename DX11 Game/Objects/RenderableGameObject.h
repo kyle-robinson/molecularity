@@ -21,13 +21,15 @@ public:
 		ID3D11DeviceContext* context,
 		ConstantBuffer<CB_VS_matrix>& cb_vs_vertexshader );
 	void Draw();
+
 	std::shared_ptr<PhysicsModel> GetPhysicsModel() const noexcept { return physicsModel; }
 protected:
 	void UpdateMatrix() override;
 
+	std::shared_ptr<PhysicsModel> physicsModel;
+
 	Model model;
 	XMMATRIX worldMatrix = XMMatrixIdentity();
-	std::shared_ptr<PhysicsModel> physicsModel;
 };
 
 #endif

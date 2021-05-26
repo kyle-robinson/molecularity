@@ -16,7 +16,7 @@ bool ParticleSystem::InitializeParticles(ParticleBase particle, int numOfParticl
 	{
 		for (int i = 0; i < numOfParticles; i++)
 		{
-			particles.push_back(&particle);
+			particles.push_back(particle);
 		}
 		return true;
 	}
@@ -28,9 +28,17 @@ bool ParticleSystem::InitializeParticles(ParticleBase particle, int numOfParticl
 
 void ParticleSystem::Draw()
 {
-	for(ParticleBase* particle : particles)
+	for(ParticleBase particle : particles)
 	{
-		particle->Draw();
+		particle.Draw();
+	}
+}
+
+void ParticleSystem::Update(const float deltaTime) noexcept
+{
+	for (ParticleBase particle : particles)
+	{
+		particle.Update(deltaTime);
 	}
 }
 
