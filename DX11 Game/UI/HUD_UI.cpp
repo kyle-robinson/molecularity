@@ -144,7 +144,7 @@ void HUD_UI::CreateToolHud()
 		case 1: ToolInformationTexture = "crates\\wood.png"; break;
 		case 2: ToolInformationTexture = "crates\\stone.jpg"; break;
 		case 3: ToolInformationTexture = "crates\\iron.jpg"; break;
-		case 4: ToolInformationTexture = "crates\\alien.jpg"; break;
+		case 4: ToolInformationTexture = "crates\\alien.png"; break;
 		}
 	}
 						  break;
