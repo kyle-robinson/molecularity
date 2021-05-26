@@ -610,6 +610,8 @@ void Tutorial_UI::MoveToNextPannle()
 			stateNo++;
 			CurrentState = static_cast<TutorialState>(stateNo);
 			timer.Restart();
+			
+			Sound::Instance()->PlaySoundEffect( "Notification" );
 		}
 
 	}
