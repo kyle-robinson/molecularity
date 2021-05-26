@@ -21,7 +21,6 @@ public:
 	//eventsystem
 	void AddToEvent();
 	void HandleEvent(Event* event);
-
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );

@@ -41,14 +41,18 @@ bool Level1::OnCreate()
 }
 
 void Level1::OnSwitch()
-{
+{	
+	
+	CurrentLevel = 0;
+	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 	// update items on level switch here...
 	levelName = "Level1";
 	NextLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
-
+	
+	//UI
 	_UiManager->RemoveUI( "MainMenu" );
-
+	
 	//send out editable properties to hud for data
 	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
 
@@ -162,6 +166,6 @@ void Level1::Update( const float dt )
 	}
 
 	
-	//levelCompleted = true;
+
 	LevelContainer::LateUpdate( dt );
 }

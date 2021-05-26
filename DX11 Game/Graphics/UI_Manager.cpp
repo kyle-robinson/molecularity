@@ -9,19 +9,20 @@
 
 UI_Manager::UI_Manager()
 {
-	EventSystem::Instance()->AddClient(EVENTID::WorldOrthMatrixEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::RemoveUIItemEvent, this);
+	AddtoEvent();
 }
 
 void UI_Manager::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, ConstantBuffer<CB_VS_matrix_2D>* _cb_vs_matrix_2d)
 {
-
+	if (FontsList == nullptr) {
+		FontsList = make_shared<Fonts>();
+		FontsList->Initialize(device, context);
+	}
 
 	for (auto const& UIItem : UiList) {
 
 		UIItem.second->SetSizeOfScreen(WinSize);
-		UIItem.second->Inizalize(device, context, _cb_vs_matrix_2d);
+		UIItem.second->Inizalize(device, context, _cb_vs_matrix_2d,FontsList);
 		
 	}
 	
@@ -29,6 +30,8 @@ void UI_Manager::Initialize(ID3D11Device* device, ID3D11DeviceContext* context, 
 
 UI_Manager::~UI_Manager()
 {
+	RemoveAllUI();
+	RemoveFromEvent();
 }
 
 void UI_Manager::Update(float dt)
@@ -47,6 +50,8 @@ void UI_Manager::Update(float dt)
 			UIItem.second->Update(dt);
 		}
 	}
+
+
 }
 
 void UI_Manager::Draw(VertexShader& vert, PixelShader& pix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
@@ -128,6 +133,7 @@ void UI_Manager::HandleEvent(Event* event)
 	case EVENTID::WindowSizeChangeEvent:
 	{
 		WinSize = *static_cast<XMFLOAT2*>(event->GetData());
+		FontsList->ResizeViewAll(WinSize);
 	}
 	break;
 	case EVENTID::RemoveUIItemEvent:
@@ -141,6 +147,21 @@ void UI_Manager::HandleEvent(Event* event)
 
 
 
+}
+
+void UI_Manager::AddtoEvent()
+{	EventSystem::Instance()->AddClient(EVENTID::WorldOrthMatrixEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::RemoveUIItemEvent, this);
+	
+}
+
+void UI_Manager::RemoveFromEvent()
+{
+	EventSystem::Instance()->RemoveClient(EVENTID::WorldOrthMatrixEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::RemoveUIItemEvent, this);
+	
 }
 
 void UI_Manager::HideAllUI()

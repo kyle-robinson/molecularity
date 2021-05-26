@@ -191,9 +191,15 @@ void RenderWindow::HandleEvent(Event* event)
 						SetWindowPos(hWnd, NULL, ((mi.rcMonitor.right - mi.rcMonitor.left)/2)- width/2,
 							((mi.rcMonitor.bottom - mi.rcMonitor.top)/2)- hight/2, width, hight, SWP_SHOWWINDOW |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 					}
-
-
-					SetActiveWindow(hWnd);
+					
+					SetCapture(hWnd);
+					POINT pt;
+					pt.x = width/2;
+					pt.y = 0;
+					ClientToScreen(hWnd, &pt);
+					SetCursorPos(pt.x, pt.y);
+				
+					
 				}
 				
 			}

@@ -55,8 +55,8 @@ template<typename BackGroundType, typename BarType, typename FrontType>
 inline bool Energy_Bar_Widget<BackGroundType, BarType, FrontType>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
 
-	_Background.Initialize(Device, Contex, 100, 100, _TypeBackGround, cb_vs_matrix_2d);
-	Bar.Initialize(Device, Contex,200, 300, _TypeBar, cb_vs_matrix_2d);
+	_Background.Initialize(Device, Contex, 100, 100, "", cb_vs_matrix_2d);
+	Bar.Initialize(Device, Contex,200, 300, "", cb_vs_matrix_2d);
 	Front.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
 
 	return true;

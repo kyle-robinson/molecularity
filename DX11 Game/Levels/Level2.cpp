@@ -36,8 +36,19 @@ bool Level2::OnCreate()
 
 void Level2::OnSwitch()
 {
+	CurrentLevel = 1;
+	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
+
 	// update items on level switch here...
 	levelName = "Level2";
+	NextLevel = 2;
+	//UI
+	_UiManager->RemoveUI("MainMenu");
+	_UiManager->RemoveUI("Tutorial");
+	_UiManager->ShowAllUi();
+	_UiManager->HideUi("EndLevel");
+	
+	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
 
 	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
