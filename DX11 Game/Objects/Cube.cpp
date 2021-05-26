@@ -48,13 +48,16 @@ void Cube::Update( const float deltaTime ) noexcept
 {
     // update properties
     physicsModel->SetMass( 0.0f );
+    physicsModel->SetBounciness( 0.0f );
+    physicsModel->SetConductive( false );
+    physicsModel->SetMagnetic( false );
     switch ( editableProperties->GetBoxType() )
     {
-    case BoxType::Mesh:  physicsModel->SetMass( 10.0f );  break;
-    case BoxType::Wood:  physicsModel->SetMass( 30.0f );  break;
-    case BoxType::Stone: physicsModel->SetMass( 50.0f );  break;
-    case BoxType::Iron:  physicsModel->SetMass( 70.0f );  break;
-    case BoxType::Alien: physicsModel->SetMass( 100.0f ); break;
+    case BoxType::Mesh:  physicsModel->SetMass( 10.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( true ); physicsModel->SetMagnetic( true );   break;
+    case BoxType::Wood:  physicsModel->SetMass( 30.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( false ); physicsModel->SetMagnetic( false ); break;
+    case BoxType::Stone: physicsModel->SetMass( 50.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( false ); physicsModel->SetMagnetic( false ); break;
+    case BoxType::Iron:  physicsModel->SetMass( 70.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( true ); physicsModel->SetMagnetic( true );   break;
+    case BoxType::Alien: physicsModel->SetMass( 100.0f ); physicsModel->SetBounciness( 0.5f ); physicsModel->SetConductive( true ); physicsModel->SetMagnetic( true );  break;
     }
     switch ( editableProperties->GetBoxSize() )
     {
