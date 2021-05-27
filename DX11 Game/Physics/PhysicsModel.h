@@ -76,8 +76,6 @@ private:
 	bool mUseLaminar;
 
 	bool mIsHeld;
-	bool mActivated;
-	bool mUseLaminar;
 	bool mInvVelocity;
 
 	XMFLOAT3 mFriction;
