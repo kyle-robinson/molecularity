@@ -43,6 +43,9 @@ void Credits_UI::Update(float dt)
 	if (CurrentYPos < 0) {
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 	}
+	if ((1 << 15) & GetAsyncKeyState(VK_RETURN)) {
+		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
+	}
 
 }
 
