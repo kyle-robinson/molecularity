@@ -18,8 +18,6 @@ void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
 	);
 
 	AddToEvent();
-
-	
 }
 
 void Input::Update( const float dt )
@@ -42,8 +40,6 @@ void Input::HandleEvent( Event* event )
 {
 	switch ( event->GetEventID() )
 	{
-
-
 	case EVENTID::ShowCursorEvent:
 	{
 		EnableCursor();
@@ -73,12 +69,10 @@ void Input::HandleEvent( Event* event )
 	{
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast< DirectX::XMFLOAT2* >( event->GetData() );
 		mousePick.SetWidthHight( _SizeOfScreen.x, _SizeOfScreen.y );
-
 		
-			UiMouseData.LPress = false;
-			UiMouseData.MPress = false;
-			UiMouseData.RPress = false;
-		
+		UiMouseData.LPress = false;
+		UiMouseData.MPress = false;
+		UiMouseData.RPress = false;
 	}
 	break;
 	case EVENTID::UpdateSettingsEvent:
@@ -95,7 +89,6 @@ void Input::HandleEvent( Event* event )
 				string key = std::get<string>( setting.Setting ).c_str();
 
 				//convert to input commands
-
 				if ( key == "SCROLL WHEEL" ) {
 					MouseBinds[setting.Name + "_Up"] = Mouse::MouseEvent::EventType::WheelUp;
 					MouseBinds[setting.Name + "_Down"] = Mouse::MouseEvent::EventType::WheelDown;
@@ -117,7 +110,6 @@ void Input::HandleEvent( Event* event )
 					unsigned char* valChar = ( unsigned char* )key.c_str();
 					KeyBinds[setting.Name] = *valChar;
 				}
-
 			}
 
 			//mouse inputs
@@ -164,17 +156,21 @@ void Input::UpdateKeyboard( const float dt )
 		{
 			// set multi-tool type
 			if ( keycode == KeyBinds["Gun_State_One"] ) {
-				currentTool = ToolType::Convert;;
+				currentTool = ToolType::Convert;
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
 				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
 			}
 			if ( keycode == KeyBinds["Gun_State_Two"] ) {
 				currentTool = ToolType::Resize;
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );;
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
+				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
+			}
+			if ( keycode == KeyBinds["Gun_State_Three"] ) {
+				currentTool = ToolType::Bounce;
+				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
 				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
 			}
 
-			if ( keycode == KeyBinds["Gun_State_Three"] );
 			if ( keycode == KeyBinds["Gun_State_Four"] );
 			if ( keycode == KeyBinds["Gun_State_Five"] );
 			if ( keycode == KeyBinds["Gun_State_Six"] );
@@ -366,14 +362,12 @@ void Input::UpdateMouse( const float dt )
 						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
 
-
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( levelSystem->GetCurrentLevel()->GetGraphics()->GetWidth() / 2, levelSystem->GetCurrentLevel()->GetGraphics()->GetHeight() / 2, *levelSystem->GetCurrentLevel()->GetCube()[i] ) )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( true );
 				else
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( false );
 #pragma region Tool_Picking
-
 				// update box texture on click while hovering
 				if ( me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() )
 					EventSystem::Instance()->AddEvent( EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get() );
@@ -400,8 +394,6 @@ void Input::UpdateMouse( const float dt )
 					UiMouseData.MPress = true;
 				else
 					UiMouseData.MPress = false;
-
-
 
 				EventSystem::Instance()->AddEvent( EVENTID::UIMouseInput, &UiMouseData );
 			}

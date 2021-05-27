@@ -65,6 +65,11 @@ void Cube::Update( const float deltaTime ) noexcept
     case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() + 25.0f ); break;
     case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); break;
     }
+    switch ( editableProperties->GetBoxBounce() )
+    {
+    case BoxBounce::Solid: physicsModel->InvVelocity( false ); break;
+    case BoxBounce::Bouncy: physicsModel->InvVelocity( true ); break;
+    }
 
     // update physics
     if ( !isHeld )

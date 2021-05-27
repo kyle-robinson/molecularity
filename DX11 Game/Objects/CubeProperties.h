@@ -1,8 +1,10 @@
 #pragma once
-#include<Utility/stdafx.h>
 #ifndef CUBEPROPERTIES_H
 #define CUBEPROPERTIES_H
+
+#include<Utility/stdafx.h>
 #include<Tool_Structs.h>
+
 /// <summary>
 /// Editable object properties by the multitool.
 /// </summary>
@@ -12,6 +14,7 @@ public:
 	// Getters	
 	BoxType GetBoxType() const noexcept { return boxType; }
 	BoxSize GetBoxSize() const noexcept { return boxSize; }
+	BoxBounce GetBoxBounce() const noexcept { return boxBounce; }
 	
 	int GetSizeID() const noexcept { return sizeID; }
 	int GetMaterialID() const noexcept { return materialID; }
@@ -21,7 +24,6 @@ public:
 	float GetSizeMultiplier() const noexcept { return sizeMultiplier; }
 
 	// Setters
-	
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
 	void SetBoxSize( BoxSize size ) noexcept {
 		
@@ -36,6 +38,7 @@ public:
 			SetSizeMultiplier(2.0f);
 		}
 	}
+	void SetBoxBounce( BoxBounce bouncy ) noexcept { boxBounce = bouncy; }
 	
 	void SetSizeID( int id ) noexcept { sizeID = id; }
 	void SetMaterialID( int id ) noexcept { materialID = id; }
@@ -50,8 +53,10 @@ private:
 	bool isBurnable = false;
 	bool isReflective = false;
 	float sizeMultiplier = 1.0f;
+
 	BoxType boxType = BoxType::Wood;
 	BoxSize boxSize = BoxSize::Normal;
+	BoxBounce boxBounce = BoxBounce::Solid;
 	
 };
 
