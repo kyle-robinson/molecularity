@@ -117,7 +117,7 @@ void Main_Menu_UI::MenuButtons()
 	if (MainMenuButtons[0].Function(LoadedTextMap["Button_1"], ButtonTex, size, XMFLOAT2{ ButtonXPos, static_cast<float>(_SizeOfScreen.y * ButtonYPos) }, DirectX::Colors::Black, _MouseData)) {
 		//go to hub/save
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
-		LevelTo = 0;
+		LevelTo = 1;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 	}
 	ButtonYPos += 0.20;

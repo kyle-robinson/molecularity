@@ -156,3 +156,54 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 	}
 }
 #pragma endregion
+
+#pragma region Level2_Collisions
+void Collisions::CheckCollisionLevel2( std::unique_ptr<Camera>& camera, GameObject3D& object, float offset ) noexcept
+{
+	if ( camera->GetPositionFloat3().z < -7.5f ) // entrance collisions
+	{
+		// X-COLLISIONS
+		{
+			if ( camera->GetPositionFloat3().x >= 4.5f )
+				camera->SetPosition( 4.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+
+			if ( camera->GetPositionFloat3().x <= -4.5f )
+				camera->SetPosition( -4.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+		}
+
+		// Z-COLLISIONS
+		{
+			if ( camera->GetPositionFloat3().z <= -25.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -25.0f );
+		}
+	}
+	else // main area collisions
+	{
+		// X-COLLISIONS
+		{
+			if ( camera->GetPositionFloat3().x <= -offset )
+				camera->SetPosition( -offset, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+
+			if ( camera->GetPositionFloat3().x >= offset )
+				camera->SetPosition( offset, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+		}
+
+		// Z-COLLISIONS
+		{
+			if ( camera->GetPositionFloat3().z >= -1.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -1.0f );
+
+			if ( camera->GetPositionFloat3().x >= 4.5f && camera->GetPositionFloat3().z <= -7.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -7.0f );
+
+			if ( camera->GetPositionFloat3().x <= -4.5f && camera->GetPositionFloat3().z <= -7.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -7.0f );
+		}
+	}
+}
+
+void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept
+{
+
+}
+#pragma endregion
