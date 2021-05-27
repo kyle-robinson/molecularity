@@ -160,7 +160,7 @@ void HUD_UI::CreateToolHud()
 	case ToolType::Bounce:
 	{
 		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
-		switch ( static_cast< int >( Mode->GetCurrentOption().boxSize ) )
+		switch ( static_cast< int >( Mode->GetCurrentOption().boxBounce ) )
 		{
 		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Down.png"; break;
 		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_UP.png"; break;

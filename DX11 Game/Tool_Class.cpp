@@ -24,7 +24,6 @@ Tool_Class::~Tool_Class()
 
 void Tool_Class::SetCurrentTool(ToolType CurrentTool)
 {
-
 	switch (CurrentTool)
 	{
 	case ToolType::Convert:
