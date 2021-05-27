@@ -45,8 +45,8 @@ bool Level1::OnCreate()
 void Level1::OnSwitch()
 {
 	// Update Level System
-	CurrentLevel = 1;
 
+	CurrentLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 
 	levelName = "Level1";
