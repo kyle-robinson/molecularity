@@ -103,11 +103,15 @@
     },
     {
       "Name": "Bounce_Tool",
-      "Text": "Bounce:\nThis allows for the cube to bounce or not"
+      "Text": "Bounce:\nThis allows for the cube to bounce or not."
     },
     {
       "Name": "Magnatism_Tool",
-      "Text": "Magnetism:\nThis pulls the cube to you"
+      "Text": "Magnetism:\nThis pulls the cube to you."
+    },
+    {
+      "Name": "Conductivity_Tool",
+      "Text": "Conductivity:\nThis makes the cube conductive or not."
     }
   ],
   "TOOL_TIPS_Options": [
@@ -158,6 +162,14 @@
     {
       "Name": "Bounce_2",
       "Text": "This allows the cube to bounce."
+    },
+    {
+      "Name": "Conductivity_1",
+      "Text": "This stops the cube from being conductive."
+    },
+    {
+      "Name": "Conductivity_2",
+      "Text": "This allows the cube to be conductive."
     }
   ],
   "Tool_Controls": [
@@ -188,6 +200,10 @@
     {
       "Name": "Tool_4",
       "Text": ":  Magnetism"
+    },
+    {
+      "Name": "Tool_5",
+      "Text": ":  Conductivity"
     }
   ],
   "Other_Controls": [
