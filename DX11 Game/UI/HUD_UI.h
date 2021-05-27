@@ -30,7 +30,7 @@ private:
 	float hudScale = 1;
 	bool isHudActive=true;
 	TextToDraw PickupText;
-	Immage_Widget HUDImages[3];
+	Image_Widget HUDImages[3];
 	ColourBlock HudBakgrounds[2];
 	Energy_Bar_Widget<Colour, Colour, string> HUDenergyWidget;
 

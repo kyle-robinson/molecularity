@@ -32,7 +32,7 @@ public:
 
 protected:
 	string ConvertFromUnsignedCharTostring(unsigned char input);
-	//Graphics Infromation
+	//Graphics Information
 	Microsoft::WRL::ComPtr <ID3D11Device>_Device;
 	Microsoft::WRL::ComPtr <ID3D11DeviceContext> _Contex;
 	ConstantBuffer<CB_PS_scene>* _cb_ps_scene;

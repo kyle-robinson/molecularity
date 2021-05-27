@@ -2,19 +2,19 @@
   "Description": "The Eng Text File",
   "Main_Menu_Text": [
     {
-      "Name": "Buttion_1",
+      "Name": "Button_1",
       "Text": "Jouer"
     },
     {
-      "Name": "Buttion_2",
+      "Name": "Button_2",
       "Text": "Credits"
     },
     {
-      "Name": "Buttion_3",
+      "Name": "Button_3",
       "Text": "Parametres"
     },
     {
-      "Name": "Buttion_4",
+      "Name": "Button_4",
       "Text": "Sortir"
     }
   ],
@@ -30,13 +30,13 @@
       "Text": "Niveau termine"
     }
   ],
-  "EndLevelButtions_Text": [
+  "EndLevelButtons_Text": [
     {
-      "Name": "Buttion_1",
+      "Name": "Button_1",
       "Text": "Menu principal"
     },
     {
-      "Name": "Buttion_2",
+      "Name": "Button_2",
       "Text": "Niveau suivant"
     }
   ],
@@ -51,7 +51,7 @@
       "Text": "appuyez sur Entree pour continuer"
     }
   ],
-  "Movement_Controlls": [
+  "Movement_Controls": [
     {
       "Name": "Movement_Title",
       "Text": "Commandes de mouvement:"
@@ -90,7 +90,7 @@
   ],
   "TOOL_TIPS": [
     {
-      "Name": "infromation_Title",
+      "Name": "information_Title",
       "Text": "Informations sur l'outil"
     },
     {
@@ -148,13 +148,13 @@
       "Text": "Cela tire le cube auquel l'outil est destine."
     }
   ],
-  "TooL_Controlls": [
+  "Tool_Controls": [
     {
       "Name": "Controls_Title",
       "Text": "Controles d'outils"
     },
     {
-      "Name": "Infromation",
+      "Name": "Information",
       "Text": "L'outil vous permet de modifier\nles proprietes des cubes que vous trouverez\ndans les niveaux."
     },
     {
@@ -174,7 +174,7 @@
       "Text": ":  Magnetisme"
     }
   ],
-  "Other_Controlls": [
+  "Other_Controls": [
     {
       "Name": "Other_Title",
       "Text": "Autres contreles"
@@ -224,21 +224,21 @@
 
     }
   ],
-  "Pause_Buttions": [
+  "Pause_Buttons": [
     {
-      "Name": "Buttion_1",
+      "Name": "Button_1",
       "Text": "Jouer"
     },
     {
-      "Name": "Buttion_2",
+      "Name": "Button_2",
       "Text": "Menu principal"
     },
     {
-      "Name": "Buttion_3",
+      "Name": "Button_3",
       "Text": "Parametres"
     },
     {
-      "Name": "Buttion_4",
+      "Name": "Button_4",
       "Text": "Sortir"
     }
   ],
@@ -359,25 +359,25 @@
 
 
   ],
-  "Settings_Buttions": [
+  "Settings_Buttons": [
     {
-      "Name": "Buttion_1",
+      "Name": "Button_1",
       "Text": "General"
     },
     {
-      "Name": "Buttion_2",
+      "Name": "Button_2",
       "Text": "Graphique"
     },
     {
-      "Name": "Buttion_3",
+      "Name": "Button_3",
       "Text": "Sonner"
     },
     {
-      "Name": "Buttion_4",
+      "Name": "Button_4",
       "Text": "Les controles"
     },
     {
-      "Name": "Buttion_Accept",
+      "Name": "Button_Accept",
       "Text": "J'accepte"
     }
   ],

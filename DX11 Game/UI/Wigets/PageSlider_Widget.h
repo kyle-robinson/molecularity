@@ -25,8 +25,8 @@ private:
 	Sprite Slider;
     SliderTex _SliderColour;
 
-	float PY=0;
-	float PagePos=0;
+	float PY = 0;
+	float PagePos = 0;
 	float PageSize;
 };
 
@@ -48,7 +48,7 @@ template<typename BarTex, typename SliderTex>
 inline void PageSlider_Widget<BarTex, SliderTex>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix)
 {
 	Bar.UpdateTex(Device, _BarColour);
-	Bar.SetScale(_Size.x, _Size.y+100);
+	Bar.SetScale(_Size.x, _Size.y + 100);
 	Bar.SetInitialPosition(_Pos.x, _Pos.y, 0);
 
 	cb_ps_scene.data.alphaFactor = 0.8;
@@ -62,7 +62,7 @@ inline void PageSlider_Widget<BarTex, SliderTex>::Draw(ID3D11DeviceContext* Cont
 	Slider.SetInitialPosition(_Pos.x, _Pos.y + PY, 0);
 	Slider.SetScale(_Size.x, 100);
 
-	cb_ps_scene.data.alphaFactor = _AlfaFactor;
+	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = false;
 	
 	if (!cb_ps_scene.ApplyChanges()) return;

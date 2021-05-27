@@ -27,7 +27,7 @@ void Main_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, 
 
 	MainMenuBackground.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 5; i++) {
-		MainMenuButtions[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+		MainMenuButtons[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
 
 }
@@ -39,8 +39,8 @@ void Main_Menu_UI::Update(float dt)
 		MainMenuBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		Titlecard.Function("Title_Card\\TitleCard.dds", { static_cast<float>(_SizeOfScreen.x * 0.4),static_cast<float>(_SizeOfScreen.y * 0.12) }, { static_cast<float>((_SizeOfScreen.x * 0.5) - static_cast<float>(_SizeOfScreen.x * 0.4) / 2) ,0 });
 
-		MenuButtions();
-		LinkButtions();
+		MenuButtons();
+		LinkButtons();
 
 		
 	}
@@ -52,7 +52,7 @@ void Main_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX Worl
 	MainMenuBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 	Titlecard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 	for (unsigned int i = 0; i < 5; i++) {
-		MainMenuButtions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
+		MainMenuButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
 		Shaders::BindShaders(_Contex.Get(), vert, pix);
 	}
 }
@@ -109,47 +109,47 @@ void Main_Menu_UI::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
 }
 
-void Main_Menu_UI::MenuButtions()
+void Main_Menu_UI::MenuButtons()
 {
 	XMFLOAT2 size{ static_cast<float>(_SizeOfScreen.x * 0.15), static_cast<float>(_SizeOfScreen.y * 0.13) };
-	float ButtionXPos = static_cast<float>((_SizeOfScreen.x * 0.5) - size.x / 2);
-	float ButtionYPos = 0.25f;
-	if (MainMenuButtions[0].Function(LoadedTextMap["Buttion_1"], ButtionTex, size, XMFLOAT2{ ButtionXPos, static_cast<float>(_SizeOfScreen.y * ButtionYPos) }, DirectX::Colors::Black, _MouseData)) {
+	float ButtonXPos = static_cast<float>((_SizeOfScreen.x * 0.5) - size.x / 2);
+	float ButtonYPos = 0.25f;
+	if (MainMenuButtons[0].Function(LoadedTextMap["Button_1"], ButtonTex, size, XMFLOAT2{ ButtonXPos, static_cast<float>(_SizeOfScreen.y * ButtonYPos) }, DirectX::Colors::Black, _MouseData)) {
 		//go to hub/save
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
 		LevelTo = 0;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 	}
-	ButtionYPos += 0.20;
+	ButtonYPos += 0.20;
 
-	if (MainMenuButtions[1].Function(LoadedTextMap["Buttion_2"], ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
+	if (MainMenuButtons[1].Function(LoadedTextMap["Button_2"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//place holder
 		LevelTo = 3;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 	}
-	ButtionYPos += 0.20;
-	if (MainMenuButtions[2].Function(LoadedTextMap["Buttion_3"], ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	ButtonYPos += 0.20;
+	if (MainMenuButtons[2].Function(LoadedTextMap["Button_3"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
 		IsSettings = true;
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
 	}
-	ButtionYPos += 0.20;
-	if (MainMenuButtions[3].Function(LoadedTextMap["Buttion_4"], ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
+	ButtonYPos += 0.20;
+	if (MainMenuButtons[3].Function(LoadedTextMap["Button_4"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 		//exit
 		EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
 	}
 }
 
-void Main_Menu_UI::LinkButtions()
+void Main_Menu_UI::LinkButtons()
 {
 	//link to git hub
-	if (MainMenuButtions[4].Function("", ButtionTex2, { static_cast<float>(_SizeOfScreen.x * 0.055), static_cast<float>(_SizeOfScreen.y * 0.075) }, XMFLOAT2{ 2,  2 }, DirectX::Colors::Black, _MouseData)) {
+	if (MainMenuButtons[4].Function("", ButtonTex2, { static_cast<float>(_SizeOfScreen.x * 0.055), static_cast<float>(_SizeOfScreen.y * 0.075) }, XMFLOAT2{ 2,  2 }, DirectX::Colors::Black, _MouseData)) {
 		if (!openlink && open) {
 			openlink = true;
 		}
 
 	}
-	if (MainMenuButtions[4].GetIsPressed() == false) {
+	if (MainMenuButtons[4].GetIsPressed() == false) {
 		open = true;
 	}
 	if (openlink) {

@@ -30,7 +30,7 @@ namespace JSON
 	enum SettingType {
 		GeneralType,
 		SoundType,
-		ControllType,
+		ControlType,
 		GraphicType,
 		Invalid
 	};

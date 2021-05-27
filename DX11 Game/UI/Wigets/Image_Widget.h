@@ -1,13 +1,13 @@
 #pragma once
 #include "widget.h"
 
-class Immage_Widget :
+class Image_Widget :
     public widget
 {
 
 public:
-    Immage_Widget();
-    ~Immage_Widget();
+    Image_Widget();
+    ~Image_Widget();
 
     bool INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d);
     void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix);
@@ -17,7 +17,7 @@ public:
     
 private:
 
-    Sprite _Immage;
+    Sprite _Image;
     std::string _TexFile;
    
 
