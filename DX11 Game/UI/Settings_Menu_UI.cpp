@@ -120,6 +120,14 @@ void Settings_Menu_UI::TextLoad()
 {
 	vector<JSON::TextData>ButtionsText = TextLoader::Instance()->LoadText("Settings_Buttions");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(ButtionsText);
+
+	vector<JSON::TextData>setText = TextLoader::Instance()->LoadText("Settings_Names");
+	int i=0;
+	for (auto& text : _SettingsData) {
+		text.Text = setText[i].Text;
+		i++;
+	}
+	
 }
 
 void Settings_Menu_UI::HandleEvent(Event* event)
@@ -222,7 +230,7 @@ void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 		//language input
 		else if (string* input = std::get_if<string>(&settingData.Setting)) {
 
-			vector<string>Language = { "Eng", "Fr","Es"};
+			vector<string>Language = { "Eng", "Fr"};
 			SettingsDropdowns[SettingsDropCount].Function(Language, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, ButtionBackDrop, ButtionTexDrop, DirectX::Colors::White, *input, _MouseData);
 			settingData.Setting = SettingsDropdowns[SettingsDropCount].getSelected();
 			SettingsDropCount++;

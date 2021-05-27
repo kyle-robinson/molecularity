@@ -7,11 +7,11 @@
     },
     {
       "Name": "Buttion_2",
-      "Text": "Crédits"
+      "Text": "Credits"
     },
     {
       "Name": "Buttion_3",
-      "Text": "Paramètres"
+      "Text": "Parametres"
     },
     {
       "Name": "Buttion_4",
@@ -27,7 +27,7 @@
   "EndLevel_Text": [
     {
       "Name": "Level_End_Text",
-      "Text": "Niveau terminé"
+      "Text": "Niveau termine"
     }
   ],
   "EndLevelButtions_Text": [
@@ -43,12 +43,12 @@
   "Gen_Text": [
     {
       "Name": "Start_Text",
-      "Text": "Le but pour vous est de vous intriguer\ndans les pièces qui vous sont offertes."
+      "Text": "Le but pour vous est de vous intriguer\ndans les pieces qui vous sont offertes."
 
     },
     {
       "Name": "Move_Next_Text",
-      "Text": "appuyez sur Entrée pour continuer"
+      "Text": "appuyez sur Entree pour continuer"
     }
   ],
   "Movement_Controlls": [
@@ -95,7 +95,7 @@
     },
     {
       "Name": "Convert_Tool",
-      "Text": "Convertir:\nCela change le matériau du cube.\nCela transforme l'objet en "
+      "Text": "Convertir:\nCela change le materiau du cube.\nCela transforme l'objet en "
     },
     {
       "Name": "Size_Tool",
@@ -103,7 +103,7 @@
     },
     {
       "Name": "Magnatism_Tool",
-      "Text": "Magnétisme:\nCela tire le cube vers vous."
+      "Text": "Magnetisme:\nCela tire le cube vers vous."
     }
   ],
   "TOOL_TIPS_Options": [
@@ -129,15 +129,15 @@
     },
     {
       "Name": "Size_1",
-      "Text": "Cela rétrécit le cube."
+      "Text": "Cela retrecit le cube."
     },
     {
       "Name": "Size_2",
-      "Text": "Cela réinitialise le cube à sa taille normale."
+      "Text": "Cela reinitialise le cube a sa taille normale."
     },
     {
       "Name": "Size_3",
-      "Text": "Cela élargit le cube."
+      "Text": "Cela elargit le cube."
     },
     {
       "Name": "Magnatism_1",
@@ -145,17 +145,17 @@
     },
     {
       "Name": "Magnatism_2",
-      "Text": "Cela tire le cube auquel l'outil est destiné."
+      "Text": "Cela tire le cube auquel l'outil est destine."
     }
   ],
   "TooL_Controlls": [
     {
       "Name": "Controls_Title",
-      "Text": "Contrôles d'outils"
+      "Text": "Controles d'outils"
     },
     {
       "Name": "Infromation",
-      "Text": "L'outil vous permet de modifier\nles propriétés des cubes que vous trouverez\ndans les niveaux."
+      "Text": "L'outil vous permet de modifier\nles proprietes des cubes que vous trouverez\ndans les niveaux."
     },
     {
       "Name": "Tool_Mode_Switch",
@@ -171,13 +171,13 @@
     },
     {
       "Name": "Tool_3",
-      "Text": ":  Magnétisme"
+      "Text": ":  Magnetisme"
     }
   ],
   "Other_Controlls": [
     {
       "Name": "Other_Title",
-      "Text": "Autres contrôles"
+      "Text": "Autres contreles"
     },
     {
       "Name": "Other_Control_1",
@@ -210,7 +210,7 @@
   "Tip_Pause": [
     {
       "Name": "Tip_Level_1",
-      "Text": "Utilisez le bouton de l'autre côté"
+      "Text": "Utilisez le bouton de l'autre cote"
 
     },
     {
@@ -235,7 +235,7 @@
     },
     {
       "Name": "Buttion_3",
-      "Text": "Paramètres"
+      "Text": "Parametres"
     },
     {
       "Name": "Buttion_4",
@@ -249,15 +249,15 @@
     },
     {
       "Name": "WindowWidth",
-      "Text": "La taille de la fenêtre"
+      "Text": "La taille de la fenetre"
     },
     {
       "Name": "WindowHight",
-      "Text": "La taille de la fenêtre"
+      "Text": "La taille de la fenetre"
     },
     {
       "Name": "FullScreen",
-      "Text": "Plein écran"
+      "Text": "Plein ecran"
     },
     {
       "Name": "Language",
@@ -289,35 +289,35 @@
     },
     {
       "Name": "Change_Gun_State_Up",
-      "Text": "Modifier l'état de l'outil"
+      "Text": "Modifier l'etat de l'outil"
     },
     {
       "Name": "Change_Gun_State_Down",
-      "Text": "Modifier l'état de l'outil vers le bas"
+      "Text": "Modifier l'etat de l'outil vers le bas"
     },
     {
       "Name": "Gun_State_One",
-      "Text": "état d'outil un"
+      "Text": "etat d'outil un"
     },
     {
       "Name": "Gun_State_Two",
-      "Text": "état d'outil deux"
+      "Text": "etat d'outil deux"
     },
     {
       "Name": "Gun_State_Three",
-      "Text": "état d'outil trois"
+      "Text": "etat d'outil trois"
     },
     {
       "Name": "Gun_State_Four",
-      "Text": "état d'outil quatre"
+      "Text": "etat d'outil quatre"
     },
     {
       "Name": "Gun_State_Five",
-      "Text": "état d'outil cinq"
+      "Text": "etat d'outil cinq"
     },
     {
       "Name": "Gun_State_Six",
-      "Text": "état d'outil six"
+      "Text": "etat d'outil six"
     },
     {
       "Name": "Pause",
@@ -325,7 +325,7 @@
     },
     {
       "Name": "MasterSoundOn",
-      "Text": "Son maître"
+      "Text": "Son maitre"
     },
     {
       "Name": "MasterSoundVolume",
@@ -362,7 +362,7 @@
   "Settings_Buttions": [
     {
       "Name": "Buttion_1",
-      "Text": "Général"
+      "Text": "General"
     },
     {
       "Name": "Buttion_2",
@@ -374,7 +374,7 @@
     },
     {
       "Name": "Buttion_4",
-      "Text": "Les contrôles"
+      "Text": "Les controles"
     },
     {
       "Name": "Buttion_Accept",
@@ -489,11 +489,11 @@
     },
     {
       "Name": "",
-      "Text": "Modèles 3D"
+      "Text": "Modeles 3D"
 
     },
     {
-      "Name": "Modèles 3D",
+      "Name": "Modeles 3D",
       "Text": "Daniel WILSON"
 
     },

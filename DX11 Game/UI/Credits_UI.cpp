@@ -101,6 +101,10 @@ void Credits_UI::LoadImages()
 {
 	//immage data
 	ImmageData IData;
+	if (!_ImmageList.empty()) {
+		_ImmageList.clear();
+	}
+
 
 	IData.Name = "Headder";
 	IData.FileName = "Title_Card\\TitleCard.dds";
