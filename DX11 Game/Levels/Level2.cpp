@@ -36,12 +36,12 @@ bool Level2::OnCreate()
 
 void Level2::OnSwitch()
 {
-	CurrentLevel = 1;
+	CurrentLevel = 2;
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 
 	// update items on level switch here...
 	levelName = "Level2";
-	NextLevel = 2;
+	NextLevel = 3;
 	//UI
 	_UiManager->RemoveUI("MainMenu");
 	_UiManager->RemoveUI("Tutorial");

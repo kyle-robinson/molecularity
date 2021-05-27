@@ -181,11 +181,18 @@ void Pause::AddTipText()
 
 	switch (currentLevel)
 	{
-	case 0:
+	case 1:
 		pauseText._Text = LoadedTextMap["Tip_Level_1"];
 		break;
-	case 1:
+	case 2:
 		pauseText._Text = LoadedTextMap["Tip_Level_2"];
+		break;
+	case 3:
+		pauseText._Text = LoadedTextMap["Tip_Level_3"];
+		break;
+
+	case 4:
+		pauseText._Text = LoadedTextMap["Tip_Level_4"];
 		break;
 	default:
 		pauseText._Text = "This Is TEXT";

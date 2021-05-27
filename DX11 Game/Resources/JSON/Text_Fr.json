@@ -227,12 +227,17 @@
     },
     {
       "Name": "Tip_Level_2",
-      "Text": "Utilisez l'outil"
+      "Text": "Utilisez le rebond"
 
     },
     {
       "Name": "Tip_Level_3",
-      "Text": "aa"
+      "Text": "Ouvre la porte"
+
+    },
+    {
+      "Name": "Tip_Level_4",
+      "Text": "ooooooooo une chambre"
 
     }
   ],
