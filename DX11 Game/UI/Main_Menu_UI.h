@@ -16,13 +16,13 @@ private:
 	void AddtoEvent();
 	void RemoveFromEvent();
 
-	void MenuButtions();
-	void LinkButtions();
+	void MenuButtons();
+	void LinkButtons();
 private:
 	//MainMenu
 	ColourBlock MainMenuBackground;
-	Buttion_Widget<std::string> MainMenuButtions[5];
-	Immage_Widget Titlecard;
+	Button_Widget<std::string> MainMenuButtons[5];
+	Image_Widget Titlecard;
 
 	map<string, string> LoadedTextMap;
 	//github link
@@ -32,16 +32,16 @@ private:
 
 	UINT32 LevelTo=0;
 	bool IsSettings;
-	//buttion state textures
-	vector<string> ButtionTex = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds",
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds",
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
+	//button state textures
+	vector<string> ButtonTex = { "Resources\\Textures\\UI_Buttons\\Button_1_Down.dds",
+		"Resources\\Textures\\UI_Buttons\\Button_1_Hover.dds",
+		"Resources\\Textures\\UI_Buttons\\Button_1_Up.dds" };
 
 
 
 	//Logo from https://github.com/logos
-	vector<string> ButtionTex2 = { "Resources\\Textures\\UI_Buttions\\GitHubLogo.png",
-		"Resources\\Textures\\UI_Buttions\\GitHubLogo.png",
-		"Resources\\Textures\\UI_Buttions\\GitHubLogo.png" };
+	vector<string> ButtonTex2 = { "Resources\\Textures\\UI_Buttons\\GitHubLogo.png",
+		"Resources\\Textures\\UI_Buttons\\GitHubLogo.png",
+		"Resources\\Textures\\UI_Buttons\\GitHubLogo.png" };
 };
 

@@ -25,7 +25,7 @@ void ColourBlock::Draw( ID3D11DeviceContext* Context,
 	_ColourSprite.SetInitialPosition( _Pos.x, _Pos.y, 0 );
 	_ColourSprite.SetScale( _Size.x, _Size.y );
 
-	cb_ps_scene.data.alphaFactor = _AlfaFactor;
+	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = false;
 
 	if ( !cb_ps_scene.ApplyChanges() ) return;
@@ -38,7 +38,7 @@ bool ColourBlock::Function( Colour colour, DirectX::XMFLOAT2 size, DirectX::XMFL
 	_Colour = colour;
 	_Size = size;
 	_Pos = pos;
-	_AlfaFactor = AFactor;
+	_AlphaFactor = AFactor;
 
 	return true;
 }

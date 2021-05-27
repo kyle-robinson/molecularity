@@ -565,7 +565,7 @@
     <ClInclude Include="Credits_Level.h">
       <Filter>Headers\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\Buttion_Widget.h">
+    <ClInclude Include="UI\Wigets\Button_Widget.h">
       <Filter>UI\widgets</Filter>
     </ClInclude>
     <ClInclude Include="UI\Fonts.h">

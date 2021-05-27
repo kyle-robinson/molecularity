@@ -18,20 +18,20 @@ private:
 	void AddtoEvent();
 	void RemoveFromEvent();
 
-	void AddButtions();
+	void AddButtons();
 
 private:
 	map<string, string>LoadedTextMap;
-	Immage_Widget Image;
+	Image_Widget Image;
 	ColourBlock Background;
-	Buttion_Widget<string> Buttions[2];
+	Button_Widget<string> Buttons[2];
 	vector<TextToDraw> _TextList;
 	bool ToShow;
 	UINT32 Hub = 2;
 	UINT32 NextLevel = 0;
-	vector<string> ButtionTex = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds",
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds",
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
+	vector<string> ButtonTex = { "Resources\\Textures\\UI_Buttons\\Button_1_Down.dds",
+		"Resources\\Textures\\UI_Buttons\\Button_1_Hover.dds",
+		"Resources\\Textures\\UI_Buttons\\Button_1_Up.dds" };
 
 	
 };

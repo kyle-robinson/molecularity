@@ -82,8 +82,8 @@ void Input::HandleEvent( Event* event )
 		for ( auto& setting : a )
 		{
 			//only for player not debug key changes
-			if ( setting.Type == JSON::SettingType::ControllType ) {
-				//change controll
+			if ( setting.Type == JSON::SettingType::ControlType ) {
+				//change control
 
 				//control map
 				string key = std::get<string>( setting.Setting ).c_str();

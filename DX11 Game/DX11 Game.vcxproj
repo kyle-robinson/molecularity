@@ -440,7 +440,7 @@
     <ClInclude Include="UI\Tutorial_UI.h" />
     <ClInclude Include="UI\UI.h" />
     <ClInclude Include="UI\WidgetIncludes.h" />
-    <ClInclude Include="UI\Wigets\Buttion_Widget.h" />
+    <ClInclude Include="UI\Wigets\Button_Widget.h" />
     <ClInclude Include="UI\Wigets\ColourBlock.h" />
     <ClInclude Include="UI\Wigets\DataSlider_Widget.h" />
     <ClInclude Include="UI\Wigets\DropDown_Widget.h" />

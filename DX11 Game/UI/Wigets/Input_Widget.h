@@ -29,7 +29,7 @@ private:
 	unsigned char _Key;
     string CurrentText;
     XMVECTORF32 TextColour;
-    bool Selcted=false;
+    bool Selcted = false;
 
 };
 
@@ -58,7 +58,7 @@ void Input_Widget<background>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* D
 	Background.SetInitialPosition(_Pos.x, _Pos.y, 0);
 	Background.SetScale(_Size.x, _Size.y);
 
-	cb_ps_scene.data.alphaFactor = _AlfaFactor;
+	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = false;
 
 	if (!cb_ps_scene.ApplyChanges()) return;
