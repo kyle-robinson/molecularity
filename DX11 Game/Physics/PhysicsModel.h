@@ -34,8 +34,7 @@ public:
 	XMFLOAT3 GetAcceleration() const noexcept { return mAcceleration; }
 
 	float GetBounciness() const noexcept { return mBounciness; }
-	bool GetMagnetic() const noexcept { return mMagnetic; }
-	bool GetConductivity() const noexcept { return mConductive; }
+
 
 	// Set Forces
 	void SetMass( float mass ) noexcept { mMass = mass; }
@@ -74,8 +73,7 @@ private:
 	bool mUseLaminar;
 
 	bool mIsDissCube;
-	bool mMagnetic;
-	bool mConductive;
+
 	float mBounciness;
 
 	bool mIsHeld;

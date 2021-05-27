@@ -47,9 +47,9 @@ bool Application::Initialize(
 		fouth.join();
 
 		// add levels to state machine
+		MainMenu_ID = stateMachine.Add( MainMenu );
 		level1_ID = stateMachine.Add( level1 );
 		level2_ID = stateMachine.Add( level2 );
-		MainMenu_ID = stateMachine.Add( MainMenu );
 		Credits_ID = stateMachine.Add(Credits);
 
 		stateMachine.SwitchTo( MainMenu_ID );

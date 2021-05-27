@@ -52,7 +52,7 @@
     },
     {
       "Name": "Move_Next_Text",
-      "Text": "press enter to continue"
+      "Text": "press ENTER to continue"
     }
   ],
   "Movement_Controls": [
@@ -95,7 +95,7 @@
   "TOOL_TIPS": [
     {
       "Name": "information_Title",
-      "Text": "Tool information"
+      "Text": "Tool Information"
     },
     {
       "Name": "Convert_Tool",
@@ -107,11 +107,15 @@
     },
     {
       "Name": "Bounce_Tool",
-      "Text": "Bounce:\nThis allows for the cube to bounce or not"
+      "Text": "Bounce:\nThis allows for the cube to bounce or not."
     },
     {
       "Name": "Magnatism_Tool",
-      "Text": "Magnetism:\nThis pulls the cube to you"
+      "Text": "Magnetism:\nThis pulls the cube to you."
+    },
+    {
+      "Name": "Conductivity_Tool",
+      "Text": "Conductivity:\nThis makes the cube conductive or not."
     }
   ],
   "TOOL_TIPS_Options": [
@@ -154,6 +158,14 @@
     {
       "Name": "Bounce_2",
       "Text": "This allows the cube to bounce."
+    },
+    {
+      "Name": "Conductivity_1",
+      "Text": "This stops the cube from being conductive."
+    },
+    {
+      "Name": "Conductivity_2",
+      "Text": "This allows the cube to be conductive."
     }
   ],
   "Tool_Controls": [
@@ -184,6 +196,10 @@
     {
       "Name": "Tool_4",
       "Text": ":  Magnetism"
+    },
+    {
+      "Name": "Tool_5",
+      "Text": ":  Conductivity"
     }
   ],
   "Other_Controls": [
@@ -205,7 +221,7 @@
     },
     {
       "Name": "Other_Control_4",
-      "Text": "RMB : throw cube"
+      "Text": "RMB : Throw cube"
     }
   ],
   "Pause_Text": [
@@ -227,12 +243,17 @@
     },
     {
       "Name": "Tip_Level_2",
-      "Text": "Use the tool"
+      "Text": "Use the bounce"
 
     },
     {
       "Name": "Tip_Level_3",
-      "Text": "aa"
+      "Text": "Open the door"
+
+    },
+    {
+      "Name": "Tip_Level_4",
+      "Text": "ooooooooo a room"
 
     }
   ],
@@ -309,27 +330,27 @@
     },
     {
       "Name": "Gun_State_One",
-      "Text": "tool State One"
+      "Text": "Tool State One"
     },
     {
       "Name": "Gun_State_Two",
-      "Text": "tool State Two"
+      "Text": "Tool State Two"
     },
     {
       "Name": "Gun_State_Three",
-      "Text": "tool State Three"
+      "Text": "Tool State Three"
     },
     {
       "Name": "Gun_State_Four",
-      "Text": "tool State Four"
+      "Text": "Tool State Four"
     },
     {
       "Name": "Gun_State_Five",
-      "Text": "tool State Five"
+      "Text": "Tool State Five"
     },
     {
       "Name": "Gun_State_Six",
-      "Text": "tool State Six"
+      "Text": "Tool State Six"
     },
     {
       "Name": "Pause",

@@ -25,7 +25,8 @@ public:
 	bool GetBoxMagneticMove() { return isMagneticMove; }
 
 	XMFLOAT3 GetOutlineColor() const noexcept { return outlineColor; }
-
+	bool GetConductivity() const noexcept { return mConductive; }
+	bool GetIsMagnetic() const noexcept { return isMagnetic; }
 	// Setters
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
 	void SetBoxSize( BoxSize size ) noexcept {
@@ -41,9 +42,12 @@ public:
 			SetSizeMultiplier(2.0f);
 		}
 	}
+
+
+	void SetMagnetic(bool mag)noexcept { isMagnetic = mag; }
 	void SetBoxMagneticMove(bool isMove) noexcept { isMagneticMove = isMove; }
 	void SetBoxBounce( BoxBounce bouncy ) noexcept { boxBounce = bouncy; }
-  
+	void SetConductive(bool conductive) noexcept { mConductive = conductive; }
 	void SetSizeID( int id ) noexcept { sizeID = id; }
 	void SetMaterialID( int id ) noexcept { materialID = id; }
 
@@ -60,6 +64,7 @@ private:
 	bool isReflective = false;
 	bool isMagnetic = false;
 	bool isMagneticMove = false;
+	bool mConductive=false;
 	float sizeMultiplier = 1.0f;
 	XMFLOAT3 outlineColor = { 0.0f, 0.0f, 0.0f };
 

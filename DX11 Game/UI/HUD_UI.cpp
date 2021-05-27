@@ -180,6 +180,16 @@ void HUD_UI::CreateToolHud()
 		}
 	}
 	break;
+	case ToolType::Conductive:
+	{
+		TextFile = "HUD\\Tool_Assets\\Conductivity.png";
+		switch (static_cast<int>(Mode->GetCurrentOption().boxConductive))
+		{
+		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\Conductivity_Off..png"; break;
+		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\Conductivity_On.png"; break;
+		}
+	}
+	break;
 	default:
 		TextFile = "";
 		ToolInformationTexture = "";

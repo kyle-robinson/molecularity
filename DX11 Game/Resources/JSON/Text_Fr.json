@@ -108,6 +108,10 @@
     {
       "Name": "Magnatism_Tool",
       "Text": "Magnetisme:\nCela tire le cube vers vous."
+    },
+    {
+      "Name": "Conductivity_Tool",
+      "Text": "Conductivite:\nCela rend le cube conducteur ou non."
     }
   ],
   "TOOL_TIPS_Options": [
@@ -150,6 +154,14 @@
     {
       "Name": "Bounce_2",
       "Text": "Cela permet au cube de rebondir."
+    },
+    {
+      "Name": "Conductivity_1",
+      "Text": "Cela empeche le cube d'etre conducteur."
+    },
+    {
+      "Name": "Conductivity_2",
+      "Text": "Cela permet au cube d'etre conducteur."
     }
   ],
   "Tool_Controls": [
@@ -176,6 +188,10 @@
     {
       "Name": "Tool_3",
       "Text": ":  Magnetisme"
+    },
+    {
+      "Name": "Tool_5",
+      "Text": ":  Conductivite"
     }
   ],
   "Other_Controls": [
@@ -219,12 +235,17 @@
     },
     {
       "Name": "Tip_Level_2",
-      "Text": "Utilisez l'outil"
+      "Text": "Utilisez le rebond"
 
     },
     {
       "Name": "Tip_Level_3",
-      "Text": "aa"
+      "Text": "Ouvre la porte"
+
+    },
+    {
+      "Name": "Tip_Level_4",
+      "Text": "ooooooooo une chambre"
 
     }
   ],

@@ -45,11 +45,12 @@ bool Level1::OnCreate()
 void Level1::OnSwitch()
 {
 	// Update Level System
-	CurrentLevel = 0;
+
+	CurrentLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 
 	levelName = "Level1";
-	NextLevel = 1;
+	NextLevel = 2;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
 
 	// Update HUD with tool data
