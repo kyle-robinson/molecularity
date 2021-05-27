@@ -1,6 +1,17 @@
 #include "SpotLight.h"
 #include "Camera.h"
+#include "Tool_Structs.h"
 #include <imgui/imgui.h>
+
+SpotLight::SpotLight()
+{
+	EventSystem::Instance()->AddClient( EVENTID::ChangeToolEvent, this );
+}
+
+SpotLight::~SpotLight()
+{
+	EventSystem::Instance()->RemoveClient( EVENTID::ChangeToolEvent, this );
+}
 
 // "Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 // FREE Low Poly Cyberpunk-Sci fi Handgun Free low-poly 3D model (https://www.cgtrader.com/free-3d-models/military/gun/free-low-poly-cyberpunk-sci-fi-handgun)
@@ -12,10 +23,23 @@ bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_m
 		HRESULT hr = cb_ps_spot.Initialize( GetDevice( gfx ), GetContext( gfx ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'SpotLight' constant buffer!" );
 
-		//if ( !Light::Initialize( "Resources\\Models\\Flashlight.fbx", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
-		//if ( !Light::Initialize( "Resources\\Models\\ShrinkGun3.fbx", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
-		if ( !Light::Initialize( "Resources\\Models\\Cybergun.fbx", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
-			return false;
+		// get model file paths
+		std::string filePath = "Resources\\Models\\Gun\\Cybergun_";
+		std::vector<std::string> fileNames;
+		fileNames.push_back( "Blue.fbx" );
+		fileNames.push_back( "Red.fbx" );
+		fileNames.push_back( "Green.fbx" );
+		fileNames.push_back( "Yellow.fbx" );
+
+		// load models
+		for ( uint32_t i = 0; i < fileNames.size(); i++ )
+		{
+			Model newModel;
+			newModel.Initialize( filePath + fileNames[i], GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix );
+			gunModels.push_back( std::move( newModel ) );
+		}
+
+		model = gunModels[0];
 	}
 	catch ( COMException& exception )
 	{
@@ -84,4 +108,32 @@ void SpotLight::UpdateModelPosition( std::unique_ptr<Camera>& camera )
 		camera->GetRotationFloat3().y - XM_PIDIV2,
 		-camera->GetRotationFloat3().x
 	);
+}
+
+void SpotLight::HandleEvent( Event* event )
+{
+	switch ( event->GetEventID() )
+	{
+	case EVENTID::ChangeToolEvent:
+		switch ( *static_cast< ToolType* >( event->GetData() ) )
+		{
+		case ToolType::Convert:
+			model = gunModels[0];
+			color = { 0.45f, 0.72f, 1.0f };
+			break;
+		case ToolType::Resize:
+			model = gunModels[1];
+			color = { 1.0f, 0.46f, 0.45f };
+			break;
+		case ToolType::Bounce:
+			model = gunModels[2];
+			color = { 0.72f, 0.86f, 0.34f };
+			break;
+		case ToolType::Magnetism:
+			model = gunModels[3];
+			color = { 1.0f, 0.91f, 0.65f };
+			break;
+		}
+		break;
+	}
 }

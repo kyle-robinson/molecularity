@@ -1,6 +1,6 @@
 #include "StencilOutline.h"
-#include "RenderableGameObject.h"
 #include "InputLayout.h"
+#include "SpotLight.h"
 #include "Cube.h"
 #include <imgui/imgui.h>
 
@@ -33,7 +33,7 @@ void StencilOutline::DrawWithOutline( Graphics& gfx, Cube& cube, ConstantBuffer<
 
 	// scale the cube and draw the stencil outline, ignoring the pixels previously written to the buffer
 	Shaders::BindShaders( GetContext( gfx ), vertexShader_outline, pixelShader_outline );
-	cb_ps_outline.data.outlineColor = color;
+	cb_ps_outline.data.outlineColor = cube.GetEditableProperties()->GetOutlineColor();
 	if ( !cb_ps_outline.ApplyChanges() ) return;
 	GetContext( gfx )->PSSetConstantBuffers( 6u, 1u, cb_ps_outline.GetAddressOf() );
 	GetStencil( gfx, "Mask" )->Bind( gfx );
@@ -57,17 +57,15 @@ void StencilOutline::DrawWithOutline( Graphics& gfx, Cube& cube, ConstantBuffer<
 	cube.Draw( cb_vs_matrix, texture );
 }
 
-void StencilOutline::DrawWithOutline( Graphics& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point )
+void StencilOutline::DrawWithOutline( Graphics& gfx, SpotLight& object, ConstantBuffer<CB_PS_point>& cb_ps_point )
 {
-	static XMFLOAT3 outlineColor = { 0.0f, 0.29f, 0.85f };
-
 	// write pixels to the buffer, which will act as the stencil mask
 	GetStencil( gfx, "Write" )->Bind( gfx );
 	object.Draw();
 
 	// scale the model and draw the stencil outline, ignoring the pixels previously written to the buffer
 	Shaders::BindShaders( GetContext( gfx ), vertexShader_outline, pixelShader_outline );
-	cb_ps_outline.data.outlineColor = outlineColor;
+	cb_ps_outline.data.outlineColor = object.GetColor();
 	if ( !cb_ps_outline.ApplyChanges() ) return;
 	GetContext( gfx )->PSSetConstantBuffers( 6u, 1u, cb_ps_outline.GetAddressOf() );
 	GetStencil( gfx, "Mask" )->Bind( gfx );

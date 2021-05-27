@@ -20,7 +20,6 @@ private:
 	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;
 
-
 	shared_ptr<Main_Menu_UI> Menu;
 	shared_ptr<Settings_Menu_UI> settingsUi;
 };
