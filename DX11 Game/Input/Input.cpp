@@ -387,16 +387,6 @@ void Input::UpdateMouse( const float dt )
 							cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt
 						);
 					}
-					
-				}
-
-				// testing sound, feel free to move or remove
-				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
-				{
-					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
-						Sound::Instance()->PlaySoundEffect( "MenuClick" );
-					else
-						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
         
 #pragma region Tool_Picking

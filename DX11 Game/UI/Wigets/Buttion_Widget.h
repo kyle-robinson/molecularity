@@ -108,6 +108,7 @@ inline bool Buttion_Widget<ButtionTexType>::Function(std::string text,vector<But
     	
     		ButtionColour = ButtionText[0];
     		IsPressed = true;
+            Sound::Instance()->PlaySoundEffect( "MenuClick" );
     		return true;
     		break;
     	case Hover:
