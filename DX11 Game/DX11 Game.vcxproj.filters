@@ -259,7 +259,9 @@
       <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="TextLoader.cpp" />
-    <ClCompile Include="Tool_Bounce.cpp" />
+    <ClCompile Include="Tool_Bounce.cpp">
+      <Filter>Tool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -590,7 +592,9 @@
       <Filter>Tool</Filter>
     </ClInclude>
     <ClInclude Include="TextLoader.h" />
-    <ClInclude Include="Tool_Bounce.h" />
+    <ClInclude Include="Tool_Bounce.h">
+      <Filter>Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">

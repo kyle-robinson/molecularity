@@ -3,7 +3,6 @@
 #include "Collisions.h"
 #include "Rasterizer.h"
 
-
 MainMenu_Level::MainMenu_Level(LevelStateMachine& stateMachine) : levelStateMachine(stateMachine){}
 
 bool MainMenu_Level::OnCreate()
@@ -13,12 +12,8 @@ bool MainMenu_Level::OnCreate()
 		// DRAWABLES
 		{
 			//add level UI 
-			 Menu = make_shared<Main_Menu_UI>();
-		
-			 settingsUi = make_shared<Settings_Menu_UI>();
-			
-
-			
+			Menu = make_shared<Main_Menu_UI>();
+			settingsUi = make_shared<Settings_Menu_UI>();
 		}
 	}
 	catch (COMException& exception)
@@ -54,7 +49,7 @@ void MainMenu_Level::Render()
 	// Render to sub viewport first using static camera
 	GetMultiViewport()->SetUsingSub();
 	BeginFrame();
-	RenderFrame();
+	//RenderFrame();
 
 	// Render main scene next with main/debug camera
 	GetMultiViewport()->SetUsingMain();
@@ -68,16 +63,6 @@ void MainMenu_Level::RenderFrame()
 {
 	// render ligths/skysphere
 	LevelContainer::RenderFrameEarly();
-	// render the cubes
-	LevelContainer::RenderFrame();
-
-	if (cameras->GetCurrentCamera() != JSON::CameraType::Static)
-	{
-		Shaders::BindShaders(graphics->context.Get(), graphics->vertexShader_2D, graphics->pixelShader_2D);
-		cb_ps_scene.data.useTexture = TRUE;
-		if (!cb_ps_scene.ApplyChanges()) return;
-		graphics->context->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
-	}
 }
 void MainMenu_Level::Update(const float dt)
 {
