@@ -16,17 +16,19 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 
 	AddtoEvent();
 	UI::Inizalize(device, contex, cb_vs_matrix_2d,fonts);
-	_isPuased = false;
+	_isPaused = false;
 
-	
+	//text
+	TextLoad();
+
 	FontsList->AddFont("OpenSans_50", "OpenSans_50.spritefont");
 	FontsList->AddFont("OpenSans_12", "OpenSans_12.spritefont");
 
 
 	_TitleCard.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
-	PuaseBakgtound.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+	PauseBackground.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 4; i++) {
-		PuaseButtions[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+		PauseButtons[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
 
 
@@ -34,19 +36,19 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 
 void Pause::Update(float dt)
 {
-	if (_isPuased) {
+	if (_isPaused) {
 		//bakground
-		PuaseBakgtound.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
+		PauseBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		//title card
-		_TitleCard.Function("Title_Card\\TitleCard.dds", { static_cast<float>(_SizeOfScreen.x*0.5),static_cast<float>(_SizeOfScreen.y*0.12) }, { 0,0 });
-		ButtionCreate();
+		_TitleCard.Function("Title_Card\\TitleCard.png", { static_cast<float>(_SizeOfScreen.x*0.5),static_cast<float>(_SizeOfScreen.y*0.12) }, { 0,0 });
+		ButtonCreate();
 
 		//Headder text
-		TextToDraw puaseText;
-		puaseText._Colour = Colors::Black;
-		puaseText._Position = { 0,static_cast<float>(_SizeOfScreen.y * 0.12) };
-		puaseText._Text = "Pause";
-		PuaseTextTitles.push_back(puaseText);
+		TextToDraw pauseText;
+		pauseText._Colour = Colors::Black;
+		pauseText._Position = { 0,static_cast<float>(_SizeOfScreen.y * 0.12) };
+		pauseText._Text = LoadedTextMap["Title"];
+		PauseTextTitles.push_back(pauseText);
 
 		AddTipText();
 	}
@@ -55,25 +57,38 @@ void Pause::Update(float dt)
 void Pause::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
 	Shaders::BindShaders(_Contex.Get(), vert, pix);
-	if (_isPuased) {
-		PuaseBakgtound.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+	if (_isPaused) {
+		PauseBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		_TitleCard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		for (unsigned int i = 0; i < 4; i++) {
-			PuaseButtions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
+			PauseButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
 			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
 
-		for (UINT i = 0; i < PuaseTextTitles.size(); i++)
+		for (UINT i = 0; i < PauseTextTitles.size(); i++)
 		{
-			FontsList->GetFont("OpenSans_50")->RenderString(PuaseTextTitles[i]._Text, PuaseTextTitles[i]._Position, PuaseTextTitles[i]._Colour);
+			FontsList->GetFont("OpenSans_50")->RenderString(PauseTextTitles[i]._Text, PauseTextTitles[i]._Position, PauseTextTitles[i]._Colour);
 		}
-		PuaseTextTitles.clear();
-		for (UINT i = 0; i < PuaseTextPG.size(); i++)
+		PauseTextTitles.clear();
+		for (UINT i = 0; i < PauseTextPG.size(); i++)
 		{
-			FontsList->GetFont("OpenSans_12")->RenderString(PuaseTextPG[i]._Text, PuaseTextPG[i]._Position, PuaseTextPG[i]._Colour);
+			FontsList->GetFont("OpenSans_12")->RenderString(PauseTextPG[i]._Text, PauseTextPG[i]._Position, PauseTextPG[i]._Colour);
 		}
-		PuaseTextPG.clear();
+		PauseTextPG.clear();
 	}
+}
+
+void Pause::TextLoad()
+{
+	vector<JSON::TextData>ButtonsText = TextLoader::Instance()->LoadText("Pause_Buttons");
+	LoadedTextMap = TextLoader::Instance()->ConvertToMap(ButtonsText);
+	vector<JSON::TextData>TipText = TextLoader::Instance()->LoadText("Tip_Pause");
+	map<string, string>temp= TextLoader::Instance()->ConvertToMap(TipText);
+	LoadedTextMap.insert(temp.begin(), temp.end());
+	vector<JSON::TextData>TitleText = TextLoader::Instance()->LoadText("Pause_Text");
+	temp = TextLoader::Instance()->ConvertToMap(TitleText);
+	LoadedTextMap.insert(temp.begin(), temp.end());
+	
 }
 
 void Pause::HandleEvent(Event* event)
@@ -82,7 +97,7 @@ void Pause::HandleEvent(Event* event)
 	{
 	case EVENTID::GamePauseEvent:
 	{
-		_isPuased = true;
+		_isPaused = true;
 	}
 	break;
 	case EVENTID::SetCurrentLevelEvent:
@@ -128,24 +143,26 @@ void Pause::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::SetCurrentLevelEvent, this);
 }
 
-void Pause::ButtionCreate()
+void Pause::ButtonCreate()
 {
-	//Buttions
-	if (PuaseButtions[0].Function("Play", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>(_SizeOfScreen.y * 0.25) }, DirectX::Colors::Black, _MouseData)) {
+	//Buttons
+	if (PauseButtons[0].Function(LoadedTextMap["Button_1"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>(_SizeOfScreen.y * 0.25) }, DirectX::Colors::Black, _MouseData)) {
 		//back to game
-		_isPuased = false;
+		_isPaused = false;
 		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
-
+		
 	}
-	else if (PuaseButtions[1].Function("Reset", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
+	else if (PauseButtons[1].Function(LoadedTextMap["Button_2"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//reset level
+		_isPaused = false;
+		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
 	}
-	else if (PuaseButtions[2].Function("Settings", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	else if (PauseButtons[2].Function(LoadedTextMap["Button_3"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
 	}
-	else if (PuaseButtions[3].Function("Exit", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
+	else if (PauseButtons[3].Function(LoadedTextMap["Button_4"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 		//exit
 		EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
 	}
@@ -153,29 +170,29 @@ void Pause::ButtionCreate()
 
 void Pause::AddTipText()
 {
-	TextToDraw puaseText;
+	TextToDraw pauseText;
 	XMVECTOR FontSize;
-	puaseText._Colour = Colors::Black;
+	pauseText._Colour = Colors::Black;
 
-	puaseText._Text = "Tip";
-	FontSize=FontsList->GetFont("OpenSans_50")->GetSpriteFont()->MeasureString(puaseText._Text.c_str());
-	puaseText._Position = { (_SizeOfScreen.x / 2)-(XMVectorGetX(FontSize)/2),_SizeOfScreen.y / 3 };
-	PuaseTextTitles.push_back(puaseText);
+	pauseText._Text = LoadedTextMap["Tip_Title"];
+	FontSize=FontsList->GetFont("OpenSans_50")->GetSpriteFont()->MeasureString(pauseText._Text.c_str());
+	pauseText._Position = { (_SizeOfScreen.x / 2)-(XMVectorGetX(FontSize)/2),_SizeOfScreen.y / 3 };
+	PauseTextTitles.push_back(pauseText);
 
 	switch (currentLevel)
 	{
 	case 0:
-		puaseText._Text = "Use the Buttion on the other side";
+		pauseText._Text = LoadedTextMap["Tip_Level_1"];
 		break;
 	case 1:
-		puaseText._Text = "Use the tool";
+		pauseText._Text = LoadedTextMap["Tip_Level_2"];
 		break;
 	default:
-		puaseText._Text = "This Is TEXT";
+		pauseText._Text = "This Is TEXT";
 		break;
 	}
 	
-	FontSize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(puaseText._Text.c_str());
-	puaseText._Position = { static_cast<float>(_SizeOfScreen.x * 0.5) - (XMVectorGetX(FontSize) / 2),static_cast<float>(_SizeOfScreen.y * 0.5) };
-	PuaseTextPG.push_back(puaseText);
+	FontSize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(pauseText._Text.c_str());
+	pauseText._Position = { static_cast<float>(_SizeOfScreen.x * 0.5) - (XMVectorGetX(FontSize) / 2),static_cast<float>(_SizeOfScreen.y * 0.5) };
+	PauseTextPG.push_back(pauseText);
 }

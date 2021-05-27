@@ -27,20 +27,19 @@ private:
     float currentFraction;
     int CurrentPercent;
 
-	//Bakground 
+	//Background 
     Sprite _Background;
     BackGroundType _TypeBackGround;
-	bool updateTexBackground= true;
+	
 
-	//Moveing bar
+	//Moving bar
     Sprite Bar;
     BarType _TypeBar;
-	bool updateTexBar= true;
-
+	
 	//Front
     Sprite Front;
     FrontType _TypeFront;
-	bool updateTexFront=true;
+	
 
 
 };
@@ -65,10 +64,10 @@ inline bool Energy_Bar_Widget<BackGroundType, BarType, FrontType>::INITSprite(ID
 template<typename BackGroundType, typename BarType, typename FrontType>
 inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix)
 {
-	//bakground
-	if (updateTexBackground) {
+	//background
+	
 		_Background.UpdateTex(Device, _TypeBackGround);
-	}
+	
 	_Background.SetInitialPosition(_Pos.x, _Pos.y, 0);
 	_Background.SetScale(_Size.x, _Size.y,0 );
 	
@@ -81,9 +80,9 @@ inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Draw(ID3D11De
 	_Background.Draw(WorldOrthoMatrix);
 
 	//Bar
-	if (updateTexBar) {
+	
 		Bar.UpdateTex(Device, _TypeBar);
-	}
+	
 	Bar.SetInitialPosition(_Pos.x, _Pos.y, 0);
 	Bar.SetScale(_Size.x * currentFraction, _Size.y, 0);
 	cb_ps_scene.data.alphaFactor = 1.0f;
@@ -99,7 +98,7 @@ inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Draw(ID3D11De
 			Front.UpdateTex(Device, _TypeFront);
 		
 		Front.SetInitialPosition(_Pos.x, _Pos.y, 0);
-		Front.SetScale(_Size.x+15, _Size.y, 0);
+		Front.SetScale(_Size.x+13.5f, _Size.y, 0);
 
 		cb_ps_scene.data.alphaFactor = 1.0f;
 		cb_ps_scene.data.useTexture = true;
@@ -114,32 +113,13 @@ inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Draw(ID3D11De
 template<typename BackGroundType, typename BarType, typename FrontType>
 inline void Energy_Bar_Widget<BackGroundType, BarType, FrontType>::Function(BackGroundType TexBackGround, BarType TexBar, FrontType TexFront, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, float fraction)
 {
-	if (_TypeBackGround== TexBackGround) {
-		updateTexBackground = false;
-	}
-	else {
+	
+	
+	
 		_TypeBackGround = TexBackGround;
-		updateTexBackground = true;
-	}
-	if (_TypeBar == TexBar)
-	{
-		updateTexBar = false;
-	}
-	else
-	{
 		_TypeBar = TexBar;
-		updateTexBar = true;
-	}
-
-	if (_TypeFront == TexFront)
-	{
-		updateTexFront = false;
-	}
-	else 
-	{
 		_TypeFront = TexFront;
-		updateTexFront = true;
-	}
+	
 
 	_Size = size;
 	_Pos = pos;

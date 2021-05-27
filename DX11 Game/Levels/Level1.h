@@ -30,8 +30,8 @@ private:
 	// Scene Objects
 	Sprite crosshair;
 	RenderableGameObject room;
-	RenderableGameObject podium;
 	RenderableGameObject pressurePlate;
+	RenderableGameObject securityCamera;
 
 	//UI
 	shared_ptr<HUD_UI> HUD;

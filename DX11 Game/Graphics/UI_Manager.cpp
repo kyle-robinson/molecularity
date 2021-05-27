@@ -141,7 +141,26 @@ void UI_Manager::HandleEvent(Event* event)
 		RemoveUI(*static_cast<string*>(event->GetData()));
 	}
 	break;
+	case EVENTID::ChangeLanguageEvent:
+	{
+		for (auto const& UIItem : UiList)
+		{
+			UIItem.second->TextLoad();
+		}
+	}
+	break;
+	case EVENTID::UpdateSettingsEvent: {
+		std::vector<JSON::SettingData> SettingsData = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		for (auto& setting : SettingsData)
+		{
+			
 
+			if (setting.Name == "Language") {
+				TextLoader::Instance()->ChangeLang(std::get<string>(setting.Setting));
+			}
+		}
+	}
+									 break;
 	}
 
 
@@ -153,7 +172,8 @@ void UI_Manager::AddtoEvent()
 {	EventSystem::Instance()->AddClient(EVENTID::WorldOrthMatrixEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::RemoveUIItemEvent, this);
-	
+	EventSystem::Instance()->AddClient(EVENTID::ChangeLanguageEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
 }
 
 void UI_Manager::RemoveFromEvent()
@@ -161,7 +181,8 @@ void UI_Manager::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::WorldOrthMatrixEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::RemoveUIItemEvent, this);
-	
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeLanguageEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
 }
 
 void UI_Manager::HideAllUI()

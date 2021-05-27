@@ -14,7 +14,7 @@ public:
 	PhysicsModel( GameObject* transform );
 	virtual ~PhysicsModel() = default;
 
-	// pressure plate activation
+	// Pressure Plate Activation
 	bool GetActivated() const noexcept { return mActivated; }
 	void SetActivated( bool activated ) noexcept { mActivated = activated; }
 
@@ -26,6 +26,7 @@ public:
 	void AddForce( XMVECTOR force ) noexcept;
 	void ResetForces() noexcept;
 	void ResetForces_NoY() noexcept;
+	void InvVelocity( bool invert ) noexcept { mInvVelocity = invert; }
 
 	// Get Forces
 	float GetMass() const noexcept { return mMass; }
@@ -33,14 +34,25 @@ public:
 	XMFLOAT3 GetVelocity() const noexcept { return mVelocity; }
 	XMFLOAT3 GetAcceleration() const noexcept { return mAcceleration; }
 
+	float GetBounciness() const noexcept { return mBounciness; }
+
+
 	// Set Forces
 	void SetMass( float mass ) noexcept { mMass = mass; }
 	void SetNetForce( XMFLOAT3 netForce ) noexcept { mNetForce = netForce; }
 	void SetVelocity( XMFLOAT3 velocity ) noexcept { mVelocity = velocity; }
 	void SetAcceleration( XMFLOAT3 acceleration ) noexcept { mAcceleration = acceleration; }
 
+	void SetBounciness( float bounciness ) noexcept { mBounciness = bounciness; }
+	
+	
+
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
+  
+	void CheckGroundCollisions( bool collisions ) noexcept { mCheckGroundCollisions = collisions; }
+	void UseWeight(bool use)noexcept { useWeight = use; }
+
 private:
 	// Update Forces
 	void Weight();
@@ -61,10 +73,14 @@ private:
 	// Local Variables
 	float mMass;
 	float mWeight;
-	bool mActivated;
 	bool mUseLaminar;
 
+	float mBounciness;
+
 	bool mIsHeld;
+	bool mActivated;
+	bool mInvVelocity;
+  bool mCheckGroundCollisions;
 
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;
@@ -72,6 +88,8 @@ private:
 	XMFLOAT3 mVelocity;
 	XMFLOAT3 mAcceleration;
 	GameObject* mTransform;
+	
+	bool useWeight = true;
 };
 
 #endif

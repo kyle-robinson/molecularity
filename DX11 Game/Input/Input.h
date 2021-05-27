@@ -35,6 +35,8 @@ private:
 	float delay = 0.0f;
 	bool canHover = true;
 
+
+
 	//ui input
 	bool isPaused;
 	unsigned char UIChar;

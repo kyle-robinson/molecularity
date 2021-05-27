@@ -55,7 +55,9 @@ void TextRenderer::RenderCameraText( LevelContainer& manager )
 
 void TextRenderer::RenderString( std::string text, XMFLOAT2 position, XMVECTORF32 color )
 {
-	std::wstring String = std::wstring( text.begin(), text.end() );
+	
+	std::wstring String = std::wstring(text.begin(), text.end());
+
 	DrawString( String, position, color );
 }
 

@@ -48,7 +48,7 @@ inline void DataSlider_Widget<BarTex, SliderTex>::Draw( ID3D11DeviceContext* Con
 	Bar.SetInitialPosition( _Pos.x, _Pos.y, 0 );
 	Bar.SetScale( _Size.x, _Size.y );
 	Bar.UpdateTex( Device, _BarColour );
-	cb_ps_scene.data.alphaFactor = _AlfaFactor;
+	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = true;
 
 	if ( !cb_ps_scene.ApplyChanges() ) return;
@@ -59,7 +59,7 @@ inline void DataSlider_Widget<BarTex, SliderTex>::Draw( ID3D11DeviceContext* Con
 	Slider.SetInitialPosition( ( _Pos.x + PX ) - 25 / 2, _Pos.y + ( 30 - ( 30 / 0.75 ) ) / 2, 0 );
 	Slider.SetScale( 25, _Size.y / 0.75 );
 
-	cb_ps_scene.data.alphaFactor = _AlfaFactor;
+	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = true;
 
 	if ( !cb_ps_scene.ApplyChanges() ) return;

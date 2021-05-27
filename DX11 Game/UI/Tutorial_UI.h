@@ -25,7 +25,7 @@ public:
      void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d,std::shared_ptr<Fonts> fonts);
      void Update(float dt);
      void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
-
+     void TextLoad();
      void HandleEvent(Event* event);
 
      //functions
@@ -34,7 +34,7 @@ private:
     void AddtoEvent();
     void RemoveFromEvent();
 
-    string ConvertFromUnsignedCharTostring(unsigned char input);
+    
 
     //Text functions
     void GenralTutorialText();
@@ -46,8 +46,8 @@ private:
     void MoveToNextPannle();
 
 
-    void LoadKeyBindes(std::vector<JSON::SettingData> SettingsData);
-
+    void LoadKeyBinds(std::vector<JSON::SettingData> SettingsData);
+    void SetTextPos(TextToDraw& text);
 private:
 
     string name = "Tutorial";
@@ -63,9 +63,11 @@ private:
     TutorialState CurrentState;
     int stateNo;
     vector<TextToDraw> _TextList;
-    map<string, string> KeyBindes;
-   
+    map<string, string> KeyBinds;
+    map<string, string> LoadedTextMap;
 
+    float textSizeY;
+    float textSizeX;
     float yPos;
     float xpos;
 };

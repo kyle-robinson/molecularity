@@ -9,8 +9,8 @@ bool Credits_Level::OnCreate()
 	{
 		// DRAWABLES
 		{
-				//add level UI 
-				credits = make_shared<Credits_UI>();
+			//add level UI 
+			credits = make_shared<Credits_UI>();
 		}
 	}
 	catch (COMException& exception)
@@ -19,7 +19,6 @@ bool Credits_Level::OnCreate()
 		return false;
 	}
 	return true;
-
 }
 
 void Credits_Level::OnSwitch()
@@ -75,5 +74,3 @@ void Credits_Level::Update(const float dt)
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate(dt);
 }
-
-
