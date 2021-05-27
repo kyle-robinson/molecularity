@@ -2,24 +2,21 @@
 #include "Tool_Class.h"
 #include<Tool_Convert.h>
 #include<Tool_Resize.h>
+#include<Tool_Magnetism.h>
 #include<Tool_Bounce.h>
 #include<Objects/CubeProperties.h>
-
+#include<Objects/Cube.h>
 Tool_Class::Tool_Class()
 {
 	_ToolType = ToolType::Convert;
 	SetCurrentTool(ToolType::Convert);
 	AddToEvent();
-	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);
+	
 }
 
 Tool_Class::~Tool_Class()
 {
-	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionDownEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionUpEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::ChangeCubeEvent, this);
+	RemoveFromEvent();
 }
 
 void Tool_Class::SetCurrentTool(ToolType CurrentTool)
@@ -35,6 +32,13 @@ void Tool_Class::SetCurrentTool(ToolType CurrentTool)
 		_CurrentTool = std::make_shared<Tool_Resize>();
 		_ToolType = CurrentTool;
 		break;
+	case ToolType::Magnetism:
+	{
+		_CurrentTool = std::make_shared<Tool_Magnetism>();
+		_ToolType = CurrentTool;
+		break;
+	}
+	break;
 	case ToolType::Bounce:
 		_CurrentTool = std::make_shared<Tool_Bounce>();
 		_ToolType = CurrentTool;
@@ -51,8 +55,8 @@ Tool_Function* Tool_Class::GetCurrentTool()
 
 ToolData Tool_Class::GetCurrentOption()
 {
-	
-	return _CurrentTool->GetToolData();
+
+return _CurrentTool->GetToolData();
 }
 
 void Tool_Class::Update()
@@ -75,6 +79,19 @@ void Tool_Class::AddToEvent()
 	EventSystem::Instance()->AddClient(EVENTID::ChangeToolOptionDownEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::ChangeToolOptionUpEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::ChangeCubeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::ChangeAllCubeEvent, this);
+	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, this);
+	
+}
+
+void Tool_Class::RemoveFromEvent()
+{
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionDownEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeToolOptionUpEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeCubeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ChangeAllCubeEvent, this);
 }
 
 void Tool_Class::HandleEvent(Event* event)
@@ -89,14 +106,14 @@ void Tool_Class::HandleEvent(Event* event)
 	break;
 	case EVENTID::ChangeToolOptionUpEvent:
 	{
-	
-		_CurrentTool->addoneTOCurrent();
+
+		_CurrentTool->AddOneToCurrent();
 	}
 	break;
 	case EVENTID::ChangeToolOptionDownEvent:
 	{
-		
-		_CurrentTool->minusoneTOCurrent();
+
+		_CurrentTool->MinusOneTOCurrent();
 	}
 	break;
 	case EVENTID::ChangeToolEvent:
@@ -106,12 +123,36 @@ void Tool_Class::HandleEvent(Event* event)
 	break;
 	case EVENTID::ChangeCubeEvent:
 	{
-		
-		timer.Restart();
-		if (_Energy >= 0) {
-			_Energy -= 25;
-			timer.Start();
+		if (_CurrentTool->GetToolData().MagMode != MagnetismMode::AllCubes) {
+			timer.Restart();
+			if (_Energy > 0) {
+
+				_Energy -= _CurrentTool->GetEnergyCost();
+				timer.Start();
+
+				CubeProperties* cube = static_cast<CubeProperties*>(event->GetData());
+				ChangeCube(cube);
+
+			}
+			else if (_Energy <= 0) {
+
+			}
 		}
+	}
+	break;
+	case EVENTID::ChangeAllCubeEvent:
+	{
+		timer.Restart();
+		if (_CurrentTool->GetToolData().MagMode == MagnetismMode::AllCubes) {
+			_Energy -= _CurrentTool->GetEnergyCost()*2;
+			//change all cubes propites
+			for (auto& cube : *static_cast<std::vector<std::shared_ptr<Cube>>*>(event->GetData())) {
+				ChangeCube(cube->GetEditableProperties().get());
+			}
+		}
+	}
+	break;
+      
 		CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
 
 		switch (_ToolType)
@@ -133,6 +174,19 @@ void Tool_Class::HandleEvent(Event* event)
 	}
 }
 
+void Tool_Class::ChangeCube(CubeProperties* Cube)
+{
+	switch (_ToolType)
+	{
+	case ToolType::Convert:
+		Cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
+		break;
+	case ToolType::Resize:
+		Cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
+		break;
+	case ToolType::Magnetism:
+			Cube->SetBoxMagneticMove(true);
+		break;
+	}
+}
 
-//TODO Get Cubes
-//TODO Get Picking

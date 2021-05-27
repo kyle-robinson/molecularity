@@ -10,7 +10,7 @@ public:
 	void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts);
 	void Update(float dt);
 	void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
-
+	void TextLoad();
 	bool GetPause() { return _isPuased; }
 
 	void HandleEvent(Event* event);
@@ -36,4 +36,7 @@ private:
 		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
 	
 	int currentLevel=0;
+	UINT32 Hub = 2;
+
+	map<string, string>LoadedTextMap;
 };

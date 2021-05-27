@@ -22,6 +22,8 @@ void Main_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, 
 	FontsList->AddFont("OpenSans_12", "OpenSans_12.spritefont");
 	Titlecard.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 
+	TextLoad();
+	
 
 	MainMenuBackground.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	for (unsigned int i = 0; i < 5; i++) {
@@ -53,6 +55,12 @@ void Main_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX Worl
 		MainMenuButtions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
 		Shaders::BindShaders(_Contex.Get(), vert, pix);
 	}
+}
+
+void Main_Menu_UI::TextLoad()
+{
+	vector<JSON::TextData>Main_Menu_Text = TextLoader::Instance()->LoadText("Main_Menu_Text");
+	LoadedTextMap=TextLoader::Instance()->ConvertToMap(Main_Menu_Text);
 }
 
 void Main_Menu_UI::HandleEvent(Event* event)
@@ -106,7 +114,7 @@ void Main_Menu_UI::MenuButtions()
 	XMFLOAT2 size{ static_cast<float>(_SizeOfScreen.x * 0.15), static_cast<float>(_SizeOfScreen.y * 0.13) };
 	float ButtionXPos = static_cast<float>((_SizeOfScreen.x * 0.5) - size.x / 2);
 	float ButtionYPos = 0.25f;
-	if (MainMenuButtions[0].Function("Play", ButtionTex, size, XMFLOAT2{ ButtionXPos, static_cast<float>(_SizeOfScreen.y * ButtionYPos) }, DirectX::Colors::Black, _MouseData)) {
+	if (MainMenuButtions[0].Function(LoadedTextMap["Buttion_1"], ButtionTex, size, XMFLOAT2{ ButtionXPos, static_cast<float>(_SizeOfScreen.y * ButtionYPos) }, DirectX::Colors::Black, _MouseData)) {
 		//go to hub/save
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
 		LevelTo = 0;
@@ -114,19 +122,19 @@ void Main_Menu_UI::MenuButtions()
 	}
 	ButtionYPos += 0.20;
 
-	if (MainMenuButtions[1].Function("place holder", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
+	if (MainMenuButtions[1].Function(LoadedTextMap["Buttion_2"], ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//place holder
 		LevelTo = 3;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 	}
 	ButtionYPos += 0.20;
-	if (MainMenuButtions[2].Function("Settings", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	if (MainMenuButtions[2].Function(LoadedTextMap["Buttion_3"], ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
 		IsSettings = true;
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
 	}
 	ButtionYPos += 0.20;
-	if (MainMenuButtions[3].Function("Exit", ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
+	if (MainMenuButtions[3].Function(LoadedTextMap["Buttion_4"], ButtionTex, size, XMFLOAT2{ ButtionXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 		//exit
 		EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
 	}

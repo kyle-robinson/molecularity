@@ -12,12 +12,15 @@ public:
 
 	void virtual ChangeCurrent(int number) = 0;
 	void virtual ChangeCurrent(std::string name) = 0;
-	void virtual addoneTOCurrent() = 0;
-	void virtual minusoneTOCurrent() = 0;
+	void virtual AddOneToCurrent() = 0;
+	void virtual MinusOneTOCurrent() = 0;
 	ToolData virtual GetToolData() { return ToolData(); };
-
-
+	float GetEnergyCost() { return EnergyCost; }
+	void SetEnergyCost(float cost) { EnergyCost = cost; }
 protected:
-	 int current = 0;
+	float EnergyCost = 0;
+	 int Current = 0;
+	 int MaxNumber;
+	 int MinNumber;
 };
 

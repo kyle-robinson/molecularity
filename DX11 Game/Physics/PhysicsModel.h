@@ -49,6 +49,10 @@ public:
 
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
+
+	 
+	void UseWeight(bool use)noexcept { useWeight = use; }
+
 private:
 	// Update Forces
 	void Weight();
@@ -86,6 +90,10 @@ private:
 	XMFLOAT3 mVelocity;
 	XMFLOAT3 mAcceleration;
 	GameObject* mTransform;
+
+
+	
+	bool useWeight = true;
 };
 
 #endif

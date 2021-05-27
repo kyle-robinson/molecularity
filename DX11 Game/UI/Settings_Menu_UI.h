@@ -19,7 +19,7 @@ public:
 	void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts);
 	void Update(float dt);
 	void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
-
+	void TextLoad();
 	void HandleEvent(Event* event);
 
 private:
@@ -37,6 +37,7 @@ private:
 private:
 	bool _isSettings;
 	std::vector<JSON::SettingData> _SettingsData;
+	map<string, string>LoadedTextMap;
 	//Settings
 	Immage_Widget SettingsBackground;
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;
@@ -47,7 +48,7 @@ private:
 	vector<TextToDraw> PuaseTextTitles;
 	vector<TextToDraw> PuaseTextPG;
 
-	std::string TabNames[4] = { "General","Graphics","Sound","Controls" };
+
 	vector<string> ButtionTexDrop = { "Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow.dds" };

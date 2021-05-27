@@ -116,6 +116,7 @@ void Input::HandleEvent( Event* event )
 			MouseBinds["Change_Gun_State_Up"] = Mouse::MouseEvent::EventType::WheelUp;
 			MouseBinds["Change_Gun_State_Down"] = Mouse::MouseEvent::EventType::WheelDown;
 			MouseBinds["Fire_Tool"] = Mouse::MouseEvent::EventType::LPress;
+			MouseBinds["Fire_Tool_Alt"] = Mouse::MouseEvent::EventType::RPress;
 		}
 	}
 	break;
@@ -170,16 +171,22 @@ void Input::UpdateKeyboard( const float dt )
 				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
 				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
 			}
-
-			if ( keycode == KeyBinds["Gun_State_Four"] );
+			if (keycode == KeyBinds["Gun_State_Four"]) {
+				currentTool = ToolType::Magnetism;
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);;
+			}
+      
 			if ( keycode == KeyBinds["Gun_State_Five"] );
 			if ( keycode == KeyBinds["Gun_State_Six"] );
 
-			if ( keycode == KeyBinds["Change_Gun_State_Up"] )
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionUpEvent );
-
-			if ( keycode == KeyBinds["Change_Gun_State_Down"] )
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolOptionDownEvent );
+			if (kbe.IsPress()) {
+				if (keycode == KeyBinds["Change_Gun_State_Up"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+				}
+				else if (keycode == KeyBinds["Change_Gun_State_Down"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+				}
+			}
 		}
 
 		//UI
@@ -273,7 +280,7 @@ void Input::UpdateKeyboard( const float dt )
 					cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y,
 					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
 				);
-
+        
 				heldLastFrame[i] = true;
 
 				// cube throwing
@@ -349,10 +356,38 @@ void Input::UpdateMouse( const float dt )
 				Sound::Instance()->PlaySoundEffect("ToolChange");
 			}
 
+			//mag mode all
+				if (me.GetType() == MouseBinds["Fire_Tool"]) {
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeAllCubeEvent, &levelSystem->GetCurrentLevel()->GetCube());
+					
+				}
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
 			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 			{
+				//cube mouse input
+				{
+					float alreadyHeld = false;
+					for (uint32_t j = 0; j < NUM_CUBES; j++) {
+						if (i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true) {
+							alreadyHeld = true;
+						}
+					}
+					// cube throwing
+					if (me.GetType() == MouseBinds["Fire_Tool_Alt"] && !alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
+						(levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding()))
+					{
+						canHover = false;
+
+						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
+							sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
+							-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
+							cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt
+						);
+					}
+					
+				}
+
 				// testing sound, feel free to move or remove
 				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
 				{
@@ -361,18 +396,21 @@ void Input::UpdateMouse( const float dt )
 					else
 						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
-
+        
+#pragma region Tool_Picking
 				// test intersection between crosshair and cube
 				if ( mousePick.TestIntersection( levelSystem->GetCurrentLevel()->GetGraphics()->GetWidth() / 2, levelSystem->GetCurrentLevel()->GetGraphics()->GetHeight() / 2, *levelSystem->GetCurrentLevel()->GetCube()[i] ) )
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( true );
 				else
 					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHovering( false );
-#pragma region Tool_Picking
+        
 				// update box texture on click while hovering
 				if ( me.GetType() == MouseBinds["Fire_Tool"] && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() )
 					EventSystem::Instance()->AddEvent( EVENTID::ChangeCubeEvent, levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties().get() );
 #pragma endregion
-			}
+			}	
+			
+		
 #pragma region UI_Input
 			//UI mouse input
 			{

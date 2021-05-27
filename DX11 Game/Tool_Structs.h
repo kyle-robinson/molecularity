@@ -6,6 +6,7 @@ enum class ToolType
 {
 	Convert,
 	Resize,
+	Magnetism
 	Bounce
 };
 
@@ -31,9 +32,16 @@ enum class BoxBounce
 	Bouncy
 };
 
+enum class MagnetismMode
+{
+	AllCubes=0,
+	OneCube
+};
+
 struct ToolData
 {
 	BoxType boxtype;
 	BoxSize boxSize;
+	MagnetismMode MagMode;
 	BoxBounce boxBounce;
 };
