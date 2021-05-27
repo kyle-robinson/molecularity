@@ -41,7 +41,7 @@ private:
 
 	
 	vector < JSON::TextData > CreditsINFO;
-	UINT32 LevelTo = 2;
+	UINT32 LevelTo = 0;
 	float NextY = 0;
 	float CurrentYPos;
 	int imagecount = 0;
