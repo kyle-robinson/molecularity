@@ -40,6 +40,9 @@ public:
 
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
+
+	// Ground Collisions
+	void CheckGroundCollisions( bool collisions ) noexcept { mCheckGroundCollisions = collisions; }
 private:
 	// Update Forces
 	void Weight();
@@ -64,6 +67,7 @@ private:
 	bool mUseLaminar;
 
 	bool mIsHeld;
+	bool mCheckGroundCollisions;
 
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;

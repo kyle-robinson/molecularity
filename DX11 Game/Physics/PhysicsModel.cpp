@@ -10,6 +10,7 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 	mPosition = mTransform->GetPositionFloat3();
 
 	mIsHeld = false;
+	mCheckGroundCollisions = true;
 
 	mFriction = { 0.0f, 0.0f, 0.0f };
 	mNetForce = { 0.0f, 0.0f, 0.0f };
@@ -32,7 +33,8 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 		Acceleration();
 		Drag();
 		ComputePosition( dt );
-		CheckFloorCollisions( properties );
+		if ( mCheckGroundCollisions )
+			CheckFloorCollisions( properties );
 	}
 	else
 	{
