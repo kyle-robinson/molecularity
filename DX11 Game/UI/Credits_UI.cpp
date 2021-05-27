@@ -100,31 +100,31 @@ void Credits_UI::RemoveFromEvent()
 void Credits_UI::LoadImages()
 {
 	//immage data
-	ImmageData IData;
-	if (!_ImmageList.empty()) {
-		_ImmageList.clear();
+	ImageData IData;
+	if (!_ImageList.empty()) {
+		_ImageList.clear();
 	}
 
 
 	IData.Name = "Headder";
 	IData.FileName = "Title_Card\\TitleCard.png";
 	IData.Size = { static_cast<float>(_SizeOfScreen.x * 0.5),static_cast<float>(_SizeOfScreen.y * 0.12) };
-	_ImmageList.push_back(IData);
+	_ImageList.push_back(IData);
 
 
 	IData.Name = "DissCube";
 	IData.FileName = "Credits\\Disscube.png";
 	IData.Size = { static_cast<float>(_SizeOfScreen.x * 0.20),static_cast<float>(_SizeOfScreen.y * 0.24) };
-	_ImmageList.push_back(IData);
+	_ImageList.push_back(IData);
 
 
 	IData.Name = "Dimond";
 	IData.FileName = "Settings\\Slider_Yellow.dds";
 	IData.Size = { static_cast<float>(_SizeOfScreen.x * 0.05),static_cast<float>(_SizeOfScreen.y * 0.05) };
-	_ImmageList.push_back(IData);
+	_ImageList.push_back(IData);
 
 
-	for (unsigned int i = 0; i < _ImmageList.size(); i++) {
+	for (unsigned int i = 0; i < _ImageList.size(); i++) {
 		Images[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
 
@@ -132,10 +132,10 @@ void Credits_UI::LoadImages()
 
 void Credits_UI::AddImmage()
 {
-	if (imagecount < _ImmageList.size()) {
-		//insert immage
-		Images[imagecount].Function(_ImmageList[imagecount].FileName, _ImmageList[imagecount].Size, { (_SizeOfScreen.x / 2) - (_ImmageList[imagecount].Size.x / 2),CurrentYPos });
-		CurrentYPos += _ImmageList[imagecount].Size.y + 10;
+	if (imagecount < _ImageList.size()) {
+		//insert image
+		Images[imagecount].Function(_ImageList[imagecount].FileName, _ImageList[imagecount].Size, { (_SizeOfScreen.x / 2) - (_ImageList[imagecount].Size.x / 2),CurrentYPos });
+		CurrentYPos += _ImageList[imagecount].Size.y + 10;
 		imagecount++;
 
 	}

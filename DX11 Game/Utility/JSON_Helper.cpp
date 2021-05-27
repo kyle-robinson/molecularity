@@ -206,7 +206,7 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 			type = SettingType::GeneralType;
 		}
 		else if (objectName == "Controls") {
-			type = SettingType::ControllType;
+			type = SettingType::ControlType;
 		}
 		else if (objectName == "Sound") {
 			type = SettingType::SoundType;

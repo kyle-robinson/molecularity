@@ -3,7 +3,7 @@
 using namespace std;
 
 
-struct ImmageData
+struct ImageData
 {
 	string Name;
 	string FileName;
@@ -34,10 +34,10 @@ private:
 	void AddText();
 private:
 
-	Immage_Widget Images[10];
+	Image_Widget Images[10];
 	ColourBlock Background;
 	vector<TextToDraw> _TextList;
-	vector<ImmageData> _ImmageList;
+	vector<ImageData> _ImageList;
 
 	
 	vector < JSON::TextData > CreditsINFO;

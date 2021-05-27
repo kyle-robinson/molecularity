@@ -82,8 +82,8 @@ void Input::HandleEvent( Event* event )
 		for ( auto& setting : a )
 		{
 			//only for player not debug key changes
-			if ( setting.Type == JSON::SettingType::ControllType ) {
-				//change controll
+			if ( setting.Type == JSON::SettingType::ControlType ) {
+				//change control
 
 				//control map
 				string key = std::get<string>( setting.Setting ).c_str();
@@ -289,11 +289,13 @@ void Input::UpdateKeyboard( const float dt )
 				{
 					canHover = false;
 
-					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
-						sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
+					XMFLOAT3 cubeForce = levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->Normalization(
+						XMFLOAT3( sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
 						-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
-						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt
+						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt )
 					);
+					
+					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce( cubeForce.x * 20.0f, cubeForce.y * 20.0f, cubeForce.z * 20.0f );
 
 					Sound::Instance()->PlaySoundEffect( "CubeThrow" );
 
@@ -386,16 +388,6 @@ void Input::UpdateMouse( const float dt )
 							cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt
 						);
 					}
-					
-				}
-
-				// testing sound, feel free to move or remove
-				if ( me.GetType() == Mouse::MouseEvent::EventType::LPress )
-				{
-					if ( levelSystem->GetCurrentLevel()->GetLevelName() == "MainMenu" ||  isPaused )
-						Sound::Instance()->PlaySoundEffect( "MenuClick" );
-					else
-						Sound::Instance()->PlaySoundEffect( "ToolUse" );
 				}
         
 #pragma region Tool_Picking

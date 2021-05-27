@@ -11,7 +11,7 @@ public:
 	void Update(float dt);
 	void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
 	void TextLoad();
-	bool GetPause() { return _isPuased; }
+	bool GetPause() { return _isPaused; }
 
 	void HandleEvent(Event* event);
 
@@ -20,20 +20,20 @@ private:
 	void AddtoEvent();
 	void RemoveFromEvent();
 
-	void ButtionCreate();
+	void ButtonCreate();
 	void AddTipText();
 private:
 
-	bool _isPuased;
-	//Puase
-	Buttion_Widget<string> PuaseButtions[4];
-	ColourBlock PuaseBakgtound;
-	Immage_Widget _TitleCard;
-	vector<TextToDraw> PuaseTextTitles;
-	vector<TextToDraw> PuaseTextPG;
-	vector<string> ButtionTex = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds", 
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds", 
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
+	bool _isPaused;
+	//Pause
+	Button_Widget<string> PauseButtons[4];
+	ColourBlock PauseBackground;
+	Image_Widget _TitleCard;
+	vector<TextToDraw> PauseTextTitles;
+	vector<TextToDraw> PauseTextPG;
+	vector<string> ButtonTex = { "Resources\\Textures\\UI_Buttons\\Button_1_Down.dds", 
+		"Resources\\Textures\\UI_Buttons\\Button_1_Hover.dds", 
+		"Resources\\Textures\\UI_Buttons\\Button_1_Up.dds" };
 	
 	int currentLevel=0;
 	UINT32 Hub = 2;

@@ -133,9 +133,10 @@ void Tool_Class::HandleEvent(Event* event)
 				CubeProperties* cube = static_cast<CubeProperties*>(event->GetData());
 				ChangeCube(cube);
 
+				Sound::Instance()->PlaySoundEffect( "ToolUse" );
 			}
 			else if (_Energy <= 0) {
-
+				Sound::Instance()->PlaySoundEffect( "ToolNoEnergy" );
 			}
 		}
 	}

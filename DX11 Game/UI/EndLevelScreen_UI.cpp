@@ -31,7 +31,7 @@ void EndLevelScreen_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* con
 		Image.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	
 	for (unsigned int i = 0; i < 2; i++) {
-		Buttions[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
+		Buttons[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	}
 
 }
@@ -42,8 +42,10 @@ void EndLevelScreen_UI::Update(float dt)
 		//background
 		Background.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 1.0f);
 		//title card
+
 		Image.Function("Title_Card\\TitleCard.png", { static_cast<float>(_SizeOfScreen.x * 0.5),static_cast<float>(_SizeOfScreen.y * 0.12) }, { (_SizeOfScreen.x / 2) - (static_cast<float>(_SizeOfScreen.x * 0.5) / 2),0 });
-		AddButtions();
+		AddButtons();
+
 
 		TextToDraw text;
 		text._Text = LoadedTextMap["Level_End_Text"];
@@ -63,7 +65,7 @@ void EndLevelScreen_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX
 		Background.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		Image.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		for (unsigned int i = 0; i < 2; i++) {
-			Buttions[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
+			Buttons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
 			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
 
@@ -79,8 +81,8 @@ void EndLevelScreen_UI::TextLoad()
 {
 	vector<JSON::TextData>EndLevel_Text = TextLoader::Instance()->LoadText("EndLevel_Text");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(EndLevel_Text);
-	vector<JSON::TextData>EndLevelButtions_Text = TextLoader::Instance()->LoadText("EndLevelButtions_Text");
-	map<string,string>tempMap= TextLoader::Instance()->ConvertToMap(EndLevelButtions_Text);
+	vector<JSON::TextData>EndLevelButtons_Text = TextLoader::Instance()->LoadText("EndLevelButtons_Text");
+	map<string,string>tempMap= TextLoader::Instance()->ConvertToMap(EndLevelButtons_Text);
 	//join maps
 	LoadedTextMap.insert(tempMap.begin(), tempMap.end());
 }
@@ -136,15 +138,15 @@ void EndLevelScreen_UI::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::GameEndLevelEvent, this);
 }
 
-void EndLevelScreen_UI::AddButtions()
+void EndLevelScreen_UI::AddButtons()
 {
-	//buttions
-	if (Buttions[0].Function(LoadedTextMap["Buttion_1"], ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) - (_SizeOfScreen.x / 7) - 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	//buttons
+	if (Buttons[0].Function(LoadedTextMap["Button_1"], ButtonTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) - (_SizeOfScreen.x / 7) - 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//go to hub
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
 		ToShow = false;
 	}
-	else if (Buttions[1].Function(LoadedTextMap["Buttion_2"], ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) + 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	else if (Buttons[1].Function(LoadedTextMap["Button_2"], ButtonTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) + 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//go to next level
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &NextLevel);

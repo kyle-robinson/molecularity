@@ -80,7 +80,7 @@ void Tutorial_UI::Update(float dt)
 
 void Tutorial_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
-	//isDraw to stop from drawing over Puase/settings
+	//isDraw to stop from drawing over Pause/settings
 	if (IsDraw) {
 		Shaders::BindShaders(_Contex.Get(), vert, pix);
 		TextBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
@@ -99,17 +99,17 @@ void Tutorial_UI::TextLoad()
 {
 	vector<JSON::TextData>Gen_Text = TextLoader::Instance()->LoadText("Gen_Text");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(Gen_Text);
-	vector<JSON::TextData>Movement_Controlls = TextLoader::Instance()->LoadText("Movement_Controlls");
-	map<string, string>temp = TextLoader::Instance()->ConvertToMap(Movement_Controlls);
+	vector<JSON::TextData>Movement_Controls = TextLoader::Instance()->LoadText("Movement_Controls");
+	map<string, string>temp = TextLoader::Instance()->ConvertToMap(Movement_Controls);
 	LoadedTextMap.insert(temp.begin(), temp.end());
 	vector<JSON::TextData>TOOL_TIPS = TextLoader::Instance()->LoadText("TOOL_TIPS");
 	temp = TextLoader::Instance()->ConvertToMap(TOOL_TIPS);
 	LoadedTextMap.insert(temp.begin(), temp.end());
-	vector<JSON::TextData>TooL_Controlls = TextLoader::Instance()->LoadText("TooL_Controlls");
-	temp = TextLoader::Instance()->ConvertToMap(TooL_Controlls);
+	vector<JSON::TextData>TooL_Controls = TextLoader::Instance()->LoadText("Tool_Controls");
+	temp = TextLoader::Instance()->ConvertToMap(TooL_Controls);
 	LoadedTextMap.insert(temp.begin(), temp.end());
-	vector<JSON::TextData>Other_Controlls = TextLoader::Instance()->LoadText("Other_Controlls");
-	temp = TextLoader::Instance()->ConvertToMap(Other_Controlls);
+	vector<JSON::TextData>Other_Controls = TextLoader::Instance()->LoadText("Other_Controls");
+	temp = TextLoader::Instance()->ConvertToMap(Other_Controls);
 	LoadedTextMap.insert(temp.begin(), temp.end());
 	vector<JSON::TextData>tip_opt = TextLoader::Instance()->LoadText("TOOL_TIPS_Options");
 	temp = TextLoader::Instance()->ConvertToMap(tip_opt);
@@ -225,11 +225,11 @@ void Tutorial_UI::ToolTutorialText()
 
 		
 		//genral information
-		text._Text = LoadedTextMap["Infromation"];
+		text._Text = LoadedTextMap["Information"];
 		SetTextPos(text);
 		_TextList.push_back(text);
-		
-		//tool controlls 
+
+		//tool controls 
 		
 		text._Text = LoadedTextMap["Tool_Mode_Switch"];
 		SetTextPos(text);
@@ -244,11 +244,11 @@ void Tutorial_UI::ToolTutorialText()
 		_TextList.push_back(text);
 
 	}
-	//indvudual tool infromation
+	//indvudual tool information
 	else if (CurrentState == TutorialState::ToolTut2)
 	{
 		//tool 1
-		text._Text = LoadedTextMap["infromation_Title"];
+		text._Text = LoadedTextMap["information_Title"];
 		SetTextPos(text);
 		_TextList.push_back(text);
 
@@ -416,7 +416,7 @@ void Tutorial_UI::LoadKeyBinds(std::vector<JSON::SettingData> SettingsData)
 
 	for (auto& setting : SettingsData)
 	{
-		if (setting.Type == JSON::SettingType::ControllType)
+		if (setting.Type == JSON::SettingType::ControlType)
 		{
 
 			string key = std::get<string>(setting.Setting);
