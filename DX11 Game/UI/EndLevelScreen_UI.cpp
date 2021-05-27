@@ -68,13 +68,10 @@ void EndLevelScreen_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX
 		}
 		_TextList.clear();
 	}
-
-
 }
 
 void EndLevelScreen_UI::HandleEvent(Event* event)
 {
-
 	switch (event->GetEventID())
 	{
 		case EVENTID::GameEndLevelEvent:
@@ -104,10 +101,6 @@ void EndLevelScreen_UI::HandleEvent(Event* event)
 			_MouseData.LPress = false;
 		}
 	}
-
-
-
-
 }
 
 void EndLevelScreen_UI::AddtoEvent()

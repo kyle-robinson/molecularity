@@ -2,6 +2,7 @@
 #include "Tool_Class.h"
 #include<Tool_Convert.h>
 #include<Tool_Resize.h>
+#include<Tool_Bounce.h>
 #include<Objects/CubeProperties.h>
 
 Tool_Class::Tool_Class()
@@ -21,11 +22,8 @@ Tool_Class::~Tool_Class()
 	EventSystem::Instance()->RemoveClient(EVENTID::ChangeCubeEvent, this);
 }
 
-
-
 void Tool_Class::SetCurrentTool(ToolType CurrentTool)
 {
-
 	switch (CurrentTool)
 	{
 	case ToolType::Convert:
@@ -37,10 +35,13 @@ void Tool_Class::SetCurrentTool(ToolType CurrentTool)
 		_CurrentTool = std::make_shared<Tool_Resize>();
 		_ToolType = CurrentTool;
 		break;
+	case ToolType::Bounce:
+		_CurrentTool = std::make_shared<Tool_Bounce>();
+		_ToolType = CurrentTool;
+		break;
 	default:
 		break;
 	}
-
 }
 
 Tool_Function* Tool_Class::GetCurrentTool()
@@ -56,12 +57,7 @@ ToolData Tool_Class::GetCurrentOption()
 
 void Tool_Class::Update()
 {
-	// manage multi-tool options
-	
-
-
-
-	//energy regen
+	// energy regen
 	if (_Energy < _EnergyMax && timer.GetMilliSecondsElapsed()>=1000) {
 		_Energy += 1;
 	}
@@ -80,8 +76,6 @@ void Tool_Class::AddToEvent()
 	EventSystem::Instance()->AddClient(EVENTID::ChangeToolOptionUpEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::ChangeCubeEvent, this);
 }
-
-
 
 void Tool_Class::HandleEvent(Event* event)
 {
@@ -118,26 +112,25 @@ void Tool_Class::HandleEvent(Event* event)
 			_Energy -= 25;
 			timer.Start();
 		}
-		 CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
+		CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
 
-		 switch (_ToolType)
-		 {
-		 case ToolType::Convert:
-			 cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
-			 break;
-		 case ToolType::Resize:
-			 cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
-			 break;
-		 default:
-			 break;
-		 }
-	
-
+		switch (_ToolType)
+		{
+		case ToolType::Convert:
+			cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
+			break;
+		case ToolType::Resize:
+			cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
+			break;
+		case ToolType::Bounce:
+			cube->SetBoxBounce( _CurrentTool->GetToolData().boxBounce );
+			break;
+		default:
+			break;
+		}
 	}
 	break;
-
 	}
-
 }
 
 

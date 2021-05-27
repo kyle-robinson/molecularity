@@ -29,7 +29,6 @@ bool Level1::OnCreate()
 			PauseUI = make_shared<Pause>();
 			TutorialUI= make_shared<Tutorial_UI>();
 			EndLevelUI= make_shared<EndLevelScreen_UI>();
-
 		}
 	}
 	catch ( COMException& exception )
@@ -164,8 +163,6 @@ void Level1::Update( const float dt )
 			Collisions::CheckCollisionLevel1( cubes[i], room, 37.0f );
 		}
 	}
-
-	
 
 	LevelContainer::LateUpdate( dt );
 }

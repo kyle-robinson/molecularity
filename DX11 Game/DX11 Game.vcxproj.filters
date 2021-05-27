@@ -247,6 +247,7 @@
     <ClCompile Include="UI\Fonts.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Tool_Bounce.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -565,6 +566,7 @@
     <ClInclude Include="UI\Fonts.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Tool_Bounce.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">
