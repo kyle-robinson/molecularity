@@ -18,7 +18,9 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 	UI::Inizalize(device, contex, cb_vs_matrix_2d,fonts);
 	_isPuased = false;
 
-	
+	//text
+	TextLoad();
+
 	FontsList->AddFont("OpenSans_50", "OpenSans_50.spritefont");
 	FontsList->AddFont("OpenSans_12", "OpenSans_12.spritefont");
 
@@ -45,7 +47,7 @@ void Pause::Update(float dt)
 		TextToDraw puaseText;
 		puaseText._Colour = Colors::Black;
 		puaseText._Position = { 0,static_cast<float>(_SizeOfScreen.y * 0.12) };
-		puaseText._Text = "Pause";
+		puaseText._Text = LoadedTextMap["Title"];
 		PuaseTextTitles.push_back(puaseText);
 
 		AddTipText();
@@ -74,6 +76,19 @@ void Pause::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMa
 		}
 		PuaseTextPG.clear();
 	}
+}
+
+void Pause::TextLoad()
+{
+	vector<JSON::TextData>ButtionsText = TextLoader::Instance()->LoadText("Pause_Buttions");
+	LoadedTextMap = TextLoader::Instance()->ConvertToMap(ButtionsText);
+	vector<JSON::TextData>TipText = TextLoader::Instance()->LoadText("Tip_Pause");
+	map<string, string>temp= TextLoader::Instance()->ConvertToMap(TipText);
+	LoadedTextMap.insert(temp.begin(), temp.end());
+	vector<JSON::TextData>TitleText = TextLoader::Instance()->LoadText("Pause_Text");
+	temp = TextLoader::Instance()->ConvertToMap(TitleText);
+	LoadedTextMap.insert(temp.begin(), temp.end());
+	
 }
 
 void Pause::HandleEvent(Event* event)
@@ -131,21 +146,23 @@ void Pause::RemoveFromEvent()
 void Pause::ButtionCreate()
 {
 	//Buttions
-	if (PuaseButtions[0].Function("Play", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>(_SizeOfScreen.y * 0.25) }, DirectX::Colors::Black, _MouseData)) {
+	if (PuaseButtions[0].Function(LoadedTextMap["Buttion_1"], ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>(_SizeOfScreen.y * 0.25) }, DirectX::Colors::Black, _MouseData)) {
 		//back to game
 		_isPuased = false;
 		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
-
+		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 	}
-	else if (PuaseButtions[1].Function("Reset", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
+	else if (PuaseButtions[1].Function(LoadedTextMap["Buttion_2"], ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//reset level
+		_isPuased = false;
+		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
 	}
-	else if (PuaseButtions[2].Function("Settings", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	else if (PuaseButtions[2].Function(LoadedTextMap["Buttion_3"], ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
 	}
-	else if (PuaseButtions[3].Function("Exit", ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
+	else if (PuaseButtions[3].Function(LoadedTextMap["Buttion_4"], ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 		//exit
 		EventSystem::Instance()->AddEvent(EVENTID::QuitGameEvent);
 	}
@@ -157,7 +174,7 @@ void Pause::AddTipText()
 	XMVECTOR FontSize;
 	puaseText._Colour = Colors::Black;
 
-	puaseText._Text = "Tip";
+	puaseText._Text = LoadedTextMap["Tip_Title"];
 	FontSize=FontsList->GetFont("OpenSans_50")->GetSpriteFont()->MeasureString(puaseText._Text.c_str());
 	puaseText._Position = { (_SizeOfScreen.x / 2)-(XMVectorGetX(FontSize)/2),_SizeOfScreen.y / 3 };
 	PuaseTextTitles.push_back(puaseText);
@@ -165,10 +182,10 @@ void Pause::AddTipText()
 	switch (currentLevel)
 	{
 	case 0:
-		puaseText._Text = "Use the Buttion on the other side";
+		puaseText._Text = LoadedTextMap["Tip_Level_1"];
 		break;
 	case 1:
-		puaseText._Text = "Use the tool";
+		puaseText._Text = LoadedTextMap["Tip_Level_2"];
 		break;
 	default:
 		puaseText._Text = "This Is TEXT";

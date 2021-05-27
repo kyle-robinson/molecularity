@@ -71,17 +71,25 @@ void Cube::Update( const float deltaTime ) noexcept
     case BoxBounce::Bouncy: physicsModel->InvVelocity( true ); break;
     }
 
+    //Magnetic pull
+    MagneticForce();
+
     // update physics
-    if ( !isHeld )
-        physicsModel->Update( deltaTime / 20.0f, editableProperties );
+    if (!isHeld) {
+      
+        physicsModel->Update(deltaTime / 20.0f, editableProperties);
+    }
     else
         physicsModel->Update( deltaTime / 20.0f, editableProperties, true );
 
     // update positioning
     pos = GetPositionFloat3();
 
-    if ( heldLastFrame && !isHeld && ( pos.x != prevPos.x || pos.z != prevPos.z ) )
-        physicsModel->AddForce( XMFLOAT3( ( pos.x - prevPos.x ) * 5.0f, 0.0f, ( pos.z - prevPos.z ) * 5.0f ) );
+    if (heldLastFrame && !isHeld && (pos.x != prevPos.x || pos.z != prevPos.z)) {
+        physicsModel->AddForce(XMFLOAT3((pos.x - prevPos.x) * 5.0f, 0.0f, (pos.z - prevPos.z) * 5.0f));
+    }
+   
+
 
     if ( delay == 5 )
         prevPos = pos;
@@ -177,5 +185,21 @@ void Cube::CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) 
     object->GetPhysicsModel()->AddForce( force );
     
     Sound::Instance()->PlaySoundEffect( "CubeCollision", false, GetPositionFloat3(), 10.0f );
+}
+void Cube::MagneticForce()
+{
+    if (editableProperties->GetBoxMagneticMove()) {
+        if (!cubeInRange) {
+            XMFLOAT3 force = physicsModel->Normalization(XMFLOAT3((CamPos.x - pos.x), (CamPos.y - pos.y), (CamPos.z - pos.z)));
+            
+            physicsModel->AddForce(XMFLOAT3{ force.x * MagPower,force.y * MagPower,force.z * MagPower });
+            physicsModel->UseWeight(false);
+        }
+        else {
+            physicsModel->ResetForces();
+            editableProperties->SetBoxMagneticMove(false);
+            physicsModel->UseWeight(true);
+        }
+    }
 }
 #pragma endregion

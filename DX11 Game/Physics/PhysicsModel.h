@@ -49,6 +49,10 @@ public:
 
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
+
+	 
+	void UseWeight(bool use)noexcept { useWeight = use; }
+
 private:
 	// Update Forces
 	void Weight();
@@ -69,13 +73,14 @@ private:
 	// Local Variables
 	float mMass;
 	float mWeight;
-	float mBounciness;
-	bool mMagnetic;
-	bool mConductive;
-	bool mActivated;
 	bool mUseLaminar;
 
+	bool mMagnetic;
+	bool mConductive;
+	float mBounciness;
+
 	bool mIsHeld;
+	bool mActivated;
 	bool mInvVelocity;
 
 	XMFLOAT3 mFriction;
@@ -84,6 +89,8 @@ private:
 	XMFLOAT3 mVelocity;
 	XMFLOAT3 mAcceleration;
 	GameObject* mTransform;
+	
+	bool useWeight = true;
 };
 
 #endif

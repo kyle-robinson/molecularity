@@ -12,8 +12,8 @@ public:
 	~Tool_Bounce();
 	void ChangeCurrent( int number )override;
 	void ChangeCurrent( std::string name )override;
-	void  addoneTOCurrent() override;
-	void  minusoneTOCurrent() override;
+	void AddOneToCurrent() override;
+	void MinusOneTOCurrent() override;
 
 	BoxBounce GetType() { return CurrentType; }
 	ToolData  GetToolData() override;

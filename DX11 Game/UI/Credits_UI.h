@@ -22,13 +22,12 @@ public:
 	void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts);
 	void Update(float dt);
 	void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
-
+	void TextLoad();
 	void HandleEvent(Event* event);
 private:
 
 	void AddtoEvent();
 	void RemoveFromEvent();
-	void LoadText();
 	void LoadImages();
 
 	void AddImmage();
@@ -41,9 +40,9 @@ private:
 	vector<ImmageData> _ImmageList;
 
 	
-	vector < pair < string, string > > CreditsINFO;
+	vector < JSON::TextData > CreditsINFO;
 	UINT32 LevelTo = 2;
-	int NextY = 0;
+	float NextY = 0;
 	float CurrentYPos;
 	int imagecount = 0;
 };

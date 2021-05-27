@@ -27,32 +27,32 @@ void Tool_Bounce::ChangeCurrent( std::string name )
 {
 }
 
-void Tool_Bounce::addoneTOCurrent()
+void Tool_Bounce::AddOneToCurrent()
 {
-	current++;
-	if ( current > 1 ) {
-		current = 0;
+	Current++;
+	if ( Current > 1 ) {
+		Current = 0;
 	}
-	else if ( current < 0 )
+	else if ( Current < 0 )
 	{
-		current = 1;
+		Current = 1;
 	}
-	CurrentType = static_cast< BoxBounce >( current );
+	CurrentType = static_cast< BoxBounce >( Current );
 }
 
-void Tool_Bounce::minusoneTOCurrent()
+void Tool_Bounce::MinusOneTOCurrent()
 {
-	current--;
+	Current--;
 
-	if ( current > 2 ) {
-		current = 0;
+	if ( Current > 2 ) {
+		Current = 0;
 	}
-	else if ( current < 0 )
+	else if ( Current < 0 )
 	{
-		current = 1;
+		Current = 1;
 	}
 
-	CurrentType = static_cast< BoxBounce >( current );
+	CurrentType = static_cast< BoxBounce >( Current );
 }
 
 ToolData Tool_Bounce::GetToolData()

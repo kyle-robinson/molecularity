@@ -29,13 +29,14 @@ public:
 	void SetIsHolding( bool isHolding ) noexcept { isHeld = isHolding; }
 	void SetIsHovering( bool hover ) noexcept { cubeHover = hover; }
 	void SetIsInRange( bool range ) noexcept { cubeInRange = range; }
+	void SetCamPos(XMFLOAT3 newcampos)noexcept { CamPos = newcampos; }
 
 	void Update( const float deltaTime ) noexcept;
 	std::shared_ptr<PhysicsModel> GetPhysicsModel() const noexcept { return physicsModel; }
 	std::shared_ptr<CubeProperties> GetEditableProperties() const noexcept { return editableProperties; }
 private:
 	void CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) noexcept;
-
+	void MagneticForce();
 	std::shared_ptr<CubeProperties> editableProperties;
 	std::shared_ptr<PhysicsModel> physicsModel;
 	ID3D11DeviceContext* context;
@@ -52,6 +53,9 @@ private:
 	XMFLOAT3 prevPos;
 	XMFLOAT3 pos;
 
+	//for magnetic data
+	XMFLOAT3 CamPos;
+	float MagPower = 5;
 };
 
 #endif

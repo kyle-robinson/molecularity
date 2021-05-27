@@ -20,6 +20,11 @@ void EndLevelScreen_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* con
 	FontsList->AddFont("OpenSans_50", "OpenSans_50.spritefont");
 	FontsList->AddFont("OpenSans_12", "OpenSans_12.spritefont");
 
+	//text
+	TextLoad();
+	
+
+
 
 	Background.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
 	
@@ -41,7 +46,7 @@ void EndLevelScreen_UI::Update(float dt)
 		AddButtions();
 
 		TextToDraw text;
-		text._Text = "Level Complet";
+		text._Text = LoadedTextMap["Level_End_Text"];
 
 		XMVECTOR textsize= FontsList->GetFont("OpenSans_50")->GetSpriteFont()->MeasureString(text._Text.c_str());
 		text._Position = { (_SizeOfScreen.x / 2) - (XMVectorGetX(textsize)/2),static_cast<float>(_SizeOfScreen.y * 0.12) };
@@ -68,6 +73,16 @@ void EndLevelScreen_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX
 		}
 		_TextList.clear();
 	}
+}
+
+void EndLevelScreen_UI::TextLoad()
+{
+	vector<JSON::TextData>EndLevel_Text = TextLoader::Instance()->LoadText("EndLevel_Text");
+	LoadedTextMap = TextLoader::Instance()->ConvertToMap(EndLevel_Text);
+	vector<JSON::TextData>EndLevelButtions_Text = TextLoader::Instance()->LoadText("EndLevelButtions_Text");
+	map<string,string>tempMap= TextLoader::Instance()->ConvertToMap(EndLevelButtions_Text);
+	//join maps
+	LoadedTextMap.insert(tempMap.begin(), tempMap.end());
 }
 
 void EndLevelScreen_UI::HandleEvent(Event* event)
@@ -124,12 +139,12 @@ void EndLevelScreen_UI::RemoveFromEvent()
 void EndLevelScreen_UI::AddButtions()
 {
 	//buttions
-	if (Buttions[0].Function("Main Menu", ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) - (_SizeOfScreen.x / 7) - 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	if (Buttions[0].Function(LoadedTextMap["Buttion_1"], ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) - (_SizeOfScreen.x / 7) - 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//go to hub
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
 		ToShow = false;
 	}
-	else if (Buttions[1].Function("Next Level", ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) + 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
+	else if (Buttions[1].Function(LoadedTextMap["Buttion_2"], ButtionTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) + 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//go to next level
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &NextLevel);
