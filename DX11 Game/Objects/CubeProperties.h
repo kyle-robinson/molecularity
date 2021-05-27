@@ -23,6 +23,9 @@ public:
 	bool GetReflective() const noexcept { return isReflective; }
 	float GetSizeMultiplier() const noexcept { return sizeMultiplier; }
 	bool GetBoxMagneticMove() { return isMagneticMove; }
+
+	XMFLOAT3 GetOutlineColor() const noexcept { return outlineColor; }
+
 	// Setters
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
 	void SetBoxSize( BoxSize size ) noexcept {
@@ -46,7 +49,9 @@ public:
 
 	void SetBurnable( bool burnable ) noexcept { isBurnable = burnable; }
 	void SetReflective( bool reflective ) noexcept { isReflective = reflective; }
-	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier;}
+	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier; }
+
+	void SetOutlineColor( XMFLOAT3 color ) noexcept { outlineColor = color; }
 
 private:
 	int sizeID = 1;
@@ -56,11 +61,11 @@ private:
 	bool isMagnetic = false;
 	bool isMagneticMove = false;
 	float sizeMultiplier = 1.0f;
+	XMFLOAT3 outlineColor = { 0.0f, 0.0f, 0.0f };
 
 	BoxType boxType = BoxType::Wood;
 	BoxSize boxSize = BoxSize::Normal;
 	BoxBounce boxBounce = BoxBounce::Solid;
-	
 };
 
 #endif

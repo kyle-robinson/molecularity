@@ -144,12 +144,17 @@ void Tool_Class::HandleEvent(Event* event)
 	case EVENTID::ChangeAllCubeEvent:
 	{
 		timer.Restart();
-		if (_CurrentTool->GetToolData().MagMode == MagnetismMode::AllCubes) {
-			_Energy -= _CurrentTool->GetEnergyCost()*2;
-			//change all cubes propites
-			for (auto& cube : *static_cast<std::vector<std::shared_ptr<Cube>>*>(event->GetData())) {
-				ChangeCube(cube->GetEditableProperties().get());
+		if (_Energy > 0) {
+			if (_CurrentTool->GetToolData().MagMode == MagnetismMode::AllCubes) {
+				_Energy -= _CurrentTool->GetEnergyCost() * 2;
+				//change all cubes propites
+				for (auto& cube : *static_cast<std::vector<std::shared_ptr<Cube>>*>(event->GetData())) {
+					ChangeCube(cube->GetEditableProperties().get());
+				}
 			}
+		}
+		else if (_Energy <= 0) {
+
 		}
 	}
 	break;

@@ -7,7 +7,7 @@
 #include "ConstantBufferTypes.h"
 
 class Cube;
-class RenderableGameObject;
+class SpotLight;
 
 /// <summary>
 /// Uses the stencil buffer to create a stencil outline on a given game object.
@@ -19,7 +19,7 @@ public:
 	StencilOutline( Graphics& gfx );
 	void DrawWithOutline( Graphics& gfx, Cube& cube, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix,
 		ConstantBuffer<CB_PS_point>& cb_ps_point, ID3D11ShaderResourceView* texture );
-	void DrawWithOutline( Graphics& gfx, RenderableGameObject& object, ConstantBuffer<CB_PS_point>& cb_ps_point );
+	void DrawWithOutline( Graphics& gfx, SpotLight& object, ConstantBuffer<CB_PS_point>& cb_ps_point );
 	void SpawnControlWindow();
 
 	void SetOutlineScale( float outlineScale ) noexcept { scale = outlineScale; }

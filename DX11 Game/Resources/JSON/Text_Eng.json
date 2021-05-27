@@ -102,6 +102,10 @@
       "Text": "Resize:\nThis changes the size of the cube."
     },
     {
+      "Name": "Bounce_Tool",
+      "Text": "Bounce:\nThis allows for the cube to bounce or not"
+    },
+    {
       "Name": "Magnatism_Tool",
       "Text": "Magnetism:\nThis pulls the cube to you"
     }
@@ -146,6 +150,14 @@
     {
       "Name": "Magnatism_2",
       "Text": "This pulls the cube the tool is aimed at."
+    },
+    {
+      "Name": "Bounce_1",
+      "Text": "This stops the cube bouncing."
+    },
+    {
+      "Name": "Bounce_2",
+      "Text": "This allows the cube to bounce."
     }
   ],
   "Tool_Controls": [
@@ -171,6 +183,10 @@
     },
     {
       "Name": "Tool_3",
+      "Text": ":  Bounce"
+    },
+    {
+      "Name": "Tool_4",
       "Text": ":  Magnetism"
     }
   ],
@@ -523,5 +539,5 @@
 
     }
   ],
-  "Verson": 2.1
+  "Verson": 3.0
 }

@@ -107,7 +107,7 @@ void Credits_UI::LoadImages()
 
 
 	IData.Name = "Headder";
-	IData.FileName = "Title_Card\\TitleCard.dds";
+	IData.FileName = "Title_Card\\TitleCard.png";
 	IData.Size = { static_cast<float>(_SizeOfScreen.x * 0.5),static_cast<float>(_SizeOfScreen.y * 0.12) };
 	_ImageList.push_back(IData);
 
