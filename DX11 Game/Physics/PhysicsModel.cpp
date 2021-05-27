@@ -4,13 +4,13 @@
 
 PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 {
-	mMass = 25.0f;
+	mIsHeld = false;
 	mActivated = false;
 	mUseLaminar = true;
+	mInvVelocity = false;
 	mPosition = mTransform->GetPositionFloat3();
 
-	mIsHeld = false;
-
+	mMass = 25.0f;
 	mFriction = { 0.0f, 0.0f, 0.0f };
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 	mVelocity = { 0.0f, 0.0f, 0.0f };
@@ -151,7 +151,9 @@ void PhysicsModel::CheckFloorCollisions( std::shared_ptr<CubeProperties>& proper
 	}
 	if ( mPosition.y < offset )
 	{
-		mVelocity.y = 0.0f;
+		// enable bouncing???
+		mVelocity.y = mInvVelocity ? -mVelocity.y : 0.0f;
+
 		mPosition.y = offset;
 		mTransform->SetPosition( mPosition );
 	}

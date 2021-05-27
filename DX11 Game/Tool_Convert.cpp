@@ -23,9 +23,6 @@ void Tool_Convert::ChangeCurrent(int number)
 	CurrentType = static_cast<BoxType>(number);
 }
 
-
-
-
 void Tool_Convert::ChangeCurrent(std::string name)
 {
 }

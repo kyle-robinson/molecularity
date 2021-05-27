@@ -14,7 +14,7 @@ public:
 	PhysicsModel( GameObject* transform );
 	virtual ~PhysicsModel() = default;
 
-	// pressure plate activation
+	// Pressure Plate Activation
 	bool GetActivated() const noexcept { return mActivated; }
 	void SetActivated( bool activated ) noexcept { mActivated = activated; }
 
@@ -25,6 +25,7 @@ public:
 	void AddForce( XMVECTOR force ) noexcept;
 	void ResetForces() noexcept;
 	void ResetForces_NoY() noexcept;
+	void InvVelocity( bool invert ) noexcept { mInvVelocity = invert; }
 
 	// Get Forces
 	float GetMass() const noexcept { return mMass; }
@@ -60,10 +61,11 @@ private:
 	// Local Variables
 	float mMass;
 	float mWeight;
-	bool mActivated;
-	bool mUseLaminar;
 
 	bool mIsHeld;
+	bool mActivated;
+	bool mUseLaminar;
+	bool mInvVelocity;
 
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;

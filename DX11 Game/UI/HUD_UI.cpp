@@ -133,7 +133,6 @@ void HUD_UI::CreateToolHud()
 	string TextFile;
 	string ToolInformationTexture = "";
 
-
 	switch (Mode->GetTooltype())
 	{
 	case ToolType::Convert: {
@@ -144,10 +143,10 @@ void HUD_UI::CreateToolHud()
 		case 1: ToolInformationTexture = "crates\\wood.png"; break;
 		case 2: ToolInformationTexture = "crates\\stone.jpg"; break;
 		case 3: ToolInformationTexture = "crates\\iron.jpg"; break;
-		case 4: ToolInformationTexture = "crates\\alien.jpg"; break;
+		case 4: ToolInformationTexture = "crates\\alien.png"; break;
 		}
 	}
-						  break;
+	break;
 	case ToolType::Resize: {
 		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
 		switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
@@ -157,7 +156,17 @@ void HUD_UI::CreateToolHud()
 		case 2: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_UP.png"; break;
 		}
 	}
-						 break;
+	break;
+	case ToolType::Bounce:
+	{
+		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
+		switch ( static_cast< int >( Mode->GetCurrentOption().boxSize ) )
+		{
+		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Down.png"; break;
+		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_UP.png"; break;
+		}
+	}
+	break;
 	default:
 		TextFile = "";
 		break;
