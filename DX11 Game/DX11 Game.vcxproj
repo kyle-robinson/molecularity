@@ -217,6 +217,7 @@
     <ClCompile Include="Credits_Level.cpp" />
     <ClCompile Include="TextLoader.cpp" />
     <ClCompile Include="Tool_Magnetism.cpp" />
+    <ClCompile Include="Tool_Bounce.cpp" />
     <ClCompile Include="UI\Fonts.cpp" />
     <ClCompile Include="UI\EndLevelScreen_UI.cpp" />
     <ClCompile Include="Graphics\Fog.cpp">
@@ -356,6 +357,7 @@
     <ClInclude Include="Credits_Level.h" />
     <ClInclude Include="TextLoader.h" />
     <ClInclude Include="Tool_Magnetism.h" />
+    <ClInclude Include="Tool_Bounce.h" />
     <ClInclude Include="UI\Fonts.h" />
     <ClInclude Include="UI\EndLevelScreen_UI.h" />
     <ClInclude Include="Graphics\Bindables.h" />

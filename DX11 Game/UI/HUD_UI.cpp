@@ -38,6 +38,7 @@ void HUD_UI::Update(float dt)
 	string ToolInformationTexture = "";
 
 	CreateToolHud();
+
 	//crosshair
 	HUDImages[1].Function( "HUD\\CrossHair_Assets\\Cosshair_V2_60x60.dds", { 200 * hudScale,200 * hudScale }, { _SizeOfScreen.x / 2 - ( 200 * hudScale ) / 2,  _SizeOfScreen.y / 2 - ( 200 * hudScale ) / 2 } );
 
@@ -128,7 +129,6 @@ void HUD_UI::CreateToolHud()
 	string TextFile;
 	string ToolInformationTexture = "";
 
-
 	switch (Mode->GetTooltype())
 	{
 	case ToolType::Convert: {
@@ -139,10 +139,10 @@ void HUD_UI::CreateToolHud()
 		case 1: ToolInformationTexture = "crates\\wood.png"; break;
 		case 2: ToolInformationTexture = "crates\\stone.jpg"; break;
 		case 3: ToolInformationTexture = "crates\\iron.jpg"; break;
-		case 4: ToolInformationTexture = "crates\\alien.jpg"; break;
+		case 4: ToolInformationTexture = "crates\\alien.png"; break;
 		}
 	}
-						  break;
+	break;
 	case ToolType::Resize: {
 		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
 		switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
@@ -161,7 +161,17 @@ void HUD_UI::CreateToolHud()
 		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\MagOne.png"; break;
 		}
 	}
-						 break;
+	break;
+	case ToolType::Bounce:
+	{
+		TextFile = "HUD\\Tool_Assets\\ReSizeSelect_500x500.dds";
+		switch ( static_cast< int >( Mode->GetCurrentOption().boxBounce ) )
+		{
+		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_Down.png"; break;
+		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\ResizeTool_UP.png"; break;
+		}
+	}
+	break;
 	default:
 		TextFile = "";
 		break;

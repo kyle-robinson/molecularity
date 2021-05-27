@@ -38,10 +38,8 @@ void MainMenu_Level::OnSwitch()
 	EventSystem::Instance()->AddEvent(EVENTID::ShowCursorEvent);
 
 	//sounds
-	Sound::Instance()->ClearAudio();
-
-	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\MenuMusic.mp3", "MenuMusic" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
+	Sound::Instance()->InitialiseMusicTrack( "MenuMusic" );
+	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 
 	//UI
 	_UiManager->RemoveAllUI();

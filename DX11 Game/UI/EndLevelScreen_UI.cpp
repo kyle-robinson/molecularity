@@ -73,8 +73,6 @@ void EndLevelScreen_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX
 		}
 		_TextList.clear();
 	}
-
-
 }
 
 void EndLevelScreen_UI::TextLoad()
@@ -118,10 +116,6 @@ void EndLevelScreen_UI::HandleEvent(Event* event)
 			_MouseData.LPress = false;
 		}
 	}
-
-
-
-
 }
 
 void EndLevelScreen_UI::AddtoEvent()

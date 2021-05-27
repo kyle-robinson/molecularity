@@ -149,6 +149,7 @@ void Pause::ButtionCreate()
 	if (PuaseButtions[0].Function(LoadedTextMap["Buttion_1"], ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0, static_cast<float>(_SizeOfScreen.y * 0.25) }, DirectX::Colors::Black, _MouseData)) {
 		//back to game
 		_isPuased = false;
+		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 	}

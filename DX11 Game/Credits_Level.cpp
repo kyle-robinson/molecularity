@@ -9,8 +9,8 @@ bool Credits_Level::OnCreate()
 	{
 		// DRAWABLES
 		{
-				//add level UI 
-				credits = make_shared<Credits_UI>();
+			//add level UI 
+			credits = make_shared<Credits_UI>();
 		}
 	}
 	catch (COMException& exception)
@@ -19,7 +19,6 @@ bool Credits_Level::OnCreate()
 		return false;
 	}
 	return true;
-
 }
 
 void Credits_Level::OnSwitch()
@@ -30,6 +29,11 @@ void Credits_Level::OnSwitch()
 	_UiManager->RemoveAllUI();
 	_UiManager->AddUi(credits, "Credits");
 	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
+
+	//sounds
+	Sound::Instance()->InitialiseMusicTrack( "Credits" );
+
+	Sound::Instance()->PlayMusic( "Credits" );
 }
 
 void Credits_Level::Render()
@@ -70,5 +74,3 @@ void Credits_Level::Update(const float dt)
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate(dt);
 }
-
-

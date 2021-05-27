@@ -45,6 +45,7 @@ void LevelStateMachine::SwitchTo( uint32_t id )
 	auto it = levels.find( id );
 	if ( it != levels.end() )
 	{
+		Sound::Instance()->ClearAudio();
 		currentLevel = it->second;
 		currentLevel->OnSwitch();
 	}

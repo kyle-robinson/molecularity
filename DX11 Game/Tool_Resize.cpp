@@ -59,7 +59,6 @@ void Tool_Resize::MinusOneTOCurrent()
 
 ToolData Tool_Resize::GetToolData()
 {
-
 	ToolData Data;
 	Data.boxSize = CurrentSize;
 	return Data;
