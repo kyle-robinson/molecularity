@@ -21,6 +21,8 @@ public:
 	void UpdateModelPosition( std::unique_ptr<Camera>& camera );
 	void SpawnControlWindow();
 	void HandleEvent( Event* event );
+
+	XMFLOAT3 GetColor() noexcept { return color; }
 private:
 	BOOL enable = TRUE;
 	float cone = 20.0f;

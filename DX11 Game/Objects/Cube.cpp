@@ -47,24 +47,54 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 void Cube::Update( const float deltaTime ) noexcept
 {
     // update properties
-    physicsModel->SetMass( 0.0f );
-    physicsModel->SetBounciness( 0.0f );
-    physicsModel->SetConductive( false );
-    physicsModel->SetMagnetic( false );
     switch ( editableProperties->GetBoxType() )
     {
-    case BoxType::Mesh:  physicsModel->SetMass( 10.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( true ); physicsModel->SetMagnetic( true );   break;
-    case BoxType::Wood:  physicsModel->SetMass( 30.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( false ); physicsModel->SetMagnetic( false ); break;
-    case BoxType::Stone: physicsModel->SetMass( 50.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( false ); physicsModel->SetMagnetic( false ); break;
-    case BoxType::Iron:  physicsModel->SetMass( 70.0f ); physicsModel->SetBounciness( 0.0f ); physicsModel->SetConductive( true ); physicsModel->SetMagnetic( true );   break;
-    case BoxType::Alien: physicsModel->SetMass( 100.0f ); physicsModel->SetBounciness( 0.5f ); physicsModel->SetConductive( true ); physicsModel->SetMagnetic( true );  break;
+    case BoxType::Mesh:
+        physicsModel->SetMass( 10.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( true );
+        physicsModel->SetMagnetic( true );
+        editableProperties->SetOutlineColor( { 0.18f, 0.8f, 0.44f } );
+        break;
+    case BoxType::Wood:
+        physicsModel->SetMass( 30.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( false );
+        physicsModel->SetMagnetic( false );
+        editableProperties->SetOutlineColor( { 0.9f, 0.49f, 0.13f } );
+        break;
+    case BoxType::Stone:
+        physicsModel->SetMass( 50.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( false );
+        physicsModel->SetMagnetic( false );
+        editableProperties->SetOutlineColor( { 0.2f, 0.59f, 0.85f } );
+        break;
+    case BoxType::Iron:
+        physicsModel->SetMass( 70.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( true );
+        physicsModel->SetMagnetic( true );
+        editableProperties->SetOutlineColor( { 0.6f, 0.34f, 0.71f } );
+        break;
+    case BoxType::Alien:
+        physicsModel->SetMass( 100.0f );
+        physicsModel->SetBounciness( 0.5f );
+        physicsModel->SetConductive( true );
+        physicsModel->SetMagnetic( true );
+        editableProperties->SetOutlineColor( { 0.9f, 0.29f, 0.23f } );
+        break;
     }
+
+    // update sizing
     switch ( editableProperties->GetBoxSize() )
     {
     case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); break;
     case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() + 25.0f ); break;
     case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); break;
     }
+
+    // update bounciness
     switch ( editableProperties->GetBoxBounce() )
     {
     case BoxBounce::Solid: physicsModel->InvVelocity( false ); break;
@@ -88,8 +118,6 @@ void Cube::Update( const float deltaTime ) noexcept
     if (heldLastFrame && !isHeld && (pos.x != prevPos.x || pos.z != prevPos.z)) {
         physicsModel->AddForce(XMFLOAT3((pos.x - prevPos.x) * 5.0f, 0.0f, (pos.z - prevPos.z) * 5.0f));
     }
-   
-
 
     if ( delay == 5 )
         prevPos = pos;
