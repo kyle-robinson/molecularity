@@ -68,7 +68,7 @@ private:
 	float sizeMultiplier = 1.0f;
 	XMFLOAT3 outlineColor = { 0.0f, 0.0f, 0.0f };
 
-	BoxType boxType = BoxType::Wood;
+	BoxType boxType = BoxType::DissCube;
 	BoxSize boxSize = BoxSize::Normal;
 	BoxBounce boxBounce = BoxBounce::Solid;
 };

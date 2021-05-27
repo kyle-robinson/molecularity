@@ -15,9 +15,8 @@ enum class BoxType
 {
 	Mesh = 0,
 	Wood,
-	Stone,
 	Iron,
-	Alien
+	DissCube
 };
 
 enum class BoxSize
