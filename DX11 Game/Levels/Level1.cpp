@@ -145,7 +145,7 @@ void Level1::Update( const float dt )
 	// COLLISIONS
 	{
 		// camera collisions w room
-		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
+		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 19.0f );
 
 		// cube collisions
 		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
