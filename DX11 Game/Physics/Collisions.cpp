@@ -31,21 +31,21 @@ bool Collisions::CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObje
 #pragma region Level1_Collisions
 void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObject3D& object, float offset ) noexcept
 {
-	if ( camera->GetPositionFloat3().z < -7.0f ) // entrance collisions
+	if ( camera->GetPositionFloat3().z < -6.5f ) // entrance collisions
 	{
 		// X-COLLISIONS
 		{
-			if ( camera->GetPositionFloat3().x >= 2.5f )
-				camera->SetPosition( 2.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+			if ( camera->GetPositionFloat3().x >= 4.5f )
+				camera->SetPosition( 4.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
 
-			if ( camera->GetPositionFloat3().x <= -2.5f )
-				camera->SetPosition( -2.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+			if ( camera->GetPositionFloat3().x <= -4.5f )
+				camera->SetPosition( -4.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
 		}
 
 		// Z-COLLISIONS
 		{
-			if ( camera->GetPositionFloat3().z <= -20.0f )
-				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -20.0f );
+			if ( camera->GetPositionFloat3().z <= -23.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -23.0f );
 		}
 	}
 	else // main area collisions
@@ -61,42 +61,43 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObje
 
 		// Z-COLLISIONS
 		{
-			if ( camera->GetPositionFloat3().z >= 13.0f )
-				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, 13.0f );
+			if ( camera->GetPositionFloat3().z >= 1.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, 1.0f );
 
-			if ( camera->GetPositionFloat3().x >= 2.5f && camera->GetPositionFloat3().z <= -6.5f )
-				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -6.5f );
+			if ( camera->GetPositionFloat3().x >= 4.5f && camera->GetPositionFloat3().z <= -6.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -6.0f );
 
-			if ( camera->GetPositionFloat3().x <= -2.5f && camera->GetPositionFloat3().z <= -6.5f )
-				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -6.5f );
+			if ( camera->GetPositionFloat3().x <= -4.5f && camera->GetPositionFloat3().z <= -6.0f )
+				camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -6.0f );
 		}
 	}
 }
 
 void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept
 {
-	if ( cube->GetPositionFloat3().z < -7.0f ) // entrance collisions
+	cube->GetPhysicsModel()->CheckGroundCollisions( true );
+	if ( cube->GetPositionFloat3().z < -6.5f ) // entrance collisions
 	{
 		// X-COLLISIONS
 		{
-			if ( cube->GetPositionFloat3().x >= 2.5f )
+			if ( cube->GetPositionFloat3().x >= 5.0f )
 			{
-				cube->SetPosition( 2.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				cube->SetPosition( 5.0f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
 				RESET_FORCES;
 			}
 
-			if ( cube->GetPositionFloat3().x <= -2.5f )
+			if ( cube->GetPositionFloat3().x <= -5.0f )
 			{
-				cube->SetPosition( -2.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				cube->SetPosition( -5.0f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
 				RESET_FORCES;
 			}
 		}
 
 		// Z-COLLISIONS
 		{
-			if ( cube->GetPositionFloat3().z <= -20.0f )
+			if ( cube->GetPositionFloat3().z <= -23.0f )
 			{
-				cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -20.0f );
+				cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -23.0f );
 				RESET_FORCES;
 			}
 		}
@@ -120,23 +121,24 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 
 		// Z-COLLISIONS
 		{
-			if ( cube->GetPositionFloat3().z < 13.0f ) // main area collisions
+			if ( cube->GetPositionFloat3().z < 3.0f ) // main area collisions
 			{
-				if ( cube->GetPositionFloat3().x >= 2.5f && cube->GetPositionFloat3().z <= -6.5f )
+				if ( cube->GetPositionFloat3().x >= 5.0f && cube->GetPositionFloat3().z <= -6.0f )
 				{
-					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.5f );
+					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.0f );
 					RESET_FORCES;
 				}
 
-				if ( cube->GetPositionFloat3().x <= -2.5f && cube->GetPositionFloat3().z <= -6.5f )
+				if ( cube->GetPositionFloat3().x <= -5.0f && cube->GetPositionFloat3().z <= -6.0f )
 				{
-					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.5f );
+					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -6.0f );
 					RESET_FORCES;
 				}
 			}
-			else if ( cube->GetPositionFloat3().z >= 13.0f && cube->GetPositionFloat3().z < 38.0f ) // sludge area collisions
+			else if ( cube->GetPositionFloat3().z >= 3.0f && cube->GetPositionFloat3().z < 19.5f ) // sludge area collisions
 			{
-				if ( cube->GetPositionFloat3().y <= 0.5f )
+				cube->GetPhysicsModel()->CheckGroundCollisions( false );
+				if ( cube->GetPositionFloat3().y <= -2.5f )
 				{
 					cube->ResetPosition();
 					RESET_FORCES;
@@ -144,9 +146,9 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 			}
 			else // pressure plate platform collisions
 			{
-				if ( cube->GetPositionFloat3().z >= 53.0f )
+				if ( cube->GetPositionFloat3().z >= 28.0f )
 				{
-					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 53.0f );
+					cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 28.0f );
 					RESET_FORCES;
 				}
 			}

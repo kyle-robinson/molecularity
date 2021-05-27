@@ -34,8 +34,7 @@ public:
 	XMFLOAT3 GetAcceleration() const noexcept { return mAcceleration; }
 
 	float GetBounciness() const noexcept { return mBounciness; }
-	bool GetMagnetic() const noexcept { return mMagnetic; }
-	bool GetConductivity() const noexcept { return mConductive; }
+
 
 	// Set Forces
 	void SetMass( float mass ) noexcept { mMass = mass; }
@@ -44,13 +43,13 @@ public:
 	void SetAcceleration( XMFLOAT3 acceleration ) noexcept { mAcceleration = acceleration; }
 
 	void SetBounciness( float bounciness ) noexcept { mBounciness = bounciness; }
-	void SetMagnetic( bool magnetic ) noexcept { mMagnetic = magnetic; }
-	void SetConductive( bool conductive ) noexcept { mConductive = conductive; }
+	
+	
 
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
-
-	 
+  
+	void CheckGroundCollisions( bool collisions ) noexcept { mCheckGroundCollisions = collisions; }
 	void UseWeight(bool use)noexcept { useWeight = use; }
 
 private:
@@ -75,13 +74,12 @@ private:
 	float mWeight;
 	bool mUseLaminar;
 
-	bool mMagnetic;
-	bool mConductive;
 	float mBounciness;
 
 	bool mIsHeld;
 	bool mActivated;
 	bool mInvVelocity;
+  bool mCheckGroundCollisions;
 
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;
