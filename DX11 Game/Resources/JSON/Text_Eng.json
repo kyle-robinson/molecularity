@@ -22,6 +22,10 @@
     {
       "Name": "Action_Text",
       "Text": "Press '_' to pick up cube."
+    },
+    {
+      "Name": "Action_Text2",
+      "Text": "This cube does not want anything to do with you"
     }
   ],
   "EndLevel_Text": [
@@ -125,15 +129,7 @@
     },
     {
       "Name": "Convert_3",
-      "Text": "stone."
-    },
-    {
-      "Name": "Convert_4",
       "Text": "iron."
-    },
-    {
-      "Name": "Convert_5",
-      "Text": "alien."
     },
     {
       "Name": "Size_1",
