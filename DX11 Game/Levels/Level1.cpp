@@ -52,14 +52,18 @@ bool Level1::OnCreate()
 }
 
 void Level1::OnSwitch()
-{
+{	
+	
+	CurrentLevel = 0;
+	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 	// update items on level switch here...
 	levelName = "Level1";
 	NextLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
-
+	
+	//UI
 	_UiManager->RemoveUI( "MainMenu" );
-
+	
 	//send out editable properties to hud for data
 	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
 
@@ -69,14 +73,17 @@ void Level1::OnSwitch()
 	_UiManager->AddUi(EndLevelUI, "EndLevel");
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 	_UiManager->HideUi("EndLevel");
+
 	// initialise sounds
-	Sound::Instance()->ClearAudio();
+	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
+	Sound::Instance()->InitialiseSoundGroup( "Player" );
+	Sound::Instance()->InitialiseSoundGroup( "Cube" );
+	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
+	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
+	Sound::Instance()->InitialiseSoundEffect( "Notification" );
 
-	Sound::Instance()->InitialiseMusicTrack( "Resources\\Audio\\Music\\LevelMusic.mp3", "LevelMusic" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\ToolUse.mp3", "ToolUse" );
-	Sound::Instance()->InitialiseSoundEffect( "Resources\\Audio\\Sounds\\Collision.mp3", "MenuClick" );
-
-	Sound::Instance()->PlayMusic( "LevelMusic" );
+	Sound::Instance()->PlayMusic( "TutorialMusic" );
+	Sound::Instance()->PlaySoundEffect( "Notification" );
 }
 
 void Level1::Render()
@@ -157,8 +164,11 @@ void Level1::Update( const float dt )
 			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
 			{
 				cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
-				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f )
+				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
+				{
 					levelCompleted = true;
+					Sound::Instance()->PlaySoundEffect( "PressurePlateClick", false, pressurePlate.GetPositionFloat3(), 15.0f );
+				}
 			}
 
 			// update collisions w other cubes
@@ -172,6 +182,6 @@ void Level1::Update( const float dt )
 	}
 
 	
-	//levelCompleted = true;
+
 	LevelContainer::LateUpdate( dt );
 }

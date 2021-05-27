@@ -23,16 +23,34 @@ Sound::~Sound()
 	engine->drop();
 }
 
-void Sound::InitialiseMusicTrack( const char* fileLocation, std::string musicName )
+void Sound::InitialiseMusicTrack( std::string fileName, std::string fileType )
 {
-	musicTracks.emplace( musicName, engine->play2D( fileLocation, true, true, true ) );
-	musicTracks[musicName]->setVolume(musicVolume);
+	musicTracks.emplace( fileName, engine->play2D( ("Resources\\Audio\\Music\\" + fileName + fileType).c_str(), true, true, true ) );
+	musicTracks[fileName]->setVolume( musicVolume );
 }
 
-void Sound::InitialiseSoundEffect( const char* fileLocation, std::string soundName )
+void Sound::InitialiseSoundEffect( std::string fileName, std::string fileType )
 {
-	soundEffects.emplace( soundName, engine->addSoundSourceFromFile( fileLocation ) );
-	soundEffects[soundName]->setDefaultVolume(soundEffectsVolume);
+	soundEffects.emplace( fileName, engine->addSoundSourceFromFile( ( "Resources\\Audio\\Sounds\\" + fileName + fileType ).c_str() ) );
+	soundEffects[fileName]->setDefaultVolume( soundEffectsVolume );
+}
+
+void Sound::InitialiseSoundGroup( std::string groupName )
+{
+	if ( groupName == "Player" )
+	{
+		Sound::Instance()->InitialiseSoundEffect( "ToolUse" );
+		Sound::Instance()->InitialiseSoundEffect( "ToolNoEnergy" );
+		Sound::Instance()->InitialiseSoundEffect( "ToolChange" );
+		Sound::Instance()->InitialiseSoundEffect( "ToolSwitchMode" );
+	}
+
+	else if ( groupName == "Cube" )
+	{
+		Sound::Instance()->InitialiseSoundEffect( "CubePickup" );
+		Sound::Instance()->InitialiseSoundEffect( "CubeThrow" );
+		Sound::Instance()->InitialiseSoundEffect( "CubeCollision" );
+	}
 }
 
 void Sound::ClearAudio()
@@ -67,18 +85,21 @@ void Sound::PlayMusic( std::string musicName, bool loops )
 {
 	if ( masterOn )
 	{
-		for ( auto music : musicTracks )
+		if ( musicOn )
 		{
-			if ( music.second->getIsPaused() == false )
-				music.second->setIsPaused( true );
-		}
+			for (auto music : musicTracks)
+			{
+				if (music.second->getIsPaused() == false)
+					music.second->setIsPaused(true);
+			}
 
-		currentMusicTrack = musicName;
+			currentMusicTrack = musicName;
 
-		if ( musicTracks.size() > 0 )
-		{
-			musicTracks[musicName]->setIsLooped(loops);
-			musicTracks[musicName]->setIsPaused(false);
+			if (musicTracks.size() > 0)
+			{
+				musicTracks[musicName]->setIsLooped(loops);
+				musicTracks[musicName]->setIsPaused(false);
+			}
 		}
 	}
 }
@@ -87,7 +108,7 @@ void Sound::PlaySoundEffect( std::string soundName, bool loops, XMFLOAT3 soundPo
 {
 	if ( masterOn )
 	{
-		if ( soundEffectsOn )
+		if ( soundEffectsOn && !engine->isCurrentlyPlaying( soundEffects[soundName] ) )
 		{
 			if ( soundPosition.x == NULL && soundPosition.y == NULL && soundPosition.z == NULL )
 				engine->play2D( soundEffects[soundName] );

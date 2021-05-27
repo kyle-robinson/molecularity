@@ -3,6 +3,7 @@
 
 Immage_Widget::Immage_Widget()
 {
+	
 }
 
 Immage_Widget::~Immage_Widget()
@@ -29,6 +30,7 @@ bool Immage_Widget::Function(std::string texture, DirectX::XMFLOAT2 size, Direct
 
 bool Immage_Widget::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
+	updateText = true;
 	_Immage.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
 	return true;
 }

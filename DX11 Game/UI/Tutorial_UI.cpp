@@ -7,52 +7,22 @@ Tutorial_UI::Tutorial_UI()
 
 Tutorial_UI::~Tutorial_UI()
 {
-	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::ToolModeEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
-	EventSystem::Instance()->RemoveClient(EVENTID::GameUnPauseEvent, this);
+	RemoveFromEvent();
 }
 
-void Tutorial_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d)
+void Tutorial_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
 {
-	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::ToolModeEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
+	AddtoEvent();
+	UI::Inizalize(device, contex, cb_vs_matrix_2d, fonts);
 	//get key binds
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
-
-	for (auto& setting : SettingsData)
-	{
-		if (setting.Type == JSON::SettingType::ControllType)
-		{
-
-			string key = std::get<string>(setting.Setting);
-			unsigned char* valChar = (unsigned char*)key.c_str();
-			KeyBindes[setting.Name] = ConvertFromUnsignedCharTostring(*valChar);
-			
-		}
-	}
-
-	_Device = device;
-	_Contex = contex;
-	_cb_vs_matrix_2d = cb_vs_matrix_2d;
-
-	_TextRenderer = make_shared<TextRenderer>("OpenSans_12.spritefont", _Device.Get(), _Contex.Get());
+	LoadKeyBindes(SettingsData);
+	FontsList->AddFont("OpenSans_12", "OpenSans_12.spritefont");
 
 	TextBackground.INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
-	for (unsigned int i = 0; i < 2; i++) {
-		OutLines[i].INITSprite(_Contex.Get(), _Device.Get(), *_cb_vs_matrix_2d);
-		
-	}
+	
 
-	CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
-	_TextRenderer->UpdateViewPort(newViewport);
-
-
-
+	//inital sate
 	CurrentState = TutorialState::GameTut;
 	stateNo = 0;
 
@@ -61,179 +31,40 @@ void Tutorial_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, C
 
 void Tutorial_UI::Update(float dt)
 {
-	float yPos=0;
-	float xpos = _SizeOfScreen.x - static_cast<float>(_SizeOfScreen.x * 0.30);
+	
+	//inital position
+	yPos=0;
+	xpos = _SizeOfScreen.x - static_cast<float>(_SizeOfScreen.x * 0.30);
 	
 	XMFLOAT2 size{ static_cast<float>(_SizeOfScreen.x * 0.30), static_cast<float>(_SizeOfScreen.y * 0.13) };
-	TextBackground.Function({ 225,225,225 }, { static_cast<float>(_SizeOfScreen.x * 0.30),static_cast<float>(_SizeOfScreen.y * 0.35) }, { _SizeOfScreen.x- static_cast<float>(_SizeOfScreen.x * 0.30),0 }, 0.8f);
+	TextBackground.Function({ 225,225,225 }, { static_cast<float>(_SizeOfScreen.x * 0.30),static_cast<float>(_SizeOfScreen.y * 0.28) }, { _SizeOfScreen.x- static_cast<float>(_SizeOfScreen.x * 0.30),0 }, 0.8f);
 	
+	switch (CurrentState)
+	{
+	case TutorialState::GameTut:
+	{
+		GenralTutorialText();
+	}
+		break;
+	case TutorialState::MovementTut:
+		MovementTutorialText();
+		break;
+	case TutorialState::ToolTut:
+		ToolTutorialText();
+		break;
+	case TutorialState::ToolTut2:
+		ToolTutorialText();
+		break;
+	case TutorialState::OtherTut:
+		OtherTutorialText();
+		break;
+	default:
+		break;
+	}
+  
+	MoveToNextPannle();
 	
-	XMVECTOR textsize;
-	TextToDraw text;
-	text._Colour = DirectX::Colors::Black;
-	//Game instruction
-	if (CurrentState == TutorialState::GameTut)
-	{
-		//get to exsit
-		text._Text = "The aim for you is to puzzle you way\nthrough the rooms that are given to you.";
-		text._Position = { xpos,yPos };
-		_TextList.push_back(text);
-	}
-	
-	//tool instructions 
-	else if (CurrentState == TutorialState::ToolTut)
-	{
-
-		//genral information
-		text._Text = "The tool allows for you to change the\nproperties of the cubes you will find in\nthe levels.";
-		textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
-		_TextList.push_back(text);
-
-		//tool controlls 
-		yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
-		text._Text = "Scroll Wheel : Change Tool mode";
-		textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
-		_TextList.push_back(text);
-
-		yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
-		text._Text = KeyBindes["Gun_State_One"]+":  Tool 1          " + KeyBindes["Gun_State_Four"] + ":  Tool 4";;
-		text._Text +="\n"+ KeyBindes["Gun_State_Two"] + ":  Tool 2          " + KeyBindes["Gun_State_Five"] + ":  Tool 5";;
-		text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Tool 3          " + KeyBindes["Gun_State_Six"] + ":  Tool 6";;
-		
-		text._Position = { xpos,yPos };
-		_TextList.push_back(text);
-
-	}
-	//indvudual tool infromation
-	else if (CurrentState == TutorialState::ToolTut2)
-	{
-		//tell user about current mode
-		switch (Mode->GetTooltype())
-		{
-		case ToolType::Convert: {
-			//tool 1
-			
-			text._Text = "Convert";
-			textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
-			text._Position = { xpos,yPos };
-			_TextList.push_back(text);
-
-			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
-			text._Text = "This tool alows you to change the cubes\nmaterial.";
-			text._Position = { xpos,yPos };
-			_TextList.push_back(text);
-
-			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y)*2;
-			text._Position = { xpos,yPos };
-			text._Text = "This turns the object into ";
-			switch (static_cast<int>(Mode->GetCurrentOption().boxtype))
-			{
-			case 0:
-				text._Text += "mesh.";
-				break;
-			case 1:
-				text._Text += "wood.";
-				break;
-			case 2:
-				text._Text += "stone.";
-				break;
-			case 3:
-				text._Text += "iron.";
-				break;
-			case 4:
-				text._Text += "alien.";
-				break;
-			}
-			_TextList.push_back(text);
-		}
-							  break;
-		case ToolType::Resize: {
-			//tool 2
-
-			text._Text = "Resize:";
-			textsize = _TextRenderer->GetSpriteFont()->MeasureString(text._Text.c_str());
-			text._Position = { xpos,yPos };
-			_TextList.push_back(text);
-
-			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y);
-			text._Text = "This tool allows you to change the cubes'\nsize.";
-			text._Position = { xpos,yPos };
-			_TextList.push_back(text);
-
-			yPos += (XMVectorGetY(textsize) * _TextRenderer->GetScale().y)*2;
-			switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
-			{
-			case 0:
-
-				text._Text = "This shrinks the cube.";
-
-				break;
-			case 1:
-				text._Text = "This resets the cube to normal size.";
-				break;
-			case 2:
-				text._Text = "This largens the cube.";
-
-				break;
-			}
-			text._Position = { xpos,yPos };
-			_TextList.push_back(text);
-		}
-							 break;
-
-		}
-	}
-	//movement instructions
-	else if(CurrentState==TutorialState::MovementTut)
-	{
-		//movement
-		text._Text = "Movement Controls:";
-		text._Text += "\n"+ KeyBindes["Forward"]+": Forward ";
-		text._Text += "\n" + KeyBindes["Left"] + ": Left";
-		text._Text += "\n" + KeyBindes["Back"] + ": Back";
-		text._Text += "\n" + KeyBindes["Right"] + ": Right";
-		text._Text += "\n" + KeyBindes["Jump"] + ": Jump";
-		text._Text += "\nMouse: Look around";
-		text._Position = { xpos,yPos };
-		_TextList.push_back(text);
-	}
-
-	//other controlls 
-	else if (CurrentState == TutorialState::OtherTut)
-	{
-		
-		text._Text = "Other Controls";
-		text._Text += "\n" + KeyBindes["Pause"] + ": Puase";
-		text._Text += "\n" + KeyBindes["Change_Gun_State_Up"] + ": Change tool up";
-		text._Text += "\n" + KeyBindes["Change_Gun_State_Down"] + ": Change tool up";
-		text._Position = { xpos,yPos };
-		_TextList.push_back(text);
-	}
-
-
-	//continue 
-	{
-		//wait time 
-
-		if (timer.GetMilliSecondsElapsed()>= 5000 && stateNo<5) {
-
-
-			text._Text = "press enter to continue";
-			text._Position = { xpos,static_cast<float>(_SizeOfScreen.y * 0.30) };
-			_TextList.push_back(text);
-			//get is enter key down
-			if ((1 << 15) & GetAsyncKeyState(VK_RETURN) ) {
-				//move next state
-				stateNo++;
-				CurrentState = static_cast<TutorialState>(stateNo);
-				timer.Restart();
-			}
-			
-		}
-
-	}
+	//end Tutorial
 	if (stateNo > 4) {
 		//end
 		EventSystem::Instance()->AddEvent(EVENTID::UITutorialEnd);
@@ -253,7 +84,7 @@ void Tutorial_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX World
 
 		for (auto& Text : _TextList)
 		{
-			_TextRenderer->RenderString(Text._Text, Text._Position, Text._Colour);
+			FontsList->GetFont("OpenSans_12")->RenderString(Text._Text, Text._Position, Text._Colour);
 		}
 
 		_TextList.clear();
@@ -279,19 +110,9 @@ void Tutorial_UI::HandleEvent(Event* event)
 	break;
 	case EVENTID::UpdateSettingsEvent:
 	{
-		std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
+		std::vector<JSON::SettingData> SettingsData = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 
-		for (auto& setting : SettingsData)
-		{
-			if (setting.Type == JSON::SettingType::ControllType)
-			{
-
-				string key = std::get<string>(setting.Setting);
-				unsigned char* valChar = (unsigned char*)key.c_str();
-				KeyBindes[setting.Name] = ConvertFromUnsignedCharTostring(*valChar);
-
-			}
-		}
+		LoadKeyBindes(SettingsData);
 	}
 	break;
 	case EVENTID::ToolModeEvent:
@@ -302,12 +123,29 @@ void Tutorial_UI::HandleEvent(Event* event)
 	case EVENTID::WindowSizeChangeEvent:
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
-		CD3D11_VIEWPORT newViewport = CD3D11_VIEWPORT(0.0f, 0.0f, _SizeOfScreen.x, _SizeOfScreen.y);
-		_TextRenderer->UpdateViewPort(newViewport);
+		
 	}
 	break;
 	}
 	
+}
+
+void Tutorial_UI::AddtoEvent()
+{
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::ToolModeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
+}
+
+void Tutorial_UI::RemoveFromEvent()
+{
+	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::ToolModeEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GameUnPauseEvent, this);
 }
 
 //convert from unsigned char to understandble string fromat 
@@ -602,4 +440,197 @@ string Tutorial_UI::ConvertFromUnsignedCharTostring(unsigned char input)
 	}
 
 	return text;
+}
+
+void Tutorial_UI::GenralTutorialText()
+{
+	TextToDraw text;
+	text._Colour = DirectX::Colors::Black;
+	//get to exsit
+	text._Text = "The aim for you is to puzzle you way\nthrough the rooms that are given to you.";
+	text._Position = { xpos,yPos };
+	_TextList.push_back(text);
+}
+
+void Tutorial_UI::MovementTutorialText()
+{
+	TextToDraw text;
+	text._Colour = DirectX::Colors::Black;
+	//movement
+	text._Text = "Movement Controls:";
+	text._Text += "\n" + KeyBindes["Forward"] + ": Forward ";
+	text._Text += "\n" + KeyBindes["Left"] + ": Left";
+	text._Text += "\n" + KeyBindes["Back"] + ": Back";
+	text._Text += "\n" + KeyBindes["Right"] + ": Right";
+	text._Text += "\n" + KeyBindes["Jump"] + ": Jump";
+	text._Text += "\nMouse: Look around";
+	text._Position = { xpos,yPos };
+	_TextList.push_back(text);
+}
+
+void Tutorial_UI::ToolTutorialText()
+{
+
+	XMVECTOR textsize;
+	TextToDraw text;
+	text._Colour = DirectX::Colors::Black;
+	//tool instructions 
+	if (CurrentState == TutorialState::ToolTut)
+	{
+
+	//genral information
+	text._Text = "The tool allows for you to change the\nproperties of the cubes you will find in\nthe levels.";
+	textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
+	text._Position = { xpos,yPos };
+	_TextList.push_back(text);
+
+	//tool controlls 
+	yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+	text._Text = "Scroll Wheel : Change Tool mode";
+	textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
+	text._Position = { xpos,yPos };
+	_TextList.push_back(text);
+
+	yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+	text._Text = KeyBindes["Gun_State_One"] + ":  Tool 1          " + KeyBindes["Gun_State_Four"] + ":  Tool 4";;
+	text._Text += "\n" + KeyBindes["Gun_State_Two"] + ":  Tool 2          " + KeyBindes["Gun_State_Five"] + ":  Tool 5";;
+	text._Text += "\n" + KeyBindes["Gun_State_Three"] + ":  Tool 3          " + KeyBindes["Gun_State_Six"] + ":  Tool 6";;
+
+	text._Position = { xpos,yPos };
+	_TextList.push_back(text);
+
+	}
+	//indvudual tool infromation
+	else if (CurrentState == TutorialState::ToolTut2)
+	{
+	//tell user about current mode
+	switch (Mode->GetTooltype())
+	{
+	case ToolType::Convert: {
+		//tool 1
+
+		text._Text = "Convert";
+		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+
+		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+		text._Text = "This tool alows you to change the cubes\nmaterial.";
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+
+		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y) * 2;
+		text._Position = { xpos,yPos };
+		text._Text = "This turns the object into ";
+		switch (static_cast<int>(Mode->GetCurrentOption().boxtype))
+		{
+		case 0:
+			text._Text += "mesh.";
+			break;
+		case 1:
+			text._Text += "wood.";
+			break;
+		case 2:
+			text._Text += "stone.";
+			break;
+		case 3:
+			text._Text += "iron.";
+			break;
+		case 4:
+			text._Text += "alien.";
+			break;
+		}
+		_TextList.push_back(text);
+	}
+						  break;
+	case ToolType::Resize: {
+		//tool 2
+
+		text._Text = "Resize:";
+		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+
+		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+		text._Text = "This tool allows you to change the cubes'\nsize.";
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+
+		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y) * 2;
+		switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
+		{
+		case 0:
+
+			text._Text = "This shrinks the cube.";
+
+			break;
+		case 1:
+			text._Text = "This resets the cube to normal size.";
+			break;
+		case 2:
+			text._Text = "This largens the cube.";
+
+			break;
+		}
+		text._Position = { xpos,yPos };
+		_TextList.push_back(text);
+	}
+						 break;
+
+	}
+	}
+}
+
+void Tutorial_UI::OtherTutorialText()
+{
+	TextToDraw text;
+	text._Colour = DirectX::Colors::Black;
+	text._Text = "Other Controls";
+	text._Text += "\n" + KeyBindes["Pause"] + ": Pause";
+	text._Text += "\n" + KeyBindes["Change_Gun_State_Up"] + ": Change tool up";
+	text._Text += "\n" + KeyBindes["Change_Gun_State_Down"] + ": Change tool up";
+	text._Position = { xpos,yPos };
+	_TextList.push_back(text);
+}
+
+void Tutorial_UI::MoveToNextPannle()
+{
+	//wait time 
+	TextToDraw text;
+	text._Colour = DirectX::Colors::Black;
+	if (timer.GetMilliSecondsElapsed() >= 5000 && stateNo < 5) {
+
+
+		text._Text = "press enter to continue";
+		text._Position = { xpos,static_cast<float>(_SizeOfScreen.y * 0.25) };
+		_TextList.push_back(text);
+		//get is enter key down
+		if ((1 << 15) & GetAsyncKeyState(VK_RETURN)) {
+			//move next state
+			stateNo++;
+			CurrentState = static_cast<TutorialState>(stateNo);
+			timer.Restart();
+			
+			Sound::Instance()->PlaySoundEffect( "Notification" );
+		}
+
+	}
+}
+
+void Tutorial_UI::LoadKeyBindes(std::vector<JSON::SettingData> SettingsData)
+{
+	
+
+	for (auto& setting : SettingsData)
+	{
+		if (setting.Type == JSON::SettingType::ControllType)
+		{
+
+			string key = std::get<string>(setting.Setting);
+			unsigned char* valChar = (unsigned char*)key.c_str();
+			KeyBindes[setting.Name] = ConvertFromUnsignedCharTostring(*valChar);
+
+		}
+	}
+
 }

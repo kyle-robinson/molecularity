@@ -43,6 +43,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Resource> texture = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView = nullptr;
 	aiTextureType type = aiTextureType_UNKNOWN;
+
+	//for checking so not loaded evey frame :)
+	std::string FileName;
+	Colour ColourRGBA;
 };
 
 #endif

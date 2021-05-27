@@ -21,7 +21,6 @@ public:
 	//eventsystem
 	void AddToEvent();
 	void HandleEvent(Event* event);
-
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
@@ -44,6 +43,8 @@ private:
 	//key binds 
 	std::unordered_map<string, unsigned char> KeyBinds;
 	std::unordered_map<string, Mouse::MouseEvent::EventType> MouseBinds;
+
+	bool heldLastFrame[2] = { false };
 };
 
 #endif

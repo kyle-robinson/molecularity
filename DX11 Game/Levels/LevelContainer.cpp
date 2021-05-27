@@ -101,7 +101,7 @@ bool LevelContainer::InitializeScene()
 			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\wood.png", nullptr, boxTextures[BoxType::Wood].GetAddressOf() );
 			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\stone.jpg", nullptr, boxTextures[BoxType::Stone].GetAddressOf() );
 			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\iron.jpg", nullptr, boxTextures[BoxType::Iron].GetAddressOf() );
-			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\alien.jpg", nullptr, boxTextures[BoxType::Alien].GetAddressOf() );
+			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\alien.png", nullptr, boxTextures[BoxType::Alien].GetAddressOf() );
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
 	}
@@ -160,11 +160,12 @@ void LevelContainer::RenderFrameEarly()
 
 void LevelContainer::ShowEndLeveLScreen()
 {
-	if (levelCompleted) {
+	if (levelCompleted && ToShowEnd) {
 		//game end
 		_UiManager->HideAllUI();
 		_UiManager->ShowUi("EndLevel");
 		EventSystem::Instance()->AddEvent(EVENTID::GameEndLevelEvent);
+		ToShowEnd = false;
 	}
 }
 

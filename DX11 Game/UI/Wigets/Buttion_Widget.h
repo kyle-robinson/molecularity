@@ -34,12 +34,13 @@ private:
     bool IsPressed = false;
     ButtionState CurrentState;
 
+
 };
 
 template<typename ButtionTexType>
 inline bool Buttion_Widget<ButtionTexType>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
-    _Bakground.Initialize(Device, Contex, _Size.x, _Size.y, ButtionColour, cb_vs_matrix_2d);
+    _Bakground.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
     return true;
 }
 
@@ -49,8 +50,9 @@ inline void Buttion_Widget<ButtionTexType>::Draw(ID3D11DeviceContext* Contex, ID
         
     	_Bakground.SetInitialPosition(_Pos.x, _Pos.y, 0);
     	_Bakground.SetScale(_Size.x, _Size.y);
-     
+        
             _Bakground.UpdateTex(Device, ButtionColour);
+       
        
     	cb_ps_scene.data.alphaFactor = _AlfaFactor;
     	cb_ps_scene.data.useTexture = false;
@@ -73,7 +75,12 @@ template<typename ButtionTexType>
 inline bool Buttion_Widget<ButtionTexType>::Function(std::string text,vector<ButtionTexType> ButtionText, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, XMVECTORF32 textColour, MouseData MData)
 {
         CurrentState = Defaulet;
-        ButtionTex = text;
+
+
+      
+
+            ButtionTex = text;
+        
        
     	_Size = size;
     	_Pos = pos;

@@ -30,6 +30,11 @@ void Credits_Level::OnSwitch()
 	_UiManager->RemoveAllUI();
 	_UiManager->AddUi(credits, "Credits");
 	_UiManager->Initialize(graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d);
+
+	//sounds
+	Sound::Instance()->InitialiseMusicTrack( "Credits" );
+
+	Sound::Instance()->PlayMusic( "Credits" );
 }
 
 void Credits_Level::Render()

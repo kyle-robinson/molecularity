@@ -77,9 +77,11 @@ void Cube::Update( const float deltaTime ) noexcept
 
     if ( delay == 5 )
         prevPos = pos;
-    delay++;
-    if ( delay > 5 )
+    else if ( delay > 5 )
         delay = 0;
+
+    delay++;
+
     heldLastFrame = isHeld;
 }
 
@@ -165,5 +167,7 @@ void Cube::CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) 
 
     physicsModel->AddForce( force2 );
     object->GetPhysicsModel()->AddForce( force );
+    
+    Sound::Instance()->PlaySoundEffect( "CubeCollision", false, GetPositionFloat3(), 10.0f );
 }
 #pragma endregion
