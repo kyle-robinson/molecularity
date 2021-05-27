@@ -19,7 +19,7 @@ public:
 	void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts);
 	void Update(float dt);
 	void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
-
+	void TextLoad();
 	void HandleEvent(Event* event);
 
 private:
@@ -28,50 +28,51 @@ private:
 	void RemoveFromEvent();
 
 	void PageSlider();
-	void TabButtions();
+	void TabButtons();
 	void TabContent();
 	void Accept();
 
-	void ControllsCreate(JSON::SettingData& settingData);
+	void ControlsCreate(JSON::SettingData& settingData);
 	void WindowSizeCreate(JSON::SettingData& settingData);
 private:
 	bool _isSettings;
 	std::vector<JSON::SettingData> _SettingsData;
+	map<string, string>LoadedTextMap;
 	//Settings
-	Immage_Widget SettingsBackground;
+	Image_Widget SettingsBackground;
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;
 	DropDown_Widget<std::string, std::string, std::string> SettingsDropdowns[10];
 	DataSlider_Widget<std::string, std::string> SettingsSliders[10];
-	Buttion_Widget<std::string> SettingsButtions[10];
-	Input_Widget<std::string> ControllInput[20];
-	vector<TextToDraw> PuaseTextTitles;
-	vector<TextToDraw> PuaseTextPG;
+	Button_Widget<std::string> SettingsButtons[10];
+	Input_Widget<std::string> ControlInput[20];
+	vector<TextToDraw> PauseTextTitles;
+	vector<TextToDraw> PauseTextPG;
 
-	std::string TabNames[4] = { "General","Graphics","Sound","Controls" };
-	vector<string> ButtionTexDrop = { "Resources\\Textures\\Settings\\DropArrow_Blue.dds",
+
+	vector<string> ButtonTexDrop = { "Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow.dds" };
 
-	vector<string> ButtionBackDrop = { "Resources\\Textures\\Settings\\Input_Blue.dds",
+	vector<string> ButtonBackDrop = { "Resources\\Textures\\Settings\\Input_Blue.dds",
 		"Resources\\Textures\\Settings\\Input_Blue.dds",
 		"Resources\\Textures\\Settings\\Input_Yellow.dds" };
 
 
 
-	vector<string> ButtionTex = { "Resources\\Textures\\Settings\\Buttion_SettingsBar_Hover.dds",
-		"Resources\\Textures\\Settings\\Buttion_SettingsBar_Hover.dds",
-		"Resources\\Textures\\Settings\\Buttion_SettingsBar_Up.dds" };
+	vector<string> ButtonTex = { "Resources\\Textures\\Settings\\Button_SettingsBar_Hover.dds",
+		"Resources\\Textures\\Settings\\Button_SettingsBar_Hover.dds",
+		"Resources\\Textures\\Settings\\Button_SettingsBar_Up.dds" };
 
-	vector<string> AcceptButtion = { "Resources\\Textures\\UI_Buttions\\Buttion_1_Down.dds",
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Hover.dds",
-		"Resources\\Textures\\UI_Buttions\\Buttion_1_Up.dds" };
+	vector<string> AcceptButton = { "Resources\\Textures\\UI_Buttons\\Button_1_Down.dds",
+		"Resources\\Textures\\UI_Buttons\\Button_1_Hover.dds",
+		"Resources\\Textures\\UI_Buttons\\Button_1_Up.dds" };
 
 	XMFLOAT2 TabTextPos;
 
 	//settings counts
 	UINT SettingsDropCount = 0;
 	UINT SettingSliderCount = 0;
-	UINT SettingsButtionCount = 0;
+	UINT SettingsButtonCount = 0;
 	UINT SettingsInputCount = 0;
 
 	//current tab open

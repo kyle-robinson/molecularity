@@ -170,12 +170,10 @@ void Level1::Update( const float dt )
 			Collisions::CheckCollisionLevel1( cubes[i], room, 15.0f );
 		}
 	}
-
+  
 	// set rotation of security camera
 	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
 	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
-
-	
-
+  
 	LevelContainer::LateUpdate( dt );
 }

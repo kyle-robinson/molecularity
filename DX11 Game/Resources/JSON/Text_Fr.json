@@ -1,0 +1,539 @@
+{
+  "Description": "The Fr Text File",
+  "Main_Menu_Text": [
+    {
+      "Name": "Button_1",
+      "Text": "Jouer"
+    },
+    {
+      "Name": "Button_2",
+      "Text": "Credits"
+    },
+    {
+      "Name": "Button_3",
+      "Text": "Parametres"
+    },
+    {
+      "Name": "Button_4",
+      "Text": "Sortir"
+    }
+  ],
+  "HUD_Text": [
+    {
+      "Name": "Action_Text",
+      "Text": "Appuyez sur '_' pour prendre le cube."
+    }
+  ],
+  "EndLevel_Text": [
+    {
+      "Name": "Level_End_Text",
+      "Text": "Niveau termine"
+    }
+  ],
+  "EndLevelButtons_Text": [
+    {
+      "Name": "Button_1",
+      "Text": "Menu principal"
+    },
+    {
+      "Name": "Button_2",
+      "Text": "Niveau suivant"
+    }
+  ],
+  "Gen_Text": [
+    {
+      "Name": "Start_Text",
+      "Text": "Le but pour vous est de vous intriguer\ndans les pieces qui vous sont offertes."
+
+    },
+    {
+      "Name": "Move_Next_Text",
+      "Text": "appuyez sur Entree pour continuer"
+    }
+  ],
+  "Movement_Controls": [
+    {
+      "Name": "Movement_Title",
+      "Text": "Commandes de mouvement:"
+
+    },
+    {
+      "Name": "Control_1",
+      "Text": ": Avant"
+
+    },
+    {
+      "Name": "Control_2",
+      "Text": ": La gauche"
+
+    },
+    {
+      "Name": "Control_3",
+      "Text": ": Dos"
+
+    },
+    {
+      "Name": "Control_4",
+      "Text": ": Droit"
+
+    },
+    {
+      "Name": "Control_5",
+      "Text": ": Sauter"
+
+    },
+    {
+      "Name": "Control_6",
+      "Text": "Souris: regardez autour de vous"
+
+    }
+  ],
+  "TOOL_TIPS": [
+    {
+      "Name": "information_Title",
+      "Text": "Informations sur l'outil"
+    },
+    {
+      "Name": "Convert_Tool",
+      "Text": "Convertir:\nCela change le materiau du cube.\nCela transforme l'objet en "
+    },
+    {
+      "Name": "Size_Tool",
+      "Text": "Redimensionner:\nCela modifie la taille du cube."
+    },
+    {
+      "Name": "Bounce_Tool",
+      "Text": "Rebondir:\nCela permet au cube de rebondir ou non."
+    },
+    {
+      "Name": "Magnatism_Tool",
+      "Text": "Magnetisme:\nCela tire le cube vers vous."
+    }
+  ],
+  "TOOL_TIPS_Options": [
+    {
+      "Name": "Convert_1",
+      "Text": "mesh."
+    },
+    {
+      "Name": "Convert_2",
+      "Text": "wood."
+    },
+    {
+      "Name": "Convert_3",
+      "Text": "stone."
+    },
+    {
+      "Name": "Convert_4",
+      "Text": "iron."
+    },
+    {
+      "Name": "Convert_5",
+      "Text": "alien."
+    },
+    {
+      "Name": "Size_1",
+      "Text": "Cela retrecit le cube."
+    },
+    {
+      "Name": "Size_2",
+      "Text": "Cela reinitialise le cube a sa taille normale."
+    },
+    {
+      "Name": "Size_3",
+      "Text": "Cela elargit le cube."
+    },
+    {
+      "Name": "Magnatism_1",
+      "Text": "Cela tire tous les cubes vers vous."
+    },
+    {
+      "Name": "Magnatism_2",
+      "Text": "Cela tire le cube auquel l'outil est destine."
+    },
+    {
+      "Name": "Bounce_1",
+      "Text": "Cela arrete le rebond du cube."
+    },
+    {
+      "Name": "Bounce_2",
+      "Text": "Cela permet au cube de rebondir."
+    }
+  ],
+  "Tool_Controls": [
+    {
+      "Name": "Controls_Title",
+      "Text": "Controles d'outils"
+    },
+    {
+      "Name": "Information",
+      "Text": "L'outil vous permet de modifier\nles proprietes des cubes que vous trouverez\ndans les niveaux."
+    },
+    {
+      "Name": "Tool_Mode_Switch",
+      "Text": "Molette : Changer de mode d'outil"
+    },
+    {
+      "Name": "Tool_1",
+      "Text": ": Convertir"
+    },
+    {
+      "Name": "Tool_2",
+      "Text": ":  Redimensionner"
+    },
+    {
+      "Name": "Tool_3",
+      "Text": ":  Magnetisme"
+    }
+  ],
+  "Other_Controls": [
+    {
+      "Name": "Other_Title",
+      "Text": "Autres contreles"
+    },
+    {
+      "Name": "Other_Control_1",
+      "Text": ": Pause"
+    },
+    {
+      "Name": "Other_Control_2",
+      "Text": ": Changer d'outil"
+    },
+    {
+      "Name": "Other_Control_3",
+      "Text": ": Changer d'outil vers le bas"
+    },
+    {
+      "Name": "Other_Control_4",
+      "Text": "RMB : lancer le cube"
+    }
+  ],
+  "Pause_Text": [
+    {
+      "Name": "Title",
+      "Text": "Pause"
+
+    },
+    {
+      "Name": "Tip_Title",
+      "Text": "Conseil"
+    }
+  ],
+  "Tip_Pause": [
+    {
+      "Name": "Tip_Level_1",
+      "Text": "Utilisez le bouton de l'autre cote"
+
+    },
+    {
+      "Name": "Tip_Level_2",
+      "Text": "Utilisez l'outil"
+
+    },
+    {
+      "Name": "Tip_Level_3",
+      "Text": "aa"
+
+    }
+  ],
+  "Pause_Buttons": [
+    {
+      "Name": "Button_1",
+      "Text": "Jouer"
+    },
+    {
+      "Name": "Button_2",
+      "Text": "Menu principal"
+    },
+    {
+      "Name": "Button_3",
+      "Text": "Parametres"
+    },
+    {
+      "Name": "Button_4",
+      "Text": "Sortir"
+    }
+  ],
+  "Settings_Names": [
+    {
+      "Name": "Vsync",
+      "Text": "Vsync"
+    },
+    {
+      "Name": "WindowWidth",
+      "Text": "La taille de la fenetre"
+    },
+    {
+      "Name": "WindowHight",
+      "Text": "La taille de la fenetre"
+    },
+    {
+      "Name": "FullScreen",
+      "Text": "Plein ecran"
+    },
+    {
+      "Name": "Language",
+      "Text": "Langue"
+    },
+    {
+      "Name": "Forward",
+      "Text": "Avant"
+    },
+    {
+      "Name": "Back",
+      "Text": "Dos"
+    },
+    {
+      "Name": "Left",
+      "Text": "La gauche"
+    },
+    {
+      "Name": "Right",
+      "Text": "Droit"
+    },
+    {
+      "Name": "Jump",
+      "Text": "Sauter"
+    },
+    {
+      "Name": "Action",
+      "Text": "Action"
+    },
+    {
+      "Name": "Change_Gun_State_Up",
+      "Text": "Modifier l'etat de l'outil"
+    },
+    {
+      "Name": "Change_Gun_State_Down",
+      "Text": "Modifier l'etat de l'outil vers le bas"
+    },
+    {
+      "Name": "Gun_State_One",
+      "Text": "etat d'outil un"
+    },
+    {
+      "Name": "Gun_State_Two",
+      "Text": "etat d'outil deux"
+    },
+    {
+      "Name": "Gun_State_Three",
+      "Text": "etat d'outil trois"
+    },
+    {
+      "Name": "Gun_State_Four",
+      "Text": "etat d'outil quatre"
+    },
+    {
+      "Name": "Gun_State_Five",
+      "Text": "etat d'outil cinq"
+    },
+    {
+      "Name": "Gun_State_Six",
+      "Text": "etat d'outil six"
+    },
+    {
+      "Name": "Pause",
+      "Text": "Pause"
+    },
+    {
+      "Name": "MasterSoundOn",
+      "Text": "Son maitre"
+    },
+    {
+      "Name": "MasterSoundVolume",
+      "Text": "Volume principal"
+    },
+    {
+      "Name": "MusicOn",
+      "Text": "Musique"
+    },
+    {
+      "Name": "MusicVolume",
+      "Text": "Volume de la musique"
+    },
+    {
+      "Name": "SoundEffectsEfOn",
+      "Text": "Effets sonores"
+    },
+    {
+      "Name": "SoundEffectVolume",
+      "Text": "Volume de l'effet sonore"
+    },
+    {
+      "Name": "HUD_ON",
+      "Text": "Spectacle HUD"
+    },
+    {
+      "Name": "Hud_Scale",
+      "Text": "Taille Hud"
+    }
+
+
+
+  ],
+  "Settings_Buttons": [
+    {
+      "Name": "Button_1",
+      "Text": "General"
+    },
+    {
+      "Name": "Button_2",
+      "Text": "Graphique"
+    },
+    {
+      "Name": "Button_3",
+      "Text": "Sonner"
+    },
+    {
+      "Name": "Button_4",
+      "Text": "Les controles"
+    },
+    {
+      "Name": "Button_Accept",
+      "Text": "J'accepte"
+    }
+  ],
+  "Credits": [
+    {
+      "Name": "",
+      "Text": "Moteur"
+
+    },
+    {
+      "Name": "Programmeur principal",
+      "Text": "Kyle ROBINSON"
+
+    },
+    {
+      "Name": "Programmeur moteur",
+      "Text": "Daniel WILSON"
+
+    },
+    {
+      "Name": "Programmeur moteur",
+      "Text": "Ben SHAW"
+
+    },
+    {
+      "Name": "Programmeur moteur",
+      "Text": "Jacob J DEXTER"
+
+    },
+    {
+      "Name": "Programmeur moteur",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "",
+      "Text": "Sonner"
+
+    },
+    {
+      "Name": "Sonner",
+      "Text": "Ben SHAW"
+
+    },
+    {
+      "Name": "",
+      "Text": "Le design du jeu"
+
+    },
+    {
+      "Name": "Le design du jeu",
+      "Text": "Jacob J DEXTER"
+
+    },
+    {
+      "Name": "Le design du jeu",
+      "Text": "Kyle ROBINSON"
+
+    },
+    {
+      "Name": "Le design du jeu",
+      "Text": "Daniel WILSON"
+
+    },
+    {
+      "Name": "Le design du jeu",
+      "Text": "Ben SHAW"
+
+    },
+    {
+      "Name": "",
+      "Text": "Graphique"
+
+    },
+    {
+      "Name": "Programmeur graphique",
+      "Text": "Kyle ROBINSON"
+
+    },
+    {
+      "Name": "",
+      "Text": "UI"
+
+    },
+    {
+      "Name": "Programmeur UI ",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "Art de l'interface utilisateur",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "Conception de l'interface utilisateur",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
+      "Name": "",
+      "Text": "La physique"
+
+    },
+    {
+      "Name": "La physique",
+      "Text": "Jacob J DEXTER"
+
+    },
+    {
+      "Name": "",
+      "Text": "Modeles 3D"
+
+    },
+    {
+      "Name": "Modeles 3D",
+      "Text": "Daniel WILSON"
+
+    },
+    {
+      "Name": "",
+      "Text": "Autre"
+
+    },
+    {
+      "Name": "???",
+      "Text": "Lorcan B ENGLEDOW"
+
+    },
+    {
+      "Name": "",
+      "Text": "Merci"
+
+    },
+    {
+      "Name": "Pour",
+      "Text": "jouer"
+
+    },
+    {
+      "Name": "",
+      "Text": "Molecularity"
+
+    }
+  ],
+  "Verson": 2.1
+}

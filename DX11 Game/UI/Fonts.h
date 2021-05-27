@@ -1,6 +1,8 @@
 #pragma once
 #include"TextRenderer.h"
 
+//Fronts From :https://fonts.google.com/specimen/Open+Sans#license 
+//License: https://www.apache.org/licenses/LICENSE-2.0.html
 using namespace std;
 class Fonts
 {

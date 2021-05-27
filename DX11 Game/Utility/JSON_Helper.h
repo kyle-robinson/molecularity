@@ -30,7 +30,7 @@ namespace JSON
 	enum SettingType {
 		GeneralType,
 		SoundType,
-		ControllType,
+		ControlType,
 		GraphicType,
 		Invalid
 	};
@@ -50,7 +50,7 @@ namespace JSON
 		std::string Name;
 		DataFromFile Setting;
 		SettingType Type;
-
+		std::string Text;
 		// Get Data: get<type>(array_name[Position_in_Array].Setting);
 	};
 
@@ -95,7 +95,7 @@ namespace JSON
 
 	// load text data get all data
 	std::vector<TextData> LoadTextDataItems( const std::string& fileName );
-	
+	std::vector<TextData> LoadTextDataItems(const std::string& fileName, const std::string& Node);
 	// Load Setting Files get all data
 	std::vector<JSON::SettingData> LoadSettings();
 	
@@ -105,6 +105,7 @@ namespace JSON
 
 	// Load all Nodes
 	std::vector<std::string> LoadFileData( const std::string& fileName );
+	std::vector<std::string> LoadFileData(const std::string& fileName, const std::string& Node);
 	std::vector<std::pair<std::string, std::string>> LoadFileDataAndName( const std::string& fileName );
 	std::pair<std::string, std::string> GetData( Value::ConstMemberIterator value );
 	

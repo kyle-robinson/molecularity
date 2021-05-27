@@ -12,8 +12,8 @@ public:
 
 	void ChangeCurrent(int number)override;
 	void ChangeCurrent(std::string name)override;
-	void  addoneTOCurrent() override;
-	void  minusoneTOCurrent() override;
+	void  AddOneToCurrent() override;
+	void  MinusOneTOCurrent() override;
 	BoxSize GetSize() { return CurrentSize; }
 	ToolData GetToolData() override;
 private:

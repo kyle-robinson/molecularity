@@ -47,15 +47,46 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 void Cube::Update( const float deltaTime ) noexcept
 {
     // update properties
-    physicsModel->SetMass( 0.0f );
     switch ( editableProperties->GetBoxType() )
     {
-    case BoxType::Mesh:  physicsModel->SetMass( 10.0f );  break;
-    case BoxType::Wood:  physicsModel->SetMass( 30.0f );  break;
-    case BoxType::Stone: physicsModel->SetMass( 50.0f );  break;
-    case BoxType::Iron:  physicsModel->SetMass( 70.0f );  break;
-    case BoxType::Alien: physicsModel->SetMass( 100.0f ); break;
+    case BoxType::Mesh:
+        physicsModel->SetMass( 10.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( true );
+        physicsModel->SetMagnetic( true );
+        editableProperties->SetOutlineColor( { 0.18f, 0.8f, 0.44f } );
+        break;
+    case BoxType::Wood:
+        physicsModel->SetMass( 30.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( false );
+        physicsModel->SetMagnetic( false );
+        editableProperties->SetOutlineColor( { 0.9f, 0.49f, 0.13f } );
+        break;
+    case BoxType::Stone:
+        physicsModel->SetMass( 50.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( false );
+        physicsModel->SetMagnetic( false );
+        editableProperties->SetOutlineColor( { 0.2f, 0.59f, 0.85f } );
+        break;
+    case BoxType::Iron:
+        physicsModel->SetMass( 70.0f );
+        physicsModel->SetBounciness( 0.0f );
+        physicsModel->SetConductive( true );
+        physicsModel->SetMagnetic( true );
+        editableProperties->SetOutlineColor( { 0.6f, 0.34f, 0.71f } );
+        break;
+    case BoxType::Alien:
+        physicsModel->SetMass( 100.0f );
+        physicsModel->SetBounciness( 0.5f );
+        physicsModel->SetConductive( true );
+        physicsModel->SetMagnetic( true );
+        editableProperties->SetOutlineColor( { 0.9f, 0.29f, 0.23f } );
+        break;
     }
+
+    // update sizing
     switch ( editableProperties->GetBoxSize() )
     {
     case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); break;
@@ -63,17 +94,30 @@ void Cube::Update( const float deltaTime ) noexcept
     case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); break;
     }
 
+    // update bounciness
+    switch ( editableProperties->GetBoxBounce() )
+    {
+    case BoxBounce::Solid: physicsModel->InvVelocity( false ); break;
+    case BoxBounce::Bouncy: physicsModel->InvVelocity( true ); break;
+    }
+
+    //Magnetic pull
+    MagneticForce();
+
     // update physics
-    if ( !isHeld )
-        physicsModel->Update( deltaTime / 20.0f, editableProperties );
+    if (!isHeld) {
+      
+        physicsModel->Update(deltaTime / 20.0f, editableProperties);
+    }
     else
         physicsModel->Update( deltaTime / 20.0f, editableProperties, true );
 
     // update positioning
     pos = GetPositionFloat3();
 
-    if ( heldLastFrame && !isHeld && ( pos.x != prevPos.x || pos.z != prevPos.z ) )
-        physicsModel->AddForce( XMFLOAT3( ( pos.x - prevPos.x ) * 5.0f, 0.0f, ( pos.z - prevPos.z ) * 5.0f ) );
+    if (heldLastFrame && !isHeld && (pos.x != prevPos.x || pos.z != prevPos.z)) {
+        physicsModel->AddForce(XMFLOAT3((pos.x - prevPos.x) * 5.0f, 0.0f, (pos.z - prevPos.z) * 5.0f));
+    }
 
     if ( delay == 5 )
         prevPos = pos;
@@ -169,5 +213,21 @@ void Cube::CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) 
     object->GetPhysicsModel()->AddForce( force );
     
     Sound::Instance()->PlaySoundEffect( "CubeCollision", false, GetPositionFloat3(), 10.0f );
+}
+void Cube::MagneticForce()
+{
+    if (editableProperties->GetBoxMagneticMove()) {
+        if (!cubeInRange) {
+            XMFLOAT3 force = physicsModel->Normalization(XMFLOAT3((CamPos.x - pos.x), (CamPos.y - pos.y), (CamPos.z - pos.z)));
+            
+            physicsModel->AddForce(XMFLOAT3{ force.x * MagPower,force.y * MagPower,force.z * MagPower });
+            physicsModel->UseWeight(false);
+        }
+        else {
+            physicsModel->ResetForces();
+            editableProperties->SetBoxMagneticMove(false);
+            physicsModel->UseWeight(true);
+        }
+    }
 }
 #pragma endregion

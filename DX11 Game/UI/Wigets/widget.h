@@ -32,14 +32,14 @@ public:
 	void setPos(XMFLOAT2 pos) { _Pos = pos; }
 	XMFLOAT2 GetPos() { return _Pos; }
 
-	void SetAlfaFactor(float AF) { _AlfaFactor = AF; }
-	float GetAlfaFactor() { return _AlfaFactor; }
+	void SetAlphaFactor(float AF) { _AlphaFactor = AF; }
+	float GetAlphaFactor() { return _AlphaFactor; }
 
 	//vars
 protected:
 	XMFLOAT2 _Size;
 	XMFLOAT2 _Pos;
-	float _AlfaFactor = 1.0f;
+	float _AlphaFactor = 1.0f;
 	bool updateText = true;
 	
 };

@@ -55,6 +55,8 @@ public:
 	Graphics* GetGraphics() const noexcept { return graphics; }
 
 	void SetTool(Tool_Class* Tool) { tool = Tool; }
+	Tool_Class* GetTool() { return tool; }
+
 	std::string GetLevelName() { return levelName; }
   
 protected:
