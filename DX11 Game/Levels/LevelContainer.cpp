@@ -8,7 +8,6 @@
 
 // systems
 #include "Fog.h"
-#include "Billboard.h"
 #include "Collisions.h"
 #include "ImGuiManager.h"
 #include "TextRenderer.h"
@@ -57,11 +56,6 @@ bool LevelContainer::InitializeScene()
 			// skysphere
 			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
-
-			// security camera
-			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			securityCamera.SetInitialPosition( 37.0f, 25.0f, 53.0f );
-			securityCamera.SetInitialScale( 4.0f, 4.0f, 4.0f );
 		}
 
 		// LIGHTS
@@ -179,9 +173,6 @@ void LevelContainer::RenderFrame()
 
 	// DRAWABLES
 	{
-		// SECURITY CAMERA
-		securityCamera.Draw();
-
 		// CUBES
 		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
 		{
@@ -279,10 +270,6 @@ void LevelContainer::LateUpdate( const float dt )
 			EventSystem::Instance()->AddEvent( EVENTID::CubePickupEvent, ( void* )false );
 		}
 	}
-
-	// set rotation of security camera
-	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
-	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
