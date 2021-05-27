@@ -262,6 +262,7 @@
     <ClCompile Include="Tool_Bounce.cpp">
       <Filter>Tool</Filter>
     </ClCompile>
+    <ClCompile Include="Tool_Conductivity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -595,6 +596,7 @@
     <ClInclude Include="Tool_Bounce.h">
       <Filter>Tool</Filter>
     </ClInclude>
+    <ClInclude Include="Tool_Conductivity.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">

@@ -4,6 +4,7 @@
 #include<Tool_Resize.h>
 #include<Tool_Magnetism.h>
 #include<Tool_Bounce.h>
+#include<Tool_Conductivity.h>
 #include<Objects/CubeProperties.h>
 #include<Objects/Cube.h>
 Tool_Class::Tool_Class()
@@ -41,6 +42,11 @@ void Tool_Class::SetCurrentTool(ToolType CurrentTool)
 	break;
 	case ToolType::Bounce:
 		_CurrentTool = std::make_shared<Tool_Bounce>();
+		_ToolType = CurrentTool;
+		break;
+
+	case ToolType::Conductive:
+		_CurrentTool = std::make_shared<Tool_Conductivity>();
 		_ToolType = CurrentTool;
 		break;
 	default:
@@ -176,6 +182,14 @@ void Tool_Class::ChangeCube(CubeProperties* Cube)
 		break;
 	case ToolType::Bounce:
 		Cube->SetBoxBounce( _CurrentTool->GetToolData().boxBounce );
+		break;
+	case ToolType::Conductive:
+		if (_CurrentTool->GetToolData().boxConductive == BoxConductive::IsConductive) {
+			Cube->SetConductive(true);
+		}
+		else {
+			Cube->SetConductive(false);
+		}
 		break;
 	}
 }

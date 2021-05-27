@@ -70,7 +70,6 @@ protected:
 	ImGuiManager* imgui;
 	CameraController* cameras;
 	RenderableGameObject skysphere;
-	RenderableGameObject securityCamera;
 	std::vector<std::shared_ptr<Cube>> cubes;
 
 	// Lights
@@ -85,8 +84,8 @@ protected:
 	
 	//UI
 	UI_Manager* _UiManager;
-
-  //Next level data
+	
+	//Next level data
 	std::string levelName;
 	UINT32 NextLevel;
 	UINT32 CurrentLevel;
