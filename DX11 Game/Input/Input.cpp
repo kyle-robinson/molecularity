@@ -176,8 +176,11 @@ void Input::UpdateKeyboard( const float dt )
 				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
 				Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
 			}
-      
-			if ( keycode == KeyBinds["Gun_State_Five"] );
+			if (keycode == KeyBinds["Gun_State_Five"]) {
+				currentTool = ToolType::Conductive;
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+				Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
+			}
 			if ( keycode == KeyBinds["Gun_State_Six"] );
 
 			if (kbe.IsPress()) {
