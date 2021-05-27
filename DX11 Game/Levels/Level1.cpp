@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Level1.h"
+#include "Billboard.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
 
@@ -12,17 +13,19 @@ bool Level1::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1-Final.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			room.SetInitialPosition( 0.1f, 0.0f, -20.0f );
-
-			if ( !podium.Initialize( "Resources\\Models\\Levels\\Podium.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			podium.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			podium.SetInitialPosition( 0.0f, 0.0f, 10.0f );
+			room.SetInitialPosition( -2.0f, 0.0f, -20.0f );
+			room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
 
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 45.0f );
+			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 24.5f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
+
+			// security camera
+			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			securityCamera.SetInitialScale( 2.0f, 2.0f, 2.0f );
+			securityCamera.SetInitialPosition( 17.0f, 10.0f, 27.5f );
 
 			//add level UI 
 			HUD = make_shared<HUD_UI>();
@@ -40,29 +43,30 @@ bool Level1::OnCreate()
 }
 
 void Level1::OnSwitch()
-{	
-	
+{
+	// Update Level System
 	CurrentLevel = 0;
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
-	// update items on level switch here...
+
 	levelName = "Level1";
 	NextLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
-	
-	//UI
-	_UiManager->RemoveUI( "MainMenu" );
-	
-	//send out editable properties to hud for data
+
+	// Update HUD with tool data
 	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
+
+	// Initialize UI
+	_UiManager->RemoveUI( "MainMenu" );
 
 	_UiManager->AddUi( HUD, "HUD" );
 	_UiManager->AddUi(TutorialUI, "Tutorial");
 	_UiManager->AddUi( PauseUI, "Pause" );
 	_UiManager->AddUi(EndLevelUI, "EndLevel");
+
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 	_UiManager->HideUi("EndLevel");
 
-	// initialise sounds
+	// Initialise Sounds
 	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
@@ -72,6 +76,11 @@ void Level1::OnSwitch()
 
 	Sound::Instance()->PlayMusic( "TutorialMusic" );
 	Sound::Instance()->PlaySoundEffect( "Notification" );
+
+	// Initialize Camera Positions
+	cameras->GetCamera( JSON::CameraType::Default )->SetInitialPosition( 0.0f, 7.0f, -20.0f );
+	cameras->GetCamera( JSON::CameraType::Static )->SetInitialPosition( 16.0f, 10.0f, 26.0f );
+	cameras->GetCamera( JSON::CameraType::Debug )->SetInitialPosition( 0.0f, 7.0f, -15.0f );
 }
 
 void Level1::Render()
@@ -100,10 +109,8 @@ void Level1::RenderFrame()
 		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
 		room.Draw();
 		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
-
-		if ( levelCompleted )
-			podium.Draw();
 		pressurePlate.Draw();
+		securityCamera.Draw();
 
 		// render the cubes
 		LevelContainer::RenderFrame();
@@ -129,16 +136,16 @@ void Level1::Update( const float dt )
 
 	// adjust pressure plate x-position over time
 	static float offset = 0.1f;
-	if ( pressurePlate.GetPositionFloat3().x > 30.0f )
+	if ( pressurePlate.GetPositionFloat3().x > 13.0f )
 		offset = -offset;
-	else if ( pressurePlate.GetPositionFloat3().x < -30.0f )
+	else if ( pressurePlate.GetPositionFloat3().x < -13.0f )
 		offset = 0.1f;
 	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
 
 	// COLLISIONS
 	{
 		// camera collisions w room
-		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 37.0f );
+		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 19.0f );
 
 		// cube collisions
 		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
@@ -160,9 +167,13 @@ void Level1::Update( const float dt )
 					cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 			// update collisions w room
-			Collisions::CheckCollisionLevel1( cubes[i], room, 37.0f );
+			Collisions::CheckCollisionLevel1( cubes[i], room, 15.0f );
 		}
 	}
-
+  
+	// set rotation of security camera
+	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
+	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
+  
 	LevelContainer::LateUpdate( dt );
 }

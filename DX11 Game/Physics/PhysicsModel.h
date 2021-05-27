@@ -49,8 +49,8 @@ public:
 
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
-
-	 
+  
+	void CheckGroundCollisions( bool collisions ) noexcept { mCheckGroundCollisions = collisions; }
 	void UseWeight(bool use)noexcept { useWeight = use; }
 
 private:
@@ -82,6 +82,7 @@ private:
 	bool mIsHeld;
 	bool mActivated;
 	bool mInvVelocity;
+  bool mCheckGroundCollisions;
 
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;
