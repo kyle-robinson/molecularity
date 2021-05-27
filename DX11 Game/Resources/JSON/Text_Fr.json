@@ -521,8 +521,13 @@
 
     },
     {
+      "Name": "La physique",
+      "Text": "Ben SHAW"
+
+    },
+    {
       "Name": "",
-      "Text": "Modeles 3D"
+      "Text": "de l'art"
 
     },
     {
@@ -531,10 +536,26 @@
 
     },
     {
+      "Name": "Cube Art",
+      "Text": "Ben SHAW"
+
+    },
+    {
+      "Name": "",
+      "Text": "JSON"
+
+    },
+    {
+      "Name": "JSON programming",
+      "Text": "Thomas MILLARD"
+
+    },
+    {
       "Name": "",
       "Text": "Autre"
 
     },
+
     {
       "Name": "???",
       "Text": "Lorcan B ENGLEDOW"
