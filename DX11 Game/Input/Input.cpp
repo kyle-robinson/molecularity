@@ -32,8 +32,9 @@ void Input::AddToEvent()
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::GameUnPauseEvent, this );
-	EventSystem::Instance()->AddClient(EVENTID::ShowCursorEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::HideCursorEvent, this);
+	EventSystem::Instance()->AddClient( EVENTID::ShowCursorEvent, this );
+	EventSystem::Instance()->AddClient( EVENTID::HideCursorEvent, this );
+	EventSystem::Instance()->AddClient( EVENTID::IsDissCube, this );
 }
 
 void Input::HandleEvent( Event* event )
@@ -252,16 +253,19 @@ void Input::UpdateKeyboard( const float dt )
 				if ( i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true )
 					alreadyHeld = true;
 
+			static bool dissCube = levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsDissCube();
+			EventSystem::Instance()->AddEvent(EVENTID::IsDissCube, &dissCube);
+
 			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
 			if ( ( keyboard.KeyIsPressed( KeyBinds["Action"] ) ) &&
-				!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
+				!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover && !levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsDissCube() &&
 				( levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() ) )
 			{
 				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( true );
 				levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->ResetForces();
 
 				if (!heldLastFrame[i])
-					Sound::Instance()->PlaySoundEffect("CubePickup");
+					Sound::Instance()->PlaySoundEffect( "CubePickup" );
 
 				// set cube position
 				static int offset = 2;
@@ -283,24 +287,6 @@ void Input::UpdateKeyboard( const float dt )
 				);
         
 				heldLastFrame[i] = true;
-
-				// cube throwing
-				if ( keyboard.KeyIsPressed( 'R' ) )
-				{
-					canHover = false;
-
-					XMFLOAT3 cubeForce = levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->Normalization(
-						XMFLOAT3( sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
-						-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
-						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt )
-					);
-					
-					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce( cubeForce.x * 20.0f, cubeForce.y * 20.0f, cubeForce.z * 20.0f );
-
-					Sound::Instance()->PlaySoundEffect( "CubeThrow" );
-
-					heldLastFrame[i] = false;
-				}
 			}
 			else
 			{
@@ -377,16 +363,21 @@ void Input::UpdateMouse( const float dt )
 						}
 					}
 					// cube throwing
-					if (me.GetType() == MouseBinds["Fire_Tool_Alt"] && !alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
+					if (me.GetType() == MouseBinds["Fire_Tool_Alt"] && !alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover && 
+						!levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsDissCube() && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() &&
 						(levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding()))
 					{
 						canHover = false;
 
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
-							sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
-							-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
-							cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt
+						XMFLOAT3 cubeForce = levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->Normalization(
+							XMFLOAT3(sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
+								-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
+								cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt)
 						);
+
+						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(cubeForce.x * 20.0f, cubeForce.y * 20.0f, cubeForce.z * 20.0f);
+
+						Sound::Instance()->PlaySoundEffect("CubeThrow");
 					}
 				}
         

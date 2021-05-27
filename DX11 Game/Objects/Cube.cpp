@@ -51,23 +51,23 @@ void Cube::Update( const float deltaTime ) noexcept
     {
     case BoxType::Mesh:
         physicsModel->SetMass( 10.0f );
+        SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.18f, 0.8f, 0.44f } );
         break;
     case BoxType::Wood:
         physicsModel->SetMass( 30.0f );
+        SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.9f, 0.49f, 0.13f } );
-        break;
-    case BoxType::Stone:
-        physicsModel->SetMass( 50.0f );
-        editableProperties->SetOutlineColor( { 0.2f, 0.59f, 0.85f } );
         break;
     case BoxType::Iron:
         physicsModel->SetMass( 70.0f );
+        SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.6f, 0.34f, 0.71f } );
         break;
-    case BoxType::Alien:
-        physicsModel->SetMass( 100.0f );
-        editableProperties->SetOutlineColor( { 0.9f, 0.29f, 0.23f } );
+    case BoxType::DissCube:
+        physicsModel->SetMass(50.0f);
+        SetIsDissCube( true );
+        editableProperties->SetOutlineColor({ 0.2f, 0.59f, 0.85f });
         break;
     }
 

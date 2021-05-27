@@ -27,6 +27,7 @@ private:
 	//HUD
 	string key;
 	bool canHoldCube = false;
+	bool isDissCube = true;
 	float hudScale = 1;
 	bool isHudActive=true;
 	TextToDraw PickupText;

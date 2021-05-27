@@ -44,8 +44,6 @@ public:
 	void SetAcceleration( XMFLOAT3 acceleration ) noexcept { mAcceleration = acceleration; }
 
 	void SetBounciness( float bounciness ) noexcept { mBounciness = bounciness; }
-	void SetMagnetic( bool magnetic ) noexcept { mMagnetic = magnetic; }
-	void SetConductive( bool conductive ) noexcept { mConductive = conductive; }
 
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
@@ -75,6 +73,7 @@ private:
 	float mWeight;
 	bool mUseLaminar;
 
+	bool mIsDissCube;
 	bool mMagnetic;
 	bool mConductive;
 	float mBounciness;
