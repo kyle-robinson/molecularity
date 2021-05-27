@@ -1,5 +1,5 @@
 {
-  "Description": "The Eng Text File",
+  "Description": "The Fr Text File",
   "Main_Menu_Text": [
     {
       "Name": "Buttion_1",
@@ -102,6 +102,10 @@
       "Text": "Redimensionner:\nCela modifie la taille du cube."
     },
     {
+      "Name": "Bounce_Tool",
+      "Text": "Rebondir:\nCela permet au cube de rebondir ou non."
+    },
+    {
       "Name": "Magnatism_Tool",
       "Text": "Magnetisme:\nCela tire le cube vers vous."
     }
@@ -146,6 +150,14 @@
     {
       "Name": "Magnatism_2",
       "Text": "Cela tire le cube auquel l'outil est destine."
+    },
+    {
+      "Name": "Bounce_1",
+      "Text": "Cela arrete le rebond du cube."
+    },
+    {
+      "Name": "Bounce_2",
+      "Text": "Cela permet au cube de rebondir."
     }
   ],
   "TooL_Controlls": [

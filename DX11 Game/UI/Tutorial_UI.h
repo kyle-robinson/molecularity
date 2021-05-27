@@ -46,8 +46,8 @@ private:
     void MoveToNextPannle();
 
 
-    void LoadKeyBindes(std::vector<JSON::SettingData> SettingsData);
-
+    void LoadKeyBinds(std::vector<JSON::SettingData> SettingsData);
+    void SetTextPos(TextToDraw& text);
 private:
 
     string name = "Tutorial";
@@ -63,10 +63,11 @@ private:
     TutorialState CurrentState;
     int stateNo;
     vector<TextToDraw> _TextList;
-    map<string, string> KeyBindes;
+    map<string, string> KeyBinds;
     map<string, string> LoadedTextMap;
 
-
+    float textSizeY;
+    float textSizeX;
     float yPos;
     float xpos;
 };

@@ -173,7 +173,8 @@ void Input::UpdateKeyboard( const float dt )
 			}
 			if (keycode == KeyBinds["Gun_State_Four"]) {
 				currentTool = ToolType::Magnetism;
-				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);;
+				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+				Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
 			}
       
 			if ( keycode == KeyBinds["Gun_State_Five"] );

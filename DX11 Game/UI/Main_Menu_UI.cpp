@@ -37,7 +37,7 @@ void Main_Menu_UI::Update(float dt)
 	if (!IsSettings)
 	{
 		MainMenuBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
-		Titlecard.Function("Title_Card\\TitleCard.dds", { static_cast<float>(_SizeOfScreen.x * 0.4),static_cast<float>(_SizeOfScreen.y * 0.12) }, { static_cast<float>((_SizeOfScreen.x * 0.5) - static_cast<float>(_SizeOfScreen.x * 0.4) / 2) ,0 });
+		Titlecard.Function("Title_Card\\TitleCard.png", { static_cast<float>(_SizeOfScreen.x * 0.4),static_cast<float>(_SizeOfScreen.y * 0.12) }, { static_cast<float>((_SizeOfScreen.x * 0.5) - static_cast<float>(_SizeOfScreen.x * 0.4) / 2) ,0 });
 
 		MenuButtions();
 		LinkButtions();

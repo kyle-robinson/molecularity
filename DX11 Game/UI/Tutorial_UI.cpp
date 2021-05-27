@@ -16,7 +16,7 @@ void Tutorial_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, C
 	UI::Inizalize(device, contex, cb_vs_matrix_2d, fonts);
 	//get key binds
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
-	LoadKeyBindes(SettingsData);
+	LoadKeyBinds(SettingsData);
 
 	TextLoad();
 
@@ -38,10 +38,9 @@ void Tutorial_UI::Update(float dt)
 	
 	//inital position
 	yPos=0;
-	xpos = _SizeOfScreen.x - static_cast<float>(_SizeOfScreen.x * 0.30);
+	xpos = _SizeOfScreen.x - static_cast<float>(_SizeOfScreen.x * 0.25);
+	textSizeY = 0;
 	
-	XMFLOAT2 size{ static_cast<float>(_SizeOfScreen.x * 0.30), static_cast<float>(_SizeOfScreen.y * 0.13) };
-	TextBackground.Function({ 225,225,225 }, { static_cast<float>(_SizeOfScreen.x * 0.30),static_cast<float>(_SizeOfScreen.y * 0.28) }, { _SizeOfScreen.x- static_cast<float>(_SizeOfScreen.x * 0.30),0 }, 0.8f);
 	
 	switch (CurrentState)
 	{
@@ -76,7 +75,7 @@ void Tutorial_UI::Update(float dt)
 		timer.Stop();
 	}
 
-
+	TextBackground.Function({ 225,225,225 }, { textSizeX,textSizeY }, { _SizeOfScreen.x - textSizeX,0 }, 0.8f);
 }
 
 void Tutorial_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
@@ -137,7 +136,9 @@ void Tutorial_UI::HandleEvent(Event* event)
 	{
 		std::vector<JSON::SettingData> SettingsData = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 
-		LoadKeyBindes(SettingsData);
+		LoadKeyBinds(SettingsData);
+		textSizeX = 0;
+		textSizeY = 0;
 	}
 	break;
 	case EVENTID::ToolModeEvent:
@@ -177,64 +178,69 @@ void Tutorial_UI::RemoveFromEvent()
 
 void Tutorial_UI::GenralTutorialText()
 {
+	XMVECTOR textsize;
 	TextToDraw text;
 	text._Colour = DirectX::Colors::Black;
 	//get to exsit
 	text._Text = LoadedTextMap["Start_Text"];
-	text._Position = { xpos,yPos };
+	SetTextPos(text);
+
+	
 	_TextList.push_back(text);
 }
 
 void Tutorial_UI::MovementTutorialText()
 {
 	TextToDraw text;
+	XMVECTOR textsize;
 	text._Colour = DirectX::Colors::Black;
 	//movement
 	text._Text = LoadedTextMap["Movement_Title"];
-	text._Text += "\n" + KeyBindes["Forward"] + LoadedTextMap["Control_1"];
-	text._Text += "\n" + KeyBindes["Left"] + LoadedTextMap["Control_2"];
-	text._Text += "\n" + KeyBindes["Back"] + LoadedTextMap["Control_3"];
-	text._Text += "\n" + KeyBindes["Right"] + LoadedTextMap["Control_4"];
-	text._Text += "\n" + KeyBindes["Jump"] + LoadedTextMap["Control_5"];
-	text._Text += "\n"+ LoadedTextMap["Control_6"];;
-	text._Position = { xpos,yPos };
+	text._Text += "\n" + KeyBinds["Forward"] + LoadedTextMap["Control_1"];
+	text._Text += "\n" + KeyBinds["Left"] + LoadedTextMap["Control_2"];
+	text._Text += "\n" + KeyBinds["Back"] + LoadedTextMap["Control_3"];
+	text._Text += "\n" + KeyBinds["Right"] + LoadedTextMap["Control_4"];
+	text._Text += "\n" + KeyBinds["Jump"] + LoadedTextMap["Control_5"];
+	text._Text += "\n"+ LoadedTextMap["Control_6"];
+	SetTextPos(text);
 	_TextList.push_back(text);
+
+
+
+
 }
 
 void Tutorial_UI::ToolTutorialText()
 {
 
-	XMVECTOR textsize;
+	
 	TextToDraw text;
 	text._Colour = DirectX::Colors::Black;
 	//tool instructions 
 	if (CurrentState == TutorialState::ToolTut)
 	{
 		text._Text = LoadedTextMap["Controls_Title"];
-		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
+		SetTextPos(text);
 		_TextList.push_back(text);
 
-		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+		
 		//genral information
 		text._Text = LoadedTextMap["Infromation"];
-		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
+		SetTextPos(text);
 		_TextList.push_back(text);
-
+		
 		//tool controlls 
-		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+		
 		text._Text = LoadedTextMap["Tool_Mode_Switch"];
-		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
+		SetTextPos(text);
 		_TextList.push_back(text);
 
-		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
-		text._Text = KeyBindes["Gun_State_One"] + LoadedTextMap["Tool_1"];
-		text._Text += "\n" + KeyBindes["Gun_State_Two"] + LoadedTextMap["Tool_2"];
-		text._Text += "\n" + KeyBindes["Gun_State_Three"] + LoadedTextMap["Tool_3"];
-
-		text._Position = { xpos,yPos };
+		
+		text._Text = KeyBinds["Gun_State_One"] + LoadedTextMap["Tool_1"];
+		text._Text += "\n" + KeyBinds["Gun_State_Two"] + LoadedTextMap["Tool_2"];
+		text._Text += "\n" + KeyBinds["Gun_State_Three"] + LoadedTextMap["Tool_3"];
+		text._Text += "\n" + KeyBinds["Gun_State_Four"] + LoadedTextMap["Tool_4"];
+		SetTextPos(text);
 		_TextList.push_back(text);
 
 	}
@@ -243,22 +249,17 @@ void Tutorial_UI::ToolTutorialText()
 	{
 		//tool 1
 		text._Text = LoadedTextMap["infromation_Title"];
-		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
+		SetTextPos(text);
 		_TextList.push_back(text);
 
-		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+	
 	//tell user about current mode
 	switch (Mode->GetTooltype())
 	{
 	case ToolType::Convert: {
 		
 		text._Text = LoadedTextMap["Convert_Tool"];
-		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
-		_TextList.push_back(text);
 
-	
 		switch (static_cast<int>(Mode->GetCurrentOption().boxtype))
 		{
 		case 0:
@@ -277,6 +278,8 @@ void Tutorial_UI::ToolTutorialText()
 			text._Text += LoadedTextMap["Convert_5"];
 			break;
 		}
+
+		SetTextPos(text);
 		_TextList.push_back(text);
 	}
 						  break;
@@ -284,12 +287,12 @@ void Tutorial_UI::ToolTutorialText()
 		//tool 2
 
 		text._Text = LoadedTextMap["Size_Tool"];
-		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
+
+
+		SetTextPos(text);
+
 		_TextList.push_back(text);
 
-
-		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
 		switch (static_cast<int>(Mode->GetCurrentOption().boxSize))
 		{
 		case 0:
@@ -305,19 +308,44 @@ void Tutorial_UI::ToolTutorialText()
 
 			break;
 		}
-		text._Position = { xpos,yPos };
+
+		SetTextPos(text);
 		_TextList.push_back(text);
 	}
 	break;
-	case ToolType::Magnetism: {
+	case ToolType::Bounce: {
 		//tool 3
-
-		text._Text = LoadedTextMap["Magnatism_Tool"];
-		textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
-		text._Position = { xpos,yPos };
+		text._Text = LoadedTextMap["Bounce_Tool"];
+		SetTextPos(text);
 		_TextList.push_back(text);
 
-		yPos += (XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y);
+		
+		switch (static_cast<int>(Mode->GetCurrentOption().boxBounce))
+		{
+		case 0:
+
+			text._Text = LoadedTextMap["Bounce_1"];
+
+			break;
+		case 1:
+			text._Text = LoadedTextMap["Bounce_2"];
+			break;
+
+		}
+
+		SetTextPos(text);
+		_TextList.push_back(text);
+
+	}
+	break;
+	case ToolType::Magnetism: {
+		//tool 4
+
+		text._Text = LoadedTextMap["Magnatism_Tool"];
+		SetTextPos(text);
+		_TextList.push_back(text);
+
+		
 		switch (static_cast<int>(Mode->GetCurrentOption().MagMode))
 		{
 		case 0:
@@ -330,10 +358,10 @@ void Tutorial_UI::ToolTutorialText()
 			break;
 		
 		}
-		text._Position = { xpos,yPos };
+		SetTextPos(text);
 		_TextList.push_back(text);
 	}
-						 break;
+	 break;
 
 	}
 	}
@@ -342,13 +370,15 @@ void Tutorial_UI::ToolTutorialText()
 void Tutorial_UI::OtherTutorialText()
 {
 	TextToDraw text;
+
 	text._Colour = DirectX::Colors::Black;
 	text._Text = LoadedTextMap["Other_Title"];
-	text._Text += "\n" + KeyBindes["Pause"] + LoadedTextMap["Other_Control_1"];
-	text._Text += "\n" + KeyBindes["Change_Gun_State_Up"] + LoadedTextMap["Other_Control_2"];
-	text._Text += "\n" + KeyBindes["Change_Gun_State_Down"] + LoadedTextMap["Other_Control_3"];
+	text._Text += "\n" + KeyBinds["Pause"] + LoadedTextMap["Other_Control_1"];
+	text._Text += "\n" + KeyBinds["Change_Gun_State_Up"] + LoadedTextMap["Other_Control_2"];
+	text._Text += "\n" + KeyBinds["Change_Gun_State_Down"] + LoadedTextMap["Other_Control_3"];
 	text._Text += "\n"+ LoadedTextMap["Other_Control_4"];
-	text._Position = { xpos,yPos };
+
+	SetTextPos(text);
 	_TextList.push_back(text);
 }
 
@@ -361,7 +391,10 @@ void Tutorial_UI::MoveToNextPannle()
 
 
 		text._Text = LoadedTextMap["Move_Next_Text"];
-		text._Position = { xpos,static_cast<float>(_SizeOfScreen.y * 0.25) };
+		SetTextPos(text);
+		
+		
+
 		_TextList.push_back(text);
 		//get is enter key down
 		if ((1 << 15) & GetAsyncKeyState(VK_RETURN)) {
@@ -369,14 +402,15 @@ void Tutorial_UI::MoveToNextPannle()
 			stateNo++;
 			CurrentState = static_cast<TutorialState>(stateNo);
 			timer.Restart();
-			
+			textSizeX = 0;
+			textSizeY = 0;
 			Sound::Instance()->PlaySoundEffect( "Notification" );
 		}
 
 	}
 }
 
-void Tutorial_UI::LoadKeyBindes(std::vector<JSON::SettingData> SettingsData)
+void Tutorial_UI::LoadKeyBinds(std::vector<JSON::SettingData> SettingsData)
 {
 	
 
@@ -387,9 +421,20 @@ void Tutorial_UI::LoadKeyBindes(std::vector<JSON::SettingData> SettingsData)
 
 			string key = std::get<string>(setting.Setting);
 			unsigned char* valChar = (unsigned char*)key.c_str();
-			KeyBindes[setting.Name] = ConvertFromUnsignedCharTostring(*valChar);
+			KeyBinds[setting.Name] = ConvertFromUnsignedCharTostring(*valChar);
 
 		}
 	}
 
+}
+
+void Tutorial_UI::SetTextPos(TextToDraw& text)
+{
+	XMVECTOR textsize = FontsList->GetFont("OpenSans_12")->GetSpriteFont()->MeasureString(text._Text.c_str());
+	
+	if (textSizeX < (XMVectorGetX(textsize) + 2) * FontsList->GetFont("OpenSans_12")->GetScale().x) {
+		textSizeX = (XMVectorGetX(textsize) + 2) * FontsList->GetFont("OpenSans_12")->GetScale().x;
+	}
+	text._Position = { _SizeOfScreen.x - textSizeX,textSizeY };
+	textSizeY += XMVectorGetY(textsize) * FontsList->GetFont("OpenSans_12")->GetScale().y;
 }

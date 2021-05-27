@@ -40,7 +40,7 @@ void Pause::Update(float dt)
 		//bakground
 		PuaseBakgtound.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		//title card
-		_TitleCard.Function("Title_Card\\TitleCard.dds", { static_cast<float>(_SizeOfScreen.x*0.5),static_cast<float>(_SizeOfScreen.y*0.12) }, { 0,0 });
+		_TitleCard.Function("Title_Card\\TitleCard.png", { static_cast<float>(_SizeOfScreen.x*0.5),static_cast<float>(_SizeOfScreen.y*0.12) }, { 0,0 });
 		ButtionCreate();
 
 		//Headder text
@@ -151,7 +151,7 @@ void Pause::ButtionCreate()
 		_isPuased = false;
 		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
-		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
+		
 	}
 	else if (PuaseButtions[1].Function(LoadedTextMap["Buttion_2"], ButtionTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//reset level

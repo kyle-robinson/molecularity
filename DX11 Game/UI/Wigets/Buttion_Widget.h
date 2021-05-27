@@ -105,7 +105,7 @@ inline bool Buttion_Widget<ButtionTexType>::Function(std::string text,vector<But
     	{
     	case Pressed:
     		//buttion hit
-    	
+    	    
     		ButtionColour = ButtionText[0];
     		IsPressed = true;
     		return true;
