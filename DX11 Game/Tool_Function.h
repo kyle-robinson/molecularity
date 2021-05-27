@@ -1,4 +1,6 @@
 #pragma once
+#ifndef TOOL_FUNCTION_H
+#define TOOL_FUNCTION_H
 
 #include<Tool_Structs.h>
 
@@ -19,8 +21,9 @@ public:
 	void SetEnergyCost(float cost) { EnergyCost = cost; }
 protected:
 	float EnergyCost = 0;
-	 int Current = 0;
-	 int MaxNumber;
-	 int MinNumber;
+	int Current = 0;
+	int MaxNumber;
+	int MinNumber;
 };
 
+#endif

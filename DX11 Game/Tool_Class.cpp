@@ -152,25 +152,6 @@ void Tool_Class::HandleEvent(Event* event)
 		}
 	}
 	break;
-      
-		CubeProperties* cube=static_cast<CubeProperties*>(event->GetData());
-
-		switch (_ToolType)
-		{
-		case ToolType::Convert:
-			cube->SetBoxType(_CurrentTool->GetToolData().boxtype);
-			break;
-		case ToolType::Resize:
-			cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
-			break;
-		case ToolType::Bounce:
-			cube->SetBoxBounce( _CurrentTool->GetToolData().boxBounce );
-			break;
-		default:
-			break;
-		}
-	}
-	break;
 	}
 }
 
@@ -185,7 +166,10 @@ void Tool_Class::ChangeCube(CubeProperties* Cube)
 		Cube->SetBoxSize(_CurrentTool->GetToolData().boxSize);
 		break;
 	case ToolType::Magnetism:
-			Cube->SetBoxMagneticMove(true);
+		Cube->SetBoxMagneticMove(true);
+		break;
+	case ToolType::Bounce:
+		Cube->SetBoxBounce( _CurrentTool->GetToolData().boxBounce );
 		break;
 	}
 }

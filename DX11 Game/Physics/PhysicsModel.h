@@ -73,15 +73,14 @@ private:
 	// Local Variables
 	float mMass;
 	float mWeight;
-	float mBounciness;
+	bool mUseLaminar;
+
 	bool mMagnetic;
 	bool mConductive;
-	bool mActivated;
-	bool mUseLaminar;
+	float mBounciness;
 
 	bool mIsHeld;
 	bool mActivated;
-	bool mUseLaminar;
 	bool mInvVelocity;
 
 	XMFLOAT3 mFriction;
@@ -90,8 +89,6 @@ private:
 	XMFLOAT3 mVelocity;
 	XMFLOAT3 mAcceleration;
 	GameObject* mTransform;
-
-
 	
 	bool useWeight = true;
 };

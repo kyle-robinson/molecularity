@@ -6,7 +6,7 @@ enum class ToolType
 {
 	Convert,
 	Resize,
-	Magnetism
+	Magnetism,
 	Bounce
 };
 
