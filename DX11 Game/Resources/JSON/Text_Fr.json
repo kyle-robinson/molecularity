@@ -148,7 +148,7 @@
       "Text": "Cela tire le cube auquel l'outil est destine."
     }
   ],
-  "TooL_Controls": [
+  "Tool_Controls": [
     {
       "Name": "Controls_Title",
       "Text": "Controles d'outils"
