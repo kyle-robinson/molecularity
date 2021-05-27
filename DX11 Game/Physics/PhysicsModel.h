@@ -33,11 +33,19 @@ public:
 	XMFLOAT3 GetVelocity() const noexcept { return mVelocity; }
 	XMFLOAT3 GetAcceleration() const noexcept { return mAcceleration; }
 
+	float GetBounciness() const noexcept { return mBounciness; }
+	bool GetMagnetic() const noexcept { return mMagnetic; }
+	bool GetConductivity() const noexcept { return mConductive; }
+
 	// Set Forces
 	void SetMass( float mass ) noexcept { mMass = mass; }
 	void SetNetForce( XMFLOAT3 netForce ) noexcept { mNetForce = netForce; }
 	void SetVelocity( XMFLOAT3 velocity ) noexcept { mVelocity = velocity; }
 	void SetAcceleration( XMFLOAT3 acceleration ) noexcept { mAcceleration = acceleration; }
+
+	void SetBounciness( float bounciness ) noexcept { mBounciness = bounciness; }
+	void SetMagnetic( bool magnetic ) noexcept { mMagnetic = magnetic; }
+	void SetConductive( bool conductive ) noexcept { mConductive = conductive; }
 
 	float Magnitude( XMFLOAT3 vec ) const noexcept;
 	XMFLOAT3 Normalization( XMFLOAT3 vec ) const noexcept;
@@ -61,6 +69,11 @@ private:
 	// Local Variables
 	float mMass;
 	float mWeight;
+	float mBounciness;
+	bool mMagnetic;
+	bool mConductive;
+	bool mActivated;
+	bool mUseLaminar;
 
 	bool mIsHeld;
 	bool mActivated;
