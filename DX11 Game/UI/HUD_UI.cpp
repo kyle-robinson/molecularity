@@ -46,7 +46,7 @@ void HUD_UI::Update(float dt)
 	// cube pickup text
 	PickupText._Colour = Colors::White;
 
-	if ( !isDissCube )
+	if ( !isDissCube)
 		PickupText._Text = LoadedTextMap["Action_Text"];
 	else
 		PickupText._Text = LoadedTextMap["Action_Text2"];
@@ -108,7 +108,7 @@ void HUD_UI::HandleEvent( Event* event )
 	break;
 	case EVENTID::IsDissCube:
 	{
-		isDissCube = ( bool )event->GetData();
+		isDissCube = *static_cast<bool*>(event->GetData());
 	}
 	break;
 	}
@@ -120,7 +120,7 @@ void HUD_UI::AddtoEvent()
 	EventSystem::Instance()->AddClient(EVENTID::ToolModeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
-
+	EventSystem::Instance()->AddClient(EVENTID::IsDissCube, this);
 }
 
 void HUD_UI::RemoveFromEvent()
@@ -129,6 +129,7 @@ void HUD_UI::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::ToolModeEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::IsDissCube, this);
 }
 
 void HUD_UI::CreateToolHud()
