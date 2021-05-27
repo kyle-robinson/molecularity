@@ -140,6 +140,7 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 				cube->GetPhysicsModel()->CheckGroundCollisions( false );
 				if ( cube->GetPositionFloat3().y <= -2.5f )
 				{
+					Sound::Instance()->PlaySoundEffect( "CubeSplash", false, cube->GetPositionFloat3(), 3.0f );
 					cube->ResetPosition();
 					RESET_FORCES;
 				}
