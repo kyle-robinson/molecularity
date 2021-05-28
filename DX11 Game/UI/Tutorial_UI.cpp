@@ -272,12 +272,6 @@ void Tutorial_UI::ToolTutorialText()
 		case 2:
 			text._Text += LoadedTextMap["Convert_3"];
 			break;
-		case 3:
-			text._Text += LoadedTextMap["Convert_4"];
-			break;
-		case 4:
-			text._Text += LoadedTextMap["Convert_5"];
-			break;
 		}
 
 		SetTextPos(text);

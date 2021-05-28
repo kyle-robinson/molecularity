@@ -93,9 +93,8 @@ bool LevelContainer::InitializeScene()
 		{
 			HRESULT hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\mesh.png", nullptr, boxTextures[BoxType::Mesh].GetAddressOf() );
 			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\wood.png", nullptr, boxTextures[BoxType::Wood].GetAddressOf() );
-			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\stone.jpg", nullptr, boxTextures[BoxType::Stone].GetAddressOf() );
 			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\iron.jpg", nullptr, boxTextures[BoxType::Iron].GetAddressOf() );
-			hr = CreateWICTextureFromFile( graphics->device.Get(), L"Resources\\Textures\\crates\\alien.png", nullptr, boxTextures[BoxType::Alien].GetAddressOf() );
+			hr = CreateWICTextureFromFile(graphics->device.Get(), L"Resources\\Textures\\crates\\dCube.png", nullptr, boxTextures[BoxType::DissCube].GetAddressOf());
 			COM_ERROR_IF_FAILED( hr, "Failed to create texture from file!" );
 		}
 	}
@@ -260,10 +259,13 @@ void LevelContainer::LateUpdate( const float dt )
 		// update objects
 		cubes[i]->Update( dt );
 
+		isDissCube = cubes[i]->GetIsDissCube();
 		// cube pickup text
 		if ( cubes[i]->GetIsInRange() && cubes[i]->GetIsHovering() && !cubes[i]->GetIsHolding() )
 		{
 			EventSystem::Instance()->AddEvent( EVENTID::CubePickupEvent, ( void* )true );
+			
+			EventSystem::Instance()->AddEvent(EVENTID::IsDissCube, &isDissCube);
 			break;
 		}
 		else
