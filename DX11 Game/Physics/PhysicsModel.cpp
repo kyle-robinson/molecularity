@@ -174,13 +174,13 @@ void PhysicsModel::AddForce( XMFLOAT3 force ) noexcept
 	mNetForce.y += force.y;
 	mNetForce.z += force.z;
 
-	std::string dMessage = std::to_string(mNetForce.x);
-	std::string dMessage2 = std::to_string(mNetForce.z);
-	char sz[1024] = { 0 };
-	dMessage = "x: " + dMessage + " z: " + dMessage2 + "\n";
-	const char* c = dMessage.c_str();
-	sprintf_s(sz, c);
-	OutputDebugStringA(sz);
+	//std::string dMessage = std::to_string(mNetForce.x);
+	//std::string dMessage2 = std::to_string(mNetForce.z);
+	//char sz[1024] = { 0 };
+	//dMessage = "x: " + dMessage + " z: " + dMessage2 + "\n";
+	//const char* c = dMessage.c_str();
+	//sprintf_s(sz, c);
+	//OutputDebugStringA(sz);
 }
 
 void PhysicsModel::AddForce( XMVECTOR force ) noexcept
