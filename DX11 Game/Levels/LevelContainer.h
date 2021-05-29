@@ -105,8 +105,6 @@ private:
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
 
-	bool ToShowEnd=true;
-
 	bool isDissCube;
 };
 

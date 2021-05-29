@@ -145,7 +145,7 @@ void LevelContainer::ShowEndLeveLScreen()
 		_UiManager->HideAllUI();
 		_UiManager->ShowUi("EndLevel");
 		EventSystem::Instance()->AddEvent(EVENTID::GameEndLevelEvent);
-		ToShowEnd = false;
+		
 	}
 }
 
