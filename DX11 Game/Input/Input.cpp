@@ -332,21 +332,25 @@ void Input::UpdateMouse( const float dt )
 
 		// CAMERA INPUT
 		{
-			// camera orientation
-			if ( mouse.IsRightDown() || !cursorEnabled )
+			if (!isPaused)
 			{
-				// update raw camera movement
-				if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
+				// camera orientation
+				if (mouse.IsRightDown() || !cursorEnabled)
 				{
-					cameras->GetCamera( cameras->GetCurrentCamera() )->AdjustRotation(
-						XMFLOAT3(
-							static_cast< float >( me.GetPosY() ) * 0.005f,
-							static_cast< float >( me.GetPosX() ) * 0.005f,
-							0.0f
-						)
-					);
+					// update raw camera movement
+					if (me.GetType() == Mouse::MouseEvent::EventType::RawMove)
+					{
+						cameras->GetCamera(cameras->GetCurrentCamera())->AdjustRotation(
+							XMFLOAT3(
+								static_cast<float>(me.GetPosY()) * 0.005f,
+								static_cast<float>(me.GetPosX()) * 0.005f,
+								0.0f
+							)
+						);
+					}
 				}
 			}
+			
 		}
 
 		// MULTI-TOOL INPUT

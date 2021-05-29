@@ -156,6 +156,7 @@ void RenderWindow::HandleEvent(Event* event)
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 		for (auto& setting : a)
 		{
+			SetIsStopNextFrame(true);
 			if (setting.Name == "FullScreen") {
 				//setfullscreen
 				WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
@@ -214,6 +215,7 @@ void RenderWindow::HandleEvent(Event* event)
 	}
 		break;
 	case EVENTID::WindowSizeChangeEvent:
+		SetIsStopNextFrame(true);
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
 		width = _SizeOfScreen.x;
 		height = _SizeOfScreen.y;

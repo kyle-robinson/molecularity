@@ -48,12 +48,15 @@ void Main_Menu_UI::Update(float dt)
 
 void Main_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
-	Shaders::BindShaders(_Contex.Get(), vert, pix);
-	MainMenuBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	Titlecard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	for (unsigned int i = 0; i < 5; i++) {
-		MainMenuButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
+	if (!IsSettings)
+	{
 		Shaders::BindShaders(_Contex.Get(), vert, pix);
+		MainMenuBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		Titlecard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		for (unsigned int i = 0; i < 5; i++) {
+			MainMenuButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
+			Shaders::BindShaders(_Contex.Get(), vert, pix);
+		}
 	}
 }
 
@@ -70,6 +73,7 @@ void Main_Menu_UI::HandleEvent(Event* event)
 	case EVENTID::UpdateSettingsEvent:
 	{
 		IsSettings = false;
+		EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 	}
 	break;
 	case EVENTID::UIKeyInput:
@@ -115,8 +119,9 @@ void Main_Menu_UI::MenuButtons()
 	float ButtonXPos = static_cast<float>((_SizeOfScreen.x * 0.5) - size.x / 2);
 	float ButtonYPos = 0.25f;
 	if (MainMenuButtons[0].Function(LoadedTextMap["Button_1"], ButtonTex, size, XMFLOAT2{ ButtonXPos, static_cast<float>(_SizeOfScreen.y * ButtonYPos) }, DirectX::Colors::Black, _MouseData)) {
-		//go to hub/save
+		//go to Level 1
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
+		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		LevelTo = 1;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 	}

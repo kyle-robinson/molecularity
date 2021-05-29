@@ -3,6 +3,8 @@
 
 HUD_UI::HUD_UI()
 {
+	LastKey = "_";
+	key = "_";
 }
 
 HUD_UI::~HUD_UI()
@@ -13,6 +15,8 @@ HUD_UI::~HUD_UI()
 
 void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d,std::shared_ptr<Fonts> fonts)
 {
+	LastKey = "_";
+	key = "_";
 	AddtoEvent();
 	TextLoad();
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
@@ -77,7 +81,7 @@ void HUD_UI::TextLoad()
 
 	vector<JSON::TextData> LoadedTextData = TextLoader::Instance()->LoadText("HUD_Text");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(LoadedTextData);
-
+	UpdateKeytext();
 }
 
 void HUD_UI::HandleEvent( Event* event )
@@ -205,9 +209,12 @@ void HUD_UI::CreateToolHud()
 
 void HUD_UI::UpdateKeytext()
 {
-	int position = LoadedTextMap["Action_Text"].find_first_of("_");
-	LoadedTextMap["Action_Text"].erase(LoadedTextMap["Action_Text"].begin() + position);
-	LoadedTextMap["Action_Text"] = LoadedTextMap["Action_Text"].insert(position, key);
+	int position = LoadedTextMap["Action_Text"].find_first_of(LastKey);
+
+	if (position > 0) {
+		LoadedTextMap["Action_Text"].erase(LoadedTextMap["Action_Text"].begin() + position);
+		LoadedTextMap["Action_Text"] = LoadedTextMap["Action_Text"].insert(position, key);
+	}
 }
 
 void HUD_UI::UpdateSettingsData(std::vector<JSON::SettingData>& SettingsData)
@@ -223,6 +230,7 @@ void HUD_UI::UpdateSettingsData(std::vector<JSON::SettingData>& SettingsData)
 		}
 
 		if (setting.Name == "Action") {
+			//LastKey = key;
 			key = std::get<string>(setting.Setting);
 			unsigned char* valChar = (unsigned char*)key.c_str();
 			key = ConvertFromUnsignedCharTostring(*valChar);
