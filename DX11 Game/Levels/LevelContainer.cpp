@@ -140,7 +140,7 @@ void LevelContainer::RenderFrameEarly()
 
 void LevelContainer::ShowEndLeveLScreen()
 {
-	if (levelCompleted && ToShowEnd) {
+	if (levelCompleted) {
 		//game end
 		_UiManager->HideAllUI();
 		_UiManager->ShowUi("EndLevel");

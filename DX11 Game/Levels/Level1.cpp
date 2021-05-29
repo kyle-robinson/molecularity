@@ -43,12 +43,14 @@ bool Level1::OnCreate()
 }
 
 void Level1::OnSwitch()
-{
+{	
+	levelCompleted = false;
+	
 	// Update Level System
 
 	CurrentLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
-
+	
 	levelName = "Level1";
 	numOfCubes = 1;
 	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );

@@ -36,6 +36,12 @@ void Main_Menu_UI::Update(float dt)
 {
 	if (!IsSettings)
 	{
+
+		if (mouseLoad) {
+			_MouseData.LPress = false;
+			mouseLoad = false;
+		}
+
 		MainMenuBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		Titlecard.Function("Title_Card\\TitleCard.png", { static_cast<float>(_SizeOfScreen.x * 0.4),static_cast<float>(_SizeOfScreen.y * 0.12) }, { static_cast<float>((_SizeOfScreen.x * 0.5) - static_cast<float>(_SizeOfScreen.x * 0.4) / 2) ,0 });
 
@@ -90,7 +96,7 @@ void Main_Menu_UI::HandleEvent(Event* event)
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
 		
-		_MouseData.LPress = false;
+		
 
 	}
 	break;
@@ -124,6 +130,7 @@ void Main_Menu_UI::MenuButtons()
 		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		LevelTo = 1;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
+		mouseLoad = true;
 	}
 	ButtonYPos += 0.20;
 
@@ -131,12 +138,14 @@ void Main_Menu_UI::MenuButtons()
 		//place holder
 		LevelTo = 3;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
+		mouseLoad = true;
 	}
 	ButtonYPos += 0.20;
 	if (MainMenuButtons[2].Function(LoadedTextMap["Button_3"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
 		IsSettings = true;
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
+		mouseLoad = true;
 	}
 	ButtonYPos += 0.20;
 	if (MainMenuButtons[3].Function(LoadedTextMap["Button_4"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {

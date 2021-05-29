@@ -120,7 +120,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		if ( imio.WantCaptureMouse )
 			return 0;
-		if ( pt.x >= 0 && pt.x < renderWindow.GetWidth() && pt.y >= 0 && pt.y < renderWindow.GetHeight() )
+		if ( pt.x >= 0 && pt.x < windowsize.x && pt.y >= 0 && pt.y < windowsize.y)
 		{
 			mouse.OnMouseMove( x, y );
 			if ( !mouse.IsInWindow() )
@@ -174,7 +174,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		mouse.OnLeftReleased( x, y );
 
 		const POINTS pt = MAKEPOINTS( lParam );
-		if ( pt.x < 0 || pt.x >= renderWindow.GetWidth() || pt.y < 0 || pt.y >= renderWindow.GetHeight() )
+		if ( pt.x < 0 || pt.x >= windowsize.x || pt.y < 0 || pt.y >= windowsize.y)
 		{
 			ReleaseCapture();
 			mouse.OnMouseLeave( x, y );
@@ -203,7 +203,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		mouse.OnRightReleased( x, y );
 
 		const POINTS pt = MAKEPOINTS( lParam );
-		if ( pt.x < 0 || pt.x >= renderWindow.GetWidth() || pt.y < 0 || pt.y >= renderWindow.GetHeight() )
+		if ( pt.x < 0 || pt.x >= windowsize.x || pt.y < 0 || pt.y >= windowsize.y)
 		{
 			ReleaseCapture();
 			mouse.OnMouseLeave( x, y );

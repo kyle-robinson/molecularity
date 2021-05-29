@@ -88,17 +88,24 @@ bool Application::ProcessMessages() noexcept
 
 void Application::Update()
 {
-	// delta time
-	float dt = static_cast< float >( timer.GetMilliSecondsElapsed() );
-	timer.Restart();
+	
+	if (renderWindow.GetIsStopNextFrame()) {
+		// delta time
+		float dt = static_cast<float>(timer.GetMilliSecondsElapsed());
+		timer.Restart();
 
-	// update systems
-	input.Update( dt );
-	cameras.Update();
+		// update systems
+		input.Update(dt);
+		cameras.Update();
 
-	// update current level
-	stateMachine.Update( dt );
-	EventSystem::Instance()->ProcessEvents();
+		// update current level
+		stateMachine.Update(dt);
+		EventSystem::Instance()->ProcessEvents();
+	}
+	else
+	{
+		renderWindow.SetIsStopNextFrame(false);
+	}
 }
 
 void Application::Render()

@@ -426,17 +426,17 @@ void Input::UpdateMouse( const float dt )
 					UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
 				}
 
-				if ( mouse.IsRightDown() && cursorEnabled )
+				if ( me.GetType()== Mouse::MouseEvent::EventType::RPress && cursorEnabled )
 					UiMouseData.RPress = true;
 				else
 					UiMouseData.RPress = false;
 
-				if ( mouse.IsLeftDown() && cursorEnabled )
+				if (me.GetType() == Mouse::MouseEvent::EventType::LPress && cursorEnabled )
 					UiMouseData.LPress = true;
 				else
 					UiMouseData.LPress = false;
 
-				if ( mouse.IsMiddleDown() && cursorEnabled )
+				if (me.GetType() == Mouse::MouseEvent::EventType::MPress && cursorEnabled )
 					UiMouseData.MPress = true;
 				else
 					UiMouseData.MPress = false;
