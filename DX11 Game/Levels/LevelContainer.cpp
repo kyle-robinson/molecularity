@@ -40,19 +40,6 @@ bool LevelContainer::InitializeScene()
 	{
 		// DRAWABLES
 		{
-			// cubes
-			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
-			{
-				std::shared_ptr<Cube> cube = std::make_shared<Cube>();
-				if ( !cube->Initialize( graphics->context.Get(), graphics->device.Get() ) ) return false;
-
-				float xPos = 2.5f;
-				if ( i % 2 == 0 ) xPos = -xPos;
-				cube->SetInitialPosition( xPos, 0.0f, -6.0f );
-
-				cubes.push_back( std::move( cube ) );
-			}
-
 			// skysphere
 			if ( !skysphere.Initialize( "Resources\\Models\\Sphere\\sphere.obj", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			skysphere.SetInitialScale( 250.0f, 250.0f, 250.0f );
@@ -173,7 +160,7 @@ void LevelContainer::RenderFrame()
 	// DRAWABLES
 	{
 		// CUBES
-		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+		for ( uint32_t i = 0; i < numOfCubes; i++ )
 		{
 			// render backfaces
 			if ( cubes[i]->GetEditableProperties()->GetBoxType() == BoxType::Mesh )
@@ -246,7 +233,7 @@ void LevelContainer::Update( const float dt )
 void LevelContainer::LateUpdate( const float dt )
 {
 	// update cubes
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	for ( uint32_t i = 0; i < numOfCubes; i++ )
 	{
 		cubes[i]->SetCamPos(cameras->GetCamera(cameras->GetCurrentCamera())->GetPositionFloat3());
 		// update cube scale multiplier
@@ -276,4 +263,19 @@ void LevelContainer::LateUpdate( const float dt )
 
 	// set position of spot light model
 	spotLight.UpdateModelPosition( cameras->GetCamera( JSON::CameraType::Default ) );
+}
+
+void LevelContainer::UpdateCubes( float xPos, float yPos, float zPos, float spacing )
+{
+	cubes.clear();
+
+	for (uint32_t i = 0; i < numOfCubes; i++)
+	{
+		std::shared_ptr<Cube> cube = std::make_shared<Cube>();
+		if (!cube->Initialize(graphics->context.Get(), graphics->device.Get())) return;
+
+		cube->SetInitialPosition(xPos + ( i * spacing ) , yPos, zPos);
+
+		cubes.push_back(std::move(cube));
+	}
 }

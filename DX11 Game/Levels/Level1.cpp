@@ -50,6 +50,8 @@ void Level1::OnSwitch()
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 
 	levelName = "Level1";
+	numOfCubes = 1;
+	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );
 	NextLevel = 2;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
 
@@ -149,7 +151,7 @@ void Level1::Update( const float dt )
 		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 19.0f );
 
 		// cube collisions
-		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+		for ( uint32_t i = 0; i < numOfCubes; i++ )
 		{
 			// update collisions w pressure plate
 			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
@@ -163,7 +165,7 @@ void Level1::Update( const float dt )
 			}
 
 			// update collisions w other cubes
-			for ( uint32_t j = 0; j < NUM_CUBES; j++ )
+			for ( uint32_t j = 0; j < numOfCubes; j++ )
 				if ( i != j )
 					cubes[i]->CheckCollisionAABB( cubes[j], dt );
 

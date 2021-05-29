@@ -41,6 +41,8 @@ void Level2::OnSwitch()
 
 	// update items on level switch here...
 	levelName = "Level2";
+	numOfCubes = 3;
+	LevelContainer::UpdateCubes();
 	NextLevel = 3;
 	//UI
 	_UiManager->RemoveUI("MainMenu");
