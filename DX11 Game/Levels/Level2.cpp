@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "Level2.h"
-#include "Collisions.h"
-#include "Rasterizer.h"
 //ui
 #include<Graphics/UI_Manager.h>
 #include<UI/HUD_UI.h>
@@ -42,7 +40,7 @@ void Level2::OnSwitch()
 	// update items on level switch here...
 	levelName = "Level2";
 	numOfCubes = 3;
-	LevelContainer::UpdateCubes();
+	LevelContainer::UpdateCubesPos();
 	NextLevel = 3;
 	//UI
 	_UiManager->RemoveUI("MainMenu");

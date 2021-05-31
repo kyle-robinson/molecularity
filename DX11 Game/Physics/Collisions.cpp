@@ -75,7 +75,11 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObje
 
 void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept
 {
-	cube->GetPhysicsModel()->CheckGroundCollisions( true );
+	if ( cube->GetPositionFloat3().y <= 3.0f )
+		cube->GetPhysicsModel()->CheckGroundCollisions( true );
+	else
+		cube->GetPhysicsModel()->CheckGroundCollisions( false );
+
 	if ( cube->GetPositionFloat3().z < -6.5f ) // entrance collisions
 	{
 		// X-COLLISIONS
