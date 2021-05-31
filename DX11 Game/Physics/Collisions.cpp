@@ -29,7 +29,7 @@ bool Collisions::CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObje
 }
 
 #pragma region Level1_Collisions
-void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObject3D& object, float offset ) noexcept
+void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, float offset ) noexcept
 {
 	if ( camera->GetPositionFloat3().z < -6.5f ) // entrance collisions
 	{
@@ -47,11 +47,11 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObje
 	else // main area collisions
 	{
 		// X-COLLISIONS
-		if ( camera->GetPositionFloat3().x <= object.GetPositionFloat3().x - offset )
-			camera->SetPosition( object.GetPositionFloat3().x - offset, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+		if ( camera->GetPositionFloat3().x <= -offset + 1.5f )
+			camera->SetPosition( -offset + 1.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
 		
-		if ( camera->GetPositionFloat3().x >= object.GetPositionFloat3().x + offset )
-			camera->SetPosition( object.GetPositionFloat3().x + offset, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+		if ( camera->GetPositionFloat3().x >= offset - 1.5f )
+			camera->SetPosition( offset - 1.5f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
 
 		// Z-COLLISIONS
 		if ( camera->GetPositionFloat3().z >= 1.0f )
@@ -65,7 +65,7 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObje
 	}
 }
 
-void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept
+void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
 	cube->GetPhysicsModel()->CheckGroundCollisions( true );
 	if ( cube->GetPositionFloat3().z < -6.5f ) // entrance collisions
@@ -93,15 +93,15 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 	else
 	{
 		// X-COLLISIONS
-		if ( cube->GetPositionFloat3().x <= object.GetPositionFloat3().x - offset )
+		if ( cube->GetPositionFloat3().x <= -offset - 1.5f )
 		{
-			cube->SetPosition( object.GetPositionFloat3().x - offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			cube->SetPosition( -offset - 1.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
 			RESET_FORCES;
 		}
 
-		if ( cube->GetPositionFloat3().x >= object.GetPositionFloat3().x + offset )
+		if ( cube->GetPositionFloat3().x >= offset + 1.5f )
 		{
-			cube->SetPosition( object.GetPositionFloat3().x + offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			cube->SetPosition( offset + 1.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
 			RESET_FORCES;
 		}
 
@@ -142,7 +142,7 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 #pragma endregion
 
 #pragma region Level2_Collisions
-void Collisions::CheckCollisionLevel2( std::unique_ptr<Camera>& camera, GameObject3D& object, float offset ) noexcept
+void Collisions::CheckCollisionLevel2( std::unique_ptr<Camera>& camera, float offset ) noexcept
 {
 	if ( camera->GetPositionFloat3().z < -7.5f ) // entrance collisions
 	{
@@ -178,7 +178,7 @@ void Collisions::CheckCollisionLevel2( std::unique_ptr<Camera>& camera, GameObje
 	}
 }
 
-void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept
+void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
 	// check floor collisions - don't check wall collisions if below the floor
 	// (prevents cube jumping to floor level when colliding with the wall while in the sludge area)

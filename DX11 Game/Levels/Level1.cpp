@@ -13,9 +13,9 @@ bool Level1::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1-Final.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1-Final-Corners-Fixed.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			room.SetInitialPosition( -2.0f, 0.0f, -20.0f );
+			room.SetInitialPosition( 70.5f, 0.0f, 4.0f );
 			room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
 
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
@@ -133,7 +133,7 @@ void Level1::Update( const float dt )
 	// COLLISIONS
 	{
 		// camera collisions w room
-		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 18.5f );
+		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), 18.5f );
 
 		// cube collisions
 		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
@@ -154,7 +154,7 @@ void Level1::Update( const float dt )
 					cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 			// update collisions w room
-			Collisions::CheckCollisionLevel1( cubes[i], room, 15.0f );
+			Collisions::CheckCollisionLevel1( cubes[i], 15.0f );
 		}
 	}
 
