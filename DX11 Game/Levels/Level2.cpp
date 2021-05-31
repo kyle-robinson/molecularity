@@ -153,7 +153,7 @@ void Level2::Update( const float dt )
 					cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 			// update collisions w room
-			Collisions::CheckCollisionLevel2( cubes[i], room, 15.0f );
+			Collisions::CheckCollisionLevel2( cubes[i], room, 17.0f );
 		}
 	}
 

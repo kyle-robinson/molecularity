@@ -19,6 +19,7 @@ public:
 
 	void SetInitialPosition( const XMFLOAT3& pos ) noexcept;
 	void SetInitialPosition( float xPos, float yPos, float zPos ) noexcept;
+	const XMFLOAT3& GetInitialPosition() const noexcept { return initialPos; }
 	void SetPosition( const XMVECTOR& pos ) noexcept;
 	void SetPosition( const XMFLOAT3& pos ) noexcept;
 	void SetPosition( float xPos, float yPos, float zPos ) noexcept;
