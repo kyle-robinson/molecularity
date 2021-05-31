@@ -13,7 +13,7 @@ bool Level2::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			if ( !room.Initialize( "Resources\\Models\\Levels\\Level2-Final.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			if ( !room.Initialize( "Resources\\Models\\Levels\\Level2-Final-Corners-Fixed.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
 			room.SetInitialPosition( -32.0f, 0.0f, -40.0f );
 			room.SetInitialRotation( 0.0f, XM_PI, 0.0f );

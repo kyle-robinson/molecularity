@@ -182,9 +182,9 @@ void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, GameObject3D
 {
 	// check floor collisions - don't check wall collisions if below the floor
 	// (prevents cube jumping to floor level when colliding with the wall while in the sludge area)
-	if (  ( cube->GetPositionFloat3().z >= 0.5f && cube->GetPositionFloat3().z < 26.5f ) && // center area collisions
-		  ( ( cube->GetPositionFloat3().x > 9.5f || cube->GetPositionFloat3().x < -9.5f ) || // sludge area collisions
-		    ( cube->GetPositionFloat3().z < 8.5f || cube->GetPositionFloat3().z > 18.5f ) ) )
+	if ( ( cube->GetPositionFloat3().z >= 0.5f && cube->GetPositionFloat3().z < 26.5f ) && // center area collisions
+		 ( ( cube->GetPositionFloat3().x > 9.5f || cube->GetPositionFloat3().x < -9.5f ) || // sludge area collisions
+		   ( cube->GetPositionFloat3().z < 8.5f || cube->GetPositionFloat3().z > 18.5f ) ) )
 	{
 		cube->GetPhysicsModel()->CheckGroundCollisions( false );
 		RESET_FORCES;
