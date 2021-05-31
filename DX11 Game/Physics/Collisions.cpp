@@ -52,8 +52,8 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObje
 	{
 		// X-COLLISIONS
 		{
-			if ( camera->GetPositionFloat3().x <= object.GetPositionFloat3().x - offset )
-				camera->SetPosition( object.GetPositionFloat3().x - offset, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+			if ( camera->GetPositionFloat3().x <= object.GetPositionFloat3().x - offset + 4.0f )
+				camera->SetPosition( object.GetPositionFloat3().x - offset + 4.0f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
 		
 			if ( camera->GetPositionFloat3().x >= object.GetPositionFloat3().x + offset )
 				camera->SetPosition( object.GetPositionFloat3().x + offset, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
@@ -79,6 +79,8 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 		cube->GetPhysicsModel()->CheckGroundCollisions( true );
 	else
 		cube->GetPhysicsModel()->CheckGroundCollisions( false );
+
+	CeilingCollision( cube, 11.5f );
 
 	if ( cube->GetPositionFloat3().z < -6.5f ) // entrance collisions
 	{
@@ -116,9 +118,9 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 				RESET_FORCES;
 			}
 
-			if ( cube->GetPositionFloat3().x >= object.GetPositionFloat3().x + offset )
+			if ( cube->GetPositionFloat3().x >= object.GetPositionFloat3().x + offset + 4.0f )
 			{
-				cube->SetPosition( object.GetPositionFloat3().x + offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+				cube->SetPosition( object.GetPositionFloat3().x + offset + 4.0f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
 				RESET_FORCES;
 			}
 		}
@@ -157,6 +159,15 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D
 				}
 			}
 		}
+	}
+}
+void Collisions::CeilingCollision(std::shared_ptr<Cube>& cube, float ceilingHeight ) noexcept
+{
+	if (cube->GetPositionFloat3().y > ceilingHeight)
+	{
+		cube->SetPosition(XMFLOAT3(cube->GetPositionFloat3().x, ceilingHeight, cube->GetPositionFloat3().z));
+		cube->GetPhysicsModel()->CheckGroundCollisions(true);
+		cube->GetPhysicsModel()->AddForce(XMFLOAT3(0.0f, -2.0f, 0.0f));
 	}
 }
 #pragma endregion

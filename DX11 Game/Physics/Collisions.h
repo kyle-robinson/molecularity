@@ -19,6 +19,8 @@ public:
 	
 	static void CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObject3D& object, float offset ) noexcept;
 	static void CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept;
+
+	static void CeilingCollision(std::shared_ptr<Cube>& cube, float ceilingHeight ) noexcept;
 };
 
 #endif

@@ -74,8 +74,6 @@ private:
 	float mWeight;
 	bool mUseLaminar;
 
-	float mPrevYPos;
-
 	bool mIsDissCube;
 
 	float mBounciness;

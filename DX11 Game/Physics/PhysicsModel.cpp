@@ -21,7 +21,6 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
 	mIsHeld = isHeld;
-	mPrevYPos = mPosition.y;
 
 	if ( !mActivated )
 	{
