@@ -24,12 +24,14 @@ public:
 	bool GetIsHolding() const noexcept { return isHeld; }
 	bool GetIsHovering() const noexcept { return cubeHover; }
 	bool GetIsInRange() const noexcept { return cubeInRange; }
+	bool GetIsDissCube() const noexcept { return isDissCube; }
 
 	// Setters
 	void SetIsHolding( bool isHolding ) noexcept { isHeld = isHolding; }
 	void SetIsHovering( bool hover ) noexcept { cubeHover = hover; }
 	void SetIsInRange( bool range ) noexcept { cubeInRange = range; }
-	void SetCamPos(XMFLOAT3 newcampos)noexcept { CamPos = newcampos; }
+	void SetCamPos( XMFLOAT3 newcampos ) noexcept { CamPos = newcampos; }
+	void SetIsDissCube( bool isDiss ) noexcept { isDissCube = isDiss; }
 
 	void Update( const float deltaTime ) noexcept;
 	std::shared_ptr<PhysicsModel> GetPhysicsModel() const noexcept { return physicsModel; }
@@ -47,6 +49,7 @@ private:
 	bool heldLastFrame = false;
 	bool cubeHover = false;
 	bool cubeInRange = false;
+	bool isDissCube = true;
 
 	int delay;
 

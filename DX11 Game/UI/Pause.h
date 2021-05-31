@@ -36,7 +36,9 @@ private:
 		"Resources\\Textures\\UI_Buttons\\Button_1_Up.dds" };
 	
 	int currentLevel=0;
-	UINT32 Hub = 2;
+	UINT32 Hub = 0;
 
 	map<string, string>LoadedTextMap;
+
+	bool OnLoad = true;
 };

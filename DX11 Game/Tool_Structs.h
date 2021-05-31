@@ -7,16 +7,16 @@ enum class ToolType
 	Convert,
 	Resize,
 	Magnetism,
-	Bounce
+	Bounce,
+	Conductive
 };
 
 enum class BoxType
 {
 	Mesh = 0,
 	Wood,
-	Stone,
 	Iron,
-	Alien
+	DissCube
 };
 
 enum class BoxSize
@@ -38,10 +38,17 @@ enum class MagnetismMode
 	OneCube
 };
 
+enum class BoxConductive
+{
+	NotConductive,
+	IsConductive
+};
+
 struct ToolData
 {
 	BoxType boxtype;
 	BoxSize boxSize;
 	MagnetismMode MagMode;
 	BoxBounce boxBounce;
+	BoxConductive boxConductive;
 };

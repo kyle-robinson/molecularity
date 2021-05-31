@@ -32,8 +32,9 @@ void Input::AddToEvent()
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::GameUnPauseEvent, this );
-	EventSystem::Instance()->AddClient(EVENTID::ShowCursorEvent, this);
-	EventSystem::Instance()->AddClient(EVENTID::HideCursorEvent, this);
+	EventSystem::Instance()->AddClient( EVENTID::ShowCursorEvent, this );
+	EventSystem::Instance()->AddClient( EVENTID::HideCursorEvent, this );
+	EventSystem::Instance()->AddClient( EVENTID::IsDissCube, this );
 }
 
 void Input::HandleEvent( Event* event )
@@ -156,36 +157,42 @@ void Input::UpdateKeyboard( const float dt )
 		// MULTI-TOOL INPUT
 		{
 			// set multi-tool type
-			if ( keycode == KeyBinds["Gun_State_One"] ) {
-				currentTool = ToolType::Convert;
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
-				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
-			}
-			if ( keycode == KeyBinds["Gun_State_Two"] ) {
-				currentTool = ToolType::Resize;
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
-				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
-			}
-			if ( keycode == KeyBinds["Gun_State_Three"] ) {
-				currentTool = ToolType::Bounce;
-				EventSystem::Instance()->AddEvent( EVENTID::ChangeToolEvent, &currentTool );
-				Sound::Instance()->PlaySoundEffect( "ToolSwitchMode" );
-			}
-			if (keycode == KeyBinds["Gun_State_Four"]) {
-				currentTool = ToolType::Magnetism;
-				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
-				Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
-			}
-      
-			if ( keycode == KeyBinds["Gun_State_Five"] );
-			if ( keycode == KeyBinds["Gun_State_Six"] );
-
-			if (kbe.IsPress()) {
-				if (keycode == KeyBinds["Change_Gun_State_Up"]) {
-					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+			if (!isPaused)
+			{
+				if (keycode == KeyBinds["Gun_State_One"]) {
+					currentTool = ToolType::Convert;
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+					Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
 				}
-				else if (keycode == KeyBinds["Change_Gun_State_Down"]) {
-					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+				if (keycode == KeyBinds["Gun_State_Two"]) {
+					currentTool = ToolType::Resize;
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+					Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
+				}
+				if (keycode == KeyBinds["Gun_State_Three"]) {
+					currentTool = ToolType::Bounce;
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+					Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
+				}
+				if (keycode == KeyBinds["Gun_State_Four"]) {
+					currentTool = ToolType::Magnetism;
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+					Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
+				}
+				if (keycode == KeyBinds["Gun_State_Five"]) {
+					currentTool = ToolType::Conductive;
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolEvent, &currentTool);
+					Sound::Instance()->PlaySoundEffect("ToolSwitchMode");
+				}
+				if (keycode == KeyBinds["Gun_State_Six"]);
+
+				if (kbe.IsPress()) {
+					if (keycode == KeyBinds["Change_Gun_State_Up"]) {
+						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+					}
+					else if (keycode == KeyBinds["Change_Gun_State_Down"]) {
+						EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+					}
 				}
 			}
 		}
@@ -218,24 +225,27 @@ void Input::UpdateKeyboard( const float dt )
 			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( cameras->GetCamera( JSON::CameraType::Debug ), dt );
 			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( cameras->GetCamera( JSON::CameraType::Debug ), dt );
 		}
-		else
+		else if ( !isPaused )
 		{
 			static bool jumping = false;
 			if ( keyboard.KeyIsPressed( KeyBinds["Jump"] ) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
 		}
 
-		// normalize diagonal movement speed
-		if ( keyboard.KeyIsPressed( KeyBinds["Forward"] ) && ( keyboard.KeyIsPressed( KeyBinds["Left"] ) || keyboard.KeyIsPressed( KeyBinds["Back"] ) ) )
-			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
-		if ( keyboard.KeyIsPressed( KeyBinds["Back"] ) && ( keyboard.KeyIsPressed( KeyBinds["Left"] ) || keyboard.KeyIsPressed( KeyBinds["Back"] ) ) )
-			cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.008f );
+		if (!isPaused)
+		{
+			// normalize diagonal movement speed
+			if (keyboard.KeyIsPressed(KeyBinds["Forward"]) && (keyboard.KeyIsPressed(KeyBinds["Left"]) || keyboard.KeyIsPressed(KeyBinds["Back"])))
+				cameras->GetCamera(cameras->GetCurrentCamera())->SetCameraSpeed(0.008f);
+			if (keyboard.KeyIsPressed(KeyBinds["Back"]) && (keyboard.KeyIsPressed(KeyBinds["Left"]) || keyboard.KeyIsPressed(KeyBinds["Back"])))
+				cameras->GetCamera(cameras->GetCurrentCamera())->SetCameraSpeed(0.008f);
 
-		// update camera movement
-		if ( keyboard.KeyIsPressed( KeyBinds["Forward"] ) ) CameraMovement::MoveForward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( KeyBinds["Left"] ) ) CameraMovement::MoveLeft( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( KeyBinds["Back"] ) ) CameraMovement::MoveBackward( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
-		if ( keyboard.KeyIsPressed( KeyBinds["Right"] ) ) CameraMovement::MoveRight( cameras->GetCamera( cameras->GetCurrentCamera() ), playMode, dt );
+			// update camera movement
+			if (keyboard.KeyIsPressed(KeyBinds["Forward"])) CameraMovement::MoveForward(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt);
+			if (keyboard.KeyIsPressed(KeyBinds["Left"])) CameraMovement::MoveLeft(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt);
+			if (keyboard.KeyIsPressed(KeyBinds["Back"])) CameraMovement::MoveBackward(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt);
+			if (keyboard.KeyIsPressed(KeyBinds["Right"])) CameraMovement::MoveRight(cameras->GetCamera(cameras->GetCurrentCamera()), playMode, dt);
+		}
 
 		// set camera speed
 		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
@@ -244,77 +254,70 @@ void Input::UpdateKeyboard( const float dt )
 	// MULTI-TOOL INPUT
 	{
 		// set multi-tool type
-		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+		if (!isPaused)
 		{
-			// ensure another cube is not already being held
-			float alreadyHeld = false;
-			for ( uint32_t j = 0; j < NUM_CUBES; j++ )
-				if ( i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true )
-					alreadyHeld = true;
-
-			// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
-			if ( ( keyboard.KeyIsPressed( KeyBinds["Action"] ) ) &&
-				!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
-				( levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() ) )
+			for (uint32_t i = 0; i < levelSystem->GetCurrentLevel()->GetNumOfLevelCubes(); i++)
 			{
-				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( true );
-				levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->ResetForces();
+				// ensure another cube is not already being held
+				float alreadyHeld = false;
+				for (uint32_t j = 0; j < levelSystem->GetCurrentLevel()->GetNumOfLevelCubes(); j++)
+					if (i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true)
+						alreadyHeld = true;
 
-				if (!heldLastFrame[i])
-					Sound::Instance()->PlaySoundEffect("CubePickup");
 
-				// set cube position
-				static int offset = 2;
-				switch ( levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetBoxSize() )
+
+				// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
+				if ((keyboard.KeyIsPressed(KeyBinds["Action"])) &&
+					!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover && !levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsDissCube() &&
+					(levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding()))
 				{
-				case BoxSize::Small:  offset = 1; break;
-				case BoxSize::Normal: offset = 2; break;
-				case BoxSize::Large:  offset = 4; break;
-				}
-				XMVECTOR cubePosition = cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionVector();
-				cubePosition += cameras->GetCamera( cameras->GetCurrentCamera() )->GetForwardVector() * offset;
-				levelSystem->GetCurrentLevel()->GetCube()[i]->SetPosition( cubePosition );
+					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding(true);
+					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->ResetForces();
 
-				// set cube rotation
-				levelSystem->GetCurrentLevel()->GetCube()[i]->SetRotation(
-					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().x,
-					cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().y,
-					levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
-				);
-        
-				heldLastFrame[i] = true;
+					if (!heldLastFrame[i])
+						Sound::Instance()->PlaySoundEffect("CubePickup");
 
-				// cube throwing
-				if ( keyboard.KeyIsPressed( 'R' ) )
-				{
-					canHover = false;
+					// set cube position
+					static int offset = 2;
+					switch (levelSystem->GetCurrentLevel()->GetCube()[i]->GetEditableProperties()->GetBoxSize())
+					{
+					case BoxSize::Small:  offset = 1; break;
+					case BoxSize::Normal: offset = 2; break;
+					case BoxSize::Large:  offset = 4; break;
+					}
+					XMVECTOR cubePosition = cameras->GetCamera(cameras->GetCurrentCamera())->GetPositionVector();
+					cubePosition += cameras->GetCamera(cameras->GetCurrentCamera())->GetForwardVector() * offset;
+					levelSystem->GetCurrentLevel()->GetCube()[i]->SetPosition(cubePosition);
 
-					XMFLOAT3 cubeForce = levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->Normalization(
-						XMFLOAT3( sinf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt,
-						-( cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().x + cameras->GetCamera( cameras->GetCurrentCamera() )->GetRotationFloat3().z ) / 2.0f * 100.0f,
-						cosf( levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y ) * dt )
+					// set cube rotation
+					levelSystem->GetCurrentLevel()->GetCube()[i]->SetRotation(
+						levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().x,
+						cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().y,
+						levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().z
 					);
-					
-					levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce( cubeForce.x * 20.0f, cubeForce.y * 20.0f, cubeForce.z * 20.0f );
 
-					Sound::Instance()->PlaySoundEffect( "CubeThrow" );
-
+					heldLastFrame[i] = true;
+				}
+				else
+				{
+					levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding(false);
 					heldLastFrame[i] = false;
 				}
 			}
+
+			if (!canHover && delay < 100.0f)
+				delay += 1.0f;
 			else
 			{
-				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding( false );
-				heldLastFrame[i] = false;
+				canHover = true;
+				delay = 0.0f;
 			}
 		}
 
-		if ( !canHover && delay < 100.0f )
-			delay += 1.0f;
 		else
 		{
-			canHover = true;
-			delay = 0.0f;
+			for (int i = 0; i < levelSystem->GetCurrentLevel()->GetNumOfLevelCubes(); i++)
+				levelSystem->GetCurrentLevel()->GetCube()[i]->SetIsHolding(false);
 		}
 	}
 #pragma endregion
@@ -329,64 +332,76 @@ void Input::UpdateMouse( const float dt )
 
 		// CAMERA INPUT
 		{
-			// camera orientation
-			if ( mouse.IsRightDown() || !cursorEnabled )
+			if (!isPaused)
 			{
-				// update raw camera movement
-				if ( me.GetType() == Mouse::MouseEvent::EventType::RawMove )
+				// camera orientation
+				if (mouse.IsRightDown() || !cursorEnabled)
 				{
-					cameras->GetCamera( cameras->GetCurrentCamera() )->AdjustRotation(
-						XMFLOAT3(
-							static_cast< float >( me.GetPosY() ) * 0.005f,
-							static_cast< float >( me.GetPosX() ) * 0.005f,
-							0.0f
-						)
-					);
+					// update raw camera movement
+					if (me.GetType() == Mouse::MouseEvent::EventType::RawMove)
+					{
+						cameras->GetCamera(cameras->GetCurrentCamera())->AdjustRotation(
+							XMFLOAT3(
+								static_cast<float>(me.GetPosY()) * 0.005f,
+								static_cast<float>(me.GetPosX()) * 0.005f,
+								0.0f
+							)
+						);
+					}
 				}
 			}
+			
 		}
 
 		// MULTI-TOOL INPUT
 		{
-			if (me.GetType() == MouseBinds["Change_Gun_State_Up"])
+			if (!isPaused)
 			{
-				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
-				Sound::Instance()->PlaySoundEffect( "ToolChange" );
-			}
-			else if (me.GetType() == MouseBinds["Change_Gun_State_Down"])
-			{
-				EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
-				Sound::Instance()->PlaySoundEffect("ToolChange");
-			}
+				if (me.GetType() == MouseBinds["Change_Gun_State_Up"])
+				{
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionUpEvent);
+					Sound::Instance()->PlaySoundEffect("ToolChange");
+				}
+				else if (me.GetType() == MouseBinds["Change_Gun_State_Down"])
+				{
+					EventSystem::Instance()->AddEvent(EVENTID::ChangeToolOptionDownEvent);
+					Sound::Instance()->PlaySoundEffect("ToolChange");
+				}
 
-			//mag mode all
+				//mag mode all
 				if (me.GetType() == MouseBinds["Fire_Tool"]) {
 					EventSystem::Instance()->AddEvent(EVENTID::ChangeAllCubeEvent, &levelSystem->GetCurrentLevel()->GetCube());
-					
+
 				}
+			}
 			// mouse picking
 			mousePick.UpdateMatrices( cameras->GetCamera( cameras->GetCurrentCamera() ) );
-			for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+			for ( uint32_t i = 0; i < levelSystem->GetCurrentLevel()->GetNumOfLevelCubes(); i++ )
 			{
 				//cube mouse input
 				{
 					float alreadyHeld = false;
-					for (uint32_t j = 0; j < NUM_CUBES; j++) {
+					for (uint32_t j = 0; j < levelSystem->GetCurrentLevel()->GetNumOfLevelCubes(); j++) {
 						if (i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true) {
 							alreadyHeld = true;
 						}
 					}
 					// cube throwing
-					if (me.GetType() == MouseBinds["Fire_Tool_Alt"] && !alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover &&
+					if (me.GetType() == MouseBinds["Fire_Tool_Alt"] && !alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover && !isPaused &&
+						!levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsDissCube() && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding() &&
 						(levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHovering() || levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsHolding()))
 					{
 						canHover = false;
 
-						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(
-							sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
-							-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
-							cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt
+						XMFLOAT3 cubeForce = levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->Normalization(
+							XMFLOAT3(sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
+								-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
+								cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt)
 						);
+
+						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(cubeForce.x * 20.0f, cubeForce.y * 20.0f, cubeForce.z * 20.0f);
+
+						Sound::Instance()->PlaySoundEffect("CubeThrow");
 					}
 				}
         
@@ -411,17 +426,17 @@ void Input::UpdateMouse( const float dt )
 					UiMouseData.Pos = { static_cast<float>(me.GetPosX()),static_cast<float>(me.GetPosY()) };
 				}
 
-				if ( mouse.IsRightDown() && cursorEnabled )
+				if ( me.GetType()== Mouse::MouseEvent::EventType::RPress && cursorEnabled )
 					UiMouseData.RPress = true;
 				else
 					UiMouseData.RPress = false;
 
-				if ( mouse.IsLeftDown() && cursorEnabled )
+				if (me.GetType() == Mouse::MouseEvent::EventType::LPress && cursorEnabled )
 					UiMouseData.LPress = true;
 				else
 					UiMouseData.LPress = false;
 
-				if ( mouse.IsMiddleDown() && cursorEnabled )
+				if (me.GetType() == Mouse::MouseEvent::EventType::MPress && cursorEnabled )
 					UiMouseData.MPress = true;
 				else
 					UiMouseData.MPress = false;

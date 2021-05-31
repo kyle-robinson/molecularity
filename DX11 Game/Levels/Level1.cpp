@@ -45,15 +45,20 @@ bool Level1::OnCreate()
 }
 
 void Level1::OnSwitch()
-{
+{	
 	// Update Level System
 	levelCompleted = false;
-	CurrentLevel = 0;
-	EventSystem::Instance()->AddEvent( EVENTID::SetCurrentLevelEvent, &CurrentLevel );
-
+	CurrentLevel = 1;
+	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
+	
 	levelName = "Level1";
-	NextLevel = 1;
-	EventSystem::Instance()->AddEvent( EVENTID::SetNextLevelEvent, &NextLevel );
+	numOfCubes = 1;
+	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );
+	NextLevel = 2;
+	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
+
+	// Update HUD with tool data
+	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
 
 	// Initialize UI
 	_UiManager->RemoveUI( "MainMenu" );
@@ -136,7 +141,7 @@ void Level1::Update( const float dt )
 		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), 18.5f );
 
 		// cube collisions
-		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+		for ( uint32_t i = 0; i < numOfCubes; i++ )
 		{
 			// update collisions w pressure plate
 			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )

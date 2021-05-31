@@ -37,6 +37,11 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 void Pause::Update(float dt)
 {
 	if (_isPaused) {
+		if (OnLoad) {
+			_MouseData.LPress = false;
+			OnLoad = false;
+		}
+
 		//bakground
 		PauseBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		//title card
@@ -119,7 +124,7 @@ void Pause::HandleEvent(Event* event)
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
 	
-		_MouseData.LPress = false;
+		//_MouseData.LPress = false;
 	}
 	break;
 	}
@@ -151,16 +156,19 @@ void Pause::ButtonCreate()
 		_isPaused = false;
 		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
+		OnLoad = true;
 		
 	}
 	else if (PauseButtons[1].Function(LoadedTextMap["Button_2"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//reset level
 		_isPaused = false;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
+		OnLoad = true;
 	}
 	else if (PauseButtons[2].Function(LoadedTextMap["Button_3"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
+		OnLoad = true;
 	}
 	else if (PauseButtons[3].Function(LoadedTextMap["Button_4"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {
 		//exit
@@ -181,11 +189,18 @@ void Pause::AddTipText()
 
 	switch (currentLevel)
 	{
-	case 0:
+	case 1:
 		pauseText._Text = LoadedTextMap["Tip_Level_1"];
 		break;
-	case 1:
+	case 2:
 		pauseText._Text = LoadedTextMap["Tip_Level_2"];
+		break;
+	case 3:
+		pauseText._Text = LoadedTextMap["Tip_Level_3"];
+		break;
+
+	case 4:
+		pauseText._Text = LoadedTextMap["Tip_Level_4"];
 		break;
 	default:
 		pauseText._Text = "This Is TEXT";

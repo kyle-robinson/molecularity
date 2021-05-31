@@ -47,26 +47,23 @@ void Level2::OnSwitch()
 {
 	// Update Level System
 	levelCompleted = false;
-	CurrentLevel = 1;
-	EventSystem::Instance()->AddEvent( EVENTID::SetCurrentLevelEvent, &CurrentLevel );
+	CurrentLevel = 2;
+	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 
 	levelName = "Level2";
-	NextLevel = 2;
-	EventSystem::Instance()->AddEvent( EVENTID::SetNextLevelEvent, &NextLevel );
+	numOfCubes = 3;
+	LevelContainer::UpdateCubes();
+	NextLevel = 3;
+  
+	//UI
+	_UiManager->RemoveUI("MainMenu");
+	_UiManager->RemoveUI("Tutorial");
+	_UiManager->ShowAllUi();
+	_UiManager->HideUi("EndLevel");
+	
+	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
 
-	// Update HUD with tool data
-	EventSystem::Instance()->AddEvent( EVENTID::ToolModeEvent, tool );
-
-	// Initialize UI
-	_UiManager->RemoveAllUI();
-	_UiManager->AddUi( HUD, "HUD" );
-	_UiManager->AddUi( PauseUI, "Pause" );
-	_UiManager->AddUi( EndLevelUI, "EndLevel" );
-	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
-	_UiManager->HideUi( "EndLevel" );
-
-	// Initialise Sounds
-	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
+	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
 	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );

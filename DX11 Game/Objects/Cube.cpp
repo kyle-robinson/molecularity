@@ -51,47 +51,32 @@ void Cube::Update( const float deltaTime ) noexcept
     {
     case BoxType::Mesh:
         physicsModel->SetMass( 10.0f );
-        physicsModel->SetBounciness( 0.0f );
-        physicsModel->SetConductive( true );
-        physicsModel->SetMagnetic( true );
+        SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.18f, 0.8f, 0.44f } );
         break;
     case BoxType::Wood:
         physicsModel->SetMass( 30.0f );
-        physicsModel->SetBounciness( 0.0f );
-        physicsModel->SetConductive( false );
-        physicsModel->SetMagnetic( false );
+        SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.9f, 0.49f, 0.13f } );
-        break;
-    case BoxType::Stone:
-        physicsModel->SetMass( 50.0f );
-        physicsModel->SetBounciness( 0.0f );
-        physicsModel->SetConductive( false );
-        physicsModel->SetMagnetic( false );
-        editableProperties->SetOutlineColor( { 0.2f, 0.59f, 0.85f } );
         break;
     case BoxType::Iron:
         physicsModel->SetMass( 70.0f );
-        physicsModel->SetBounciness( 0.0f );
-        physicsModel->SetConductive( true );
-        physicsModel->SetMagnetic( true );
+        SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.6f, 0.34f, 0.71f } );
         break;
-    case BoxType::Alien:
-        physicsModel->SetMass( 100.0f );
-        physicsModel->SetBounciness( 0.5f );
-        physicsModel->SetConductive( true );
-        physicsModel->SetMagnetic( true );
-        editableProperties->SetOutlineColor( { 0.9f, 0.29f, 0.23f } );
+    case BoxType::DissCube:
+        physicsModel->SetMass(50.0f);
+        SetIsDissCube( true );
+        editableProperties->SetOutlineColor({ 0.2f, 0.59f, 0.85f });
         break;
     }
 
     // update sizing
     switch ( editableProperties->GetBoxSize() )
     {
-    case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); break;
-    case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() + 25.0f ); break;
-    case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); break;
+    case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); physicsModel->SetBounciness( 1.1f ); break;
+    case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() + 25.0f ); physicsModel->SetBounciness( 0.9f ); break;
+    case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); physicsModel->SetBounciness( 0.7f ); break;
     }
 
     // update bounciness
@@ -105,12 +90,7 @@ void Cube::Update( const float deltaTime ) noexcept
     MagneticForce();
 
     // update physics
-    if (!isHeld) {
-      
-        physicsModel->Update(deltaTime / 20.0f, editableProperties);
-    }
-    else
-        physicsModel->Update( deltaTime / 20.0f, editableProperties, true );
+    physicsModel->Update( deltaTime / 20.0f, editableProperties, isHeld );
 
     // update positioning
     pos = GetPositionFloat3();

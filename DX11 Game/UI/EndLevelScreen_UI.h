@@ -27,12 +27,12 @@ private:
 	Button_Widget<string> Buttons[2];
 	vector<TextToDraw> _TextList;
 	bool ToShow;
-	UINT32 Hub = 2;
+	UINT32 Hub = 0;
 	UINT32 NextLevel = 0;
 	vector<string> ButtonTex = { "Resources\\Textures\\UI_Buttons\\Button_1_Down.dds",
 		"Resources\\Textures\\UI_Buttons\\Button_1_Hover.dds",
 		"Resources\\Textures\\UI_Buttons\\Button_1_Up.dds" };
 
-	
+	bool OnLoad= true;
 };
 

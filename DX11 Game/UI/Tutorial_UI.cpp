@@ -240,6 +240,7 @@ void Tutorial_UI::ToolTutorialText()
 		text._Text += "\n" + KeyBinds["Gun_State_Two"] + LoadedTextMap["Tool_2"];
 		text._Text += "\n" + KeyBinds["Gun_State_Three"] + LoadedTextMap["Tool_3"];
 		text._Text += "\n" + KeyBinds["Gun_State_Four"] + LoadedTextMap["Tool_4"];
+		text._Text += "\n" + KeyBinds["Gun_State_Five"] + LoadedTextMap["Tool_5"];
 		SetTextPos(text);
 		_TextList.push_back(text);
 
@@ -270,12 +271,6 @@ void Tutorial_UI::ToolTutorialText()
 			break;
 		case 2:
 			text._Text += LoadedTextMap["Convert_3"];
-			break;
-		case 3:
-			text._Text += LoadedTextMap["Convert_4"];
-			break;
-		case 4:
-			text._Text += LoadedTextMap["Convert_5"];
 			break;
 		}
 
@@ -362,6 +357,30 @@ void Tutorial_UI::ToolTutorialText()
 		_TextList.push_back(text);
 	}
 	 break;
+	case ToolType::Conductive: {
+		//tool 4
+
+		text._Text = LoadedTextMap["Conductivity_Tool"];
+		SetTextPos(text);
+		_TextList.push_back(text);
+
+
+		switch (static_cast<int>(Mode->GetCurrentOption().boxConductive))
+		{
+		case 0:
+
+			text._Text = LoadedTextMap["Conductivity_1"];
+
+			break;
+		case 1:
+			text._Text = LoadedTextMap["Conductivity_2"];
+			break;
+
+		}
+		SetTextPos(text);
+		_TextList.push_back(text);
+	}
+							break;
 
 	}
 	}

@@ -156,7 +156,7 @@ void PhysicsModel::CheckFloorCollisions( std::shared_ptr<CubeProperties>& proper
 	if ( mPosition.y < offset )
 	{
 		// enable bouncing???
-		mVelocity.y = mInvVelocity ? -mVelocity.y : 0.0f;
+		mVelocity.y = mInvVelocity ? -mVelocity.y * mBounciness : 0.0f;
 
 		mPosition.y = offset;
 		mTransform->SetPosition( mPosition );

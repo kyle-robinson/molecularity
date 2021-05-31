@@ -3,6 +3,8 @@
 
 HUD_UI::HUD_UI()
 {
+	LastKey = "_";
+	key = "_";
 }
 
 HUD_UI::~HUD_UI()
@@ -13,6 +15,8 @@ HUD_UI::~HUD_UI()
 
 void HUD_UI::Inizalize( ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d,std::shared_ptr<Fonts> fonts)
 {
+	LastKey = "_";
+	key = "_";
 	AddtoEvent();
 	TextLoad();
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
@@ -45,10 +49,13 @@ void HUD_UI::Update(float dt)
 
 	// cube pickup text
 	PickupText._Colour = Colors::White;
-	
-	PickupText._Text = LoadedTextMap["Action_Text"];
+
+	if ( !isDissCube)
+		PickupText._Text = LoadedTextMap["Action_Text"];
+	else
+		PickupText._Text = LoadedTextMap["Action_Text2"];
 	//center text
-	XMVECTOR textsize= FontsList->GetFont("OpenSans_Bold_14")->GetSpriteFont()->MeasureString(PickupText._Text.c_str());
+	XMVECTOR textsize = FontsList->GetFont("OpenSans_Bold_14")->GetSpriteFont()->MeasureString(PickupText._Text.c_str());
 	PickupText._Position = { (_SizeOfScreen.x * 0.5f)-((XMVectorGetX(textsize)* FontsList->GetFont("OpenSans_Bold_14")->GetScale().x)/2), _SizeOfScreen.y * 0.55f };
 	
 }
@@ -74,7 +81,7 @@ void HUD_UI::TextLoad()
 
 	vector<JSON::TextData> LoadedTextData = TextLoader::Instance()->LoadText("HUD_Text");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(LoadedTextData);
-
+	UpdateKeytext();
 }
 
 void HUD_UI::HandleEvent( Event* event )
@@ -103,6 +110,11 @@ void HUD_UI::HandleEvent( Event* event )
 		UpdateSettingsData(SettingsData);
 	}
 	break;
+	case EVENTID::IsDissCube:
+	{
+		isDissCube = *static_cast<bool*>(event->GetData());
+	}
+	break;
 	}
 }
 
@@ -112,7 +124,7 @@ void HUD_UI::AddtoEvent()
 	EventSystem::Instance()->AddClient(EVENTID::ToolModeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
-
+	EventSystem::Instance()->AddClient(EVENTID::IsDissCube, this);
 }
 
 void HUD_UI::RemoveFromEvent()
@@ -121,6 +133,7 @@ void HUD_UI::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::ToolModeEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::IsDissCube, this);
 }
 
 void HUD_UI::CreateToolHud()
@@ -137,9 +150,8 @@ void HUD_UI::CreateToolHud()
 		{
 		case 0: ToolInformationTexture = "crates\\mesh.png"; break;
 		case 1: ToolInformationTexture = "crates\\wood.png"; break;
-		case 2: ToolInformationTexture = "crates\\stone.jpg"; break;
-		case 3: ToolInformationTexture = "crates\\iron.jpg"; break;
-		case 4: ToolInformationTexture = "crates\\alien.png"; break;
+		case 2: ToolInformationTexture = "crates\\iron.jpg"; break;
+		case 3: ToolInformationTexture = "crates\\dCube.png"; break;
 		}
 	}
 	break;
@@ -172,6 +184,16 @@ void HUD_UI::CreateToolHud()
 		}
 	}
 	break;
+	case ToolType::Conductive:
+	{
+		TextFile = "HUD\\Tool_Assets\\Conductivity.png";
+		switch (static_cast<int>(Mode->GetCurrentOption().boxConductive))
+		{
+		case 0: ToolInformationTexture = "HUD\\Tool_Assets\\Conductivity_Off..png"; break;
+		case 1: ToolInformationTexture = "HUD\\Tool_Assets\\Conductivity_On.png"; break;
+		}
+	}
+	break;
 	default:
 		TextFile = "";
 		ToolInformationTexture = "";
@@ -187,9 +209,12 @@ void HUD_UI::CreateToolHud()
 
 void HUD_UI::UpdateKeytext()
 {
-	int position = LoadedTextMap["Action_Text"].find_first_of("_");
-	LoadedTextMap["Action_Text"].erase(LoadedTextMap["Action_Text"].begin() + position);
-	LoadedTextMap["Action_Text"] = LoadedTextMap["Action_Text"].insert(position, key);
+	int position = LoadedTextMap["Action_Text"].find_first_of(LastKey);
+
+	if (position > 0) {
+		LoadedTextMap["Action_Text"].erase(LoadedTextMap["Action_Text"].begin() + position);
+		LoadedTextMap["Action_Text"] = LoadedTextMap["Action_Text"].insert(position, key);
+	}
 }
 
 void HUD_UI::UpdateSettingsData(std::vector<JSON::SettingData>& SettingsData)
@@ -205,6 +230,7 @@ void HUD_UI::UpdateSettingsData(std::vector<JSON::SettingData>& SettingsData)
 		}
 
 		if (setting.Name == "Action") {
+			//LastKey = key;
 			key = std::get<string>(setting.Setting);
 			unsigned char* valChar = (unsigned char*)key.c_str();
 			key = ConvertFromUnsignedCharTostring(*valChar);
