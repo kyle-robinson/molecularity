@@ -13,9 +13,9 @@ bool Level1::OnCreate()
 		// DRAWABLES
 		{
 			// models
-			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1-Final.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
+			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1-Final-Corners-Fixed.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			room.SetInitialPosition( -2.0f, 0.0f, -20.0f );
+			room.SetInitialPosition( 70.5f, 0.0f, 4.0f );
 			room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
 
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
@@ -26,12 +26,14 @@ bool Level1::OnCreate()
 			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			securityCamera.SetInitialScale( 2.0f, 2.0f, 2.0f );
 			securityCamera.SetInitialPosition( 17.0f, 10.0f, 27.5f );
+		}
 
-			//add level UI 
+		// UI
+		{
 			HUD = make_shared<HUD_UI>();
 			PauseUI = make_shared<Pause>();
-			TutorialUI= make_shared<Tutorial_UI>();
-			EndLevelUI= make_shared<EndLevelScreen_UI>();
+			TutorialUI = make_shared<Tutorial_UI>();
+			EndLevelUI = make_shared<EndLevelScreen_UI>();
 		}
 	}
 	catch ( COMException& exception )
@@ -44,10 +46,8 @@ bool Level1::OnCreate()
 
 void Level1::OnSwitch()
 {	
-	levelCompleted = false;
-	
 	// Update Level System
-
+	levelCompleted = false;
 	CurrentLevel = 1;
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 	
@@ -62,14 +62,15 @@ void Level1::OnSwitch()
 
 	// Initialize UI
 	_UiManager->RemoveUI( "MainMenu" );
-
 	_UiManager->AddUi( HUD, "HUD" );
-	_UiManager->AddUi(TutorialUI, "Tutorial");
 	_UiManager->AddUi( PauseUI, "Pause" );
-	_UiManager->AddUi(EndLevelUI, "EndLevel");
-
+	_UiManager->AddUi( TutorialUI, "Tutorial" );
+	_UiManager->AddUi( EndLevelUI, "EndLevel" );
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
-	_UiManager->HideUi("EndLevel");
+	_UiManager->HideUi( "EndLevel" );
+
+	// Update HUD with tool data
+	EventSystem::Instance()->AddEvent( EVENTID::ToolModeEvent, tool );
 
 	// Initialise Sounds
 	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
@@ -120,19 +121,6 @@ void Level1::RenderFrame()
 		// render the cubes
 		LevelContainer::RenderFrame();
 	}
-
-	// SPRITES
-	{
-		if ( cameras->GetCurrentCamera() != JSON::CameraType::Static )
-		{
-			Shaders::BindShaders( graphics->context.Get(), graphics->vertexShader_2D, graphics->pixelShader_2D );
-			cb_ps_scene.data.useTexture = TRUE;
-			if ( !cb_ps_scene.ApplyChanges() ) return;
-			graphics->context->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
-
-			// render sprites here...
-		}
-	}
 }
 
 void Level1::Update( const float dt )
@@ -150,7 +138,7 @@ void Level1::Update( const float dt )
 	// COLLISIONS
 	{
 		// camera collisions w room
-		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), room, 19.0f );
+		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), 18.5f );
 
 		// cube collisions
 		for ( uint32_t i = 0; i < numOfCubes; i++ )
@@ -167,18 +155,18 @@ void Level1::Update( const float dt )
 			}
 
 			// update collisions w other cubes
-			for ( uint32_t j = 0; j < numOfCubes; j++ )
-				if ( i != j )
+			for ( uint32_t j = 0; j < NUM_CUBES; j++ ) if ( i != j )
 					cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 			// update collisions w room
-			Collisions::CheckCollisionLevel1( cubes[i], room, 15.0f );
+			Collisions::CheckCollisionLevel1( cubes[i], 15.0f );
 		}
 	}
-  
+
 	// set rotation of security camera
 	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
 	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
-  
+
+	// update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
 }
