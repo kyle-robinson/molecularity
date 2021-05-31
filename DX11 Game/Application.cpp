@@ -88,7 +88,7 @@ bool Application::ProcessMessages() noexcept
 void Application::Update()
 {	
 	if ( renderWindow.GetIsStopNextFrame() )
-  {
+	{
 		// delta time
 		float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
 		timer.Restart();
