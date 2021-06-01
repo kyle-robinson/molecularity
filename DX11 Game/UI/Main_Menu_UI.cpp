@@ -36,6 +36,12 @@ void Main_Menu_UI::Update(float dt)
 {
 	if (!IsSettings)
 	{
+
+		if (mouseLoad) {
+			_MouseData.LPress = false;
+			mouseLoad = false;
+		}
+
 		MainMenuBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
 		Titlecard.Function("Title_Card\\TitleCard.png", { static_cast<float>(_SizeOfScreen.x * 0.4),static_cast<float>(_SizeOfScreen.y * 0.12) }, { static_cast<float>((_SizeOfScreen.x * 0.5) - static_cast<float>(_SizeOfScreen.x * 0.4) / 2) ,0 });
 
@@ -48,12 +54,15 @@ void Main_Menu_UI::Update(float dt)
 
 void Main_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene)
 {
-	Shaders::BindShaders(_Contex.Get(), vert, pix);
-	MainMenuBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	Titlecard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-	for (unsigned int i = 0; i < 5; i++) {
-		MainMenuButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
+	if (!IsSettings)
+	{
 		Shaders::BindShaders(_Contex.Get(), vert, pix);
+		MainMenuBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		Titlecard.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		for (unsigned int i = 0; i < 5; i++) {
+			MainMenuButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
+			Shaders::BindShaders(_Contex.Get(), vert, pix);
+		}
 	}
 }
 
@@ -70,6 +79,7 @@ void Main_Menu_UI::HandleEvent(Event* event)
 	case EVENTID::UpdateSettingsEvent:
 	{
 		IsSettings = false;
+		EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 	}
 	break;
 	case EVENTID::UIKeyInput:
@@ -86,7 +96,7 @@ void Main_Menu_UI::HandleEvent(Event* event)
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
 		
-		_MouseData.LPress = false;
+		
 
 	}
 	break;
@@ -115,10 +125,12 @@ void Main_Menu_UI::MenuButtons()
 	float ButtonXPos = static_cast<float>((_SizeOfScreen.x * 0.5) - size.x / 2);
 	float ButtonYPos = 0.25f;
 	if (MainMenuButtons[0].Function(LoadedTextMap["Button_1"], ButtonTex, size, XMFLOAT2{ ButtonXPos, static_cast<float>(_SizeOfScreen.y * ButtonYPos) }, DirectX::Colors::Black, _MouseData)) {
-		//go to hub/save
+		//go to Level 1
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
+		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		LevelTo = 1;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
+		mouseLoad = true;
 	}
 	ButtonYPos += 0.20;
 
@@ -126,12 +138,14 @@ void Main_Menu_UI::MenuButtons()
 		//place holder
 		LevelTo = 3;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
+		mouseLoad = true;
 	}
 	ButtonYPos += 0.20;
 	if (MainMenuButtons[2].Function(LoadedTextMap["Button_3"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
 		IsSettings = true;
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
+		mouseLoad = true;
 	}
 	ButtonYPos += 0.20;
 	if (MainMenuButtons[3].Function(LoadedTextMap["Button_4"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.70) }, DirectX::Colors::Black, _MouseData)) {

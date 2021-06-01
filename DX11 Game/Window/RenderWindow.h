@@ -32,7 +32,9 @@ public:
 
 	void AddToEvent();
 	void HandleEvent(Event* event);
-
+	//protecton from reloading errors 
+	bool GetIsStopNextFrame() { return IsStopNextFrame; }
+	void SetIsStopNextFrame(bool set) { IsStopNextFrame =set; }
 	HCURSOR hCursorNormal = NULL;
 	HCURSOR hCursorNightNormal = NULL;
 	HCURSOR hCursorNightSelect = NULL;
@@ -46,6 +48,8 @@ private:
 	std::string windowClass = "";
 	std::wstring windowClass_Wide = L"";
 	int width = 0, height = 0;
+
+	bool IsStopNextFrame = false;
 };
 
 #endif

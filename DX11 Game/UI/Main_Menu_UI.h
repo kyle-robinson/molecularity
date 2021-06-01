@@ -43,5 +43,8 @@ private:
 	vector<string> ButtonTex2 = { "Resources\\Textures\\UI_Buttons\\GitHubLogo.png",
 		"Resources\\Textures\\UI_Buttons\\GitHubLogo.png",
 		"Resources\\Textures\\UI_Buttons\\GitHubLogo.png" };
+
+
+	bool mouseLoad = true;
 };
 
