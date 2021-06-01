@@ -203,7 +203,8 @@ void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset
 		   ( cube->GetPositionFloat3().z < 8.5f || cube->GetPositionFloat3().z > 18.5f ) ) )
 	{
 		cube->GetPhysicsModel()->CheckGroundCollisions( false );
-		RESET_FORCES;
+		if ( cube->GetPositionFloat3().y < 0.5f )
+			RESET_FORCES;
 	}
 	else
 	{
@@ -271,6 +272,7 @@ void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset
 	// if cube enters sludge, reset its position
 	if ( cube->GetPositionFloat3().y <= -2.5f )
 	{
+		Sound::Instance()->PlaySoundEffect( "CubeSplash", false, cube->GetPositionFloat3(), 10.0f );
 		cube->ResetPosition();
 		RESET_FORCES;
 	}

@@ -136,7 +136,7 @@ void SpotLight::HandleEvent( Event* event )
 			break;
 		case ToolType::Conductive:
 			model = gunModels[4];
-			color = { 0.67f, 0.07f, 0.8f };
+			color = { 0.67f, 0.27f, 0.8f };
 		}
 		break;
 	}
