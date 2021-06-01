@@ -68,10 +68,8 @@ void Level2::OnSwitch()
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
 	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
-	Sound::Instance()->InitialiseSoundEffect( "Notification" );
 
-	Sound::Instance()->PlayMusic( "TutorialMusic" );
-	Sound::Instance()->PlaySoundEffect( "Notification" );
+	Sound::Instance()->PlayMusic( "LevelMusic" );
 
 	// Initialize Camera Positions
 	cameras->GetCamera( JSON::CameraType::Default )->SetInitialPosition( 0.0f, 7.0f, -20.0f );
