@@ -105,6 +105,11 @@ void Pause::HandleEvent(Event* event)
 		_isPaused = true;
 	}
 	break;
+	case EVENTID::GameUnPauseEvent:
+	{
+		_isPaused = false;
+	}
+	break;
 	case EVENTID::SetCurrentLevelEvent:
 	{
 		currentLevel = *static_cast<int*>(event->GetData());
@@ -137,6 +142,7 @@ void Pause::AddtoEvent()
 	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
 	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::SetCurrentLevelEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
 }
 
 void Pause::RemoveFromEvent()
@@ -146,6 +152,7 @@ void Pause::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::UIMouseInput, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::SetCurrentLevelEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GameUnPauseEvent, this);
 }
 
 void Pause::ButtonCreate()
