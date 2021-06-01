@@ -197,18 +197,24 @@ void Collisions::CheckCollisionLevel2( std::unique_ptr<Camera>& camera, float of
 
 void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
+	CeilingCollision(cube, 11.5f);
+
 	// check floor collisions - don't check wall collisions if below the floor
 	// (prevents cube jumping to floor level when colliding with the wall while in the sludge area)
 	if ( ( cube->GetPositionFloat3().z >= 0.5f && cube->GetPositionFloat3().z < 26.5f ) && // center area collisions
 		 ( ( cube->GetPositionFloat3().x > 9.5f || cube->GetPositionFloat3().x < -9.5f ) || // sludge area collisions
 		   ( cube->GetPositionFloat3().z < 8.5f || cube->GetPositionFloat3().z > 18.5f ) ) )
 	{
-		cube->GetPhysicsModel()->CheckGroundCollisions( false );
+		//cube->GetPhysicsModel()->CheckGroundCollisions( false );
 		RESET_FORCES;
 	}
 	else
 	{
-		cube->GetPhysicsModel()->CheckGroundCollisions( true );
+		if (cube->GetPositionFloat3().y <= 3.0f)
+			cube->GetPhysicsModel()->CheckGroundCollisions(true);
+		else
+			cube->GetPhysicsModel()->CheckGroundCollisions(false);
+		//cube->GetPhysicsModel()->CheckGroundCollisions( true );
 		if ( cube->GetPositionFloat3().z < -7.5f ) // entrance collisions
 		{
 			// X-COLLISIONS
@@ -273,6 +279,7 @@ void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset
 	// if cube enters sludge, reset its position
 	if ( cube->GetPositionFloat3().y <= -2.5f )
 	{
+		Sound::Instance()->PlaySoundEffect("CubeSplash", false, cube->GetPositionFloat3(), 6.0f);
 		cube->ResetPosition();
 		RESET_FORCES;
 	}
