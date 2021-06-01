@@ -25,7 +25,7 @@ void Credits_Level::OnSwitch()
 {	
 	levelName = "Credits";
 	numOfCubes = 0;
-	LevelContainer::UpdateCubes();
+	LevelContainer::UpdateCubesPos();
 
 	//new UI
 	_UiManager->RemoveAllUI();
