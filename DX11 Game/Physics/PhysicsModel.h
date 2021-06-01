@@ -3,7 +3,6 @@
 #define PHYSICSMODEL_H
 
 #include "GameObject.h"
-
 class CubeProperties;
 
 /// <summary>
@@ -55,8 +54,8 @@ private:
 	// Update Forces
 	void Weight();
 	void Acceleration();
-	void Velocity();
-	void Friction();
+	void Velocity( const float dt );
+	void Friction( const float dt );
 	void Drag();
 	void LaminarDrag();
 	void TurbulentDrag();
@@ -66,8 +65,7 @@ private:
 	// Constants
 	static constexpr float mGravity = 9.81f;
 	static constexpr float mDragFactor = 2.0f;
-	//static constexpr float mFrictionFactor = 0.002f;
-	static constexpr float mFrictionFactor = 0.1f;
+	static constexpr float mFrictionFactor = 0.002f;
 
 	// Local Variables
 	float mMass;
@@ -81,7 +79,7 @@ private:
 	bool mIsHeld;
 	bool mActivated;
 	bool mInvVelocity;
-	bool mCheckGroundCollisions;
+  bool mCheckGroundCollisions;
 
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;

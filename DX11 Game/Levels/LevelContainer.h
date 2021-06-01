@@ -5,13 +5,11 @@
 #include "Graphics.h"
 #include "JSON_Helper.h"
 #include "MultiViewport.h"
-#include "../Graphics/Rasterizer.h"
 
 #include "Cube.h"
 #include "Camera.h"
 #include "Camera2D.h"
 #include "CameraController.h"
-#include "../Physics/Collisions.h"
 
 #include "SpotLight.h"
 #include "PointLight.h"
@@ -48,7 +46,7 @@ public:
 	virtual void RenderFrame();
 	virtual void Update( const float dt );
 	void LateUpdate( const float dt );
-	void UpdateCubesPos( float xPos = -2.5f, float yPos = 0.0f, float zPos = -6.0f, float spacing = 2.5f );
+	void UpdateCubes( float xPos = -2.5f, float yPos = 0.0f, float zPos = -6.0f, float spacing = 2.5f );
 
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<StencilOutline> GetStencilOutline() const noexcept { return stencilOutline; }
