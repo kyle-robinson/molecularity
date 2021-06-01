@@ -18,7 +18,6 @@ bool Graphics::InitializeDirectX( HWND hWnd )
 {
 	try
 	{
-		
 		// pipeline - main components
 		swapChain = std::make_shared<Bind::SwapChain>( *this, context.GetAddressOf(), device.GetAddressOf(), hWnd );
 		depthStencil = std::make_shared<Bind::DepthStencil>( *this );

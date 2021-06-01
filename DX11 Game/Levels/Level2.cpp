@@ -73,7 +73,7 @@ void Level2::OnSwitch()
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 	Sound::Instance()->InitialiseSoundEffect( "Notification" );
 
-	Sound::Instance()->PlayMusic( "TutorialMusic" );
+	Sound::Instance()->PlayMusic( "LevelMusic" );
 	Sound::Instance()->PlaySoundEffect( "Notification" );
 
 	// Initialize Camera Positions
