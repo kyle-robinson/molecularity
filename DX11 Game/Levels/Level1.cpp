@@ -76,7 +76,6 @@ void Level1::OnSwitch()
 	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
-	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
 	Sound::Instance()->InitialiseSoundEffect( "LevelComplete" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 	Sound::Instance()->InitialiseSoundEffect( "Notification" );

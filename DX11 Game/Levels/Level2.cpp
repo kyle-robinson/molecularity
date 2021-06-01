@@ -66,7 +66,7 @@ void Level2::OnSwitch()
 	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
-	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
+	Sound::Instance()->PlaySoundEffect( "LevelComplete" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 
 	Sound::Instance()->PlayMusic( "LevelMusic" );
@@ -139,7 +139,7 @@ void Level2::Update( const float dt )
 				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
 				{
 					levelCompleted = true;
-					Sound::Instance()->PlaySoundEffect( "PressurePlateClick", false, pressurePlate.GetPositionFloat3(), 15.0f );
+					Sound::Instance()->PlaySoundEffect( "LevelComplete" );
 				}
 			}
 

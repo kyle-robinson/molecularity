@@ -263,6 +263,9 @@
       <Filter>Tool</Filter>
     </ClCompile>
     <ClCompile Include="Tool_Conductivity.cpp" />
+    <ClCompile Include="Level3.cpp">
+      <Filter>Source\Levels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -597,6 +600,9 @@
       <Filter>Tool</Filter>
     </ClInclude>
     <ClInclude Include="Tool_Conductivity.h" />
+    <ClInclude Include="Level3.h">
+      <Filter>Headers\Levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\skybox\alpha_mayoris.jpg">
