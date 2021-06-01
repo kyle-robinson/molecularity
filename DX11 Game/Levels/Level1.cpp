@@ -155,7 +155,7 @@ void Level1::Update( const float dt )
 			}
 
 			// update collisions w other cubes
-			for ( uint32_t j = 0; j < NUM_CUBES; j++ ) if ( i != j )
+			for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
 					cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 			// update collisions w room
