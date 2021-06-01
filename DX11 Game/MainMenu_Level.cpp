@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "MainMenu_Level.h"
-#include "Collisions.h"
-#include "Rasterizer.h"
 
 MainMenu_Level::MainMenu_Level( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
@@ -28,7 +26,7 @@ void MainMenu_Level::OnSwitch()
 	// update items on level switch here...
 	levelName = "MainMenu";
 	numOfCubes = 0;
-	LevelContainer::UpdateCubes();
+	LevelContainer::UpdateCubesPos();
 
 	//make sure cursor is displayed
 	EventSystem::Instance()->AddEvent( EVENTID::ShowCursorEvent );

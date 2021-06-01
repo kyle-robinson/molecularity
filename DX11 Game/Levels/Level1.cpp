@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Level1.h"
 #include "Billboard.h"
-#include "Collisions.h"
-#include "Rasterizer.h"
 
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
@@ -53,7 +51,7 @@ void Level1::OnSwitch()
 	
 	levelName = "Level1";
 	numOfCubes = 1;
-	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );
+	LevelContainer::UpdateCubesPos( 0.0f, 0.0f, -4.0f );
 	NextLevel = 2;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
 

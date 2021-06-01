@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "Level2.h"
+//ui
+#include<Graphics/UI_Manager.h>
+#include<UI/HUD_UI.h>
+#include<UI/Pause.h>
+#include<UI/Settings_Menu_UI.h>
 #include "Billboard.h"
-#include "Collisions.h"
-#include "Rasterizer.h"
 
 Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
@@ -52,7 +55,7 @@ void Level2::OnSwitch()
 
 	levelName = "Level2";
 	numOfCubes = 3;
-	LevelContainer::UpdateCubes();
+	LevelContainer::UpdateCubesPos();
 	NextLevel = 3;
   
 	//UI
