@@ -28,6 +28,16 @@ bool Collisions::CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObje
 		return false;
 }
 
+void Collisions::CeilingCollision(std::shared_ptr<Cube>& cube, float ceilingHeight) noexcept
+{
+	if (cube->GetPositionFloat3().y > ceilingHeight)
+	{
+		cube->SetPosition(XMFLOAT3(cube->GetPositionFloat3().x, ceilingHeight, cube->GetPositionFloat3().z));
+		cube->GetPhysicsModel()->CheckGroundCollisions(true);
+		cube->GetPhysicsModel()->AddForce(XMFLOAT3(0.0f, -2.0f, 0.0f));
+	}
+}
+
 #pragma region Level1_Collisions
 void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, float offset ) noexcept
 {
@@ -68,8 +78,12 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, float of
 void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
 	CeilingCollision( cube, 11.5f );
-	cube->GetPhysicsModel()->CheckGroundCollisions( true );
 
+	if ( cube->GetPositionFloat3().y <= 3.0f )
+		cube->GetPhysicsModel()->CheckGroundCollisions( true );
+	else
+		cube->GetPhysicsModel()->CheckGroundCollisions( false );
+	
 	if ( cube->GetPositionFloat3().z < -6.5f ) // entrance collisions
 	{
 		// X-COLLISIONS
@@ -127,6 +141,7 @@ void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, float offset
 			cube->GetPhysicsModel()->CheckGroundCollisions( false );
 			if ( cube->GetPositionFloat3().y <= -2.5f )
 			{
+				Sound::Instance()->PlaySoundEffect( "CubeSplash", false, cube->GetPositionFloat3(), 6.0f );
 				cube->ResetPosition();
 				RESET_FORCES;
 			}
@@ -182,9 +197,6 @@ void Collisions::CheckCollisionLevel2( std::unique_ptr<Camera>& camera, float of
 
 void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
-	CeilingCollision( cube, 11.5f );
-	cube->GetPhysicsModel()->CheckGroundCollisions( true );
-
 	// check floor collisions - don't check wall collisions if below the floor
 	// (prevents cube jumping to floor level when colliding with the wall while in the sludge area)
 	if ( ( cube->GetPositionFloat3().z >= 0.5f && cube->GetPositionFloat3().z < 26.5f ) && // center area collisions
@@ -192,11 +204,11 @@ void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset
 		   ( cube->GetPositionFloat3().z < 8.5f || cube->GetPositionFloat3().z > 18.5f ) ) )
 	{
 		cube->GetPhysicsModel()->CheckGroundCollisions( false );
-		if ( cube->GetPositionFloat3().y < 0.5f )
-			RESET_FORCES;
+		RESET_FORCES;
 	}
 	else
 	{
+		cube->GetPhysicsModel()->CheckGroundCollisions( true );
 		if ( cube->GetPositionFloat3().z < -7.5f ) // entrance collisions
 		{
 			// X-COLLISIONS
@@ -263,15 +275,6 @@ void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset
 	{
 		cube->ResetPosition();
 		RESET_FORCES;
-	}
-}
-void Collisions::CeilingCollision(std::shared_ptr<Cube>& cube, float ceilingHeight ) noexcept
-{
-	if (cube->GetPositionFloat3().y > ceilingHeight)
-	{
-		cube->SetPosition(XMFLOAT3(cube->GetPositionFloat3().x, ceilingHeight, cube->GetPositionFloat3().z));
-		cube->GetPhysicsModel()->CheckGroundCollisions(true);
-		cube->GetPhysicsModel()->AddForce(XMFLOAT3(0.0f, -2.0f, 0.0f));
 	}
 }
 #pragma endregion

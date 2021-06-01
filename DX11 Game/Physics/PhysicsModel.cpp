@@ -11,7 +11,7 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 	mCheckGroundCollisions = true;
 	mPosition = mTransform->GetPositionFloat3();
   
-  mMass = 25.0f;
+	mMass = 25.0f;
 	mFriction = { 0.0f, 0.0f, 0.0f };
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 	mVelocity = { 0.0f, 0.0f, 0.0f };
@@ -21,10 +21,10 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
 	static float deltaTime = 0.0f;
-
+	
 	deltaTime += dt / 45.0f;
 
-	if (deltaTime < 1.0f / 60.0f)
+	if ( deltaTime < 1.0f / 60.0f )
 		return;
 
 	mIsHeld = isHeld;
@@ -36,8 +36,8 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 			if (useWeight) {
 				Weight();
 			}
-			Friction();
-			Velocity();
+			Friction( dt );
+			Velocity(dt);
 		}
 		Acceleration();
 		Drag();
@@ -53,7 +53,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 
-	deltaTime -= (1.0f / 60.0f);
+	deltaTime -= ( 1.0f / 60.0f );
 }
 
 void PhysicsModel::Weight()
@@ -69,13 +69,13 @@ void PhysicsModel::Acceleration()
 	mAcceleration.z = mNetForce.z / mMass;
 }
 
-void PhysicsModel::Velocity()
+void PhysicsModel::Velocity( const float dt )
 {
 	mVelocity.x += mAcceleration.x;
 	mVelocity.y += mAcceleration.y;
 	mVelocity.z += mAcceleration.z;
 
-	// x-axis friction
+	//// x-axis friction
 	//if ( mVelocity.x > 0.0f ) mVelocity.x -= mFrictionFactor;
 	//else if ( mVelocity.x < 0.0f ) mVelocity.x += mFrictionFactor;
 
@@ -89,20 +89,20 @@ void PhysicsModel::Velocity()
 
 	if (mCheckGroundCollisions)
 	{
-		mVelocity.x += mFrictionFactor * -(mVelocity.x);
-		mVelocity.z += mFrictionFactor * -(mVelocity.z);
+		mVelocity.x += mFrictionFactor * -( mVelocity.x );
+		mVelocity.z += mFrictionFactor * -( mVelocity.z );
 	}
 }
 
-void PhysicsModel::Friction()
+void PhysicsModel::Friction( const float dt )
 {
 	// f = u * N
 	XMFLOAT3 invVelocity = { -mVelocity.x, -mVelocity.y, -mVelocity.z };
 	if ( Magnitude( mVelocity ) < mFrictionFactor )
 	{
-		mFriction.x = invVelocity.x;
-		mFriction.y = invVelocity.y;
-		mFriction.z = invVelocity.z;
+		mFriction.x = invVelocity.x / dt;
+		mFriction.y = invVelocity.y / dt;
+		mFriction.z = invVelocity.z / dt;
 	}
 	else
 	{

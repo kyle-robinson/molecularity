@@ -1,11 +1,8 @@
 #include "stdafx.h"
 #include "Level2.h"
-//ui
-#include<Graphics/UI_Manager.h>
-#include<UI/HUD_UI.h>
-#include<UI/Pause.h>
-#include<UI/Settings_Menu_UI.h>
 #include "Billboard.h"
+#include "Collisions.h"
+#include "Rasterizer.h"
 
 Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
@@ -55,7 +52,7 @@ void Level2::OnSwitch()
 
 	levelName = "Level2";
 	numOfCubes = 3;
-	LevelContainer::UpdateCubesPos();
+	LevelContainer::UpdateCubes();
 	NextLevel = 3;
   
 	//UI
@@ -71,10 +68,8 @@ void Level2::OnSwitch()
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
 	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
-	Sound::Instance()->InitialiseSoundEffect( "Notification" );
 
 	Sound::Instance()->PlayMusic( "LevelMusic" );
-	Sound::Instance()->PlaySoundEffect( "Notification" );
 
 	// Initialize Camera Positions
 	cameras->GetCamera( JSON::CameraType::Default )->SetInitialPosition( 0.0f, 7.0f, -20.0f );

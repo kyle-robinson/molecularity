@@ -3,7 +3,6 @@
 #define PHYSICSMODEL_H
 
 #include "GameObject.h"
-
 class CubeProperties;
 
 /// <summary>
@@ -55,8 +54,8 @@ private:
 	// Update Forces
 	void Weight();
 	void Acceleration();
-	void Velocity();
-	void Friction();
+	void Velocity( const float dt );
+	void Friction( const float dt );
 	void Drag();
 	void LaminarDrag();
 	void TurbulentDrag();

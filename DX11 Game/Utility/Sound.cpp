@@ -50,6 +50,7 @@ void Sound::InitialiseSoundGroup( std::string groupName )
 		Sound::Instance()->InitialiseSoundEffect( "CubePickup" );
 		Sound::Instance()->InitialiseSoundEffect( "CubeThrow" );
 		Sound::Instance()->InitialiseSoundEffect( "CubeCollision" );
+		Sound::Instance()->InitialiseSoundEffect( "CubeSplash" );
 	}
 }
 

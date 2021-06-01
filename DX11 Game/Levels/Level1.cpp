@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Level1.h"
 #include "Billboard.h"
+#include "Collisions.h"
+#include "Rasterizer.h"
 
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
@@ -51,7 +53,7 @@ void Level1::OnSwitch()
 	
 	levelName = "Level1";
 	numOfCubes = 1;
-	LevelContainer::UpdateCubesPos( 0.0f, 0.0f, -4.0f );
+	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );
 	NextLevel = 2;
 	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
 
@@ -75,6 +77,7 @@ void Level1::OnSwitch()
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
 	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
+	Sound::Instance()->InitialiseSoundEffect( "LevelComplete" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 	Sound::Instance()->InitialiseSoundEffect( "Notification" );
 
@@ -148,7 +151,7 @@ void Level1::Update( const float dt )
 				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
 				{
 					levelCompleted = true;
-					Sound::Instance()->PlaySoundEffect( "PressurePlateClick", false, pressurePlate.GetPositionFloat3(), 15.0f );
+					Sound::Instance()->PlaySoundEffect( "LevelComplete" );
 				}
 			}
 
