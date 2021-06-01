@@ -17,10 +17,13 @@ public:
 	static bool CheckCollisionCircle( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept;
 	static bool CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept;
 	
-	static void CheckCollisionLevel1( std::unique_ptr<Camera>& camera, GameObject3D& object, float offset ) noexcept;
-	static void CheckCollisionLevel1( std::shared_ptr<Cube>& cube, GameObject3D& object, float offset ) noexcept;
-
 	static void CeilingCollision(std::shared_ptr<Cube>& cube, float ceilingHeight ) noexcept;
+
+	static void CheckCollisionLevel1( std::unique_ptr<Camera>& camera, float offset ) noexcept;
+	static void CheckCollisionLevel1( std::shared_ptr<Cube>& cube, float offset ) noexcept;
+
+	static void CheckCollisionLevel2( std::unique_ptr<Camera>& camera, float offset ) noexcept;
+	static void CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset ) noexcept;
 };
 
 #endif

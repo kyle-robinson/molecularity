@@ -2,8 +2,13 @@
 #ifndef LEVEL2_H
 #define LEVEL2_H
 
-#include "Sprite.h"
 #include "LevelStateMachine.h"
+
+//ui
+#include<Graphics/UI_Manager.h>
+#include<UI/HUD_UI.h>
+#include<UI/Pause.h>
+#include<UI/EndLevelScreen_UI.h>
 
 /// <summary>
 /// The second level of the game.
@@ -22,8 +27,14 @@ private:
 	LevelStateMachine& levelStateMachine;
 
 	// Scene Objects
-	Sprite crosshair;
-	RenderableGameObject hubRoom;
+	RenderableGameObject room;
+	RenderableGameObject pressurePlate;
+	RenderableGameObject securityCamera;
+
+	// UI
+	shared_ptr<HUD_UI> HUD;
+	shared_ptr<Pause> PauseUI;
+	shared_ptr<EndLevelScreen_UI> EndLevelUI;
 };
 
 #endif
