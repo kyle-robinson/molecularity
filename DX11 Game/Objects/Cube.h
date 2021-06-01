@@ -2,8 +2,6 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#define NUM_CUBES 2
-
 #include "RenderableGameObject.h"
 #include "CubeProperties.h"
 #include "PhysicsModel.h"

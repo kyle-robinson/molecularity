@@ -15,22 +15,22 @@ bool Level3::OnCreate()
 			// models
 			if ( !room.Initialize( "Resources\\Models\\Levels\\Level3-V1.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			room.SetInitialPosition( 0.0f, 0.0f, 0.0f );
-			//room.SetInitialPosition( -32.0f, 0.0f, -40.0f );
-			//room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
+			room.SetInitialPosition( 0.5f, 0.0f, -17.5f );
+			room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
 
 			if ( !door.Initialize( "Resources\\Models\\Levels\\Door.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			door.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			door.SetInitialPosition( 0.0f, 0.0f, 0.0f );
+			door.SetInitialPosition( 0.5f, 0.0f, -17.5f );
+			door.SetInitialRotation( 0.0f, XM_PI, 0.0f );
 
 			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 31.5f );
+			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 57.0f );
 			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
 
 			// security camera
 			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
 			securityCamera.SetInitialScale( 2.0f, 2.0f, 2.0f );
-			securityCamera.SetInitialPosition( 17.5f, 10.0f, 35.0f );
+			securityCamera.SetInitialPosition( 0.0f, 10.0f, 67.5f );
 		}
 
 		// UI
@@ -56,7 +56,7 @@ void Level3::OnSwitch()
 	EventSystem::Instance()->AddEvent( EVENTID::SetCurrentLevelEvent, &CurrentLevel );
 
 	levelName = "Level3";
-	numOfCubes = 2;
+	numOfCubes = 3;
 	LevelContainer::UpdateCubes();
 	NextLevel = 4;
 
@@ -78,7 +78,7 @@ void Level3::OnSwitch()
 
 	// Initialize Camera Positions
 	cameras->GetCamera( JSON::CameraType::Default )->SetInitialPosition( 0.0f, 7.0f, -20.0f );
-	cameras->GetCamera( JSON::CameraType::Static )->SetInitialPosition( 16.5f, 10.0f, 33.5f );
+	cameras->GetCamera( JSON::CameraType::Static )->SetInitialPosition( 0.0f, 10.0f, 65.0f );
 	cameras->GetCamera( JSON::CameraType::Debug )->SetInitialPosition( 0.0f, 7.0f, -15.0f );
 }
 
@@ -107,6 +107,7 @@ void Level3::RenderFrame()
 	{
 		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
 		room.Draw();
+		door.Draw();
 		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 		pressurePlate.Draw();
 		securityCamera.Draw();
@@ -127,7 +128,7 @@ void Level3::Update( const float dt )
 		//Collisions::CheckCollisionLevel3( cameras->GetCamera( JSON::CameraType::Default ), 17.0f );
 
 		// cube collisions
-		for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+		for ( uint32_t i = 0; i < numOfCubes; i++ )
 		{
 			// update collisions w pressure plate
 			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
@@ -140,7 +141,7 @@ void Level3::Update( const float dt )
 			}
 
 			// update collisions w other cubes
-			for ( uint32_t j = 0; j < NUM_CUBES; j++ ) if ( i != j )
+			for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
 				cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 			// update collisions w room
