@@ -20,6 +20,13 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 
 void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
+	static float deltaTime = 0.0f;
+
+	deltaTime += dt / 45.0f;
+
+	if (deltaTime < 1.0f / 60.0f)
+		return;
+
 	mIsHeld = isHeld;
 
 	if ( !mActivated )
@@ -29,8 +36,8 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 			if (useWeight) {
 				Weight();
 			}
-			Friction( dt );
-			Velocity(dt);
+			Friction();
+			Velocity();
 		}
 		Acceleration();
 		Drag();
@@ -45,6 +52,8 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	}
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
+
+	deltaTime -= (1.0f / 60.0f);
 }
 
 void PhysicsModel::Weight()
@@ -60,11 +69,11 @@ void PhysicsModel::Acceleration()
 	mAcceleration.z = mNetForce.z / mMass;
 }
 
-void PhysicsModel::Velocity( const float dt )
+void PhysicsModel::Velocity()
 {
-	mVelocity.x += mAcceleration.x * dt;
-	mVelocity.y += mAcceleration.y * dt;
-	mVelocity.z += mAcceleration.z * dt;
+	mVelocity.x += mAcceleration.x;
+	mVelocity.y += mAcceleration.y;
+	mVelocity.z += mAcceleration.z;
 
 	// x-axis friction
 	//if ( mVelocity.x > 0.0f ) mVelocity.x -= mFrictionFactor;
@@ -80,20 +89,20 @@ void PhysicsModel::Velocity( const float dt )
 
 	if (mCheckGroundCollisions)
 	{
-		mVelocity.x += mFrictionFactor * -(mVelocity.x) * dt;
-		mVelocity.z += mFrictionFactor * -(mVelocity.z) * dt;
+		mVelocity.x += mFrictionFactor * -(mVelocity.x);
+		mVelocity.z += mFrictionFactor * -(mVelocity.z);
 	}
 }
 
-void PhysicsModel::Friction( const float dt )
+void PhysicsModel::Friction()
 {
 	// f = u * N
 	XMFLOAT3 invVelocity = { -mVelocity.x, -mVelocity.y, -mVelocity.z };
-	if ( Magnitude( mVelocity ) < mFrictionFactor * dt )
+	if ( Magnitude( mVelocity ) < mFrictionFactor )
 	{
-		mFriction.x = invVelocity.x / dt;
-		mFriction.y = invVelocity.y / dt;
-		mFriction.z = invVelocity.z / dt;
+		mFriction.x = invVelocity.x;
+		mFriction.y = invVelocity.y;
+		mFriction.z = invVelocity.z;
 	}
 	else
 	{
@@ -138,13 +147,13 @@ void PhysicsModel::TurbulentDrag()
 void PhysicsModel::ComputePosition( const float dt )
 {
 	mPosition = mTransform->GetPositionFloat3();
-	mPosition.x += mVelocity.x * dt + 0.5f * mAcceleration.x * dt * dt;
-	mPosition.y += mVelocity.y * dt + 0.5f * mAcceleration.y * dt * dt;
-	mPosition.z += mVelocity.z * dt + 0.5f * mAcceleration.z * dt * dt;
+	mPosition.x += mVelocity.x + 0.5f * mAcceleration.x;
+	mPosition.y += mVelocity.y + 0.5f * mAcceleration.y;
+	mPosition.z += mVelocity.z + 0.5f * mAcceleration.z;
 
-	mVelocity.x += mAcceleration.x * dt;
-	mVelocity.y += mAcceleration.y * dt;
-	mVelocity.z += mAcceleration.z * dt;
+	mVelocity.x += mAcceleration.x;
+	mVelocity.y += mAcceleration.y;
+	mVelocity.z += mAcceleration.z;
 	mTransform->SetPosition( mPosition );
 }
 

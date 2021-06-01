@@ -55,8 +55,8 @@ private:
 	// Update Forces
 	void Weight();
 	void Acceleration();
-	void Velocity( const float dt );
-	void Friction( const float dt );
+	void Velocity();
+	void Friction();
 	void Drag();
 	void LaminarDrag();
 	void TurbulentDrag();
