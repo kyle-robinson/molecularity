@@ -8,7 +8,7 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 	mActivated = false;
 	mUseLaminar = true;
 	mInvVelocity = false;
-	mCheckGroundCollisions = true;
+  mCheckGroundCollisions = true;
 	mPosition = mTransform->GetPositionFloat3();
   
   mMass = 25.0f;
@@ -20,13 +20,6 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 
 void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
-	static float deltaTime = 0.0f;
-
-	deltaTime += dt / 45.0f;
-
-	if (deltaTime < 1.0f / 60.0f)
-		return;
-
 	mIsHeld = isHeld;
 
 	if ( !mActivated )
@@ -36,8 +29,8 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 			if (useWeight) {
 				Weight();
 			}
-			Friction();
-			Velocity();
+			Friction( dt );
+			Velocity(dt);
 		}
 		Acceleration();
 		Drag();
@@ -52,8 +45,6 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	}
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
-
-	deltaTime -= (1.0f / 60.0f);
 }
 
 void PhysicsModel::Weight()
@@ -69,40 +60,34 @@ void PhysicsModel::Acceleration()
 	mAcceleration.z = mNetForce.z / mMass;
 }
 
-void PhysicsModel::Velocity()
+void PhysicsModel::Velocity( const float dt )
 {
-	mVelocity.x += mAcceleration.x;
-	mVelocity.y += mAcceleration.y;
-	mVelocity.z += mAcceleration.z;
+	mVelocity.x += mAcceleration.x * dt;
+	mVelocity.y += mAcceleration.y * dt;
+	mVelocity.z += mAcceleration.z * dt;
 
 	// x-axis friction
-	//if ( mVelocity.x > 0.0f ) mVelocity.x -= mFrictionFactor;
-	//else if ( mVelocity.x < 0.0f ) mVelocity.x += mFrictionFactor;
+	if ( mVelocity.x > 0.0f ) mVelocity.x -= mFrictionFactor;
+	else if ( mVelocity.x < 0.0f ) mVelocity.x += mFrictionFactor;
 
-	//// y-axis friction
-	//if ( mVelocity.y > 0.0f ) mVelocity.y -= mFrictionFactor;
-	//else if ( mVelocity.y < 0.0f ) mVelocity.y += mFrictionFactor;
+	// y-axis friction
+	if ( mVelocity.y > 0.0f ) mVelocity.y -= mFrictionFactor;
+	else if ( mVelocity.y < 0.0f ) mVelocity.y += mFrictionFactor;
 
-	//// z-axis friction
-	//if ( mVelocity.z > 0.0f ) mVelocity.z -= mFrictionFactor;
-	//else if ( mVelocity.z < 0.0f ) mVelocity.z += mFrictionFactor;
-
-	if (mCheckGroundCollisions)
-	{
-		mVelocity.x += mFrictionFactor * -(mVelocity.x);
-		mVelocity.z += mFrictionFactor * -(mVelocity.z);
-	}
+	// z-axis friction
+	if ( mVelocity.z > 0.0f ) mVelocity.z -= mFrictionFactor;
+	else if ( mVelocity.z < 0.0f ) mVelocity.z += mFrictionFactor;
 }
 
-void PhysicsModel::Friction()
+void PhysicsModel::Friction( const float dt )
 {
 	// f = u * N
 	XMFLOAT3 invVelocity = { -mVelocity.x, -mVelocity.y, -mVelocity.z };
-	if ( Magnitude( mVelocity ) < mFrictionFactor )
+	if ( Magnitude( mVelocity ) < mFrictionFactor * dt )
 	{
-		mFriction.x = invVelocity.x;
-		mFriction.y = invVelocity.y;
-		mFriction.z = invVelocity.z;
+		mFriction.x = invVelocity.x / dt;
+		mFriction.y = invVelocity.y / dt;
+		mFriction.z = invVelocity.z / dt;
 	}
 	else
 	{
@@ -147,13 +132,13 @@ void PhysicsModel::TurbulentDrag()
 void PhysicsModel::ComputePosition( const float dt )
 {
 	mPosition = mTransform->GetPositionFloat3();
-	mPosition.x += mVelocity.x + 0.5f * mAcceleration.x;
-	mPosition.y += mVelocity.y + 0.5f * mAcceleration.y;
-	mPosition.z += mVelocity.z + 0.5f * mAcceleration.z;
+	mPosition.x += mVelocity.x * dt + 0.5f * mAcceleration.x * dt * dt;
+	mPosition.y += mVelocity.y * dt + 0.5f * mAcceleration.y * dt * dt;
+	mPosition.z += mVelocity.z * dt + 0.5f * mAcceleration.z * dt * dt;
 
-	mVelocity.x += mAcceleration.x;
-	mVelocity.y += mAcceleration.y;
-	mVelocity.z += mAcceleration.z;
+	mVelocity.x += mAcceleration.x * dt;
+	mVelocity.y += mAcceleration.y * dt;
+	mVelocity.z += mAcceleration.z * dt;
 	mTransform->SetPosition( mPosition );
 }
 
@@ -189,13 +174,13 @@ void PhysicsModel::AddForce( XMFLOAT3 force ) noexcept
 	mNetForce.y += force.y;
 	mNetForce.z += force.z;
 
-	//std::string dMessage = std::to_string(mNetForce.x);
-	//std::string dMessage2 = std::to_string(mNetForce.z);
-	//char sz[1024] = { 0 };
-	//dMessage = "x: " + dMessage + " z: " + dMessage2 + "\n";
-	//const char* c = dMessage.c_str();
-	//sprintf_s(sz, c);
-	//OutputDebugStringA(sz);
+	std::string dMessage = std::to_string(mNetForce.x);
+	std::string dMessage2 = std::to_string(mNetForce.z);
+	char sz[1024] = { 0 };
+	dMessage = "x: " + dMessage + " z: " + dMessage2 + "\n";
+	const char* c = dMessage.c_str();
+	sprintf_s(sz, c);
+	OutputDebugStringA(sz);
 }
 
 void PhysicsModel::AddForce( XMVECTOR force ) noexcept
