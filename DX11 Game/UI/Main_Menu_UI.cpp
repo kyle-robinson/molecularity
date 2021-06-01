@@ -40,6 +40,7 @@ void Main_Menu_UI::Update(float dt)
 		if (mouseLoad) {
 			_MouseData.LPress = false;
 			mouseLoad = false;
+			EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 		}
 
 		MainMenuBackground.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 0.7f);
@@ -79,7 +80,7 @@ void Main_Menu_UI::HandleEvent(Event* event)
 	case EVENTID::UpdateSettingsEvent:
 	{
 		IsSettings = false;
-		EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+		
 	}
 	break;
 	case EVENTID::UIKeyInput:

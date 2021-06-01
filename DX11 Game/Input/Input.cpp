@@ -326,6 +326,12 @@ void Input::UpdateKeyboard( const float dt )
 void Input::UpdateMouse( const float dt )
 {
 	// read mouse events
+
+	if (!isPaused && cameras->GetCurrentCamera() != JSON::CameraType::Debug)
+	{
+		DisableCursor();
+	}
+
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
@@ -428,17 +434,17 @@ void Input::UpdateMouse( const float dt )
 
 				if ( me.GetType()== Mouse::MouseEvent::EventType::RPress && cursorEnabled )
 					UiMouseData.RPress = true;
-				else
+				else if (me.GetType() == Mouse::MouseEvent::EventType::RRelease && cursorEnabled)
 					UiMouseData.RPress = false;
 
 				if (me.GetType() == Mouse::MouseEvent::EventType::LPress && cursorEnabled )
 					UiMouseData.LPress = true;
-				else
+				else if(me.GetType() == Mouse::MouseEvent::EventType::LRelease && cursorEnabled)
 					UiMouseData.LPress = false;
 
 				if (me.GetType() == Mouse::MouseEvent::EventType::MPress && cursorEnabled )
 					UiMouseData.MPress = true;
-				else
+				else if (me.GetType() == Mouse::MouseEvent::EventType::MRelease && cursorEnabled)
 					UiMouseData.MPress = false;
 
 				EventSystem::Instance()->AddEvent( EVENTID::UIMouseInput, &UiMouseData );

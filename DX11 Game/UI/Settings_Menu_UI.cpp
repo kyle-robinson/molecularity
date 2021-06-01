@@ -483,7 +483,7 @@ void Settings_Menu_UI::Accept()
 void Settings_Menu_UI::ControlsCreate(JSON::SettingData& settingData)
 {
 	TextToDraw TextToDraw;
-	TextToDraw._Colour = Colors::Black;
+	
 
 
 	TextToDraw._Colour = Colors::Black;
