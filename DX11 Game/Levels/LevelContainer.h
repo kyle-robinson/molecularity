@@ -92,6 +92,8 @@ protected:
 	UINT32 NextLevel;
 	UINT32 CurrentLevel;
 	int numOfCubes;
+	
+	std::shared_ptr<PostProcessing> postProcessing;
 private:
 	bool InitializeScene();
 
@@ -99,7 +101,6 @@ private:
 	std::shared_ptr<Fog> fogSystem;
 	std::shared_ptr<TextRenderer> textRenderer;
 	std::shared_ptr<MultiViewport> multiViewport;
-	std::shared_ptr<PostProcessing> postProcessing;
 	std::shared_ptr<StencilOutline> stencilOutline;
 
 	// Textures

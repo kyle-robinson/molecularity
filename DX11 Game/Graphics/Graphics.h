@@ -56,11 +56,9 @@ public:
 	void RenderSceneToTexture();
 	void PresentScene();
 
-
 	//eventsystem
 	void AddtoEvent();
 	void HandleEvent(Event* event);
-
 
 	// Pipeline Getters
 	std::shared_ptr<Bind::Rasterizer> GetRasterizer( const std::string& rast ) noexcept { return rasterizers[rast]; }

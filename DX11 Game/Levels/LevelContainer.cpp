@@ -251,9 +251,7 @@ void LevelContainer::LateUpdate( const float dt )
 		if ( cubes[i]->GetIsInRange() && cubes[i]->GetIsHovering() && !cubes[i]->GetIsHolding() )
 		{
 			EventSystem::Instance()->AddEvent( EVENTID::CubePickupEvent, ( void* )true );
-			
 			EventSystem::Instance()->AddEvent(EVENTID::IsDissCube, &isDissCube);
-			break;
 		}
 		else
 		{

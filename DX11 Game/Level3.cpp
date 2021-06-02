@@ -3,6 +3,7 @@
 #include "Billboard.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
+#include "PostProcessing.h"
 
 Level3::Level3( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
@@ -39,6 +40,7 @@ bool Level3::OnCreate()
 		brokenCircuitPoints.push_back( std::make_pair( XMFLOAT3( 7.5f, 0.0f, 34.5f ), false ) );
 
 		// POST-PROCESSING
+		//postProcessing->BindMonochrome();
 	}
 	catch ( COMException& exception )
 	{
@@ -149,13 +151,7 @@ void Level3::Update( const float dt )
 				brokenCircuitPoints[j].second = true;
 				Sound::Instance()->PlaySoundEffect( "PoweredOn" );
 			}
-			else
-				brokenCircuitPoints[j].second = false;
 		}
-
-		// update door if first plate is active
-		if ( brokenCircuitPoints[0].second )
-			renderDoor = false;
 
 		// update collisions w pressure plate
 		if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
@@ -174,6 +170,21 @@ void Level3::Update( const float dt )
 			}
 		}
 	}
+
+	// update postProcessing
+	if ( !brokenCircuitPoints[0].second && !brokenCircuitPoints[1].second )
+		postProcessing->BindMonochrome();
+
+	if ( ( brokenCircuitPoints[0].second && !brokenCircuitPoints[1].second ) ||
+		( !brokenCircuitPoints[0].second && brokenCircuitPoints[1].second ) )
+		postProcessing->BindSepia();
+
+	if ( brokenCircuitPoints[0].second && brokenCircuitPoints[1].second )
+		postProcessing->UnbindEffect();
+
+	// update door if first plate is active
+	if ( brokenCircuitPoints[0].second )
+		renderDoor = false;
 
 	// set rotation of security camera
 	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
