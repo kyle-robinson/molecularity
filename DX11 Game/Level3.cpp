@@ -73,7 +73,7 @@ void Level3::OnSwitch()
 	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
-	Sound::Instance()->PlaySoundEffect( "LevelComplete" );
+	Sound::Instance()->InitialiseSoundEffect( "LevelComplete" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 	Sound::Instance()->InitialiseSoundEffect( "PoweredOn" );
 
@@ -149,7 +149,20 @@ void Level3::Update( const float dt )
 			if ( cubes[i]->GetEditableProperties()->GetConductivity() && isInRange )
 			{
 				brokenCircuitPoints[j].second = true;
-				Sound::Instance()->PlaySoundEffect( "PoweredOn" );
+
+				// need a better way to do this - currently only way to fix sound looping
+				static bool playOnce1 = true;
+				if ( j == 0 && playOnce1 )
+				{
+					Sound::Instance()->PlaySoundEffect( "PoweredOn" );
+					playOnce1 = false;
+				}
+				static bool playOnce2 = true;
+				if ( j == 1 && playOnce2 )
+				{
+					Sound::Instance()->PlaySoundEffect( "PoweredOn" );
+					playOnce2 = false;
+				}
 			}
 		}
 

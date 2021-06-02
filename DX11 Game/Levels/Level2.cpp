@@ -66,7 +66,7 @@ void Level2::OnSwitch()
 	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
-	Sound::Instance()->PlaySoundEffect( "LevelComplete" );
+	Sound::Instance()->InitialiseSoundEffect( "LevelComplete" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 
 	Sound::Instance()->PlayMusic( "LevelMusic" );
