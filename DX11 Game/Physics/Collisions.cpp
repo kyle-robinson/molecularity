@@ -303,7 +303,7 @@ void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float of
 		if ( camera->GetPositionFloat3().z < -22.0f )
 			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -22.0f );
 	}
-	else if ( camera->GetPositionFloat3().z >= -4.0f && camera->GetPositionFloat3().z < 20.0f ) // first area
+	else if ( camera->GetPositionFloat3().z >= -4.0f && camera->GetPositionFloat3().z < 20.0f ) // front area
 	{		
 		// Z-COLLISIONS
 		if ( camera->GetPositionFloat3().x <= -4.5f && camera->GetPositionFloat3().z <= -3.5f ) // back walls
@@ -359,6 +359,134 @@ void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float of
 
 void Collisions::CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
+	CeilingCollision( cube, 11.5f );
+	cube->GetPhysicsModel()->CheckGroundCollisions( true );
 
+	// X-COLLISIONS
+	if ( cube->GetPositionFloat3().x >= offset )
+	{
+		cube->SetPosition( offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+		RESET_FORCES;
+	}
+
+	if ( cube->GetPositionFloat3().x <= -offset )
+	{
+		cube->SetPosition( -offset, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+		RESET_FORCES;
+	}
+
+	if ( cube->GetPositionFloat3().z < -4.0f ) // entrance
+	{
+		// X-COLLISIONS
+		if ( cube->GetPositionFloat3().x < -4.5f )
+		{
+			cube->SetPosition( -4.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x > 4.5f )
+		{
+			cube->SetPosition( 4.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			RESET_FORCES;
+		}
+
+		// Z-COLLISIONS
+		if ( cube->GetPositionFloat3().z < -22.0f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -22.0f );
+			RESET_FORCES;
+		}
+	}
+	else if ( cube->GetPositionFloat3().z >= -4.0f && cube->GetPositionFloat3().z < 20.0f ) // front area
+	{
+		// Z-COLLISIONS
+		if ( cube->GetPositionFloat3().x <= -4.5f && cube->GetPositionFloat3().z <= -3.5f ) // back walls
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -3.5f );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x >= 4.5f && cube->GetPositionFloat3().z <= -3.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, -3.5f );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x < -4.0f && cube->GetPositionFloat3().z >= 19.5f ) // front walls
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 19.5f );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x > 4.0f && cube->GetPositionFloat3().z >= 19.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 19.5f );
+			RESET_FORCES;
+		}
+	}
+	else if ( cube->GetPositionFloat3().z >= 20.0f && cube->GetPositionFloat3().z < 25.0f ) // doorway
+	{
+		// X-COLLISIONS
+		if ( cube->GetPositionFloat3().x >= 4.0f )
+		{
+			cube->SetPosition( 4.0f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x <= -4.0f )
+		{
+			cube->SetPosition( -4.0f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			RESET_FORCES;
+		}
+	}
+	else if ( cube->GetPositionFloat3().z >= 25.0f && cube->GetPositionFloat3().z < 50.0f ) // back area
+	{
+		// Z-COLLISIONS
+		if ( cube->GetPositionFloat3().x <= -4.5f && cube->GetPositionFloat3().z <= 25.5f ) // back walls
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 25.5f );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x >= 4.5f && cube->GetPositionFloat3().z <= 25.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 25.5f );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x < -4.0f && cube->GetPositionFloat3().z >= 49.5f ) // front walls
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 49.5f );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x > 4.0f && cube->GetPositionFloat3().z >= 49.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 49.5f );
+			RESET_FORCES;
+		}
+	}
+	else // pressure plate area
+	{
+		// X-COLLISIONS
+		if ( cube->GetPositionFloat3().x < -4.5f )
+		{
+			cube->SetPosition( -4.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			RESET_FORCES;
+		}
+
+		if ( cube->GetPositionFloat3().x > 4.5f )
+		{
+			cube->SetPosition( 4.5f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
+			RESET_FORCES;
+		}
+
+		// Z-COLLISIONS
+		if ( cube->GetPositionFloat3().z > 67.0f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 67.0f );
+			RESET_FORCES;
+		}
+	}
 }
 #pragma endregion
