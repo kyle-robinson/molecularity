@@ -31,7 +31,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	if ( dTimeStart == 0 )
 		dTimeStart = dTimeCur;
 
-	deltaTime += ( TimeCur - dTimeStart ) / 1000.0f;
+	deltaTime += ( dTimeCur - dTimeStart ) / 1000.0f;
 
 	if (deltaTime < ( 1.0f / 60.0f ))
 		return;
@@ -97,7 +97,7 @@ void PhysicsModel::Velocity( const float dt )
 	//if ( mVelocity.z > 0.0f ) mVelocity.z -= mFrictionFactor;
 	//else if ( mVelocity.z < 0.0f ) mVelocity.z += mFrictionFactor;
 
-	if (mCheckGroundCollisions)
+	if ( mCheckGroundCollisions && mDoFriction)
 	{
 		mVelocity.x += mFrictionFactor * -( mVelocity.x );
 		mVelocity.z += mFrictionFactor * -( mVelocity.z );
