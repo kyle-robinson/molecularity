@@ -91,9 +91,9 @@ void PhysicsModel::Friction( const float dt )
 	XMFLOAT3 invVelocity = { -mVelocity.x, -mVelocity.y, -mVelocity.z };
 	if ( Magnitude( mVelocity ) < mFrictionFactor )
 	{
-		mFriction.x = invVelocity.x / dt;
-		mFriction.y = invVelocity.y / dt;
-		mFriction.z = invVelocity.z / dt;
+		mFriction.x = invVelocity.x;
+		mFriction.y = invVelocity.y;
+		mFriction.z = invVelocity.z;
 	}
 	else
 	{
@@ -142,9 +142,9 @@ void PhysicsModel::ComputePosition( const float dt )
 	mPosition.y += mVelocity.y + 0.5f * mAcceleration.y;
 	mPosition.z += mVelocity.z + 0.5f * mAcceleration.z;
 
-	mVelocity.x += mAcceleration.x * dt;
-	mVelocity.y += mAcceleration.y * dt;
-	mVelocity.z += mAcceleration.z * dt;
+	mVelocity.x += mAcceleration.x;
+	mVelocity.y += mAcceleration.y;
+	mVelocity.z += mAcceleration.z;
 	mTransform->SetPosition( mPosition );
 }
 

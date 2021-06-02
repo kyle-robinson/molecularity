@@ -87,19 +87,39 @@ bool Application::ProcessMessages() noexcept
 
 void Application::Update()
 {	
+	static float deltaTime = 0.0f;
+	static DWORD dwTimeStart = 0;
+
 	if ( renderWindow.GetIsStopNextFrame() )
 	{
 		// delta time
+		if (dwTimeStart == 0)
+			dwTimeStart = static_cast<DWORD>(timer.GetMilliSecondsElapsed());
+
+		DWORD dwTimeCur = static_cast<DWORD>(timer.GetMilliSecondsElapsed());
+
+		if (dwTimeStart == 0)
+			dwTimeStart = dwTimeCur;
+
+		deltaTime += (dwTimeCur - dwTimeStart) / 1000.0f;
+
+		if (deltaTime < 1.0f / 60.0f)
+			return;
+
 		float dt = static_cast<float>( timer.GetMilliSecondsElapsed() );
-		timer.Restart();
+		//timer.Restart();
 
 		// update systems
-		input.Update( dt );
+		input.Update( deltaTime * 1000.0f );
 		cameras.Update();
 
 		// update current level
-		stateMachine.Update( dt );
+		stateMachine.Update( deltaTime * 1000.0f );
 		EventSystem::Instance()->ProcessEvents();
+
+		dwTimeStart = dwTimeCur;
+
+		deltaTime -= (1 / 60.0f);
 	}
 	else
 	{
