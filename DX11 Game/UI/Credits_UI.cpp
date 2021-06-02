@@ -31,12 +31,15 @@ void Credits_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Co
 
 void Credits_UI::Update(float dt)
 {
+	imagecount = 0;
+	_TextList.clear();
+
 	//background 
 	Background.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 1.0f);
 	
 	
 	CurrentYPos = NextY;
-	NextY -= 1.0f;
+	NextY -= 1;
 	AddText();
 	
 	//check it is at end
@@ -60,14 +63,14 @@ void Credits_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldO
 
 	}
 
-	imagecount = 0;
+	
 	
 	for (auto& Text : _TextList)
 	{
 		FontsList->GetFont("OpenSans_20")->RenderString(Text._Text, Text._Position, Text._Colour);
 	}
 
-	_TextList.clear();
+	
 
 }
 

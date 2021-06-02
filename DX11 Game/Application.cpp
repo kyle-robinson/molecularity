@@ -89,7 +89,7 @@ void Application::Update()
 {	
 	static float deltaTime = 0.0f;
 	static DWORD dwTimeStart = 0;
-
+	
 	if ( renderWindow.GetIsStopNextFrame() )
 	{
 		// delta time

@@ -37,6 +37,8 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 void Pause::Update(float dt)
 {
 	if (_isPaused) {
+		PauseTextTitles.clear();
+		PauseTextPG.clear();
 		if (OnLoad) {
 			_MouseData.LPress = false;
 			OnLoad = false;
@@ -74,12 +76,12 @@ void Pause::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMa
 		{
 			FontsList->GetFont("OpenSans_50")->RenderString(PauseTextTitles[i]._Text, PauseTextTitles[i]._Position, PauseTextTitles[i]._Colour);
 		}
-		PauseTextTitles.clear();
+		
 		for (UINT i = 0; i < PauseTextPG.size(); i++)
 		{
 			FontsList->GetFont("OpenSans_12")->RenderString(PauseTextPG[i]._Text, PauseTextPG[i]._Position, PauseTextPG[i]._Colour);
 		}
-		PauseTextPG.clear();
+		
 	}
 }
 
