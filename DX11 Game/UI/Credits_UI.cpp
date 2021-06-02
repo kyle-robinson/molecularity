@@ -36,7 +36,7 @@ void Credits_UI::Update(float dt)
 	
 	
 	CurrentYPos = NextY;
-	NextY -= 0.1f*dt;
+	NextY -= 1.0f;
 	AddText();
 	
 	//check it is at end
