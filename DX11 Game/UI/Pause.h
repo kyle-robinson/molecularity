@@ -39,4 +39,6 @@ private:
 	UINT32 Hub = 0;
 
 	map<string, string>LoadedTextMap;
+
+	bool OnLoad = true;
 };

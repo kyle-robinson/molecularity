@@ -66,7 +66,8 @@ private:
 	// Constants
 	static constexpr float mGravity = 9.81f;
 	static constexpr float mDragFactor = 2.0f;
-	static constexpr float mFrictionFactor = 0.002f;
+	//static constexpr float mFrictionFactor = 0.002f;
+	static constexpr float mFrictionFactor = 0.1f;
 
 	// Local Variables
 	float mMass;
@@ -80,7 +81,7 @@ private:
 	bool mIsHeld;
 	bool mActivated;
 	bool mInvVelocity;
-  bool mCheckGroundCollisions;
+	bool mCheckGroundCollisions;
 
 	XMFLOAT3 mFriction;
 	XMFLOAT3 mPosition;

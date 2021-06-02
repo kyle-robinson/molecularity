@@ -46,6 +46,7 @@ public:
 	virtual void RenderFrame();
 	virtual void Update( const float dt );
 	void LateUpdate( const float dt );
+	void UpdateCubes( float xPos = -2.5f, float yPos = 0.0f, float zPos = -6.0f, float spacing = 2.5f );
 
 	// not sure i like using this. Could pass cameras to textRenderer instead of having a passthrough of gets
 	std::shared_ptr<StencilOutline> GetStencilOutline() const noexcept { return stencilOutline; }
@@ -58,6 +59,7 @@ public:
 	Tool_Class* GetTool() { return tool; }
 
 	std::string GetLevelName() { return levelName; }
+	int GetNumOfLevelCubes() { return numOfCubes; }
   
 protected:
 	void RenderFrameEarly();
@@ -89,6 +91,7 @@ protected:
 	std::string levelName;
 	UINT32 NextLevel;
 	UINT32 CurrentLevel;
+	int numOfCubes;
 private:
 	bool InitializeScene();
 
@@ -101,8 +104,6 @@ private:
 
 	// Textures
 	std::unordered_map<BoxType, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> boxTextures;
-
-	bool ToShowEnd=true;
 
 	bool isDissCube;
 };

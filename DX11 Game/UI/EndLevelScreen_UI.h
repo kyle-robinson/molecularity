@@ -33,6 +33,6 @@ private:
 		"Resources\\Textures\\UI_Buttons\\Button_1_Hover.dds",
 		"Resources\\Textures\\UI_Buttons\\Button_1_Up.dds" };
 
-	
+	bool OnLoad= true;
 };
 

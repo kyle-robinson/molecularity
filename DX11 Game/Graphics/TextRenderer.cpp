@@ -27,7 +27,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 
 void TextRenderer::RenderCubeMoveText( LevelContainer& level )
 {
-	for ( uint32_t i = 0; i < NUM_CUBES; i++ )
+	for ( uint32_t i = 0; i < level.GetNumOfLevelCubes(); i++ )
 	{
 		if ( level.GetCube()[i]->GetIsInRange() && level.GetCube()[i]->GetIsHovering() && !level.GetCube()[i]->GetIsHolding() )
 		{

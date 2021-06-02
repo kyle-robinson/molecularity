@@ -30,6 +30,7 @@ bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_m
 		fileNames.push_back( "Red.fbx" );
 		fileNames.push_back( "Green.fbx" );
 		fileNames.push_back( "Yellow.fbx" );
+		fileNames.push_back( "Pink.fbx" );
 
 		// load models
 		for ( uint32_t i = 0; i < fileNames.size(); i++ )
@@ -133,6 +134,9 @@ void SpotLight::HandleEvent( Event* event )
 			model = gunModels[3];
 			color = { 1.0f, 0.91f, 0.65f };
 			break;
+		case ToolType::Conductive:
+			model = gunModels[4];
+			color = { 0.67f, 0.27f, 0.8f };
 		}
 		break;
 	}

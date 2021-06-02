@@ -5,7 +5,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     UNREFERENCED_PARAMETER( hPrevInstance );
     UNREFERENCED_PARAMETER( lpCmdLine );
     UNREFERENCED_PARAMETER( nCmdShow );
-  
+
     HRESULT hr = CoInitializeEx( NULL, COINITBASE_MULTITHREADED );
     if ( FAILED( hr ) )
     {
@@ -14,7 +14,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     }
 
     Application game;
-    if ( game.Initialize( hInstance, "DirectX 11 Group Project - Molecularity", "WindowClass", 2560, 1440) )
+    if ( game.Initialize( hInstance, "DirectX 11 Group Project - Molecularity", "WindowClass", 1600, 900 ) )
     {
         while ( game.ProcessMessages() == true )
         {

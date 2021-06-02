@@ -156,6 +156,7 @@ void RenderWindow::HandleEvent(Event* event)
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
 		for (auto& setting : a)
 		{
+			SetIsStopNextFrame(true);
 			if (setting.Name == "FullScreen") {
 				//setfullscreen
 				WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
@@ -188,18 +189,18 @@ void RenderWindow::HandleEvent(Event* event)
 						SetWindowLong(hWnd, GWL_STYLE,
 							dwStyle | WS_OVERLAPPEDWINDOW);
 						SetWindowPlacement(hWnd, &g_wpPrev);
-						SetWindowPos(hWnd, NULL, ((mi.rcMonitor.right - mi.rcMonitor.left)/2)- width/2,
-							((mi.rcMonitor.bottom - mi.rcMonitor.top)/2)- hight/2, width, hight, SWP_SHOWWINDOW |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+						SetWindowPos(hWnd, NULL, ((mi.rcMonitor.right - mi.rcMonitor.left) / 2) - width / 2,
+							((mi.rcMonitor.bottom - mi.rcMonitor.top) / 2) - hight / 2, width, hight, SWP_SHOWWINDOW |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 					}
 					
-					SetCapture(hWnd);
+				
 					POINT pt;
 					pt.x = width/2;
 					pt.y = 0;
 					ClientToScreen(hWnd, &pt);
 					SetCursorPos(pt.x, pt.y);
 				
-					
+					SetWidthHight(width, hight);
 				}
 				
 			}
@@ -214,9 +215,11 @@ void RenderWindow::HandleEvent(Event* event)
 	}
 		break;
 	case EVENTID::WindowSizeChangeEvent:
+		SetIsStopNextFrame(true);
 		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
-		width = _SizeOfScreen.x;
-		height = _SizeOfScreen.y;
+	
+		SetWidthHight(_SizeOfScreen.x, _SizeOfScreen.y);
+		
 		break;
 	
 	}

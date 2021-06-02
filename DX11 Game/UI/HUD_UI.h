@@ -25,6 +25,7 @@ private:
 	void UpdateSettingsData(std::vector<JSON::SettingData>& SettingsData);
 private:
 	//HUD
+	string LastKey;
 	string key;
 	bool canHoldCube = false;
 	bool isDissCube = true;

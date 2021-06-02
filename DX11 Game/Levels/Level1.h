@@ -2,15 +2,15 @@
 #ifndef LEVEL1_H
 #define LEVEL1_H
 
-#include "Sprite.h"
 #include "LevelStateMachine.h"
-#include "ParticleSystem.h"
+
 //ui
 #include<Graphics/UI_Manager.h>
 #include<UI/HUD_UI.h>
 #include<UI/Pause.h>
 #include<UI/Tutorial_UI.h>
 #include<UI/EndLevelScreen_UI.h>
+
 /// <summary>
 /// The first level of the game.
 /// Inherits from Level to render/update objects used in each level.
@@ -28,7 +28,6 @@ private:
 	LevelStateMachine& levelStateMachine;
 
 	// Scene Objects
-	Sprite crosshair;
 	RenderableGameObject room;
 	RenderableGameObject pressurePlate;
 	RenderableGameObject securityCamera;
@@ -39,7 +38,6 @@ private:
 	shared_ptr<Tutorial_UI> TutorialUI;
 	shared_ptr<EndLevelScreen_UI> EndLevelUI;
 
-	ParticleSystem pSystem;
 };
 
 #endif

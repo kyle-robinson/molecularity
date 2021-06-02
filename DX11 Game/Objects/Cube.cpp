@@ -90,12 +90,7 @@ void Cube::Update( const float deltaTime ) noexcept
     MagneticForce();
 
     // update physics
-    if (!isHeld) {
-      
-        physicsModel->Update(deltaTime / 20.0f, editableProperties);
-    }
-    else
-        physicsModel->Update( deltaTime / 20.0f, editableProperties, true );
+    physicsModel->Update( deltaTime / 20.0f, editableProperties, isHeld );
 
     // update positioning
     pos = GetPositionFloat3();
