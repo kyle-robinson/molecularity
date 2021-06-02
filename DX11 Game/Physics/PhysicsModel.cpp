@@ -23,17 +23,17 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	static float deltaTime = 0.0f;
 	static DWORD dTimeStart = 0;
 
-	if (dTimeStart == 0)
+	if ( dTimeStart == 0 )
 		dTimeStart = 0;
 
 	DWORD dTimeCur = GetTickCount64();
 
-	if (dTimeStart == 0)
+	if ( dTimeStart == 0 )
 		dTimeStart = dTimeCur;
 
-	deltaTime += (dTimeCur - dTimeStart) / 1000.0f;
+	deltaTime += ( TimeCur - dTimeStart ) / 1000.0f;
 
-	if (deltaTime < (1.0f / 60.0f))
+	if (deltaTime < ( 1.0f / 60.0f ))
 		return;
 
 	mIsHeld = isHeld;
@@ -63,7 +63,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 
 	dTimeStart = dTimeCur;
-	deltaTime -= (1.0f / 60.0f);
+	deltaTime -= ( 1.0f / 60.0f );
 }
 
 void PhysicsModel::Weight()
@@ -81,9 +81,9 @@ void PhysicsModel::Acceleration()
 
 void PhysicsModel::Velocity( const float dt )
 {
-	//mVelocity.x += mAcceleration.x;
-	//mVelocity.y += mAcceleration.y;
-	//mVelocity.z += mAcceleration.z;
+	mVelocity.x += mAcceleration.x;
+	mVelocity.y += mAcceleration.y;
+	mVelocity.z += mAcceleration.z;
 
 	//// x-axis friction
 	//if ( mVelocity.x > 0.0f ) mVelocity.x -= mFrictionFactor;
@@ -97,7 +97,7 @@ void PhysicsModel::Velocity( const float dt )
 	//if ( mVelocity.z > 0.0f ) mVelocity.z -= mFrictionFactor;
 	//else if ( mVelocity.z < 0.0f ) mVelocity.z += mFrictionFactor;
 
-	if ( mCheckGroundCollisions && mDoFriction )
+	if (mCheckGroundCollisions)
 	{
 		mVelocity.x += mFrictionFactor * -( mVelocity.x );
 		mVelocity.z += mFrictionFactor * -( mVelocity.z );
@@ -110,9 +110,9 @@ void PhysicsModel::Friction( const float dt )
 	XMFLOAT3 invVelocity = { -mVelocity.x, -mVelocity.y, -mVelocity.z };
 	if ( Magnitude( mVelocity ) < mFrictionFactor )
 	{
-		mFriction.x = invVelocity.x;
-		mFriction.y = invVelocity.y;
-		mFriction.z = invVelocity.z;
+		mFriction.x = invVelocity.x / dt;
+		mFriction.y = invVelocity.y / dt;
+		mFriction.z = invVelocity.z / dt;
 	}
 	else
 	{

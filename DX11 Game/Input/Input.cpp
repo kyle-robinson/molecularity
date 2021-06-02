@@ -126,6 +126,14 @@ void Input::HandleEvent( Event* event )
 
 void Input::UpdateKeyboard( const float dt )
 {
+
+	//alt tab support
+	if ((GetAsyncKeyState(VK_MENU) & 0x8000)&& (GetAsyncKeyState(VK_TAB) & 0x8000))
+	{
+		EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+	}
+
+
 #pragma region KeyPress_Once
 	// handle input for single key presses
 	while ( !keyboard.KeyBufferIsEmpty() )
@@ -211,6 +219,7 @@ void Input::UpdateKeyboard( const float dt )
 #pragma region KeyPress_Repeat
 	// CAMERA INPUT
 	{
+		
 		// TODO: THIS SHOULD GO INTO AN UPDATE FUNCTION IN THE CAMERA CLASS
 		// set which camera for the static camera to look at
 		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
@@ -400,9 +409,9 @@ void Input::UpdateMouse( const float dt )
 						canHover = false;
 
 						XMFLOAT3 cubeForce = levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->Normalization(
-							XMFLOAT3(sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y),
-								-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f,
-								cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) )
+							XMFLOAT3(sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
+								-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
+								cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt)
 						);
 
 						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(cubeForce.x * 20.0f, cubeForce.y * 20.0f, cubeForce.z * 20.0f);
