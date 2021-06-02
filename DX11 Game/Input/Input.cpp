@@ -409,9 +409,9 @@ void Input::UpdateMouse( const float dt )
 						canHover = false;
 
 						XMFLOAT3 cubeForce = levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->Normalization(
-							XMFLOAT3(sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y),
-								-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f,
-								cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) )
+							XMFLOAT3(sinf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt,
+								-(cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().x + cameras->GetCamera(cameras->GetCurrentCamera())->GetRotationFloat3().z) / 2.0f * 100.0f,
+								cosf(levelSystem->GetCurrentLevel()->GetCube()[i]->GetRotationFloat3().y) * dt)
 						);
 
 						levelSystem->GetCurrentLevel()->GetCube()[i]->GetPhysicsModel()->AddForce(cubeForce.x * 20.0f, cubeForce.y * 20.0f, cubeForce.z * 20.0f);
