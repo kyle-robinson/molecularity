@@ -21,10 +21,19 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
 	static float deltaTime = 0.0f;
-	
-	deltaTime += dt / 45.0f;
+	static DWORD dTimeStart = 0;
 
-	if ( deltaTime < 1.0f / 60.0f )
+	if ( dTimeStart == 0 )
+		dTimeStart = 0;
+
+	DWORD dTimeCur = GetTickCount64();
+
+	if ( dTimeStart == 0 )
+		dTimeStart = dTimeCur;
+
+	deltaTime += ( dTimeCur - dTimeStart ) / 1000.0f;
+
+	if (deltaTime < ( 1.0f / 60.0f ))
 		return;
 
 	mIsHeld = isHeld;
@@ -37,7 +46,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 				Weight();
 			}
 			Friction( dt );
-			Velocity(dt);
+			Velocity( dt );
 		}
 		Acceleration();
 		Drag();
@@ -53,6 +62,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
 
+	dTimeStart = dTimeCur;
 	deltaTime -= ( 1.0f / 60.0f );
 }
 
@@ -87,7 +97,7 @@ void PhysicsModel::Velocity( const float dt )
 	//if ( mVelocity.z > 0.0f ) mVelocity.z -= mFrictionFactor;
 	//else if ( mVelocity.z < 0.0f ) mVelocity.z += mFrictionFactor;
 
-	if (mCheckGroundCollisions)
+	if ( mCheckGroundCollisions && mDoFriction)
 	{
 		mVelocity.x += mFrictionFactor * -( mVelocity.x );
 		mVelocity.z += mFrictionFactor * -( mVelocity.z );
