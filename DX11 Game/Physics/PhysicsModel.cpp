@@ -20,6 +20,22 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 
 void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
+	static float deltaTime = 0.0f;
+	static DWORD dTimeStart = 0;
+
+	if (dTimeStart == 0)
+		dTimeStart = 0;
+
+	DWORD dTimeCur = GetTickCount64();
+
+	if (dTimeStart == 0)
+		dTimeStart = dTimeCur;
+
+	deltaTime += (dTimeCur - dTimeStart) / 1000.0f;
+
+	if (deltaTime < (1.0f / 60.0f))
+		return;
+
 	mIsHeld = isHeld;
 
 	if ( !mActivated )
@@ -30,7 +46,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 				Weight();
 			}
 			Friction( dt );
-			Velocity(dt);
+			Velocity( dt );
 		}
 		Acceleration();
 		Drag();
@@ -45,6 +61,9 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	}
 
 	mNetForce = { 0.0f, 0.0f, 0.0f };
+
+	dTimeStart = dTimeCur;
+	deltaTime -= (1.0f / 60.0f);
 }
 
 void PhysicsModel::Weight()
