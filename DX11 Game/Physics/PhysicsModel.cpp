@@ -97,7 +97,7 @@ void PhysicsModel::Velocity( const float dt )
 	//if ( mVelocity.z > 0.0f ) mVelocity.z -= mFrictionFactor;
 	//else if ( mVelocity.z < 0.0f ) mVelocity.z += mFrictionFactor;
 
-	if (mCheckGroundCollisions)
+	if ( mCheckGroundCollisions && mDoFriction)
 	{
 		mVelocity.x += mFrictionFactor * -( mVelocity.x );
 		mVelocity.z += mFrictionFactor * -( mVelocity.z );
