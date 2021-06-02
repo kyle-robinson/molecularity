@@ -78,10 +78,7 @@ void Collisions::CheckCollisionLevel1( std::unique_ptr<Camera>& camera, float of
 void Collisions::CheckCollisionLevel1( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
 	CeilingCollision( cube, 11.5f );
-	if (cube->GetPositionFloat3().y <= 3.0f)
-		cube->GetPhysicsModel()->CheckGroundCollisions( true, cube->GetEditableProperties()->GetBoxBounce() == BoxBounce::Solid );
-	else
-		cube->GetPhysicsModel()->CheckGroundCollisions( false );
+	cube->GetPhysicsModel()->CheckGroundCollisions( true );
 	
 	if ( cube->GetPositionFloat3().z < -6.5f ) // entrance collisions
 	{
@@ -197,10 +194,7 @@ void Collisions::CheckCollisionLevel2( std::unique_ptr<Camera>& camera, float of
 void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset ) noexcept
 {
 	CeilingCollision( cube, 11.5f );
-	if (cube->GetPositionFloat3().y <= 3.0f )
-		cube->GetPhysicsModel()->CheckGroundCollisions( true, cube->GetEditableProperties()->GetBoxBounce() == BoxBounce::Solid );
-	else
-		cube->GetPhysicsModel()->CheckGroundCollisions( false );
+	cube->GetPhysicsModel()->CheckGroundCollisions( true );
 	
 	// check floor collisions - don't check wall collisions if below the floor
 	// (prevents cube jumping to floor level when colliding with the wall while in the sludge area)
