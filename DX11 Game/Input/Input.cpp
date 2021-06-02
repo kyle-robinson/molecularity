@@ -126,6 +126,14 @@ void Input::HandleEvent( Event* event )
 
 void Input::UpdateKeyboard( const float dt )
 {
+
+	//alt tab support
+	if ((GetAsyncKeyState(VK_MENU) & 0x8000)&& (GetAsyncKeyState(VK_TAB) & 0x8000))
+	{
+		EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+	}
+
+
 #pragma region KeyPress_Once
 	// handle input for single key presses
 	while ( !keyboard.KeyBufferIsEmpty() )
@@ -211,6 +219,7 @@ void Input::UpdateKeyboard( const float dt )
 #pragma region KeyPress_Repeat
 	// CAMERA INPUT
 	{
+		
 		// TODO: THIS SHOULD GO INTO AN UPDATE FUNCTION IN THE CAMERA CLASS
 		// set which camera for the static camera to look at
 		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
