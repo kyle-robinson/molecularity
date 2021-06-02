@@ -264,8 +264,6 @@ void Input::UpdateKeyboard( const float dt )
 					if (i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true)
 						alreadyHeld = true;
 
-
-
 				// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
 				if ((keyboard.KeyIsPressed(KeyBinds["Action"])) &&
 					!alreadyHeld && levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsInRange() && canHover && !levelSystem->GetCurrentLevel()->GetCube()[i]->GetIsDissCube() &&

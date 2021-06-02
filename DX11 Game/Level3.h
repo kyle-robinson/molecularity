@@ -32,6 +32,9 @@ private:
 	RenderableGameObject pressurePlate;
 	RenderableGameObject securityCamera;
 
+	bool renderDoor = true;
+	std::vector<std::pair<XMFLOAT3, bool>> brokenCircuitPoints;
+
 	// UI
 	shared_ptr<HUD_UI> HUD;
 	shared_ptr<Pause> PauseUI;

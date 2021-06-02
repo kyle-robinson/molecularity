@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Collisions.h"
 #include "Camera.h"
 #include "Cube.h"
@@ -23,6 +24,19 @@ bool Collisions::CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObje
 		( camera->GetPositionFloat3().y - object.GetPositionFloat3().y ) +
 		( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) *
 		( camera->GetPositionFloat3().z - object.GetPositionFloat3().z ) <= radius * radius )
+		return true;
+	else
+		return false;
+}
+
+bool Collisions::CheckCollisionSphere( XMFLOAT3 position, GameObject3D& object, float radius ) noexcept
+{
+	if ( ( position.x - object.GetPositionFloat3().x ) *
+		( position.x - object.GetPositionFloat3().x ) +
+		( position.y - object.GetPositionFloat3().y ) *
+		( position.y - object.GetPositionFloat3().y ) +
+		( position.z - object.GetPositionFloat3().z ) *
+		( position.z - object.GetPositionFloat3().z ) <= radius * radius )
 		return true;
 	else
 		return false;

@@ -112,9 +112,12 @@ void Level1::RenderFrame()
 
 	// DRAWABLES
 	{
+		// draw w/ back-face culling
 		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
 		room.Draw();
 		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
+
+		// draw with back-face culling
 		pressurePlate.Draw();
 		securityCamera.Draw();
 
