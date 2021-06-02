@@ -31,6 +31,7 @@ void Credits_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Co
 
 void Credits_UI::Update(float dt)
 {
+	_TextList.clear();
 	//background 
 	Background.Function({ 235,209,240 }, { _SizeOfScreen.x,_SizeOfScreen.y }, { 0,0 }, 1.0f);
 	
@@ -67,7 +68,7 @@ void Credits_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldO
 		FontsList->GetFont("OpenSans_20")->RenderString(Text._Text, Text._Position, Text._Colour);
 	}
 
-	_TextList.clear();
+	
 
 }
 

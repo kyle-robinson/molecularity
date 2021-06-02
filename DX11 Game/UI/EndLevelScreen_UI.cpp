@@ -39,6 +39,7 @@ void EndLevelScreen_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* con
 void EndLevelScreen_UI::Update(float dt)
 {
 	if (ToShow) {
+		_TextList.clear();
 		if (OnLoad) {
 			EventSystem::Instance()->AddEvent(EVENTID::ShowCursorEvent);
 			//notifcation for cursor stuff
@@ -83,7 +84,7 @@ void EndLevelScreen_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX
 		{
 			FontsList->GetFont("OpenSans_50")->RenderString(Text._Text, Text._Position, Text._Colour);
 		}
-		_TextList.clear();
+		
 	}
 }
 

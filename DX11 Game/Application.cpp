@@ -87,6 +87,7 @@ bool Application::ProcessMessages() noexcept
 
 void Application::Update()
 {	
+
 	if ( renderWindow.GetIsStopNextFrame() )
 	{
 		// delta time
