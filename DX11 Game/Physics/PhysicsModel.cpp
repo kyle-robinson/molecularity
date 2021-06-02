@@ -31,7 +31,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	if ( dTimeStart == 0 )
 		dTimeStart = dTimeCur;
 
-	deltaTime += ( TimeCur - dTimeStart ) / 1000.0f;
+	deltaTime += ( dTimeCur - dTimeStart ) / 1000.0f;
 
 	if (deltaTime < ( 1.0f / 60.0f ))
 		return;
