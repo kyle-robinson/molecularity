@@ -50,17 +50,17 @@ void Cube::Update( const float deltaTime ) noexcept
     switch ( editableProperties->GetBoxType() )
     {
     case BoxType::Mesh:
-        physicsModel->SetMass( 10.0f );
+        physicsModel->SetMass( 80.0f );
         SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.18f, 0.8f, 0.44f } );
         break;
     case BoxType::Wood:
-        physicsModel->SetMass( 30.0f );
+        physicsModel->SetMass( 120.0f );
         SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.9f, 0.49f, 0.13f } );
         break;
     case BoxType::Iron:
-        physicsModel->SetMass( 70.0f );
+        physicsModel->SetMass( 240.0f );
         SetIsDissCube( false );
         editableProperties->SetOutlineColor( { 0.6f, 0.34f, 0.71f } );
         break;
@@ -74,9 +74,9 @@ void Cube::Update( const float deltaTime ) noexcept
     // update sizing
     switch ( editableProperties->GetBoxSize() )
     {
-    case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); physicsModel->SetBounciness( 1.1f ); break;
-    case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() + 25.0f ); physicsModel->SetBounciness( 0.9f ); break;
-    case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); physicsModel->SetBounciness( 0.7f ); break;
+    case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() / 1.2f ); physicsModel->SetBounciness( 1.1f ); break;
+    case BoxSize::Normal: physicsModel->SetMass( physicsModel->GetMass() ); physicsModel->SetBounciness( 0.9f ); break;
+    case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() * 2.0f ); physicsModel->SetBounciness( 0.7f ); break;
     }
 
     // update bounciness
