@@ -4,8 +4,8 @@
 
 #include"TextRenderer.h"
 
-//Fonts From :https://fonts.google.com/specimen/Open+Sans#license 
-//License: https://www.apache.org/licenses/LICENSE-2.0.html
+// Fonts From :https://fonts.google.com/specimen/Open+Sans#license 
+// License: https://www.apache.org/licenses/LICENSE-2.0.html
 
 /// <summary>
 /// Handle the addition/removal and initialization of fonts in the game.

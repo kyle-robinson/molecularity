@@ -37,7 +37,7 @@ private:
 private:
 	bool _isSettings;
 	std::vector<JSON::SettingData> _SettingsData;
-	map<string, string>LoadedTextMap;
+	unordered_map<string, string>LoadedTextMap;
 	//Settings
 	Image_Widget SettingsBackground;
 	PageSlider_Widget< Colour, Colour> SettingsScrollBar;

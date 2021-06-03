@@ -16,9 +16,9 @@ std::vector<JSON::TextData> TextLoader::LoadText( std::string Node )
 }
 
 // Convert texdata vector to string
-std::map<std::string, std::string> TextLoader::ConvertToMap( std::vector<JSON::TextData> TextData )
+std::unordered_map<std::string, std::string> TextLoader::ConvertToMap( std::vector<JSON::TextData> TextData )
 {
-	std::map<std::string, std::string> TextFile;
+	std::unordered_map<std::string, std::string> TextFile;
 	for ( auto& Text : TextData )
 		TextFile[Text.Name] = Text.Text;
 	return TextFile;

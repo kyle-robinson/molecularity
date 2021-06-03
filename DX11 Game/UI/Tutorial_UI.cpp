@@ -101,7 +101,7 @@ void Tutorial_UI::TextLoad()
 	vector<JSON::TextData>Gen_Text = TextLoader::Instance()->LoadText("Gen_Text");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(Gen_Text);
 	vector<JSON::TextData>Movement_Controls = TextLoader::Instance()->LoadText("Movement_Controls");
-	map<string, string>temp = TextLoader::Instance()->ConvertToMap(Movement_Controls);
+	unordered_map<string, string>temp = TextLoader::Instance()->ConvertToMap(Movement_Controls);
 	LoadedTextMap.insert(temp.begin(), temp.end());
 	vector<JSON::TextData>TOOL_TIPS = TextLoader::Instance()->LoadText("TOOL_TIPS");
 	temp = TextLoader::Instance()->ConvertToMap(TOOL_TIPS);
@@ -441,7 +441,7 @@ void Tutorial_UI::LoadKeyBinds(std::vector<JSON::SettingData> SettingsData)
 
 			string key = std::get<string>(setting.Setting);
 			unsigned char* valChar = (unsigned char*)key.c_str();
-			KeyBinds[setting.Name] = ConvertFromUnsignedCharTostring(*valChar);
+			KeyBinds[setting.Name] = ConvertFromUnsignedCharToString(*valChar);
 
 		}
 	}

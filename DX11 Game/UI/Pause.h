@@ -38,7 +38,7 @@ private:
 	int currentLevel=0;
 	UINT32 Hub = 0;
 
-	map<string, string>LoadedTextMap;
+	unordered_map<string, string>LoadedTextMap;
 
 	bool OnLoad = true;
 };

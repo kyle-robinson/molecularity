@@ -90,7 +90,7 @@ void Pause::TextLoad()
 	vector<JSON::TextData>ButtonsText = TextLoader::Instance()->LoadText("Pause_Buttons");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(ButtonsText);
 	vector<JSON::TextData>TipText = TextLoader::Instance()->LoadText("Tip_Pause");
-	map<string, string>temp= TextLoader::Instance()->ConvertToMap(TipText);
+	unordered_map<string, string>temp= TextLoader::Instance()->ConvertToMap(TipText);
 	LoadedTextMap.insert(temp.begin(), temp.end());
 	vector<JSON::TextData>TitleText = TextLoader::Instance()->LoadText("Pause_Text");
 	temp = TextLoader::Instance()->ConvertToMap(TitleText);

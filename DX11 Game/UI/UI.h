@@ -31,7 +31,7 @@ public:
 	void SetSizeOfScreen(XMFLOAT2 screensize) { _SizeOfScreen = screensize; }
 
 protected:
-	string ConvertFromUnsignedCharTostring(unsigned char input);
+	string ConvertFromUnsignedCharToString(unsigned char input);
 	//Graphics Information
 	Microsoft::WRL::ComPtr <ID3D11Device>_Device;
 	Microsoft::WRL::ComPtr <ID3D11DeviceContext> _Contex;

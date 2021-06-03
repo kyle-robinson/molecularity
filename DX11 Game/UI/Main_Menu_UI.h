@@ -24,7 +24,7 @@ private:
 	Button_Widget<std::string> MainMenuButtons[5];
 	Image_Widget Titlecard;
 
-	map<string, string> LoadedTextMap;
+	unordered_map<string, string> LoadedTextMap;
 	//github link
 	 bool openlink = false;
 	 bool open = true;

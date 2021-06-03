@@ -15,7 +15,7 @@ public:
 	void ChangeTextFile( std::string NewTextFile );
 
 	std::vector<JSON::TextData> LoadText( std::string Node );
-	std::map<std::string, std::string> ConvertToMap( std::vector<JSON::TextData>TextData );
+	std::unordered_map<std::string, std::string> ConvertToMap( std::vector<JSON::TextData>TextData );
 private:
 	TextLoader();
 	~TextLoader();

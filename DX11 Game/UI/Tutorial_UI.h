@@ -63,8 +63,8 @@ private:
     TutorialState CurrentState;
     int stateNo;
     vector<TextToDraw> _TextList;
-    map<string, string> KeyBinds;
-    map<string, string> LoadedTextMap;
+    unordered_map<string, string> KeyBinds;
+    unordered_map<string, string> LoadedTextMap;
 
     float textSizeY;
     float textSizeX;

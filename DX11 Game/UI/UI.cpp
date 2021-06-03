@@ -13,7 +13,7 @@ void UI::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantB
 	_cb_vs_matrix_2d = cb_vs_matrix_2d;
 }
 //convert from unsigned char to understandble string fromat 
-string UI::ConvertFromUnsignedCharTostring(unsigned char input)
+string UI::ConvertFromUnsignedCharToString(unsigned char input)
 {
 
 	string text;
