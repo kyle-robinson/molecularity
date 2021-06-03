@@ -3,12 +3,10 @@
 #define LEVEL3_H
 
 #include "LevelStateMachine.h"
-
-//ui
-#include<Graphics/UI_Manager.h>
-#include<UI/HUD_UI.h>
-#include<UI/Pause.h>
-#include<UI/EndLevelScreen_UI.h>
+#include "UI_Manager.h"
+#include "HUD_UI.h"
+#include "Pause.h"
+#include "EndLevelScreen_UI.h"
 
 /// <summary>
 /// The third level of the game.
@@ -31,7 +29,7 @@ private:
 	std::vector<std::pair<XMFLOAT3, bool>> brokenCircuitPoints;
 	bool renderDoor = true;
 
-	// UI
+	// User Interface
 	shared_ptr<HUD_UI> HUD;
 	shared_ptr<Pause> PauseUI;
 	shared_ptr<EndLevelScreen_UI> EndLevelUI;

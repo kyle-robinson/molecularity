@@ -11,7 +11,7 @@
 #include <filesystem>
 #include "JSON_Helper.h"
 #include "RenderableGameObject.h"
-std::vector<JSON::ModelData> drawables;
+static std::vector<JSON::ModelData> drawables;
 
 /// <summary>
 /// Used JSON file parsing to load and store model information.
@@ -41,7 +41,7 @@ public:
             renderables.emplace( std::move( drawables[i].ObjectName ), std::move( model ) );
         }
         return true;
-    }    
+    }
 };
 
 #endif

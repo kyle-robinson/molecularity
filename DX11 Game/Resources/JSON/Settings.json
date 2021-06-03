@@ -16,6 +16,7 @@
       "Left": "A",
       "Right": "D",
       "Jump": " ",
+      "Crouch": "\u0011",
       "Action": "E",
       "Change_Gun_State_Up": "!",
       "Change_Gun_State_Down": "\"",

@@ -14,6 +14,7 @@
 
 #include"Graphics\\UI_Manager.h"
 #include<Tool_Class.h>
+
 /// <summary>
 /// Calls functions which initialize the window and main graphics components.
 /// Responsible for calling main render/update functions in Graphics.h

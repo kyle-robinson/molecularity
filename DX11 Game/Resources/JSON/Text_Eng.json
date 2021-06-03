@@ -88,6 +88,11 @@
     },
     {
       "Name": "Control_6",
+      "Text": ": Crouch"
+
+    },
+    {
+      "Name": "Control_7",
       "Text": "Mouse: Look around"
 
     }
@@ -315,6 +320,10 @@
     {
       "Name": "Jump",
       "Text": "Jump"
+    },
+    {
+      "Name": "Crouch",
+      "Text": "Crouch"
     },
     {
       "Name": "Action",

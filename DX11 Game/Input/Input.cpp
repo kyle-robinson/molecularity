@@ -231,9 +231,12 @@ void Input::UpdateKeyboard( const float dt )
 			if ( keyboard.KeyIsPressed( KeyBinds["Jump"] ) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
 
-			//static bool crouching = false;
-			//if ( keyboard.KeyIsPressed( KeyBinds["Crouch"] ) || crouching )
-			//	CameraMovement::Crouch( cameras->GetCamera( JSON::CameraType::Default ), crouching, dt );
+			static bool crouching = false;
+			if ( keyboard.KeyIsPressed( KeyBinds["Crouch"] ) )
+				crouching = true;
+			else
+				crouching = false;
+			CameraMovement::Crouch( cameras->GetCamera( JSON::CameraType::Default ), crouching, dt );
 		}
 
 		if (!isPaused)
@@ -253,8 +256,6 @@ void Input::UpdateKeyboard( const float dt )
 
 		// set camera speed
 		cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.01f );
-		//if ( keyboard.KeyIsPressed( KeyBinds["Run"] ) )
-		//	cameras->GetCamera( cameras->GetCurrentCamera() )->SetCameraSpeed( 0.015f );
 	}
 
 	// MULTI-TOOL INPUT

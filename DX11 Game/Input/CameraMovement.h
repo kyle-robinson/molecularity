@@ -67,27 +67,21 @@ public:
 
 	static void Crouch( std::unique_ptr<Camera>& cam, bool& isCrouching, const float dt )
 	{
-		static int maxValue = 25;
-		static int counter = maxValue;
-		static float minHeight = 5.0f;
-		isCrouching = true;
+		static float maxHeight = cam->GetPositionFloat3().y;
+		static float minHeight = cam->GetPositionFloat3().y - 4.0f;
 
-		if ( counter > 0 && cam->GetPositionFloat3().y > minHeight )
+		if ( isCrouching )
 		{
 			cam->AdjustPosition( -cam->GetUpVector() * cam->GetCameraSpeed() * dt );
+			if ( cam->GetPositionFloat3().y <= minHeight )
+				cam->SetPosition( cam->GetPositionFloat3().x, minHeight, cam->GetPositionFloat3().z );
 		}
 		else
 		{
-			isCrouching = false;
-			cam->SetPosition( cam->GetPositionFloat3().x, minHeight, cam->GetPositionFloat3().z );
+			cam->AdjustPosition( cam->GetUpVector() * cam->GetCameraSpeed() * dt );
+			if ( cam->GetPositionFloat3().y >= maxHeight )
+				cam->SetPosition( cam->GetPositionFloat3().x, maxHeight, cam->GetPositionFloat3().z );
 		}
-
-		if ( counter < -maxValue )
-		{
-			counter = maxValue;
-		}
-
-		counter--;
 	}
 };
 

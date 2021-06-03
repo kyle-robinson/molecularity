@@ -3,7 +3,6 @@
 #include "Billboard.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
-#include "ModelData.h"
 
 Level2::Level2( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 

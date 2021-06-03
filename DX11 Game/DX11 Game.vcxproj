@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir);$(ProjectDir)Levels;$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Physics;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility\Logging;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)Tool;$(ProjectDir)UI;$(ProjectDir)Levels;$(ProjectDir)Graphics;$(ProjectDir)Input;$(ProjectDir)Physics;$(ProjectDir)Model;$(ProjectDir)Objects;$(ProjectDir)Utility\Logging;$(ProjectDir)Utility;$(ProjectDir)Window;$(SolutionDir)External\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\lib;$(SolutionDir)External\lib\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -214,12 +214,16 @@
     <ClCompile Include="Application.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Credits_Level.cpp" />
-    <ClCompile Include="Level3.cpp" />
-    <ClCompile Include="TextLoader.cpp" />
-    <ClCompile Include="Tool_Conductivity.cpp" />
-    <ClCompile Include="Tool_Magnetism.cpp" />
-    <ClCompile Include="Tool_Bounce.cpp" />
+    <ClCompile Include="Levels\Credits_Level.cpp" />
+    <ClCompile Include="Levels\Level3.cpp" />
+    <ClCompile Include="Levels\MainMenu_Level.cpp" />
+    <ClCompile Include="Tool\Tool_Bounce.cpp" />
+    <ClCompile Include="Tool\Tool_Class.cpp" />
+    <ClCompile Include="Tool\Tool_Conductivity.cpp" />
+    <ClCompile Include="Tool\Tool_Convert.cpp" />
+    <ClCompile Include="Tool\Tool_Function.cpp" />
+    <ClCompile Include="Tool\Tool_Magnetism.cpp" />
+    <ClCompile Include="Tool\Tool_Resize.cpp" />
     <ClCompile Include="UI\Fonts.cpp" />
     <ClCompile Include="UI\EndLevelScreen_UI.cpp" />
     <ClCompile Include="Graphics\Fog.cpp">
@@ -249,7 +253,6 @@
     <ClCompile Include="Levels\LevelContainer.cpp" />
     <ClCompile Include="Levels\Level2.cpp" />
     <ClCompile Include="Levels\LevelStateMachine.cpp" />
-    <ClCompile Include="MainMenu_Level.cpp" />
     <ClCompile Include="Model\Colour.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -306,10 +309,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Physics\PhysicsModel.cpp" />
-    <ClCompile Include="Tool_Class.cpp" />
-    <ClCompile Include="Tool_Convert.cpp" />
-    <ClCompile Include="Tool_Function.cpp" />
-    <ClCompile Include="Tool_Resize.cpp" />
     <ClCompile Include="UI\Credits_UI.cpp" />
     <ClCompile Include="UI\HUD_UI.cpp" />
     <ClCompile Include="UI\Main_Menu_UI.cpp" />
@@ -335,6 +334,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Utility\TextLoader.cpp" />
     <ClCompile Include="Window\RenderWindow.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -356,12 +356,17 @@
     <ClInclude Include="..\External\imgui\imstb_textedit.h" />
     <ClInclude Include="..\External\imgui\imstb_truetype.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Credits_Level.h" />
-    <ClInclude Include="Level3.h" />
-    <ClInclude Include="TextLoader.h" />
-    <ClInclude Include="Tool_Conductivity.h" />
-    <ClInclude Include="Tool_Magnetism.h" />
-    <ClInclude Include="Tool_Bounce.h" />
+    <ClInclude Include="Levels\Credits_Level.h" />
+    <ClInclude Include="Levels\Level3.h" />
+    <ClInclude Include="Levels\MainMenu_Level.h" />
+    <ClInclude Include="Tool\Tool_Bounce.h" />
+    <ClInclude Include="Tool\Tool_Class.h" />
+    <ClInclude Include="Tool\Tool_Conductivity.h" />
+    <ClInclude Include="Tool\Tool_Convert.h" />
+    <ClInclude Include="Tool\Tool_Function.h" />
+    <ClInclude Include="Tool\Tool_Magnetism.h" />
+    <ClInclude Include="Tool\Tool_Resize.h" />
+    <ClInclude Include="Tool\Tool_Structs.h" />
     <ClInclude Include="UI\Fonts.h" />
     <ClInclude Include="UI\EndLevelScreen_UI.h" />
     <ClInclude Include="Graphics\Bindables.h" />
@@ -406,7 +411,6 @@
     <ClInclude Include="Levels\LevelContainer.h" />
     <ClInclude Include="Levels\Level2.h" />
     <ClInclude Include="Levels\LevelStateMachine.h" />
-    <ClInclude Include="MainMenu_Level.h" />
     <ClInclude Include="Model\Colour.h" />
     <ClInclude Include="Model\Mesh.h" />
     <ClInclude Include="Model\Model.h" />
@@ -431,11 +435,6 @@
     <ClInclude Include="Physics\Collisions.h" />
     <ClInclude Include="Physics\PhysicsModel.h" />
     <ClInclude Include="Resources\resource.h" />
-    <ClInclude Include="Tool_Class.h" />
-    <ClInclude Include="Tool_Convert.h" />
-    <ClInclude Include="Tool_Function.h" />
-    <ClInclude Include="Tool_Resize.h" />
-    <ClInclude Include="Tool_Structs.h" />
     <ClInclude Include="UI\Credits_UI.h" />
     <ClInclude Include="UI\HUD_UI.h" />
     <ClInclude Include="UI\Main_Menu_UI.h" />
@@ -463,6 +462,7 @@
     <ClInclude Include="Utility\Logging\Timer.h" />
     <ClInclude Include="Utility\Sound.h" />
     <ClInclude Include="Utility\stdafx.h" />
+    <ClInclude Include="Utility\TextLoader.h" />
     <ClInclude Include="Window\RenderWindow.h" />
     <ClInclude Include="Window\WindowContainer.h" />
   </ItemGroup>

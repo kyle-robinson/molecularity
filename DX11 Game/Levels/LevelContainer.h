@@ -16,6 +16,7 @@
 #include "DirectionalLight.h"
 
 #include <Tool_Class.h>
+#include <ModelData.h>
 
 class Fog;
 class ImGuiManager;
