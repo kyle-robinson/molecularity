@@ -118,7 +118,7 @@ void Level2::Update( const float dt )
 		if ( cubes[i]->CheckCollisionAABB( renderables["PressurePlate"], dt ) )
 		{
 			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
-			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
+			if ( cubes[i]->GetPhysicsModel()->GetMass() > 240.0f && !levelCompleted )
 			{
 				levelCompleted = true;
 				Sound::Instance()->PlaySoundEffect( "LevelComplete" );

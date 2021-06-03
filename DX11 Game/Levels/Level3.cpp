@@ -161,7 +161,7 @@ void Level3::Update( const float dt )
 					hasPower = false;
 
 			// Activate the plate if it has power
-			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted && hasPower )
+			if ( cubes[i]->GetPhysicsModel()->GetMass() > 240.0f && !levelCompleted && hasPower )
 			{
 				levelCompleted = true;
 				Sound::Instance()->PlaySoundEffect( "LevelComplete" );
