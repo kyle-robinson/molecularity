@@ -394,8 +394,11 @@ void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float of
 
 void Collisions::CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset, bool doorIsOpen ) noexcept
 {
-	CeilingCollision( cube, 11.5f );
-	cube->GetPhysicsModel()->CheckGroundCollisions( true );
+	CeilingCollision(cube, 11.5f);
+	if (cube->GetPositionFloat3().y <= 3.0f)
+		cube->GetPhysicsModel()->CheckGroundCollisions(true, cube->GetEditableProperties()->GetBoxBounce() == BoxBounce::Solid);
+	else
+		cube->GetPhysicsModel()->CheckGroundCollisions(false);
 
 	// X-COLLISIONS
 	if ( cube->GetPositionFloat3().x >= offset )

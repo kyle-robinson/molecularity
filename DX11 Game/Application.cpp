@@ -54,7 +54,7 @@ bool Application::Initialize(
 		// add levels to state machine
 		MainMenu_ID = stateMachine.Add( MainMenu );
 		level1_ID = stateMachine.Add( level1 );
-		level2_ID = stateMachine.Add( level2 );
+		//level2_ID = stateMachine.Add( level2 );
 		level3_ID = stateMachine.Add( level3 );
 		Credits_ID = stateMachine.Add( Credits );
 

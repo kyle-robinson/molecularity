@@ -117,13 +117,6 @@ void Level3::Update( const float dt )
 	// Cube collisions
 	for ( uint32_t i = 0; i < numOfCubes; i++ )
 	{
-		// Update collisions w other cubes
-		for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
-			cubes[i]->CheckCollisionAABB( cubes[j], dt );
-
-		// Update collisions w room
-		Collisions::CheckCollisionLevel3( cubes[i], 17.0f, doorIsOpen );
-
 		// Range check with broken circuit points
 		for ( uint32_t j = 0; j < brokenCircuitPoints.size(); j++ )
 		{
@@ -149,6 +142,7 @@ void Level3::Update( const float dt )
 					playOnce2 = false;
 				}
 			}
+			
 		}
 
 		// Update collisions w pressure plate
@@ -167,6 +161,12 @@ void Level3::Update( const float dt )
 				Sound::Instance()->PlaySoundEffect( "LevelComplete" );
 			}
 		}
+		// Update collisions w other cubes
+			for (uint32_t j = 0; j < numOfCubes; j++) if (i != j)
+				cubes[i]->CheckCollisionAABB(cubes[j], dt);
+
+			// Update collisions w room
+			Collisions::CheckCollisionLevel3(cubes[i], 17.0f, doorIsOpen);
 	}
 
 	// Update post processing
@@ -181,8 +181,10 @@ void Level3::Update( const float dt )
 		postProcessing->UnbindEffect();
 
 	// Update door if first plate is active
-	if ( brokenCircuitPoints[0].second )
+	if (brokenCircuitPoints[0].second)
 		doorIsOpen = true;
+	else
+		doorIsOpen = false;
 
 	// Set rotation of security camera
 	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), renderables["SecurityCamera"] );

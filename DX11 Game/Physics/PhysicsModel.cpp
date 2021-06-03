@@ -20,9 +20,6 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 
 void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& properties, bool isHeld )
 {
-	static float deltaTime = 0.0f;
-	static DWORD dTimeStart = 0;
-
 	if ( dTimeStart == 0 )
 		dTimeStart = 0;
 
