@@ -16,7 +16,7 @@ public:
 	void Draw( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix );
 	void Function( DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, int start, BarTex bar, SliderTex slider, MouseData MData );
 
-	uint32_t getData() { return DataOut; }
+	uint32_t GetData() { return DataOut; }
 
 private:
 	Sprite Bar;

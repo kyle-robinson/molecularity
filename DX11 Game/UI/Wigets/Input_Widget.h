@@ -18,7 +18,7 @@ public:
     string getCurrentText() {
         return CurrentText;
     }
-	unsigned char getKey() {
+	unsigned char GetKey() {
 		return _Key;
 	}
 

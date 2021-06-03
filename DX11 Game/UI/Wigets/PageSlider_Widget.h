@@ -15,9 +15,9 @@ public:
     void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix);
     void Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, int start, BarTex bar, SliderTex slider, MouseData MData);
     
-	float getPagePos() { return PagePos; }
-	float getPY() { return PY; }
-	void setPY(float py) { PY = py; }
+	float GetPagePos() { return PagePos; }
+	float GetPY() { return PY; }
+	void SetPY(float py) { PY = py; }
 	void SetPageSize(float pageSize) { PageSize = pageSize; }
 private:
 	Sprite Bar;

@@ -18,7 +18,7 @@ public:
    
 	bool INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d);
 	void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix,TextRenderer* textrender, VertexShader& vert, PixelShader& pix);
-    ListData getSelected() { return DataSelected; }
+    ListData GetSelected() { return DataSelected; }
 
 
 	void Function(vector<ListData> DropDownList, DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, vector<BackgroundType> Backcolour, vector<ButtonBacktype> ButtonImage, XMVECTORF32 textColour, ListData Current, MouseData MData);
