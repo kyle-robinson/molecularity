@@ -28,9 +28,7 @@ private:
 	LevelStateMachine& levelStateMachine;
 
 	// Scene Objects
-	RenderableGameObject room;
-	RenderableGameObject pressurePlate;
-	RenderableGameObject securityCamera;
+	std::unordered_map<std::string, RenderableGameObject> renderables;
 
 	//UI
 	shared_ptr<HUD_UI> HUD;

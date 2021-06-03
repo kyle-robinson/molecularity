@@ -11,7 +11,7 @@
 #include <filesystem>
 #include "JSON_Helper.h"
 #include "RenderableGameObject.h"
-std::vector<JSON::ModelData> drawables;
+static std::vector<JSON::ModelData> drawables;
 
 /// <summary>
 /// Used JSON file parsing to load and store model information.
@@ -28,7 +28,7 @@ public:
     }
     // set up game object transformation data
     static bool InitializeModelData( ID3D11DeviceContext* context, ID3D11Device* device,
-        ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::map<std::string, RenderableGameObject>& renderables )
+        ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::unordered_map<std::string, RenderableGameObject>& renderables )
     {
         for ( uint32_t i = 0; i < drawables.size(); i++ )
         {
@@ -41,7 +41,7 @@ public:
             renderables.emplace( std::move( drawables[i].ObjectName ), std::move( model ) );
         }
         return true;
-    }    
+    }
 };
 
 #endif

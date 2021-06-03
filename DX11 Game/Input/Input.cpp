@@ -239,6 +239,13 @@ void Input::UpdateKeyboard( const float dt )
 			static bool jumping = false;
 			if ( keyboard.KeyIsPressed( KeyBinds["Jump"] ) || jumping )
 				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
+
+			static bool crouching = false;
+			if ( keyboard.KeyIsPressed( KeyBinds["Crouch"] ) )
+				crouching = true;
+			else
+				crouching = false;
+			CameraMovement::Crouch( cameras->GetCamera( JSON::CameraType::Default ), crouching, dt );
 		}
 
 		if (!isPaused)
@@ -272,8 +279,6 @@ void Input::UpdateKeyboard( const float dt )
 				for (uint32_t j = 0; j < levelSystem->GetCurrentLevel()->GetNumOfLevelCubes(); j++)
 					if (i != j && levelSystem->GetCurrentLevel()->GetCube()[j]->GetIsHolding() == true)
 						alreadyHeld = true;
-
-
 
 				// pickup cube is in range, hovering with mouse and not already holding a cube - toggle function - was ( ( GetKeyState( KeyBindes["Action"] ) & 0x0001 ) != 0
 				if ((keyboard.KeyIsPressed(KeyBinds["Action"])) &&

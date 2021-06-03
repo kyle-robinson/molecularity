@@ -11,6 +11,10 @@ public:
 	PostProcessing( Graphics& gfx );
 	void Bind( Graphics& gfx ) noexcept override;
 	void SpawnControlWindow();
+	
+	void BindMonochrome() noexcept { basicEffect = BasicPostProcess::Effect::Monochrome; }
+	void BindSepia() noexcept { basicEffect = BasicPostProcess::Effect::Sepia; }
+	void UnbindEffect() noexcept { basicEffect = BasicPostProcess::Effect::Copy; }
 private:
 	// post-processing parameters
 	float bloomThreshold;

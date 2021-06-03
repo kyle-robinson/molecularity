@@ -11,29 +11,13 @@ bool Level2::OnCreate()
 	try
 	{
 		// DRAWABLES
-		{
-			// models
-			if ( !room.Initialize( "Resources\\Models\\Levels\\Level2-Final-Corners-Fixed.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			room.SetInitialPosition( -32.0f, 0.0f, -40.0f );
-			room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
-
-			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 31.5f );
-			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
-
-			// security camera
-			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			securityCamera.SetInitialScale( 2.0f, 2.0f, 2.0f );
-			securityCamera.SetInitialPosition( 17.5f, 10.0f, 35.0f );
-		}
+		if ( !ModelData::LoadModelData( "Level2_Objects.json" ) ) return false;
+		if ( !ModelData::InitializeModelData( *&graphics->context, *&graphics->device, cb_vs_matrix, renderables ) ) return false;
 
 		// UI
-		{
-			HUD = make_shared<HUD_UI>();
-			PauseUI = make_shared<Pause>();
-			EndLevelUI = make_shared<EndLevelScreen_UI>();
-		}
+		HUD = make_shared<HUD_UI>();
+		PauseUI = make_shared<Pause>();
+		EndLevelUI = make_shared<EndLevelScreen_UI>();
 	}
 	catch ( COMException& exception )
 	{
@@ -66,7 +50,7 @@ void Level2::OnSwitch()
 	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
-	Sound::Instance()->InitialiseSoundEffect( "PressurePlateClick" );
+	Sound::Instance()->InitialiseSoundEffect( "LevelComplete" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 
 	Sound::Instance()->PlayMusic( "LevelMusic" );
@@ -98,17 +82,17 @@ void Level2::RenderFrame()
 	// render ligths/skysphere
 	LevelContainer::RenderFrameEarly();
 
-	// DRAWABLES
-	{
-		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
-		room.Draw();
-		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
-		pressurePlate.Draw();
-		securityCamera.Draw();
+	// draw w/ back-face culling
+	graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
+	renderables["Room"].Draw();
+	graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 
-		// render the cubes
-		LevelContainer::RenderFrame();
-	}
+	// draw with back-face culling
+	renderables["PressurePlate"].Draw();
+	renderables["SecurityCamera"].Draw();
+
+	// render the cubes
+	LevelContainer::RenderFrame();
 }
 
 void Level2::Update( const float dt )
@@ -118,43 +102,40 @@ void Level2::Update( const float dt )
 
 	// adjust pressure plate x-position over time
 	static float offset = 0.07f;
-	if ( pressurePlate.GetPositionFloat3().x > 13.0f )
+	if ( renderables["PressurePlate"].GetPositionFloat3().x > 13.0f )
 		offset = -offset;
-	else if ( pressurePlate.GetPositionFloat3().x < -13.0f )
+	else if ( renderables["PressurePlate"].GetPositionFloat3().x < -13.0f )
 		offset = 0.1f;
-	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
+	renderables["PressurePlate"].AdjustPosition( offset, 0.0f, 0.0f );
 
-	// COLLISIONS
+	// camera collisions w room
+	Collisions::CheckCollisionLevel2( cameras->GetCamera( JSON::CameraType::Default ), 17.0f );
+
+	// cube collisions
+	for ( uint32_t i = 0; i < numOfCubes; i++ )
 	{
-		// camera collisions w room
-		Collisions::CheckCollisionLevel2( cameras->GetCamera( JSON::CameraType::Default ), 17.0f );
-
-		// cube collisions
-		for ( uint32_t i = 0; i < numOfCubes; i++ )
+		// update collisions w pressure plate
+		if ( cubes[i]->CheckCollisionAABB( renderables["PressurePlate"], dt ) )
 		{
-			// update collisions w pressure plate
-			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
+			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
+			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
 			{
-				cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
-				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
-				{
-					levelCompleted = true;
-					Sound::Instance()->PlaySoundEffect( "PressurePlateClick", false, pressurePlate.GetPositionFloat3(), 15.0f );
-				}
+				levelCompleted = true;
+				Sound::Instance()->PlaySoundEffect( "LevelComplete" );
 			}
-
-			// update collisions w other cubes
-			for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
-					cubes[i]->CheckCollisionAABB( cubes[j], dt );
-
-			// update collisions w room
-			Collisions::CheckCollisionLevel2( cubes[i], 17.0f );
 		}
-	}
 
+		// update collisions w other cubes
+		for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
+				cubes[i]->CheckCollisionAABB( cubes[j], dt );
+
+		// update collisions w room
+		Collisions::CheckCollisionLevel2( cubes[i], 17.0f );
+	}
+	
 	// set rotation of security camera
-	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
-	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
+	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), renderables["SecurityCamera"] );
+	renderables["SecurityCamera"].SetRotation( 0.0f, rotation, 0.0f );
 
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );

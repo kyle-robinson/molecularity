@@ -137,7 +137,7 @@ void Main_Menu_UI::MenuButtons()
 
 	if (MainMenuButtons[1].Function(LoadedTextMap["Button_2"], ButtonTex, size, XMFLOAT2{ ButtonXPos,  static_cast<float>(_SizeOfScreen.y * 0.40) }, DirectX::Colors::Black, _MouseData)) {
 		//place holder
-		LevelTo = 3;
+		LevelTo = 4;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 		mouseLoad = true;
 	}

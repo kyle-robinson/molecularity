@@ -5,7 +5,6 @@
 class Cube;
 class Camera;
 class GameObject3D;
-#include <memory>
 
 /// <summary>
 /// Provides a list of static functions for checking collisions between the target camera and a game objects.
@@ -16,6 +15,7 @@ class Collisions
 public:
 	static bool CheckCollisionCircle( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept;
 	static bool CheckCollisionSphere( std::unique_ptr<Camera>& camera, GameObject3D& object, float radius ) noexcept;
+	static bool CheckCollisionSphere( XMFLOAT3 position, GameObject3D& object, float radius ) noexcept;
 
 	static void CeilingCollision( std::shared_ptr<Cube>& cube, float ceilingHeight ) noexcept;
 
@@ -24,6 +24,9 @@ public:
 
 	static void CheckCollisionLevel2( std::unique_ptr<Camera>& camera, float offset ) noexcept;
 	static void CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset ) noexcept;
+
+	static void CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float offset, bool doorIsOpen ) noexcept;
+	static void CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset, bool doorIsOpen ) noexcept;
 };
 
 #endif

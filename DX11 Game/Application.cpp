@@ -34,22 +34,28 @@ bool Application::Initialize(
 		level2.get()->SetTool( &tool );
 		second.join();
 
+		level3 = std::make_shared<Level3>( stateMachine );
+		std::thread third( &Level3::Initialize, level3, &gfx, &cameras, &imgui, &_UI_Manager );
+		level3.get()->SetTool( &tool );
+		third.join();
+
 		//main menu
 		MainMenu = std::make_shared<MainMenu_Level>( stateMachine );
-		std::thread third( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager );
+		std::thread fourth( &MainMenu_Level::Initialize, MainMenu, &gfx, &cameras, &imgui, &_UI_Manager );
 		MainMenu.get()->SetTool( &tool );
-		third.join();
+		fourth.join();
 
 		//credits
 		Credits = std::make_shared<Credits_Level>( stateMachine );
-		std::thread fouth( &Credits_Level::Initialize, Credits, &gfx, &cameras, &imgui, &_UI_Manager );
+		std::thread fifth( &Credits_Level::Initialize, Credits, &gfx, &cameras, &imgui, &_UI_Manager );
 		Credits.get()->SetTool( &tool );
-		fouth.join();
+		fifth.join();
 
 		// add levels to state machine
 		MainMenu_ID = stateMachine.Add( MainMenu );
 		level1_ID = stateMachine.Add( level1 );
 		level2_ID = stateMachine.Add( level2 );
+		level3_ID = stateMachine.Add( level3 );
 		Credits_ID = stateMachine.Add( Credits );
 
 		stateMachine.SwitchTo( MainMenu_ID );
@@ -58,6 +64,7 @@ bool Application::Initialize(
 		std::vector<uint32_t> level_IDs;
 		level_IDs.push_back( std::move( level1_ID ) );
 		level_IDs.push_back( std::move( level2_ID ) );
+		level_IDs.push_back( std::move( level3_ID ) );
 		level_IDs.push_back( std::move( MainMenu_ID ) );
 		level_IDs.push_back( std::move( Credits_ID ) );
 

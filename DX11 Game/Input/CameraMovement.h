@@ -41,11 +41,11 @@ public:
 		cam->AdjustPosition( cam->GetUpVector() * -cam->GetCameraSpeed() * dt );
 	}
 
-	static void Jump( std::unique_ptr<Camera>& cam, bool& jumping, const float dt )
+	static void Jump( std::unique_ptr<Camera>& cam, bool& isJumping, const float dt )
 	{
 		static int maxValue = 25;
 		static int counter = maxValue;
-		jumping = true;
+		isJumping = true;
 
 		if ( counter > 0 )
 		{
@@ -58,11 +58,30 @@ public:
 
 		if ( counter < -maxValue )
 		{
-			jumping = false;
+			isJumping = false;
 			counter = maxValue;
 		}
 
 		counter--;
+	}
+
+	static void Crouch( std::unique_ptr<Camera>& cam, bool& isCrouching, const float dt )
+	{
+		static float maxHeight = cam->GetPositionFloat3().y;
+		static float minHeight = cam->GetPositionFloat3().y - 4.0f;
+
+		if ( isCrouching )
+		{
+			cam->AdjustPosition( -cam->GetUpVector() * cam->GetCameraSpeed() * dt );
+			if ( cam->GetPositionFloat3().y <= minHeight )
+				cam->SetPosition( cam->GetPositionFloat3().x, minHeight, cam->GetPositionFloat3().z );
+		}
+		else
+		{
+			cam->AdjustPosition( cam->GetUpVector() * cam->GetCameraSpeed() * dt );
+			if ( cam->GetPositionFloat3().y >= maxHeight )
+				cam->SetPosition( cam->GetPositionFloat3().x, maxHeight, cam->GetPositionFloat3().z );
+		}
 	}
 };
 
