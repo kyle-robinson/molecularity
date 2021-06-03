@@ -25,8 +25,8 @@ public:
 	static void CheckCollisionLevel2( std::unique_ptr<Camera>& camera, float offset ) noexcept;
 	static void CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset ) noexcept;
 
-	static void CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float offset ) noexcept;
-	static void CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset ) noexcept;
+	static void CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float offset, bool doorIsOpen ) noexcept;
+	static void CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset, bool doorIsOpen ) noexcept;
 };
 
 #endif

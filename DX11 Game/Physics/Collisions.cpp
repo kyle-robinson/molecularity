@@ -294,7 +294,7 @@ void Collisions::CheckCollisionLevel2( std::shared_ptr<Cube>& cube, float offset
 #pragma endregion
 
 #pragma region Level3_Collisions
-void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float offset ) noexcept
+void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float offset, bool doorIsOpen ) noexcept
 {
 	// X-COLLISIONS
 	if ( camera->GetPositionFloat3().x >= offset )
@@ -318,7 +318,11 @@ void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float of
 			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -22.0f );
 	}
 	else if ( camera->GetPositionFloat3().z >= -4.0f && camera->GetPositionFloat3().z < 20.0f ) // front area
-	{		
+	{
+		// Y-COLLISIONS
+		if ( camera->GetPositionFloat3().y >= 5.5f && camera->GetPositionFloat3().z > 19.5f )
+			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, 19.5f );
+
 		// Z-COLLISIONS
 		if ( camera->GetPositionFloat3().x <= -4.5f && camera->GetPositionFloat3().z <= -3.5f ) // back walls
 			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, -3.5f );
@@ -331,6 +335,9 @@ void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float of
 
 		if ( camera->GetPositionFloat3().x > 4.0f && camera->GetPositionFloat3().z >= 19.5f )
 			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, 19.5f );
+
+		if ( !doorIsOpen && camera->GetPositionFloat3().z >= 19.5f )
+			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, 19.5f );
 	}
 	else if ( camera->GetPositionFloat3().z >= 20.0f && camera->GetPositionFloat3().z < 25.0f ) // doorway
 	{
@@ -340,9 +347,17 @@ void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float of
 
 		if ( camera->GetPositionFloat3().x <= -4.0f )
 			camera->SetPosition( -4.0f, camera->GetPositionFloat3().y, camera->GetPositionFloat3().z );
+
+		// Y-COLLISIONS
+		if ( camera->GetPositionFloat3().y >= 5.5f )
+			camera->SetPosition( camera->GetPositionFloat3().x, 5.5f, camera->GetPositionFloat3().z );
 	}
 	else if ( camera->GetPositionFloat3().z >= 25.0f && camera->GetPositionFloat3().z < 50.0f ) // back area
 	{
+		// Y-COLLISIONS
+		if ( camera->GetPositionFloat3().y >= 5.5f && camera->GetPositionFloat3().z < 25.5f )
+			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, 25.5f );
+
 		// Z-COLLISIONS
 		if ( camera->GetPositionFloat3().x <= -4.5f && camera->GetPositionFloat3().z <= 25.5f ) // back walls
 			camera->SetPosition( camera->GetPositionFloat3().x, camera->GetPositionFloat3().y, 25.5f );
@@ -371,7 +386,7 @@ void Collisions::CheckCollisionLevel3( std::unique_ptr<Camera>& camera, float of
 	}
 }
 
-void Collisions::CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset ) noexcept
+void Collisions::CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset, bool doorIsOpen ) noexcept
 {
 	CeilingCollision( cube, 11.5f );
 	cube->GetPhysicsModel()->CheckGroundCollisions( true );
@@ -413,6 +428,13 @@ void Collisions::CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset
 	}
 	else if ( cube->GetPositionFloat3().z >= -4.0f && cube->GetPositionFloat3().z < 20.0f ) // front area
 	{
+		// Y-COLLISIONS
+		if ( cube->GetPositionFloat3().y >= 5.5f && cube->GetPositionFloat3().z > 19.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 19.5f );
+			RESET_FORCES;
+		}
+
 		// Z-COLLISIONS
 		if ( cube->GetPositionFloat3().x <= -4.5f && cube->GetPositionFloat3().z <= -3.5f ) // back walls
 		{
@@ -437,6 +459,12 @@ void Collisions::CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset
 			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 19.5f );
 			RESET_FORCES;
 		}
+
+		if ( !doorIsOpen && cube->GetPositionFloat3().z >= 19.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 19.5f );
+			RESET_FORCES;
+		}
 	}
 	else if ( cube->GetPositionFloat3().z >= 20.0f && cube->GetPositionFloat3().z < 25.0f ) // doorway
 	{
@@ -452,9 +480,23 @@ void Collisions::CheckCollisionLevel3( std::shared_ptr<Cube>& cube, float offset
 			cube->SetPosition( -4.0f, cube->GetPositionFloat3().y, cube->GetPositionFloat3().z );
 			RESET_FORCES;
 		}
+
+		// Y-COLLISIONS
+		if ( cube->GetPositionFloat3().y >= 5.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, 5.5f, cube->GetPositionFloat3().z );
+			RESET_FORCES;
+		}
 	}
 	else if ( cube->GetPositionFloat3().z >= 25.0f && cube->GetPositionFloat3().z < 50.0f ) // back area
 	{
+		// Y-COLLISIONS
+		if ( cube->GetPositionFloat3().y >= 5.5f && cube->GetPositionFloat3().z < 25.5f )
+		{
+			cube->SetPosition( cube->GetPositionFloat3().x, cube->GetPositionFloat3().y, 25.5f );
+			RESET_FORCES;
+		}
+
 		// Z-COLLISIONS
 		if ( cube->GetPositionFloat3().x <= -4.5f && cube->GetPositionFloat3().z <= 25.5f ) // back walls
 		{

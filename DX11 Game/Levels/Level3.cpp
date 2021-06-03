@@ -96,7 +96,7 @@ void Level3::RenderFrame()
 	graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 
 	// Draw with back-face culling
-	if ( renderDoor )
+	if ( !doorIsOpen )
 		renderables["Door"].Draw();
 
 	renderables["PressurePlate"].Draw();
@@ -112,7 +112,7 @@ void Level3::Update( const float dt )
 	LevelContainer::Update( dt );
 
 	// Camera collisions w room
-	Collisions::CheckCollisionLevel3( cameras->GetCamera( JSON::CameraType::Default ), 16.5f );
+	Collisions::CheckCollisionLevel3( cameras->GetCamera( JSON::CameraType::Default ), 16.5f, doorIsOpen );
 
 	// Cube collisions
 	for ( uint32_t i = 0; i < numOfCubes; i++ )
@@ -122,7 +122,7 @@ void Level3::Update( const float dt )
 			cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 		// Update collisions w room
-		Collisions::CheckCollisionLevel3( cubes[i], 17.0f );
+		Collisions::CheckCollisionLevel3( cubes[i], 17.0f, doorIsOpen );
 
 		// Range check with broken circuit points
 		for ( uint32_t j = 0; j < brokenCircuitPoints.size(); j++ )
@@ -182,7 +182,7 @@ void Level3::Update( const float dt )
 
 	// Update door if first plate is active
 	if ( brokenCircuitPoints[0].second )
-		renderDoor = false;
+		doorIsOpen = true;
 
 	// Set rotation of security camera
 	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), renderables["SecurityCamera"] );
