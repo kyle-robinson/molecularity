@@ -17,6 +17,7 @@
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
 
+#include <vector>
 #include <directxmath.h>
 using namespace rapidjson;
 

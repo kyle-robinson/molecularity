@@ -49,8 +49,8 @@ private:
 	DataSlider_Widget<std::string, std::string> SettingsSliders[10];
 	Button_Widget<std::string> SettingsButtons[10];
 	Input_Widget<std::string> ControlInput[20];
-	vector<TextToDraw> PauseTextTitles;
-	vector<TextToDraw> PauseTextPG;
+	std::vector<TextToDraw> PauseTextTitles;
+	std::vector<TextToDraw> PauseTextPG;
 
 	std::vector<std::string> ButtonTexDrop = { "Resources\\Textures\\Settings\\DropArrow_Blue.dds",
 		"Resources\\Textures\\Settings\\DropArrow_Blue.dds",
@@ -85,7 +85,7 @@ private:
 	float currentY;
 	XMFLOAT2 curretJsonWinsize = { 0,0 };
 
-	// For checkig whether setting is on screen;
+	// For checking if is on screen
 	XMFLOAT2 boxPos;
 	XMFLOAT2 boxSize;
 };

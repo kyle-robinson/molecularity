@@ -184,7 +184,7 @@ void Settings_Menu_UI::CreateSettings( JSON::SettingData& settingData )
 
 			TextToDraw._Colour = Colors::Black;
 			TextToDraw._Position = { static_cast<float>( _SizeOfScreen.x * 0.58 ),currentY };
-			TextToDraw._Text = to_string( *input );
+			TextToDraw._Text = std::to_string( *input );
 			PauseTextPG.push_back( TextToDraw );
 			Data.LPress = false;
 		}
@@ -196,7 +196,7 @@ void Settings_Menu_UI::CreateSettings( JSON::SettingData& settingData )
 			else
 				temp = "true";
 
-			SettingsDropdowns[SettingsDropCount].Function( vector<string>{"true", "false"}, { static_cast<float>( _SizeOfScreen.x * 0.15625 ),static_cast<float>( _SizeOfScreen.y * 0.05 ) }, { static_cast<float>( _SizeOfScreen.x * 0.39 ),currentY }, ButtonBackDrop, ButtonTexDrop, DirectX::Colors::White, temp, _MouseData );
+			SettingsDropdowns[SettingsDropCount].Function( std::vector<std::string>{"true", "false"}, { static_cast<float>( _SizeOfScreen.x * 0.15625 ),static_cast<float>( _SizeOfScreen.y * 0.05 ) }, { static_cast<float>( _SizeOfScreen.x * 0.39 ),currentY }, ButtonBackDrop, ButtonTexDrop, DirectX::Colors::White, temp, _MouseData );
 
 			if ( SettingsDropdowns[SettingsDropCount].GetSelected() == "false" )
 				settingData.Setting = false;
@@ -206,9 +206,10 @@ void Settings_Menu_UI::CreateSettings( JSON::SettingData& settingData )
 			SettingsDropCount++;
 		}
 		// Language input
-		else if ( string* input = std::get_if<string>( &settingData.Setting ) ) {
+		else if ( std::string* input = std::get_if<std::string>( &settingData.Setting ) )
+		{
 
-			vector<string>Language = { "Eng", "Fr" };
+			std::vector<std::string>Language = { "Eng", "Fr" };
 			SettingsDropdowns[SettingsDropCount].Function( Language, { static_cast<float>( _SizeOfScreen.x * 0.15625 ),static_cast<float>( _SizeOfScreen.y * 0.05 ) }, { static_cast<float>( _SizeOfScreen.x * 0.39 ),currentY }, ButtonBackDrop, ButtonTexDrop, DirectX::Colors::White, *input, _MouseData );
 			settingData.Setting = SettingsDropdowns[SettingsDropCount].GetSelected();
 			SettingsDropCount++;
@@ -374,7 +375,7 @@ void Settings_Menu_UI::Accept()
 		// Update settings file
 		for ( auto& setting : _SettingsData )
 		{
-			string type;
+			std::string type;
 			switch ( setting.Type )
 			{
 			case JSON::SettingType::GeneralType:
@@ -400,11 +401,11 @@ void Settings_Menu_UI::Accept()
 				JSON::UpdateJSONItemEX<int>( "Settings.json", type, setting.Name, *input, "" );
 			else if ( float* input = std::get_if<float>( &setting.Setting ) )
 				JSON::UpdateJSONItemEX<float>( "Settings.json", type, setting.Name, *input, "" );
-			else if ( string* input = std::get_if<string>( &setting.Setting ) )
-				JSON::UpdateJSONItemEX<string>( "Settings.json", type, setting.Name, *input, "" );
+			else if ( std::string* input = std::get_if<std::string>( &setting.Setting ) )
+				JSON::UpdateJSONItemEX<std::string>( "Settings.json", type, setting.Name, *input, "" );
 
 			if ( setting.Name == "Language" )
-				TextLoader::Instance()->ChangeLang( std::get<string>( setting.Setting ) );
+				TextLoader::Instance()->ChangeLang( std::get<std::string>( setting.Setting ) );
 		}
 
 		// Notify relvent areas that settings has changed
@@ -431,12 +432,12 @@ void Settings_Menu_UI::ControlsCreate( JSON::SettingData& settingData )
 
 	if ( LoadFlag )
 	{
-		unsigned char* control = (unsigned char*)get<string>( settingData.Setting ).c_str();
+		unsigned char* control = (unsigned char*)std::get<std::string>( settingData.Setting ).c_str();
 		ControlInput[SettingsInputCount].SetKey( *control );
 	}
 	ControlInput[SettingsInputCount].Function( { static_cast<float>( _SizeOfScreen.x * 0.15625 ),static_cast<float>( _SizeOfScreen.y * 0.07 ) }, { static_cast<float>( _SizeOfScreen.x * 0.39 ),currentY }, "Resources\\Textures\\Settings\\Input_Yellow.dds", DirectX::Colors::Black, Key, _MouseData );
 
-	string output;
+	std::string output;
 	output = ControlInput[SettingsInputCount].GetKey();
 	settingData.Setting = output;
 	SettingsInputCount++;
@@ -463,9 +464,10 @@ void Settings_Menu_UI::WindowSizeCreate( JSON::SettingData& settingData )
 			TextToDraw._Text = settingData.Text;
 			PauseTextPG.push_back( TextToDraw );
 
-			if ( int* input = std::get_if<int>( &settingData.Setting ) ) {
-				vector<string> WinSize{ "1024x576","1280x720","1600x900","1920x1080","2560x1440" };
-				vector<XMFLOAT2> WinSizeFlot{ {1024,576},{1280,720},{1600,900},{1920,1080},{2560,1440} };
+			if ( int* input = std::get_if<int>( &settingData.Setting ) )
+			{
+				std::vector<std::string> WinSize{ "1024x576","1280x720","1600x900","1920x1080","2560x1440" };
+				std::vector<XMFLOAT2> WinSizeFlot{ {1024,576},{1280,720},{1600,900},{1920,1080},{2560,1440} };
 				curretJsonWinsize.y = *input;
 				int current = 0;
 				for ( UINT i = 0; i < WinSize.size(); i++ )
@@ -493,7 +495,6 @@ void Settings_Menu_UI::WindowSizeCreate( JSON::SettingData& settingData )
 
 				SettingsDropCount++;
 				currentY += static_cast<float>( _SizeOfScreen.y * 0.1 );
-
 			}
 			return;
 		}
