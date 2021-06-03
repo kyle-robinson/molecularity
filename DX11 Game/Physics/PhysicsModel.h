@@ -91,6 +91,10 @@ private:
 	GameObject* mTransform;
 	
 	bool useWeight = true;
+
+
+	float deltaTime = 0.0f;
+	DWORD dTimeStart = 0;
 };
 
 #endif
