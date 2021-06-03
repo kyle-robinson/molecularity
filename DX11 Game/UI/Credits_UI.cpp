@@ -80,7 +80,7 @@ void Credits_UI::AddtoEvent()
 
 void Credits_UI::RemoveFromEvent()
 {
-	RemoveFromEvent();
+	EventSystem::Instance()->RemoveClient(EVENTID::WindowSizeChangeEvent, this);
 }
 
 void Credits_UI::LoadImages()
