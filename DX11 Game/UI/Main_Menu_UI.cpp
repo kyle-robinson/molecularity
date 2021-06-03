@@ -128,7 +128,7 @@ void Main_Menu_UI::MenuButtons()
 		//go to Level 1
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
-		LevelTo = 3;
+		LevelTo = 1;
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &LevelTo);
 		mouseLoad = true;
 	}

@@ -9,11 +9,9 @@ bool MainMenu_Level::OnCreate()
 {
 	try
 	{
-		// UI
-		{
-			Menu = make_shared<Main_Menu_UI>();
-			settingsUi = make_shared<Settings_Menu_UI>();
-		}
+		// User Interface
+		Menu = make_shared<Main_Menu_UI>();
+		settingsUi = make_shared<Settings_Menu_UI>();
 	}
 	catch ( COMException& exception )
 	{
@@ -25,23 +23,23 @@ bool MainMenu_Level::OnCreate()
 
 void MainMenu_Level::OnSwitch()
 {
-	// update items on level switch here...
+	// Update Level System
 	levelName = "MainMenu";
 	numOfCubes = 0;
 	LevelContainer::UpdateCubes();
 
-	//make sure cursor is displayed
 	EventSystem::Instance()->AddEvent( EVENTID::ShowCursorEvent );
 
-	//UI
+	// Update UI System
 	_UiManager->RemoveAllUI();
 	_UiManager->AddUi( Menu, "MainMenu" );
 	_UiManager->AddUi( settingsUi, "Settings" );
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 
-	//sounds
+	// Update Sound System
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 	Sound::Instance()->InitialiseMusicTrack( "MenuMusic" );
+
 	Sound::Instance()->PlayMusic( "MenuMusic" );
 }
 
@@ -50,7 +48,7 @@ void MainMenu_Level::Render()
 	// Render to sub viewport first using static camera
 	GetMultiViewport()->SetUsingSub();
 	BeginFrame();
-	//RenderFrame();
+	//RenderFrame(); // don't render security camera view
 
 	// Render main scene next with main/debug camera
 	GetMultiViewport()->SetUsingMain();
@@ -63,15 +61,15 @@ void MainMenu_Level::Render()
 
 void MainMenu_Level::RenderFrame()
 {
-	// render ligths/skysphere
+	// Render lights/skysphere
 	LevelContainer::RenderFrameEarly();
 }
 
 void MainMenu_Level::Update( const float dt )
 {
-	// update lights/skysphere
+	// Update lights/skysphere
 	LevelContainer::Update( dt );
 
-	// update cubes/multi-tool position
+	// Update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
 }
