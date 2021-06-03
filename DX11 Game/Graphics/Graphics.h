@@ -29,7 +29,7 @@ namespace Bind
 /// Initializes DirectX components and shaders required by all scenes/levels.
 /// Holds some pipeline functions that clear/present the current frame and bind DirectX components.
 /// </summary>
-class Graphics :public Listener
+class Graphics : public Listener
 {
 	friend class Level1;
 	friend class Level2;

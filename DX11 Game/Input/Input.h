@@ -2,10 +2,10 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include "UI.h"
 #include "MousePicking.h"
 #include "WindowContainer.h"
 #include "LevelStateMachine.h"
-#include "UI.h"
 
 /// <summary>
 /// Handles user input by update keyboard and mouse events.
