@@ -23,6 +23,8 @@ bool Application::Initialize(
 
 	// LEVELS
 	{
+		cameras.Initialize(width, height);
+
 		// initialize levels
 		level1 = std::make_shared<Level1>( stateMachine );
 		std::thread first( &Level1::Initialize, level1, &gfx, &cameras, &imgui, &_UI_Manager );
@@ -66,8 +68,6 @@ bool Application::Initialize(
 
 	// SYSTEMS
 	{
-		cameras.Initialize( width, height );
-
 		//load settings
 		_SettingsData = JSON::LoadSettings();
 		EventSystem::Instance()->AddEvent( EVENTID::UpdateSettingsEvent, &_SettingsData );

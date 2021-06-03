@@ -67,6 +67,12 @@ void Level3::OnSwitch()
 	cameras->GetCamera( JSON::CameraType::Default )->SetInitialPosition( 0.0f, 7.0f, -20.0f );
 	cameras->GetCamera( JSON::CameraType::Static )->SetInitialPosition( 0.0f, 10.0f, 65.0f );
 	cameras->GetCamera( JSON::CameraType::Debug )->SetInitialPosition( 0.0f, 7.0f, -15.0f );
+
+	brokenCircuitPoints[0].second = false;
+	brokenCircuitPoints[1].second = false;
+	doorIsOpen = false;
+	playOnce1 = true;
+	playOnce2 = true;
 }
 
 void Level3::Render()
@@ -129,13 +135,13 @@ void Level3::Update( const float dt )
 				brokenCircuitPoints[j].second = true;
 
 				// Need a better way to do this - currently only way to fix sound looping
-				static bool playOnce1 = true;
+				playOnce1 = true;
 				if ( j == 0 && playOnce1 )
 				{
 					Sound::Instance()->PlaySoundEffect( "PoweredOn" );
 					playOnce1 = false;
 				}
-				static bool playOnce2 = true;
+				playOnce2 = true;
 				if ( j == 1 && playOnce2 )
 				{
 					Sound::Instance()->PlaySoundEffect( "PoweredOn" );
@@ -155,7 +161,7 @@ void Level3::Update( const float dt )
 					hasPower = false;
 
 			// Activate the plate if it has power
-			if ( cubes[i]->GetPhysicsModel()->GetMass() > 240.0f && !levelCompleted && hasPower )
+			if ( cubes[i]->GetPhysicsModel()->GetMass() >= 240.0f && !levelCompleted && hasPower )
 			{
 				levelCompleted = true;
 				Sound::Instance()->PlaySoundEffect( "LevelComplete" );

@@ -29,6 +29,8 @@ private:
 	std::unordered_map<std::string, RenderableGameObject> renderables;
 	std::vector<std::pair<XMFLOAT3, bool>> brokenCircuitPoints;
 	bool doorIsOpen = false;
+	bool playOnce1 = true;
+	bool playOnce2 = true;
 
 	// User Interface
 	shared_ptr<HUD_UI> HUD;

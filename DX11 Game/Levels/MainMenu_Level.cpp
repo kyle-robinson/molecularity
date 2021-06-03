@@ -72,6 +72,10 @@ void MainMenu_Level::Update( const float dt )
 
 	// Update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
+
+	cameras->GetCamera(JSON::CameraType::Default)->SetInitialPosition(0.0f, 7.0f, -20.0f);
+	cameras->GetCamera(JSON::CameraType::Static)->SetInitialPosition(16.0f, 10.0f, 26.0f);
+	cameras->GetCamera(JSON::CameraType::Debug)->SetInitialPosition(0.0f, 7.0f, -15.0f);
 }
 
 void MainMenu_Level::CleanUp()
