@@ -58,18 +58,11 @@ bool Application::Initialize(
 		level3_ID = stateMachine.Add( level3 );
 		Credits_ID = stateMachine.Add( Credits );
 
+		stateMachine.Create( MainMenu_ID );
 		stateMachine.SwitchTo( MainMenu_ID );
 
-		// add levels to list
-		std::vector<uint32_t> level_IDs;
-		level_IDs.push_back( std::move( level1_ID ) );
-		level_IDs.push_back( std::move( level2_ID ) );
-		level_IDs.push_back( std::move( level3_ID ) );
-		level_IDs.push_back( std::move( MainMenu_ID ) );
-		level_IDs.push_back( std::move( Credits_ID ) );
-
 		// initialize level inputs
-		input.Initialize( renderWindow, &stateMachine, &cameras, level_IDs );
+		input.Initialize( renderWindow, &stateMachine, &cameras );
 	}
 
 	// SYSTEMS

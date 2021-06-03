@@ -3,11 +3,11 @@
 #include "CameraMovement.h"
 
 void Input::Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
-	CameraController* camera, std::vector<uint32_t> level_IDs )
+	CameraController* camera )
 {
 	cameras = camera;
 	renderWindow = window;
-	this->level_IDs = level_IDs;
+	//this->level_IDs = level_IDs;
 	this->levelSystem = stateMachine;
 	this->level = &*stateMachine->GetCurrentLevel();
 
@@ -143,8 +143,8 @@ void Input::UpdateKeyboard( const float dt )
 
 		// LEVEL SELECTION
 		{
-			if ( keycode == VK_NUMPAD1 ) levelSystem->SwitchTo( level_IDs[0] );
-			if ( keycode == VK_NUMPAD2 ) levelSystem->SwitchTo( level_IDs[1] );
+			//if ( keycode == VK_NUMPAD1 ) levelSystem->SwitchTo( level_IDs[0] );
+			//if ( keycode == VK_NUMPAD2 ) levelSystem->SwitchTo( level_IDs[1] );
 		}
 
 		// CAMERA INPUT

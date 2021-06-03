@@ -15,6 +15,7 @@ public:
 	uint32_t Add( std::shared_ptr<LevelContainer> level );
 	void Remove( uint32_t id );
 	void SwitchTo( uint32_t id );
+	void Create( uint32_t id );
 
 	void AddToEvent();
 	void HandleEvent(Event* event);

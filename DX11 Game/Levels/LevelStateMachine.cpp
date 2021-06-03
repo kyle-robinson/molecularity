@@ -23,7 +23,7 @@ uint32_t LevelStateMachine::Add( std::shared_ptr<LevelContainer> level )
 {
 	auto inserted = levels.insert( std::make_pair( insertedLevelID, level ) );
 	insertedLevelID++;
-	inserted.first->second->OnCreate();
+	//inserted.first->second->OnCreate();
 	return insertedLevelID - 1;
 }
 
@@ -45,9 +45,21 @@ void LevelStateMachine::SwitchTo( uint32_t id )
 	auto it = levels.find( id );
 	if ( it != levels.end() )
 	{
+		if (currentLevel)
+			currentLevel->CleanUp();
 		Sound::Instance()->ClearAudio();
 		currentLevel = it->second;
+		currentLevel->OnCreate();
 		currentLevel->OnSwitch();
+	}
+}
+
+void LevelStateMachine::Create( uint32_t id )
+{
+	auto it = levels.find( id );
+	if ( it != levels.end() )
+	{
+		it->second->OnCreate();
 	}
 }
 

@@ -46,6 +46,7 @@ public:
 	virtual void Render() {}
 	virtual void RenderFrame();
 	virtual void Update( const float dt );
+	virtual void CleanUp() {}
 	void LateUpdate( const float dt );
 	void UpdateCubes( float xPos = -2.5f, float yPos = 0.0f, float zPos = -6.0f, float spacing = 2.5f );
 

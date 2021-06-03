@@ -140,3 +140,9 @@ void Level2::Update( const float dt )
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
 }
+
+void Level2::CleanUp()
+{
+	renderables.clear();
+	cubes.clear();
+}

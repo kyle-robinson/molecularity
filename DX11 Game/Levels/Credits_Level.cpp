@@ -76,3 +76,7 @@ void Credits_Level::Update(const float dt)
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate(dt);
 }
+
+void Credits_Level::CleanUp()
+{
+}

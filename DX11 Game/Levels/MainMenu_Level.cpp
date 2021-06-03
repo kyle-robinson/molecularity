@@ -73,3 +73,7 @@ void MainMenu_Level::Update( const float dt )
 	// Update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
 }
+
+void MainMenu_Level::CleanUp()
+{
+}

@@ -15,7 +15,7 @@ class Input : public WindowContainer, public Listener
 {
 public:
 	void Initialize( RenderWindow& window, LevelStateMachine* stateMachine,
-		CameraController* camera, std::vector<uint32_t> level_IDs );
+		CameraController* camera );
 	void Update( const float dt );
 
 	//eventsystem
