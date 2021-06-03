@@ -11,11 +11,11 @@ Pause::~Pause()
 	RemoveFromEvent();
 }
 
-void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
+void Pause::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
 {
 
 	AddtoEvent();
-	UI::Inizalize(device, contex, cb_vs_matrix_2d,fonts);
+	UI::Initialize(device, contex, cb_vs_matrix_2d,fonts);
 	_isPaused = false;
 
 	//text
@@ -90,7 +90,7 @@ void Pause::TextLoad()
 	vector<JSON::TextData>ButtonsText = TextLoader::Instance()->LoadText("Pause_Buttons");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(ButtonsText);
 	vector<JSON::TextData>TipText = TextLoader::Instance()->LoadText("Tip_Pause");
-	map<string, string>temp= TextLoader::Instance()->ConvertToMap(TipText);
+	unordered_map<string, string>temp= TextLoader::Instance()->ConvertToMap(TipText);
 	LoadedTextMap.insert(temp.begin(), temp.end());
 	vector<JSON::TextData>TitleText = TextLoader::Instance()->LoadText("Pause_Text");
 	temp = TextLoader::Instance()->ConvertToMap(TitleText);

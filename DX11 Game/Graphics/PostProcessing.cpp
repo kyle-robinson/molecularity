@@ -23,25 +23,25 @@ PostProcessing::PostProcessing( Graphics& gfx )
 
 void PostProcessing::Bind( Graphics& gfx ) noexcept
 {
-	// BASIC POST-PROCESS
+	// Basic Post-Processing
 	if ( useBasicPostProcess )
 	{
-		// set main post-processing effect
+		// Set main post-processing effect
 		postProcessBasic->SetEffect( basicEffect );
 
-		// update bloom extract threshold
+		// Update bloom extract threshold
 		if ( basicEffect == BasicPostProcess::Effect::BloomExtract )
 			postProcessBasic->SetBloomExtractParameter( bloomThreshold );
 
-		// update gaussian blur effect multiplier
+		// Update gaussian blur effect multiplier
 		if ( basicEffect == BasicPostProcess::Effect::GaussianBlur_5x5 )
 			postProcessBasic->SetGaussianParameter( gaussianMultiplier );
 
-		// render post-processing effect to scene texture
+		// Render post-processing effect to scene texture
 		postProcessBasic->SetSourceTexture( gfx.GetRenderTarget()->GetShaderResourceView() );
 		postProcessBasic->Process( GetContext( gfx ) );
 
-		// set and render additional effect if using bloom effect
+		// Set and render additional effect if using bloom effect
 		if ( basicEffect == BasicPostProcess::Effect::BloomExtract )
 		{
 			postProcessBasic->SetBloomBlurParameters( bloomBlurHorizontal, bloomBlurSize, bloomBlurBrightness );
@@ -49,7 +49,7 @@ void PostProcessing::Bind( Graphics& gfx ) noexcept
 			postProcessBasic->Process( GetContext( gfx ) );
 		}
 	}
-	// TONE MAP POST-PROCESS
+	// Tone Map Post-Processing
 	else
 	{
 		postProcessToneMap->SetOperator( toneMapOperator );
@@ -63,7 +63,7 @@ void PostProcessing::SpawnControlWindow()
 {
 	if ( ImGui::Begin( "Post-Processing", FALSE, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove ) )
 	{
-		// switch between basic/tone map post-process options
+		// Switch between basic/tone map post-process options
 		ImGui::Text( "Post-Process Type:" );
 		ImGui::SameLine();
 		static int postProcessGroup = 0;
@@ -75,7 +75,7 @@ void PostProcessing::SpawnControlWindow()
 
 		if ( useBasicPostProcess )
 		{
-			// overlay effects
+			// Overlay effects
 			static int activeEffect = 0;
 			static bool selectedEffect[6];
 			static std::string previewValueEffect = "None";
@@ -105,7 +105,7 @@ void PostProcessing::SpawnControlWindow()
 				ImGui::EndCombo();
 			}
 
-			// allow modification of additional parameters when bloom blur is enabled
+			// Allow modification of additional parameters when bloom blur is enabled
 			if ( basicEffect == BasicPostProcess::Effect::BloomExtract )
 			{
 				ImGui::Text( "Blur Pass Type:" );
@@ -122,13 +122,13 @@ void PostProcessing::SpawnControlWindow()
 				ImGui::SliderFloat( "Bloom Blur Brightness", &bloomBlurBrightness, 0.0f, 5.0f, "%.1f" );
 			}
 
-			// allow modification of additional parameters when gaussian blur is enabled
+			// Allow modification of additional parameters when gaussian blur is enabled
 			if ( basicEffect == BasicPostProcess::Effect::GaussianBlur_5x5 )
 				ImGui::SliderFloat( "Gaussian Multiplier", &gaussianMultiplier, 0.0f, 5.0f, "%.1f" );
 		}
 		else
 		{
-			// tone map operator
+			// Tone map operator
 			static int activeOperator = 0;
 			static bool selectedOperator[4];
 			static std::string previewValueOperator = "None";
@@ -156,7 +156,7 @@ void PostProcessing::SpawnControlWindow()
 				ImGui::EndCombo();
 			}
 
-			// tone map transfer function
+			// Tone map transfer function
 			static int activeTransfer = 0;
 			static bool selectedTransfer[3];
 			static std::string previewValueTransfer = "Linear";
@@ -182,7 +182,7 @@ void PostProcessing::SpawnControlWindow()
 
 				ImGui::EndCombo();
 			}
-		}	
+		}
 	}
 	ImGui::End();
 }

@@ -10,8 +10,8 @@ bool MainMenu_Level::OnCreate()
 	try
 	{
 		// User Interface
-		Menu = make_shared<Main_Menu_UI>();
-		settingsUi = make_shared<Settings_Menu_UI>();
+		Menu = std::make_shared<Main_Menu_UI>();
+		settingsUi = std::make_shared<Settings_Menu_UI>();
 	}
 	catch ( COMException& exception )
 	{

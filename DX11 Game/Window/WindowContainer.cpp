@@ -1,8 +1,8 @@
+#include "stdafx.h"
 #include "WindowContainer.h"
 #include <imgui/imgui.h>
 #include <memory>
 
-#include<stdafx.h>
 WindowContainer::WindowContainer()
 {
 	static bool rawInputInitialized = false;
@@ -44,7 +44,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		return 0;
 
-    case WM_DESTROY:
+	case WM_DESTROY:
 		DestroyWindow( hWnd );
 		PostQuitMessage( 0 );
 		exit( -1 );
@@ -120,7 +120,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		}
 		if ( imio.WantCaptureMouse )
 			return 0;
-		if ( pt.x >= 0 && pt.x < windowsize.x && pt.y >= 0 && pt.y < windowsize.y)
+		if ( pt.x >= 0 && pt.x < windowsize.x && pt.y >= 0 && pt.y < windowsize.y )
 		{
 			mouse.OnMouseMove( x, y );
 			if ( !mouse.IsInWindow() )
@@ -150,7 +150,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		SetCursor( renderWindow.hCursorNightSelect );
 		if ( imio.WantCaptureMouse )
 			return 0;
-		
+
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnLeftPressed( x, y );
@@ -168,13 +168,13 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		SetCursor( renderWindow.hCursorNightNormal );
 		if ( imio.WantCaptureMouse )
 			return 0;
-		
+
 		int x = LOWORD( lParam );
 		int y = HIWORD( lParam );
 		mouse.OnLeftReleased( x, y );
 
 		const POINTS pt = MAKEPOINTS( lParam );
-		if ( pt.x < 0 || pt.x >= windowsize.x || pt.y < 0 || pt.y >= windowsize.y)
+		if ( pt.x < 0 || pt.x >= windowsize.x || pt.y < 0 || pt.y >= windowsize.y )
 		{
 			ReleaseCapture();
 			mouse.OnMouseLeave( x, y );
@@ -194,7 +194,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	}
 
 	case WM_RBUTTONUP:
-	{		
+	{
 		if ( imio.WantCaptureMouse )
 			return 0;
 
@@ -203,7 +203,7 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		mouse.OnRightReleased( x, y );
 
 		const POINTS pt = MAKEPOINTS( lParam );
-		if ( pt.x < 0 || pt.x >= windowsize.x || pt.y < 0 || pt.y >= windowsize.y)
+		if ( pt.x < 0 || pt.x >= windowsize.x || pt.y < 0 || pt.y >= windowsize.y )
 		{
 			ReleaseCapture();
 			mouse.OnMouseLeave( x, y );
@@ -269,23 +269,23 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 #pragma endregion
 	case WM_SIZE:
 	{
-		//update screen size
-		 RECT windowRect = { 0,0 };
-		if (GetClientRect(renderWindow.GetHWND(), &windowRect)) {
+		// Update screen size
+		RECT windowRect = { 0,0 };
+		if ( GetClientRect( renderWindow.GetHWND(), &windowRect ) )
+		{
 
-			  windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
+			windowsize = { static_cast<float>( windowRect.right - windowRect.left ), static_cast<float>( windowRect.bottom - windowRect.top ) };
 
-			  if (windowsize.x < 500) {
-				  windowsize.x = 1260;
-			  }
+			if ( windowsize.x < 500 )
+				windowsize.x = 1260;
 
-			  if (windowsize.y < 400) {
-				  windowsize.y = 500;
-			  }
-			EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
-			
+			if ( windowsize.y < 400 )
+			{
+				windowsize.y = 500;
+				EventSystem::Instance()->AddEvent( EVENTID::WindowSizeChangeEvent, &windowsize );
+			}
+			return DefWindowProc( hWnd, uMsg, wParam, lParam );;
 		}
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);;
 	}
 	default:
 		return DefWindowProc( hWnd, uMsg, wParam, lParam );

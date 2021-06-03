@@ -3,6 +3,8 @@
 #include "Tool_Structs.h"
 #include <imgui/imgui.h>
 
+// FREE Low Poly Cyberpunk-Sci fi Handgun Free low-poly 3D model (https://www.cgtrader.com/free-3d-models/military/gun/free-low-poly-cyberpunk-sci-fi-handgun)
+
 SpotLight::SpotLight()
 {
 	EventSystem::Instance()->AddClient( EVENTID::ChangeToolEvent, this );
@@ -13,9 +15,6 @@ SpotLight::~SpotLight()
 	EventSystem::Instance()->RemoveClient( EVENTID::ChangeToolEvent, this );
 }
 
-// "Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
-// FREE Low Poly Cyberpunk-Sci fi Handgun Free low-poly 3D model (https://www.cgtrader.com/free-3d-models/military/gun/free-low-poly-cyberpunk-sci-fi-handgun)
-
 bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
@@ -23,7 +22,7 @@ bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_m
 		HRESULT hr = cb_ps_spot.Initialize( GetDevice( gfx ), GetContext( gfx ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'SpotLight' constant buffer!" );
 
-		// get model file paths
+		// Get model file paths
 		std::string filePath = "Resources\\Models\\Gun\\Cybergun_";
 		std::vector<std::string> fileNames;
 		fileNames.push_back( "Blue.fbx" );
@@ -32,7 +31,7 @@ bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_m
 		fileNames.push_back( "Yellow.fbx" );
 		fileNames.push_back( "Pink.fbx" );
 
-		// load models
+		// Load models
 		for ( uint32_t i = 0; i < fileNames.size(); i++ )
 		{
 			Model newModel;
@@ -78,13 +77,13 @@ void SpotLight::UpdateConstantBuffer( Graphics& gfx, std::unique_ptr<Camera>& ca
 	cb_ps_spot.data.spotRange = range;
 	cb_ps_spot.data.spotDiffuseColor = color;
 	cb_ps_spot.data.spotDiffuseStrength = strength;
-	
+
 	XMVECTOR lightPosition = camera->GetPositionVector();
 	lightPosition += camera->GetForwardVector();
 	lightPosition += camera->GetRightVector() / 4;
 	XMFLOAT3 lightPositionF = XMFLOAT3( XMVectorGetX( lightPosition ), XMVectorGetY( lightPosition ), XMVectorGetZ( lightPosition ) );
 	cb_ps_spot.data.spotPosition = camera->GetPositionFloat3();
-	
+
 	direction.x = camera->GetCameraTarget().x - camera->GetPositionFloat3().x;
 	direction.y = camera->GetCameraTarget().y - camera->GetPositionFloat3().y;
 	direction.z = camera->GetCameraTarget().z - camera->GetPositionFloat3().z;
@@ -116,7 +115,7 @@ void SpotLight::HandleEvent( Event* event )
 	switch ( event->GetEventID() )
 	{
 	case EVENTID::ChangeToolEvent:
-		switch ( *static_cast< ToolType* >( event->GetData() ) )
+		switch ( *static_cast<ToolType*>( event->GetData() ) )
 		{
 		case ToolType::Convert:
 			model = gunModels[0];

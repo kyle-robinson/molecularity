@@ -10,9 +10,9 @@ Settings_Menu_UI::~Settings_Menu_UI()
 	RemoveFromEvent();
 }
 
-void Settings_Menu_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
+void Settings_Menu_UI::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
 {
-	UI::Inizalize(device, contex, cb_vs_matrix_2d,fonts);
+	UI::Initialize(device, contex, cb_vs_matrix_2d,fonts);
 	AddtoEvent();
 
 	_isSettings = false;

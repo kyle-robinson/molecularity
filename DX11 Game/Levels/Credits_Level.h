@@ -4,10 +4,12 @@
 
 #include "LevelContainer.h"
 #include "LevelStateMachine.h"
+#include "UI_Manager.h"
+#include "Credits_UI.h"
 
-#include<Graphics/UI_Manager.h>
-#include<UI/Credits_UI.h>
-
+/// <summary>
+/// The end credits of the game. Displays the developers and their roles throughout the development process.
+/// </summary>
 class Credits_Level : public LevelContainer
 {
 public:
@@ -20,7 +22,7 @@ public:
 private:
 	void RenderFrame() override;
 
-	shared_ptr<Credits_UI> credits;
+	std::shared_ptr<Credits_UI> credits;
 	LevelStateMachine& levelStateMachine;
 };
 

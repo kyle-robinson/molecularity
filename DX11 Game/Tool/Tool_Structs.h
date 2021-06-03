@@ -1,7 +1,11 @@
 #pragma once
+#ifndef TOOL_STRUCTS_H
+#define TOOL_STRUCTS_H
+
 /// <summary>
-/// Data to do with tool
+/// Data relating to the multi-tool.
 /// </summary>
+
 enum class ToolType
 {
 	Convert,
@@ -34,7 +38,7 @@ enum class BoxBounce
 
 enum class MagnetismMode
 {
-	AllCubes=0,
+	AllCubes = 0,
 	OneCube
 };
 
@@ -52,3 +56,5 @@ struct ToolData
 	BoxBounce boxBounce;
 	BoxConductive boxConductive;
 };
+
+#endif

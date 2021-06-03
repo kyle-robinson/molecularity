@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Sound.h"
+#include "JSON_Helper.h"
 
 Sound::Sound()
 {
@@ -25,7 +26,7 @@ Sound::~Sound()
 
 void Sound::InitialiseMusicTrack( std::string fileName, std::string fileType )
 {
-	musicTracks.emplace( fileName, engine->play2D( ("Resources\\Audio\\Music\\" + fileName + fileType).c_str(), true, true, true ) );
+	musicTracks.emplace( fileName, engine->play2D( ( "Resources\\Audio\\Music\\" + fileName + fileType ).c_str(), true, true, true ) );
 	musicTracks[fileName]->setVolume( musicVolume );
 }
 
@@ -44,7 +45,6 @@ void Sound::InitialiseSoundGroup( std::string groupName )
 		Sound::Instance()->InitialiseSoundEffect( "ToolChange" );
 		Sound::Instance()->InitialiseSoundEffect( "ToolSwitchMode" );
 	}
-
 	else if ( groupName == "Cube" )
 	{
 		Sound::Instance()->InitialiseSoundEffect( "CubePickup" );
@@ -56,7 +56,7 @@ void Sound::InitialiseSoundGroup( std::string groupName )
 
 void Sound::ClearAudio()
 {
-	if (musicTracks.size() > 0)
+	if ( musicTracks.size() > 0 )
 	{
 		for ( auto name : musicTracks )
 		{
@@ -88,18 +88,18 @@ void Sound::PlayMusic( std::string musicName, bool loops )
 	{
 		if ( musicOn )
 		{
-			for (auto music : musicTracks)
+			for ( auto music : musicTracks )
 			{
-				if (music.second->getIsPaused() == false)
-					music.second->setIsPaused(true);
+				if ( music.second->getIsPaused() == false )
+					music.second->setIsPaused( true );
 			}
 
 			currentMusicTrack = musicName;
 
-			if (musicTracks.size() > 0)
+			if ( musicTracks.size() > 0 )
 			{
-				musicTracks[musicName]->setIsLooped(loops);
-				musicTracks[musicName]->setIsPaused(false);
+				musicTracks[musicName]->setIsLooped( loops );
+				musicTracks[musicName]->setIsPaused( false );
 			}
 		}
 	}
@@ -125,67 +125,62 @@ void Sound::AddtoEvent()
 {
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 }
-#include<JSON_Helper.h>
 
 void Sound::HandleEvent( Event* event )
 {
-	
+
 	switch ( event->GetEventID() )
 	{
-
 	case EVENTID::UpdateSettingsEvent:
 	{
-		//controls 
+		// Controls
 		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>( event->GetData() );
 		float soundVol = 1.0f;
-		bool MusicOn = false;
 		for ( auto& setting : a )
 		{
 			if ( setting.Type == JSON::SettingType::SoundType )
 			{
-				//change sound
-				if (setting.Name == "MasterSoundOn") {
-					//music
+				// Change sound
+				if ( setting.Name == "MasterSoundOn" ) {
+					// Music
 					masterOn = std::get<bool>( setting.Setting );
 					continue;
-					
 				}
-				if (setting.Name == "MasterSoundVolume") {
-					 soundVol = (float)std::get<int>(setting.Setting) / 100;
-					 continue;
+				if ( setting.Name == "MasterSoundVolume" ) {
+					soundVol = static_cast<float>( std::get<int>( setting.Setting ) ) / 100.0f;
+					continue;
 				}
-				if ( setting.Name == "MusicOn" ) {
+				if ( setting.Name == "MusicOn" )
+				{
 					musicOn = std::get<bool>( setting.Setting );
-					MusicOn = std::get<bool>( setting.Setting );
 					continue;
 				}
 				if ( setting.Name == "MusicVolume" ) {
-					musicVolume = ( float )std::get<int>( setting.Setting ) / 100;
+					musicVolume = static_cast<float>( std::get<int>( setting.Setting ) ) / 100.0f;
 					continue;
 				}
-				if (setting.Name == "SoundEffectsEfOn") {
-					soundEffectsOn = std::get<bool>(setting.Setting);
+				if ( setting.Name == "SoundEffectsEfOn" ) {
+					soundEffectsOn = std::get<bool>( setting.Setting );
 					continue;
 				}
-				if (setting.Name == "SoundEffectVolume") {
-					soundEffectsVolume = (float)std::get<int>(setting.Setting) / 100;
+				if ( setting.Name == "SoundEffectVolume" )
+				{
+					soundEffectsVolume = static_cast<float>( std::get<int>( setting.Setting ) ) / 100.0f;
 					continue;
 				}
-
 			}
-
 		}
+
 		float mVol = musicVolume * soundVol;
 		SetMusicVolume( mVol );
 		SetMusicPause( true );
 		float sEVol = soundEffectsVolume * soundVol;
 		SetSoundEffectsVolume( sEVol );
-		//stop all sound
-		if (masterOn) {
-			if (musicOn) {
-				PlayMusic(GetCurrentMusicTrack());
-			}
-		}
+
+		// Stop all sounds
+		if ( masterOn )
+			if ( musicOn )
+				PlayMusic( GetCurrentMusicTrack() );
 	}
 	break;
 	}
