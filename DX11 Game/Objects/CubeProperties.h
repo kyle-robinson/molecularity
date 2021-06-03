@@ -2,8 +2,8 @@
 #ifndef CUBEPROPERTIES_H
 #define CUBEPROPERTIES_H
 
-#include<Utility/stdafx.h>
-#include<Tool_Structs.h>
+#include "stdafx.h"
+#include "Tool_Structs.h"
 
 /// <summary>
 /// Editable object properties by the multitool.
@@ -15,7 +15,7 @@ public:
 	BoxType GetBoxType() const noexcept { return boxType; }
 	BoxSize GetBoxSize() const noexcept { return boxSize; }
 	BoxBounce GetBoxBounce() const noexcept { return boxBounce; }
-	
+
 	int GetSizeID() const noexcept { return sizeID; }
 	int GetMaterialID() const noexcept { return materialID; }
 
@@ -27,27 +27,24 @@ public:
 	XMFLOAT3 GetOutlineColor() const noexcept { return outlineColor; }
 	bool GetConductivity() const noexcept { return mConductive; }
 	bool GetIsMagnetic() const noexcept { return isMagnetic; }
+
 	// Setters
 	void SetBoxType( BoxType type ) noexcept { boxType = type; }
-	void SetBoxSize( BoxSize size ) noexcept {
-		
+	void SetBoxSize( BoxSize size ) noexcept
+	{
 		boxSize = size;
-		if (boxSize == BoxSize::Small) {
-			SetSizeMultiplier(0.5f);
-		}
-		else if (boxSize == BoxSize::Normal) {
-			SetSizeMultiplier(1.0f);
-		}
-		else if (boxSize == BoxSize::Large) {
-			SetSizeMultiplier(2.0f);
-		}
+		if ( boxSize == BoxSize::Small )
+			SetSizeMultiplier( 0.5f );
+		else if ( boxSize == BoxSize::Normal )
+			SetSizeMultiplier( 1.0f );
+		else if ( boxSize == BoxSize::Large )
+			SetSizeMultiplier( 2.0f );
 	}
 
-
-	void SetMagnetic(bool mag)noexcept { isMagnetic = mag; }
-	void SetBoxMagneticMove(bool isMove) noexcept { isMagneticMove = isMove; }
+	void SetMagnetic( bool mag )noexcept { isMagnetic = mag; }
+	void SetBoxMagneticMove( bool isMove ) noexcept { isMagneticMove = isMove; }
 	void SetBoxBounce( BoxBounce bouncy ) noexcept { boxBounce = bouncy; }
-	void SetConductive(bool conductive) noexcept { mConductive = conductive; }
+	void SetConductive( bool conductive ) noexcept { mConductive = conductive; }
 	void SetSizeID( int id ) noexcept { sizeID = id; }
 	void SetMaterialID( int id ) noexcept { materialID = id; }
 
@@ -56,7 +53,6 @@ public:
 	void SetSizeMultiplier( float multiplier ) noexcept { sizeMultiplier = multiplier; }
 
 	void SetOutlineColor( XMFLOAT3 color ) noexcept { outlineColor = color; }
-
 private:
 	int sizeID = 1;
 	int materialID = 0;
@@ -64,7 +60,7 @@ private:
 	bool isReflective = false;
 	bool isMagnetic = false;
 	bool isMagneticMove = false;
-	bool mConductive=false;
+	bool mConductive = false;
 	float sizeMultiplier = 1.0f;
 	XMFLOAT3 outlineColor = { 0.0f, 0.0f, 0.0f };
 

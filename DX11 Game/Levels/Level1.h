@@ -3,13 +3,11 @@
 #define LEVEL1_H
 
 #include "LevelStateMachine.h"
-
-//ui
-#include<Graphics/UI_Manager.h>
-#include<UI/HUD_UI.h>
-#include<UI/Pause.h>
-#include<UI/Tutorial_UI.h>
-#include<UI/EndLevelScreen_UI.h>
+#include "UI_Manager.h"
+#include "HUD_UI.h"
+#include "Pause.h"
+#include "Tutorial_UI.h"
+#include "EndLevelScreen_UI.h"
 
 /// <summary>
 /// The first level of the game.
@@ -28,15 +26,14 @@ private:
 	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;
 
+	// User Interface
+	std::shared_ptr<HUD_UI> HUD;
+	std::shared_ptr<Pause> PauseUI;
+	std::shared_ptr<Tutorial_UI> TutorialUI;
+	std::shared_ptr<EndLevelScreen_UI> EndLevelUI;
+
 	// Scene Objects
 	std::unordered_map<std::string, RenderableGameObject> renderables;
-
-	//UI
-	shared_ptr<HUD_UI> HUD;
-	shared_ptr<Pause> PauseUI;
-	shared_ptr<Tutorial_UI> TutorialUI;
-	shared_ptr<EndLevelScreen_UI> EndLevelUI;
-
 };
 
 #endif

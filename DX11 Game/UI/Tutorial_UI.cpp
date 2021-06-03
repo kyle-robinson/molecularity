@@ -10,10 +10,10 @@ Tutorial_UI::~Tutorial_UI()
 	RemoveFromEvent();
 }
 
-void Tutorial_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
+void Tutorial_UI::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
 {
 	AddtoEvent();
-	UI::Inizalize(device, contex, cb_vs_matrix_2d, fonts);
+	UI::Initialize(device, contex, cb_vs_matrix_2d, fonts);
 	//get key binds
 	std::vector<JSON::SettingData> SettingsData = JSON::LoadSettings();
 	LoadKeyBinds(SettingsData);
@@ -101,7 +101,7 @@ void Tutorial_UI::TextLoad()
 	vector<JSON::TextData>Gen_Text = TextLoader::Instance()->LoadText("Gen_Text");
 	LoadedTextMap = TextLoader::Instance()->ConvertToMap(Gen_Text);
 	vector<JSON::TextData>Movement_Controls = TextLoader::Instance()->LoadText("Movement_Controls");
-	map<string, string>temp = TextLoader::Instance()->ConvertToMap(Movement_Controls);
+	unordered_map<string, string>temp = TextLoader::Instance()->ConvertToMap(Movement_Controls);
 	LoadedTextMap.insert(temp.begin(), temp.end());
 	vector<JSON::TextData>TOOL_TIPS = TextLoader::Instance()->LoadText("TOOL_TIPS");
 	temp = TextLoader::Instance()->ConvertToMap(TOOL_TIPS);
@@ -441,7 +441,7 @@ void Tutorial_UI::LoadKeyBinds(std::vector<JSON::SettingData> SettingsData)
 
 			string key = std::get<string>(setting.Setting);
 			unsigned char* valChar = (unsigned char*)key.c_str();
-			KeyBinds[setting.Name] = ConvertFromUnsignedCharTostring(*valChar);
+			KeyBinds[setting.Name] = ConvertFromUnsignedCharToString(*valChar);
 
 		}
 	}

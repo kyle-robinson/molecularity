@@ -43,12 +43,9 @@ struct CB_PS_outline
 
 struct CB_PS_scene
 {
-	
 	BOOL useTexture;
 	float alphaFactor;
-	BOOL useNormalMap;
-	
-	
+	BOOL useNormalMap;	
 };
 
 struct CB_PS_point

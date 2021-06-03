@@ -22,7 +22,6 @@ namespace Bind
                 createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
             #endif
 
-
                 DXGI_SWAP_CHAIN_DESC sd = { 0 };
                 sd.BufferCount = 1;
                 sd.BufferDesc.Width = gfx.GetWidth();

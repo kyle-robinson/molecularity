@@ -111,7 +111,7 @@
       "Text": "Rebondir:\nCela permet au cube de rebondir ou non."
     },
     {
-      "Name": "Magnatism_Tool",
+      "Name": "Magnetism_Tool",
       "Text": "Magnetisme:\nCela tire le cube vers vous."
     },
     {
@@ -145,11 +145,11 @@
       "Text": "Cela elargit le cube."
     },
     {
-      "Name": "Magnatism_1",
+      "Name": "Magnetism_1",
       "Text": "Cela tire tous les cubes vers vous."
     },
     {
-      "Name": "Magnatism_2",
+      "Name": "Magnetism_2",
       "Text": "Cela tire le cube auquel l'outil est destine."
     },
     {
@@ -282,7 +282,7 @@
       "Text": "La taille de la fenetre"
     },
     {
-      "Name": "WindowHight",
+      "Name": "WindowHeight",
       "Text": "La taille de la fenetre"
     },
     {
