@@ -202,7 +202,7 @@ void Tutorial_UI::MovementTutorialText()
 	text._Text += "\n" + KeyBinds["Back"] + LoadedTextMap["Control_3"];
 	text._Text += "\n" + KeyBinds["Right"] + LoadedTextMap["Control_4"];
 	text._Text += "\n" + KeyBinds["Jump"] + LoadedTextMap["Control_5"];
-	text._Text += "\n"+ LoadedTextMap["Control_6"];
+	text._Text += "\n"+ KeyBinds["Crouch"]+ LoadedTextMap["Control_6"];
 	SetTextPos(text);
 	_TextList.push_back(text);
 
