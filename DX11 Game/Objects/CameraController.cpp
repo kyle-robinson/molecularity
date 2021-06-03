@@ -3,25 +3,22 @@
 
 void CameraController::Initialize( int width, int height )
 {
-	// CAMERAS
-	{
-		XMFLOAT2 aspectRatio = { static_cast< float >( width ), static_cast< float >( height ) };
-		cameras.emplace( JSON::CameraType::Default, std::make_unique<Camera>( 0.0f, 7.0f, -15.0f ) );
-		cameras.emplace( JSON::CameraType::Static, std::make_unique<Camera>( 35.0f, 20.0f, 50.0f ) );
-		cameras.emplace( JSON::CameraType::Debug, std::make_unique<Camera>( 0.0f, 7.0f, -10.0f ) );
+	XMFLOAT2 aspectRatio = { static_cast<float>( width ), static_cast<float>( height ) };
+	cameras.emplace( JSON::CameraType::Default, std::make_unique<Camera>( 0.0f, 7.0f, -15.0f ) );
+	cameras.emplace( JSON::CameraType::Static, std::make_unique<Camera>( 35.0f, 20.0f, 50.0f ) );
+	cameras.emplace( JSON::CameraType::Debug, std::make_unique<Camera>( 0.0f, 7.0f, -10.0f ) );
 
-		for ( const auto& cam : cameras )
-			cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
-		UICamera.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
+	for ( const auto& cam : cameras )
+		cam.second->SetProjectionValues( 70.0f, aspectRatio.x / aspectRatio.y, 0.1f, 1000.0f );
+	UICamera.SetProjectionValues( aspectRatio.x, aspectRatio.y, 0.0f, 1.0f );
 
-		AddToEvent();
-	}
+	AddToEvent();
 }
 
 void CameraController::Update()
 {
-	//Currently forms nothing of value since cameras arent doing anything by themselves. 
-	//In the future will need cameras to passively connect themselves to the player (default) which can be done here / in the player
+	// Currently forms nothing of value since cameras arent doing anything by themselves. 
+	// In the future will need cameras to passively connect themselves to the player (default) which can be done here / in the player
 	UICamera.SendWorldOrthoMatrix();
 }
 
@@ -46,20 +43,19 @@ void CameraController::HandleEvent( Event* event )
 {
 	switch ( event->GetEventID() )
 	{
-		case EVENTID::WindowSizeChangeEvent:
-			XMFLOAT2 _SizeOfScreen = *static_cast<XMFLOAT2*>(event->GetData());
+	case EVENTID::WindowSizeChangeEvent:
+		XMFLOAT2 _SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
 
-			if (_SizeOfScreen.x < 500) {
-				_SizeOfScreen.x = 1260;
-			}
+		if ( _SizeOfScreen.x < 500 )
+			_SizeOfScreen.x = 1260;
 
-			if (_SizeOfScreen.y < 400) {
-				_SizeOfScreen.y = 500;
-			}
+		if ( _SizeOfScreen.y < 400 )
+			_SizeOfScreen.y = 500;
 
-			UICamera.SetProjectionValues(_SizeOfScreen.x, _SizeOfScreen.y, 0.0f, 1.0f);
-			for (const auto& cam : cameras)
-				cam.second->SetProjectionValues(70.0f, _SizeOfScreen.x / _SizeOfScreen.y, 0.1f, 1000.0f);
-			break;
+		UICamera.SetProjectionValues( _SizeOfScreen.x, _SizeOfScreen.y, 0.0f, 1.0f );
+		for ( const auto& cam : cameras )
+			cam.second->SetProjectionValues( 70.0f, _SizeOfScreen.x / _SizeOfScreen.y, 0.1f, 1000.0f );
+
+		break;
 	}
 }

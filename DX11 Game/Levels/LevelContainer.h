@@ -15,8 +15,8 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 
-#include <Tool_Class.h>
-#include <ModelData.h>
+#include "Tool_Class.h"
+#include "ModelData.h"
 
 class Fog;
 class ImGuiManager;
@@ -56,15 +56,15 @@ public:
 	std::vector<std::shared_ptr<Cube>>& GetCube() noexcept { return cubes; }
 	Graphics* GetGraphics() const noexcept { return graphics; }
 
-	void SetTool(Tool_Class* Tool) { tool = Tool; }
+	void SetTool( Tool_Class* Tool ) { tool = Tool; }
 	Tool_Class* GetTool() { return tool; }
 
 	std::string GetLevelName() { return levelName; }
 	int GetNumOfLevelCubes() { return numOfCubes; }
-  
+
 protected:
 	void RenderFrameEarly();
-	void ShowEndLeveLScreen();
+	void ShowEndLevelScreen();
 	bool levelCompleted = false;
 
 	// Objects
@@ -84,16 +84,16 @@ protected:
 	ConstantBuffer<CB_PS_scene> cb_ps_scene;
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
-	
+
 	//UI
 	UI_Manager* _UiManager;
-	
-	//Next level data
+
+	// Next level data
 	std::string levelName;
 	UINT32 NextLevel;
 	UINT32 CurrentLevel;
 	int numOfCubes;
-	
+
 	std::shared_ptr<PostProcessing> postProcessing;
 private:
 	bool InitializeScene();

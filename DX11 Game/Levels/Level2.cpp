@@ -15,9 +15,9 @@ bool Level2::OnCreate()
 		if ( !ModelData::InitializeModelData( *&graphics->context, *&graphics->device, cb_vs_matrix, renderables ) ) return false;
 
 		// UI
-		HUD = make_shared<HUD_UI>();
-		PauseUI = make_shared<Pause>();
-		EndLevelUI = make_shared<EndLevelScreen_UI>();
+		HUD = std::make_shared<HUD_UI>();
+		PauseUI = std::make_shared<Pause>();
+		EndLevelUI = std::make_shared<EndLevelScreen_UI>();
 	}
 	catch ( COMException& exception )
 	{
@@ -32,20 +32,20 @@ void Level2::OnSwitch()
 	// Update Level System
 	levelCompleted = false;
 	CurrentLevel = 2;
-	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
+	EventSystem::Instance()->AddEvent( EVENTID::SetCurrentLevelEvent, &CurrentLevel );
 
 	levelName = "Level2";
 	numOfCubes = 1;
 	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );
 	NextLevel = 3;
-  
+
 	//UI
-	_UiManager->RemoveUI("MainMenu");
-	_UiManager->RemoveUI("Tutorial");
+	_UiManager->RemoveUI( "MainMenu" );
+	_UiManager->RemoveUI( "Tutorial" );
 	_UiManager->ShowAllUi();
-	_UiManager->HideUi("EndLevel");
-	
-	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
+	_UiManager->HideUi( "EndLevel" );
+
+	EventSystem::Instance()->AddEvent( EVENTID::SetNextLevelEvent, &NextLevel );
 
 	Sound::Instance()->InitialiseMusicTrack( "LevelMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
@@ -127,12 +127,12 @@ void Level2::Update( const float dt )
 
 		// update collisions w other cubes
 		for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
-				cubes[i]->CheckCollisionAABB( cubes[j], dt );
+			cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
 		// update collisions w room
 		Collisions::CheckCollisionLevel2( cubes[i], 17.0f );
 	}
-	
+
 	// set rotation of security camera
 	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), renderables["SecurityCamera"] );
 	renderables["SecurityCamera"].SetRotation( 0.0f, rotation, 0.0f );

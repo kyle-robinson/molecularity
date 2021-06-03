@@ -7,7 +7,7 @@ std::vector<JSON::ModelData> JSON::LoadGameObjects( const std::string& fileName 
 	Document document;
 	ModelData objectData;
 	std::vector<ModelData> data;
-	
+
 	document = ParseFile( fileName );
 	if ( !document.IsNull() )
 	{
@@ -33,9 +33,9 @@ std::vector<JSON::ModelData> JSON::LoadGameObjects( const std::string& fileName 
 					GameObject["Position"][2].GetFloat()
 				};
 			}
-			else if (  CheckDataIsThere<Value>("PosX", GameObject ) &&
+			else if ( CheckDataIsThere<Value>( "PosX", GameObject ) &&
 				CheckDataIsThere<Value>( "PosY", GameObject ) &&
-				CheckDataIsThere<Value>("PosZ", GameObject) )
+				CheckDataIsThere<Value>( "PosZ", GameObject ) )
 			{
 
 				objectData.Position.x = GameObject["PosX"][0].GetFloat();
@@ -56,7 +56,7 @@ std::vector<JSON::ModelData> JSON::LoadGameObjects( const std::string& fileName 
 				objectData.Position.y = 0;
 				objectData.Position.z = 0;
 			}
-				
+
 			//scale data
 			if ( CheckDataIsThere<Value>( "Scale", GameObject ) )
 			{
@@ -120,7 +120,7 @@ std::vector<JSON::ModelData> JSON::LoadGameObjects( const std::string& fileName 
 	// Check if data was loaded 
 	if ( data.size() == 0 )
 		ErrorLogger::Log( "Failed to parse JSON file data!" );
-	
+
 	return data;
 }
 // parse text from file
@@ -133,16 +133,16 @@ std::vector<JSON::TextData> JSON::LoadTextDataItems( const std::string& fileName
 	for ( Value::ConstMemberIterator Object = document.MemberBegin();
 		Object != document.MemberEnd(); ++Object )
 	{
-		if (Object->value.IsArray()) {
-			for (Value& GameObject : document[Object->name.GetString()].GetArray())
+		if ( Object->value.IsArray() ) {
+			for ( Value& GameObject : document[Object->name.GetString()].GetArray() )
 			{
 				// Store strings in relevant structs and push to vector
 				TextData textData;
-				if (CheckDataIsThere<Value>("Name", GameObject))
+				if ( CheckDataIsThere<Value>( "Name", GameObject ) )
 					textData.Name = GameObject["Name"].GetString();
-				if (CheckDataIsThere<Value>("Text", GameObject))
+				if ( CheckDataIsThere<Value>( "Text", GameObject ) )
 					textData.Text = GameObject["Text"].GetString();
-				data.push_back(std::move(textData));
+				data.push_back( std::move( textData ) );
 			}
 		}
 	}
@@ -150,38 +150,38 @@ std::vector<JSON::TextData> JSON::LoadTextDataItems( const std::string& fileName
 	// Check if data was loaded
 	if ( data.size() == 0 )
 		ErrorLogger::Log( "Error:: No data found when parsing text from JSON file!" );
-	
+
 	return data;
 }
 
-std::vector<JSON::TextData> JSON::LoadTextDataItems(const std::string& fileName, const std::string& Node)
+std::vector<JSON::TextData> JSON::LoadTextDataItems( const std::string& fileName, const std::string& Node )
 {
 	std::vector<TextData> data;
-	Document document = ParseFile(fileName);
+	Document document = ParseFile( fileName );
 
 	// load Data in data
-	for (Value::ConstMemberIterator Object = document.MemberBegin();
-		Object != document.MemberEnd(); ++Object)
+	for ( Value::ConstMemberIterator Object = document.MemberBegin();
+		Object != document.MemberEnd(); ++Object )
 	{
-		if (Object->name.GetString() == Node) {
-			if (Object->value.IsArray()) {
-				for (Value& GameObject : document[Object->name.GetString()].GetArray())
+		if ( Object->name.GetString() == Node ) {
+			if ( Object->value.IsArray() ) {
+				for ( Value& GameObject : document[Object->name.GetString()].GetArray() )
 				{
 					// Store strings in relevant structs and push to vector
 					TextData textData;
-					if (CheckDataIsThere<Value>("Name", GameObject))
+					if ( CheckDataIsThere<Value>( "Name", GameObject ) )
 						textData.Name = GameObject["Name"].GetString();
-					if (CheckDataIsThere<Value>("Text", GameObject))
+					if ( CheckDataIsThere<Value>( "Text", GameObject ) )
 						textData.Text = GameObject["Text"].GetString();
-					data.push_back(std::move(textData));
+					data.push_back( std::move( textData ) );
 				}
 			}
 		}
 	}
 
 	// Check if data was loaded
-	if (data.size() == 0)
-		ErrorLogger::Log("Error:: No data found when parsing text from JSON file!");
+	if ( data.size() == 0 )
+		ErrorLogger::Log( "Error:: No data found when parsing text from JSON file!" );
 
 	return data;
 }
@@ -189,7 +189,7 @@ std::vector<JSON::TextData> JSON::LoadTextDataItems(const std::string& fileName,
 
 //load all settings
 std::vector<JSON::SettingData> JSON::LoadSettings()
-{		
+{
 	std::string p;
 	SettingType type;
 	std::vector< JSON::SettingData> Settings;
@@ -197,21 +197,21 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 
 	// Parse data from file
 	for ( Value::ConstMemberIterator Object = document.MemberBegin();
-		Object != document.MemberEnd(); ++Object ) 
+		Object != document.MemberEnd(); ++Object )
 	{
 		//set setting type
 		std::string objectName = Object->name.GetString();
-	
-		if (objectName == "General") {
+
+		if ( objectName == "General" ) {
 			type = SettingType::GeneralType;
 		}
-		else if (objectName == "Controls") {
+		else if ( objectName == "Controls" ) {
 			type = SettingType::ControlType;
 		}
-		else if (objectName == "Sound") {
+		else if ( objectName == "Sound" ) {
 			type = SettingType::SoundType;
 		}
-		else if(objectName=="Graphics")
+		else if ( objectName == "Graphics" )
 		{
 			type = SettingType::GraphicType;
 		}
@@ -219,9 +219,9 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 		{
 			type = SettingType::Invalid;
 		}
-		
+
 		//load data
-		if ( Object->value.IsArray())
+		if ( Object->value.IsArray() )
 		{
 			for ( Value& GameObject : document[Object->name.GetString()].GetArray() )
 			{
@@ -233,29 +233,29 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 					std::string c = itr->name.GetString();
 					Setting.Name = c;
 					Setting.Setting = GetDataAny( itr );
-					Setting.Type =type;
-					
+					Setting.Type = type;
+
 					Settings.push_back( Setting );
 				}
 			}
 		}
 		else
 		{
-			if (type != SettingType::Invalid) {
+			if ( type != SettingType::Invalid ) {
 				SettingData Setting;
 				Setting.Name = Object->name.GetString();
-				Setting.Setting = GetDataAny(Object);
+				Setting.Setting = GetDataAny( Object );
 				Setting.Type = type;
-				Settings.push_back(Setting);
+				Settings.push_back( Setting );
 			}
 		}
 	}
 
 	//TODO TextSettings
-	
-	std::vector<TextData> text= LoadTextDataItems("Text_Eng.json","Settings_Names");
-	
-	for (UINT i = 0; i < Settings.size(); i++)
+
+	std::vector<TextData> text = LoadTextDataItems( "Text_Eng.json", "Settings_Names" );
+
+	for ( UINT i = 0; i < Settings.size(); i++ )
 	{
 		Settings[i].Text = text[i].Text;
 	}
@@ -268,12 +268,12 @@ std::vector<std::string> JSON::LoadFileData( const std::string& fileName )
 {
 	std::vector<std::string> data;
 	Document document = ParseFile( fileName );
-	
+
 	// Parse data into strings
 	for ( Value::ConstMemberIterator Object = document.MemberBegin();
 		Object != document.MemberEnd(); ++Object )
 	{
-		if( Object->value.IsArray() )
+		if ( Object->value.IsArray() )
 		{
 			for ( Value& GameObject : document[Object->name.GetString()].GetArray() )
 			{
@@ -292,43 +292,43 @@ std::vector<std::string> JSON::LoadFileData( const std::string& fileName )
 
 	return data;
 }
-std::vector<std::string> JSON::LoadFileData(const std::string& fileName, const std::string& Node)
+std::vector<std::string> JSON::LoadFileData( const std::string& fileName, const std::string& Node )
 {
 	std::vector<std::string> data;
-	Document document = ParseFile(fileName);
+	Document document = ParseFile( fileName );
 
 	// Parse data into strings
-	for (Value::ConstMemberIterator Object = document.MemberBegin();
-		Object != document.MemberEnd(); ++Object)
+	for ( Value::ConstMemberIterator Object = document.MemberBegin();
+		Object != document.MemberEnd(); ++Object )
 	{
-		if (Object->name.GetString() == Node) {
-			if (Object->value.IsArray())
+		if ( Object->name.GetString() == Node ) {
+			if ( Object->value.IsArray() )
 			{
-				for (Value& GameObject : document[Object->name.GetString()].GetArray())
+				for ( Value& GameObject : document[Object->name.GetString()].GetArray() )
 				{
-					for (Value::ConstMemberIterator itr = GameObject.MemberBegin();
-						itr != GameObject.MemberEnd(); ++itr)
+					for ( Value::ConstMemberIterator itr = GameObject.MemberBegin();
+						itr != GameObject.MemberEnd(); ++itr )
 					{
-						if (itr->value.IsArray()){
-							for (Value& GameObject : document[itr->name.GetString()].GetArray())
+						if ( itr->value.IsArray() ) {
+							for ( Value& GameObject : document[itr->name.GetString()].GetArray() )
 							{
-								for (Value::ConstMemberIterator itr2 = GameObject.MemberBegin();
-									itr2 != GameObject.MemberEnd(); ++itr2)
+								for ( Value::ConstMemberIterator itr2 = GameObject.MemberBegin();
+									itr2 != GameObject.MemberEnd(); ++itr2 )
 								{
-							
-									data.push_back(std::move(GetData(itr2).second));
+
+									data.push_back( std::move( GetData( itr2 ).second ) );
 								}
 							}
 						}
 						else {
-							data.push_back(std::move(GetData(itr).second));
+							data.push_back( std::move( GetData( itr ).second ) );
 						}
 					}
 				}
 			}
 			else
 			{
-				data.push_back(std::move(GetData(Object).second));
+				data.push_back( std::move( GetData( Object ).second ) );
 			}
 		}
 	}
@@ -340,7 +340,7 @@ std::vector<std::pair<std::string, std::string>> JSON::LoadFileDataAndName( cons
 {
 	Document document = ParseFile( fileName );
 	std::vector<std::pair<std::string, std::string>> data;
-	
+
 	// Parse data into strings
 	for ( Value::ConstMemberIterator Object = document.MemberBegin();
 		Object != document.MemberEnd(); ++Object )
@@ -411,8 +411,8 @@ JSON::DataFromFile JSON::GetDataAny( Value::ConstMemberIterator itr )
 		std::string boo = itr->value.GetString();
 		data = boo;
 	}
-		break;
-	case(kNumberType):
+	break;
+	case( kNumberType ):
 		if ( itr->value.IsInt() )
 			data = itr->value.GetInt();
 		else if ( itr->value.IsDouble() )
@@ -436,7 +436,7 @@ JSON::DataFromFile JSON::GetDataAny( Value::ConstMemberIterator itr )
 bool JSON::StoreFile( const std::string& fileName, const Document& document )
 {
 	// Write back to file
-	std::ofstream fileStream("Resources\\JSON\\" + fileName);
+	std::ofstream fileStream( "Resources\\JSON\\" + fileName );
 	OStreamWrapper wrapperStream( fileStream );
 	Writer<OStreamWrapper> writer( wrapperStream );
 	document.Accept( writer );

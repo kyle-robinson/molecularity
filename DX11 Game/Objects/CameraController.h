@@ -9,13 +9,13 @@
 /// <summary>
 /// Handles the user's current camera.
 /// </summary>
-class CameraController:public Listener
+class CameraController : public Listener
 {
 public:
 	void Initialize( int width, int height );
 	void Update();
 
-	// Get a handle to specific camera
+	// Get a handle to a specific camera
 	std::unique_ptr<Camera>& GetCamera( const JSON::CameraType& cam ) noexcept { return cameras[cam]; }
 
 	// Sets active camera
@@ -31,7 +31,7 @@ public:
 	void CollisionResolution( std::unique_ptr<Camera>& camera, GameObject& world, const float dt ) noexcept;
 
 	void AddToEvent();
-	void HandleEvent(Event* event);
+	void HandleEvent( Event* event );
 
 private:
 	Camera2D UICamera;
