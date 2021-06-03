@@ -337,7 +337,7 @@ void Tutorial_UI::ToolTutorialText()
 	case ToolType::Magnetism: {
 		//tool 4
 
-		text._Text = LoadedTextMap["Magnatism_Tool"];
+		text._Text = LoadedTextMap["Magnetism_Tool"];
 		SetTextPos(text);
 		_TextList.push_back(text);
 
@@ -346,11 +346,11 @@ void Tutorial_UI::ToolTutorialText()
 		{
 		case 0:
 
-			text._Text = LoadedTextMap["Magnatism_1"];
+			text._Text = LoadedTextMap["Magnetism_1"];
 
 			break;
 		case 1:
-			text._Text = LoadedTextMap["Magnatism_2"];
+			text._Text = LoadedTextMap["Magnetism_2"];
 			break;
 		
 		}

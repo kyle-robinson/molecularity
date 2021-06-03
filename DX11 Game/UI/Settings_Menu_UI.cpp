@@ -349,12 +349,11 @@ void Settings_Menu_UI::TabContent()
 			if (setting.Type == JSON::SettingType::GeneralType)
 			{
 				//window size
-				if (setting.Name == "WindowWidth" || setting.Name == "WindowHight") {
+				if (setting.Name == "WindowWidth" || setting.Name == "WindowHeight") {
 
 					WindowSizeCreate(setting);
 					continue;
 				}
-				
 				else {
 					CreateSettings(setting);
 				}
@@ -523,7 +522,7 @@ void Settings_Menu_UI::WindowSizeCreate(JSON::SettingData& settingData)
 		}
 		return;
 	}
-	else if (settingData.Name == "WindowHight") {
+	else if (settingData.Name == "WindowHeight") {
 		if (currentY >= boxPos.y &&
 			currentY <= (boxPos.y + boxSize.y))
 		{
