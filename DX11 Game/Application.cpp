@@ -58,7 +58,6 @@ bool Application::Initialize(
 		level3_ID = stateMachine.Add( level3 );
 		Credits_ID = stateMachine.Add( Credits );
 
-		stateMachine.Create( MainMenu_ID );
 		stateMachine.SwitchTo( MainMenu_ID );
 
 		// initialize level inputs

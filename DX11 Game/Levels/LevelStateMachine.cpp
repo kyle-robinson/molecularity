@@ -54,15 +54,6 @@ void LevelStateMachine::SwitchTo( uint32_t id )
 	}
 }
 
-void LevelStateMachine::Create( uint32_t id )
-{
-	auto it = levels.find( id );
-	if ( it != levels.end() )
-	{
-		it->second->OnCreate();
-	}
-}
-
 void LevelStateMachine::AddToEvent()
 {
 	EventSystem::Instance()->AddClient(EVENTID::GameLevelChangeEvent, this);
