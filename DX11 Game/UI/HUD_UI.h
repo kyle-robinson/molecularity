@@ -34,6 +34,7 @@ private:
 	bool isDissCube = true;
 	float hudScale = 1;
 	bool isHudActive = true;
+	bool isHudToDraw = true;
 	TextToDraw PickupText;
 	Image_Widget HUDImages[3];
 	ColourBlock HudBakgrounds[2];

@@ -102,6 +102,11 @@ void Pause::HandleEvent(Event* event)
 {
 	switch (event->GetEventID())
 	{
+	case EVENTID::UpdateSettingsEvent:
+	{
+		_isPaused = true;
+	}
+	break;
 	case EVENTID::GamePauseEvent:
 	{
 		_isPaused = true;
@@ -145,6 +150,7 @@ void Pause::AddtoEvent()
 	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::SetCurrentLevelEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
 }
 
 void Pause::RemoveFromEvent()
@@ -155,6 +161,7 @@ void Pause::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::SetCurrentLevelEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::GameUnPauseEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::UpdateSettingsEvent, this);
 }
 
 void Pause::ButtonCreate()
@@ -176,6 +183,7 @@ void Pause::ButtonCreate()
 	}
 	else if (PauseButtons[2].Function(LoadedTextMap["Button_3"], ButtonTex, { _SizeOfScreen.x / 10, _SizeOfScreen.y / 10 }, XMFLOAT2{ 0,  static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//settings
+		_isPaused = false;
 		EventSystem::Instance()->AddEvent(EVENTID::GameSettingsEvent);
 		OnLoad = true;
 	}

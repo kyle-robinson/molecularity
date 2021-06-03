@@ -54,7 +54,7 @@ void HUD_UI::Update( float dt )
 
 void HUD_UI::BeginDraw( VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene )
 {
-	if ( isHudActive )
+	if ( isHudActive && isHudToDraw)
 	{
 		Shaders::BindShaders( _Contex.Get(), vert, pix );
 		HudBakgrounds[0].Draw( _Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix );
@@ -80,9 +80,14 @@ void HUD_UI::HandleEvent( Event* event )
 {
 	switch ( event->GetEventID() )
 	{
-	case EVENTID::CubePickupEvent:
+	case EVENTID::GameUnPauseEvent:
 	{
-		canHoldCube = static_cast<bool>( event->GetData() );
+		isHudToDraw = true;
+	}
+	break;
+	case EVENTID::GamePauseEvent:
+	{
+		isHudToDraw = false;
 	}
 	break;
 	case EVENTID::ToolModeEvent:
@@ -116,6 +121,9 @@ void HUD_UI::AddtoEvent()
 	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
 	EventSystem::Instance()->AddClient( EVENTID::IsDissCube, this );
+	EventSystem::Instance()->AddClient( EVENTID::GamePauseEvent, this);
+	EventSystem::Instance()->AddClient( EVENTID::GameUnPauseEvent, this);
+	
 }
 
 void HUD_UI::RemoveFromEvent()
@@ -125,6 +133,9 @@ void HUD_UI::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient( EVENTID::WindowSizeChangeEvent, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::UpdateSettingsEvent, this );
 	EventSystem::Instance()->RemoveClient( EVENTID::IsDissCube, this );
+	EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GameUnPauseEvent, this);
+	
 }
 
 void HUD_UI::CreateToolHud()
