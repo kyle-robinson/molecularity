@@ -41,6 +41,8 @@ void EndLevelScreen_UI::Update(float dt)
 	if (ToShow) {
 		if (OnLoad) {
 			EventSystem::Instance()->AddEvent(EVENTID::ShowCursorEvent);
+			//notifcation for cursor stuff
+			EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
 			OnLoad = false;
 		}
 
@@ -102,7 +104,7 @@ void EndLevelScreen_UI::HandleEvent(Event* event)
 		case EVENTID::GameEndLevelEvent:
 		{
 			ToShow = true;
-			
+		
 		}
 		break;
 		case EVENTID::SetNextLevelEvent:
@@ -151,14 +153,18 @@ void EndLevelScreen_UI::AddButtons()
 	//buttons
 	if (Buttons[0].Function(LoadedTextMap["Button_1"], ButtonTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) - (_SizeOfScreen.x / 7) - 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//go to hub
+		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &Hub);
+		
 		ToShow = false;
 		OnLoad = true;
 	}
 	else if (Buttons[1].Function(LoadedTextMap["Button_2"], ButtonTex, { _SizeOfScreen.x / 7, _SizeOfScreen.y / 7 }, XMFLOAT2{ (_SizeOfScreen.x / 2) + 50, static_cast<float>(_SizeOfScreen.y * 0.55) }, DirectX::Colors::Black, _MouseData)) {
 		//go to next level
 		EventSystem::Instance()->AddEvent(EVENTID::HideCursorEvent);
+		EventSystem::Instance()->AddEvent(EVENTID::GameUnPauseEvent);
 		EventSystem::Instance()->AddEvent(EVENTID::GameLevelChangeEvent, &NextLevel);
+		
 		ToShow = false;
 		OnLoad = true;
 	}

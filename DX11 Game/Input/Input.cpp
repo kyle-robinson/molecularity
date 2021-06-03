@@ -126,6 +126,14 @@ void Input::HandleEvent( Event* event )
 
 void Input::UpdateKeyboard( const float dt )
 {
+
+	//alt tab support
+	if ((GetAsyncKeyState(VK_MENU) & 0x8000)&& (GetAsyncKeyState(VK_TAB) & 0x8000))
+	{
+		EventSystem::Instance()->AddEvent(EVENTID::GamePauseEvent);
+	}
+
+
 #pragma region KeyPress_Once
 	// handle input for single key presses
 	while ( !keyboard.KeyBufferIsEmpty() )
@@ -211,6 +219,7 @@ void Input::UpdateKeyboard( const float dt )
 #pragma region KeyPress_Repeat
 	// CAMERA INPUT
 	{
+		
 		// TODO: THIS SHOULD GO INTO AN UPDATE FUNCTION IN THE CAMERA CLASS
 		// set which camera for the static camera to look at
 		cameras->GetCamera( JSON::CameraType::Static )->SetLookAtPos(
@@ -326,6 +335,12 @@ void Input::UpdateKeyboard( const float dt )
 void Input::UpdateMouse( const float dt )
 {
 	// read mouse events
+
+	if (!isPaused && cameras->GetCurrentCamera() != JSON::CameraType::Debug)
+	{
+		DisableCursor();
+	}
+
 	while ( !mouse.EventBufferIsEmpty() )
 	{
 		Mouse::MouseEvent me = mouse.ReadEvent();
@@ -428,17 +443,17 @@ void Input::UpdateMouse( const float dt )
 
 				if ( me.GetType()== Mouse::MouseEvent::EventType::RPress && cursorEnabled )
 					UiMouseData.RPress = true;
-				else
+				else if (me.GetType() == Mouse::MouseEvent::EventType::RRelease && cursorEnabled)
 					UiMouseData.RPress = false;
 
 				if (me.GetType() == Mouse::MouseEvent::EventType::LPress && cursorEnabled )
 					UiMouseData.LPress = true;
-				else
+				else if(me.GetType() == Mouse::MouseEvent::EventType::LRelease && cursorEnabled)
 					UiMouseData.LPress = false;
 
 				if (me.GetType() == Mouse::MouseEvent::EventType::MPress && cursorEnabled )
 					UiMouseData.MPress = true;
-				else
+				else if (me.GetType() == Mouse::MouseEvent::EventType::MRelease && cursorEnabled)
 					UiMouseData.MPress = false;
 
 				EventSystem::Instance()->AddEvent( EVENTID::UIMouseInput, &UiMouseData );
