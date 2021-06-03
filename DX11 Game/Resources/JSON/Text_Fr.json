@@ -84,6 +84,11 @@
     },
     {
       "Name": "Control_6",
+      "Text": ": Crouch"
+
+    },
+    {
+      "Name": "Control_7",
       "Text": "Souris: regardez autour de vous"
 
     }
@@ -307,6 +312,10 @@
     {
       "Name": "Jump",
       "Text": "Sauter"
+    },
+    {
+      "Name": "Crouch",
+      "Text": "Crouch"
     },
     {
       "Name": "Action",
