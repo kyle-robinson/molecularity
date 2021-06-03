@@ -49,7 +49,7 @@ public:
 
 		if ( counter > 0 )
 		{
-			cam->AdjustPosition( cam->GetUpVector() * cam->GetCameraSpeed() * dt );
+			cam->AdjustPosition(cam->GetUpVector() * cam->GetCameraSpeed() * dt);
 		}
 		else if ( counter < 0 && counter > -maxValue )
 		{
@@ -76,7 +76,7 @@ public:
 			if ( cam->GetPositionFloat3().y <= minHeight )
 				cam->SetPosition( cam->GetPositionFloat3().x, minHeight, cam->GetPositionFloat3().z );
 		}
-		else
+		else if(!isCrouching)
 		{
 			cam->AdjustPosition( cam->GetUpVector() * cam->GetCameraSpeed() * dt );
 			if ( cam->GetPositionFloat3().y >= maxHeight )

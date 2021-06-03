@@ -234,18 +234,20 @@ void Input::UpdateKeyboard( const float dt )
 			if ( keyboard.KeyIsPressed( VK_SPACE ) ) CameraMovement::MoveUp( cameras->GetCamera( JSON::CameraType::Debug ), dt );
 			if ( keyboard.KeyIsPressed( VK_CONTROL ) ) CameraMovement::MoveDown( cameras->GetCamera( JSON::CameraType::Debug ), dt );
 		}
-		else if ( !isPaused )
+		else if (!isPaused)
 		{
 			static bool jumping = false;
-			if ( keyboard.KeyIsPressed( KeyBinds["Jump"] ) || jumping )
-				CameraMovement::Jump( cameras->GetCamera( JSON::CameraType::Default ), jumping, dt );
+			if (keyboard.KeyIsPressed(KeyBinds["Jump"]) || jumping)
+				CameraMovement::Jump(cameras->GetCamera(JSON::CameraType::Default), jumping, dt);
 
 			static bool crouching = false;
-			if ( keyboard.KeyIsPressed( KeyBinds["Crouch"] ) )
+			if (keyboard.KeyIsPressed(KeyBinds["Crouch"]))
 				crouching = true;
 			else
 				crouching = false;
-			CameraMovement::Crouch( cameras->GetCamera( JSON::CameraType::Default ), crouching, dt );
+			if (!jumping)
+				CameraMovement::Crouch(cameras->GetCamera(JSON::CameraType::Default), crouching, dt);
+		
 		}
 
 		if (!isPaused)
