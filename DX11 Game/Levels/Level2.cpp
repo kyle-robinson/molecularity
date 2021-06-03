@@ -35,8 +35,8 @@ void Level2::OnSwitch()
 	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
 
 	levelName = "Level2";
-	numOfCubes = 3;
-	LevelContainer::UpdateCubes();
+	numOfCubes = 1;
+	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );
 	NextLevel = 3;
   
 	//UI

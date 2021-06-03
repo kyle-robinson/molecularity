@@ -47,7 +47,7 @@ template<typename background>
 bool Input_Widget<background>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
 {
 	Selcted = false;
-	Background.Initialize(Device, Contex, _Size.x, _Size.y, Colour{ 0,0,0 }, cb_vs_matrix_2d);
+	Background.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
 	return true;
 }
 

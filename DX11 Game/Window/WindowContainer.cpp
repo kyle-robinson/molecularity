@@ -274,7 +274,14 @@ LRESULT CALLBACK WindowContainer::WindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 		if (GetClientRect(renderWindow.GetHWND(), &windowRect)) {
 
 			  windowsize = { (float)(windowRect.right - windowRect.left),(float)(windowRect.bottom - windowRect.top) };
-			
+
+			  if (windowsize.x < 500) {
+				  windowsize.x = 1260;
+			  }
+
+			  if (windowsize.y < 400) {
+				  windowsize.y = 500;
+			  }
 			EventSystem::Instance()->AddEvent(EVENTID::WindowSizeChangeEvent, &windowsize);
 			
 		}

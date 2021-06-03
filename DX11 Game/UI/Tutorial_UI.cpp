@@ -35,8 +35,9 @@ void Tutorial_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, C
 
 void Tutorial_UI::Update(float dt)
 {
-	
+	_TextList.clear();
 	//inital position
+
 	yPos=0;
 	xpos = _SizeOfScreen.x - static_cast<float>(_SizeOfScreen.x * 0.25);
 	textSizeY = 0;
@@ -90,7 +91,7 @@ void Tutorial_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX World
 			FontsList->GetFont("OpenSans_12")->RenderString(Text._Text, Text._Position, Text._Colour);
 		}
 
-		_TextList.clear();
+		
 
 	}
 }

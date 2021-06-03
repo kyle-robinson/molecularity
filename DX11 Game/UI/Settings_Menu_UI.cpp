@@ -46,6 +46,14 @@ void Settings_Menu_UI::Update(float dt)
 {
 	if (_isSettings) {
 	
+		PauseTextTitles.clear();
+		PauseTextPG.clear();
+
+		SettingsButtonCount = 0;
+		SettingsDropCount = 0;
+		SettingSliderCount = 0;
+		SettingsInputCount = 0;
+
 		if (mouseLoad) {
 			_MouseData.LPress = false;
 			mouseLoad = false;
@@ -75,13 +83,15 @@ void Settings_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX 
 		SettingsBackground.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		SettingsScrollBar.Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 
-		for (UINT i = 0; i < SettingSliderCount; i++) {
-			SettingsSliders[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
-		}
 		for (UINT i = 0; i < SettingsButtonCount; i++) {
 			SettingsButtons[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get());
 			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
+
+		for (UINT i = 0; i < SettingSliderCount; i++) {
+			SettingsSliders[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
+		}
+		
 
 		
 		for (int i = SettingsDropCount-1; i >= 0; i--) {
@@ -100,19 +110,15 @@ void Settings_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX 
 			FontsList->GetFont("OpenSans_50")->RenderString(PauseTextTitles[i]._Text, PauseTextTitles[i]._Position, PauseTextTitles[i]._Colour);
 		}
 
-		PauseTextTitles.clear();
+		
 
 		for (UINT i = 0; i < PauseTextPG.size(); i++)
 		{
 			FontsList->GetFont("OpenSans_12")->RenderString(PauseTextPG[i]._Text, PauseTextPG[i]._Position, PauseTextPG[i]._Colour);
 		}
 
-		PauseTextPG.clear();
 
-		SettingsButtonCount = 0;
-		SettingsDropCount = 0;
-		SettingSliderCount = 0;
-		SettingsInputCount = 0;
+		
 	}
 }
 
@@ -483,7 +489,7 @@ void Settings_Menu_UI::Accept()
 void Settings_Menu_UI::ControlsCreate(JSON::SettingData& settingData)
 {
 	TextToDraw TextToDraw;
-	TextToDraw._Colour = Colors::Black;
+	
 
 
 	TextToDraw._Colour = Colors::Black;

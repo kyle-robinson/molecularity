@@ -12,7 +12,7 @@ ColourBlock::~ColourBlock() { }
 
 bool ColourBlock::INITSprite( ID3D11DeviceContext* Context, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d )
 {
-	_ColourSprite.Initialize( Device, Context, _Size.x, _Size.y, _Colour, cb_vs_matrix_2d );
+	_ColourSprite.Initialize( Device, Context, _Size.x, _Size.y, "", cb_vs_matrix_2d );
 	return true;
 }
 

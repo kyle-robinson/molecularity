@@ -37,6 +37,8 @@ void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, Constan
 void Pause::Update(float dt)
 {
 	if (_isPaused) {
+		PauseTextTitles.clear();
+		PauseTextPG.clear();
 		if (OnLoad) {
 			_MouseData.LPress = false;
 			OnLoad = false;
@@ -74,12 +76,12 @@ void Pause::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMa
 		{
 			FontsList->GetFont("OpenSans_50")->RenderString(PauseTextTitles[i]._Text, PauseTextTitles[i]._Position, PauseTextTitles[i]._Colour);
 		}
-		PauseTextTitles.clear();
+		
 		for (UINT i = 0; i < PauseTextPG.size(); i++)
 		{
 			FontsList->GetFont("OpenSans_12")->RenderString(PauseTextPG[i]._Text, PauseTextPG[i]._Position, PauseTextPG[i]._Colour);
 		}
-		PauseTextPG.clear();
+		
 	}
 }
 
@@ -103,6 +105,11 @@ void Pause::HandleEvent(Event* event)
 	case EVENTID::GamePauseEvent:
 	{
 		_isPaused = true;
+	}
+	break;
+	case EVENTID::GameUnPauseEvent:
+	{
+		_isPaused = false;
 	}
 	break;
 	case EVENTID::SetCurrentLevelEvent:
@@ -137,6 +144,7 @@ void Pause::AddtoEvent()
 	EventSystem::Instance()->AddClient(EVENTID::UIMouseInput, this);
 	EventSystem::Instance()->AddClient(EVENTID::GamePauseEvent, this);
 	EventSystem::Instance()->AddClient(EVENTID::SetCurrentLevelEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::GameUnPauseEvent, this);
 }
 
 void Pause::RemoveFromEvent()
@@ -146,6 +154,7 @@ void Pause::RemoveFromEvent()
 	EventSystem::Instance()->RemoveClient(EVENTID::UIMouseInput, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::GamePauseEvent, this);
 	EventSystem::Instance()->RemoveClient(EVENTID::SetCurrentLevelEvent, this);
+	EventSystem::Instance()->RemoveClient(EVENTID::GameUnPauseEvent, this);
 }
 
 void Pause::ButtonCreate()
