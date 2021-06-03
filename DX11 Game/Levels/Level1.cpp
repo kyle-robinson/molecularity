@@ -89,19 +89,19 @@ void Level1::Render()
 
 void Level1::RenderFrame()
 {
-	// render ligths/skysphere
+	// Render lights/skysphere
 	LevelContainer::RenderFrameEarly();
 
-	// draw w/ back-face culling
+	// Draw w/ back-face culling
 	graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
 	renderables["Room"].Draw();
 	graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 
-	// draw with back-face culling
+	// Draw with back-face culling
 	renderables["PressurePlate"].Draw();
 	renderables["SecurityCamera"].Draw();
 
-	// render the cubes
+	// Render the cubes
 	LevelContainer::RenderFrame();
 }
 

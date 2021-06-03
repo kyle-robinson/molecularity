@@ -21,7 +21,7 @@ void UI_Manager::Initialize( ID3D11Device* device, ID3D11DeviceContext* context,
 	for ( auto const& UIItem : UiList )
 	{
 		UIItem.second->SetSizeOfScreen( WinSize );
-		UIItem.second->Inizalize( device, context, _cb_vs_matrix_2d, FontsList );
+		UIItem.second->Initialize( device, context, _cb_vs_matrix_2d, FontsList );
 	}
 }
 

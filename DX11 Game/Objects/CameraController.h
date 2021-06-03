@@ -32,7 +32,6 @@ public:
 
 	void AddToEvent();
 	void HandleEvent( Event* event );
-
 private:
 	Camera2D UICamera;
 	bool usingMainCamera = true;

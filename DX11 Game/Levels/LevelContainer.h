@@ -85,7 +85,7 @@ protected:
 	ConstantBuffer<CB_VS_matrix> cb_vs_matrix;
 	ConstantBuffer<CB_VS_matrix_2D> cb_vs_matrix_2d;
 
-	//UI
+	// User Interface
 	UI_Manager* _UiManager;
 
 	// Next level data

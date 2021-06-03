@@ -10,11 +10,11 @@ Credits_UI::~Credits_UI()
 	RemoveFromEvent();
 }
 
-void Credits_UI::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
+void Credits_UI::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
 {
 
 	AddtoEvent();
-	UI::Inizalize(device, contex, cb_vs_matrix_2d, fonts);
+	UI::Initialize(device, contex, cb_vs_matrix_2d, fonts);
 
 	FontsList->AddFont("OpenSans_20", "OpenSans_20.spritefont");
 

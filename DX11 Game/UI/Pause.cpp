@@ -11,11 +11,11 @@ Pause::~Pause()
 	RemoveFromEvent();
 }
 
-void Pause::Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
+void Pause::Initialize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts)
 {
 
 	AddtoEvent();
-	UI::Inizalize(device, contex, cb_vs_matrix_2d,fonts);
+	UI::Initialize(device, contex, cb_vs_matrix_2d,fonts);
 	_isPaused = false;
 
 	//text

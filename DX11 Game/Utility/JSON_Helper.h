@@ -12,14 +12,11 @@
 /// </summary>
 
 #include <variant>
-#include<unordered_map>
 #include <rapidjson/writer.h>
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/ostreamwrapper.h>
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
 #include <directxmath.h>
 using namespace rapidjson;
 
@@ -78,8 +75,8 @@ namespace JSON
 	enum LightType
 	{
 		Point,
-		directional,
-		spotlight
+		Directional,
+		Spotlight
 	};
 
 	struct LightData
@@ -87,21 +84,15 @@ namespace JSON
 		std::string Name;
 	};
 
-	// load GameObjects get all data
+	// Load GameObjects get all data
 	std::vector<ModelData> LoadGameObjects( const std::string& fileName );
 
-	// need to implement light data loading
-	//vector<LightData> LoadGameLights( const std::string& fileName );
-
-	// load text data get all data
+	// Load text data get all data
 	std::vector<TextData> LoadTextDataItems( const std::string& fileName );
 	std::vector<TextData> LoadTextDataItems( const std::string& fileName, const std::string& Node );
+	
 	// Load Setting Files get all data
 	std::vector<JSON::SettingData> LoadSettings();
-
-
-	// Load one Node as string to be reworked
-	// vector<string> LoadJSONNode( const std::string& jsonFile, const std::string& node, const std::string& dataNode = "" );
 
 	// Load all Nodes
 	std::vector<std::string> LoadFileData( const std::string& fileName );
@@ -111,19 +102,12 @@ namespace JSON
 
 	DataFromFile GetDataAny( Value::ConstMemberIterator value );
 
-	// Add new node (WIP)
-	//template<typename DataType>
-	//void AddNode( const std::string& fileName, const std::string& nodeName, DataType data )
-	//{
-	//
-	//}
-
-	//get file
+	// Get file
 	Document ParseFile( const std::string& file );
-	//store file
+	// Store file
 	bool StoreFile( const std::string& fileName, const Document& document );
 
-	//check node is there
+	// Check node is there
 	template <typename DataFormat>
 	bool CheckDataIsThere( const std::string& objectName, const DataFormat& document )
 	{
@@ -164,15 +148,15 @@ namespace JSON
 	template <typename DataTypeToSet>
 	void UpdateJSONItemEX( const std::string& jsonFile, const std::string& node, const std::string& dataNode, DataTypeToSet data, const std::string& dataName )
 	{
-		//load document
+		// Load document
 		auto autoData = data;
 		Document document = ParseFile( jsonFile );
-		//set node
+		// Set node
 		if ( document.HasMember( node.c_str() ) )
 		{
 			if ( document[node.c_str()].IsArray() )
 			{
-				//load from file
+				// Load from file
 				for ( rapidjson::Value& Object : document[node.c_str()].GetArray() )
 				{
 					if ( dataNode != "" )
@@ -183,7 +167,7 @@ namespace JSON
 							{
 								if ( Object["Name"].GetString() == dataName )
 								{
-									//check type
+									// Check type
 									AddObject<rapidjson::Value>( Object, dataNode, autoData );
 								}
 							}

@@ -23,8 +23,10 @@ Texture::Texture( ID3D11Device* device, const std::string& filePath, aiTextureTy
 			StringConverter::StringToWide( filePath ).c_str(),
 			texture.GetAddressOf(),
 			textureView.GetAddressOf() );
+		
 		if ( FAILED( hr ) )
 			Initialize1x1ColourTexture( device, Colours::UnloadedTextureColour, type );
+		
 		return;
 	}
 	else
@@ -33,8 +35,10 @@ Texture::Texture( ID3D11Device* device, const std::string& filePath, aiTextureTy
 			StringConverter::StringToWide( filePath ).c_str(),
 			texture.GetAddressOf(),
 			textureView.GetAddressOf() );
+
 		if ( FAILED( hr ) )
 			Initialize1x1ColourTexture( device, Colours::UnloadedTextureColour, type );
+		
 		return;
 	}
 }
@@ -64,7 +68,8 @@ ID3D11ShaderResourceView** Texture::GetTextureResourceViewAddress()
 
 void Texture::UpdateTexture( ID3D11Device* device, std::string file )
 {
-	if ( file != FileName ) {
+	if ( file != FileName )
+	{
 		FileName = file;
 		if ( texture )texture->Release();
 		if ( textureView )textureView->Release();
@@ -74,8 +79,10 @@ void Texture::UpdateTexture( ID3D11Device* device, std::string file )
 				StringConverter::StringToWide( file ).c_str(),
 				texture.GetAddressOf(),
 				textureView.GetAddressOf() );
+			
 			if ( FAILED( hr ) )
 				Initialize1x1ColourTexture( device, Colours::UnloadedTextureColour, type );
+
 			return;
 		}
 		else
@@ -84,17 +91,17 @@ void Texture::UpdateTexture( ID3D11Device* device, std::string file )
 				StringConverter::StringToWide( file ).c_str(),
 				texture.GetAddressOf(),
 				textureView.GetAddressOf() );
+
 			if ( FAILED( hr ) )
 				Initialize1x1ColourTexture( device, Colours::UnloadedTextureColour, type );
-
 		}
-
 	}
 }
 
 void Texture::UpdateTexture( ID3D11Device* device, Colour& file )
 {
-	if ( ColourRGBA != file ) {
+	if ( ColourRGBA != file )
+	{
 		if ( texture )texture->Release();
 		if ( textureView )textureView->Release();
 

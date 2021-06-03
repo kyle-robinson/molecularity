@@ -16,10 +16,10 @@
 #include <dxtk/WICTextureLoader.h>
 
 // ui
-#include <Graphics/UI_Manager.h>
-#include <UI/HUD_UI.h>
-#include <UI/Pause.h>
-#include <UI/Settings_Menu_UI.h>
+#include "UI_Manager.h"
+#include "HUD_UI.h"
+#include "Pause.h"
+#include "Settings_Menu_UI.h"
 
 // "CCTV Camera" (https://skfb.ly/6SD7C) by Smoggybeard is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
@@ -138,7 +138,7 @@ void LevelContainer::RenderFrame()
 	// Cybergun/spotlight - w/ normals
 	GetStencilOutline()->DrawWithOutline( *graphics, spotLight, pointLight.GetConstantBuffer() );
 
-	// Cubes
+	// Render Cubes
 	for ( uint32_t i = 0; i < numOfCubes; i++ )
 	{
 		// render backfaces
@@ -208,7 +208,7 @@ void LevelContainer::Update( const float dt )
 
 void LevelContainer::LateUpdate( const float dt )
 {
-	// update cubes
+	// Update cubes
 	for ( uint32_t i = 0; i < numOfCubes; i++ )
 	{
 		cubes[i]->SetCamPos( cameras->GetCamera( cameras->GetCurrentCamera() )->GetPositionFloat3() );

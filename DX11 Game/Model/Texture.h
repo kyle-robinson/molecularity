@@ -33,8 +33,8 @@ public:
 	ID3D11ShaderResourceView* GetTextureResourceView();
 	ID3D11ShaderResourceView** GetTextureResourceViewAddress();
 
-	void UpdateTexture(ID3D11Device* device, std::string file);
-	void UpdateTexture(ID3D11Device* device, Colour& file);
+	void UpdateTexture( ID3D11Device* device, std::string file );
+	void UpdateTexture( ID3D11Device* device, Colour& file );
 
 private:
 	void Initialize1x1ColourTexture( ID3D11Device* device, const Colour& colour, aiTextureType type );
@@ -44,7 +44,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView = nullptr;
 	aiTextureType type = aiTextureType_UNKNOWN;
 
-	//for checking so not loaded evey frame :)
+	// For checking so not loaded evey frame :)
 	std::string FileName;
 	Colour ColourRGBA;
 };
