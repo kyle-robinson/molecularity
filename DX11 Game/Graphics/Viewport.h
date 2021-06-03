@@ -20,11 +20,11 @@ namespace Bind
 		};
 		Viewport( Graphics& gfx, Type type ) : type( type )
 		{
-			// Get render target dimensions
+			// get render target dimensions
 			FLOAT width = static_cast< FLOAT >( gfx.GetWidth() );
 			FLOAT height = static_cast< FLOAT >( gfx.GetHeight() );
 
-			// Create viewport
+			// create viewport
 			viewportDesc = CD3D11_VIEWPORT( 0.0f, 0.0f, width, height );
 			if ( type == Type::Sub )
 			{
@@ -36,6 +36,7 @@ namespace Bind
 				viewportDesc.MinDepth = 0.0f;
 			}
 		}
+
 		void Bind( Graphics& gfx ) noexcept override
 		{
 			GetContext( gfx )->RSSetViewports( 1u, &viewportDesc );

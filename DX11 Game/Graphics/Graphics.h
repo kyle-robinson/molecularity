@@ -9,7 +9,8 @@
 #include <wrl/client.h>
 #include <unordered_map>
 
-#include "EventSystem/EventSystem.h"
+#include<EventSystem/EventSystem.h>
+
 #include "Shaders.h"
 #include "Quad.h"
 
@@ -55,7 +56,7 @@ public:
 	void RenderSceneToTexture();
 	void PresentScene();
 
-	// Event System
+	//eventsystem
 	void AddtoEvent();
 	void HandleEvent(Event* event);
 
@@ -92,7 +93,6 @@ private:
 	bool InitializeShaders();
 	bool InitializeRTT();
 
-	int VsynicON;
 	UINT windowWidth;
 	UINT windowHeight;
 
@@ -111,6 +111,10 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Bind::Sampler>> samplers;
 	std::unordered_map<std::string, std::shared_ptr<Bind::Viewport>> viewports;
 	std::unordered_map<std::string, std::shared_ptr<Bind::Rasterizer>> rasterizers;
+
+
+	int VsynicON;
+
 };
 
 #endif

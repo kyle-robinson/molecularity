@@ -2,7 +2,7 @@
   "GameObjects": [
     {
       "Name": "Room",
-      "FileName": "..\\Models\\Levels\\Level1.fbx",
+      "FileName": "..\\Models\\Levels\\Level1-Final-Corners-Fixed.fbx",
       "Scale": [ 0.005, 0.005, 0.005 ],
       "Position": [ 70.5, 0.0, 4.0 ],
       "Rotation": [ 0.0, 3.14159, 0.0 ]

@@ -1,14 +1,14 @@
 #include "WindowContainer.h"
-#include "Resources/Resource.h"
-#include "JSON_Helper.h"
+#include "Resources\\Resource.h"
+#include <JSON_Helper.h>
 
 // Window icon made by https://www.freepik.com Freepik from https://www.flaticon.com/
 
 bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hInstance,
 	const std::string& windowName, const std::string& windowClass, int width, int height )
-{
+{	
 	AddToEvent();
-	// Register window class
+	// register window class
 	this->hInstance = hInstance;
 	this->width = width;
 	this->height = height;
@@ -33,7 +33,7 @@ bool RenderWindow::Initialize( WindowContainer* pWindowContainer, HINSTANCE hIns
 	windowRect.bottom = windowRect.top + height;
 	AdjustWindowRect( &windowRect, WS_OVERLAPPEDWINDOW, FALSE );
 
-	// Create window
+	// create window
 	hWnd = CreateWindow(
 		windowClass_Wide.c_str(),
 		windowTitle_Wide.c_str(),
@@ -70,18 +70,18 @@ LRESULT CALLBACK HandleMsgRedirect( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 		DestroyWindow( hWnd );
 		return 0;
 
-		// Handle all other messages
+	// handle all other messages
 	default:
 	{
-		// Get ptr to window class
+		// get ptr to window class
 		WindowContainer* const pWindow = reinterpret_cast<WindowContainer*>( GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
-		// Forward messages to window class
+		// forward messages to window class
 		return pWindow->WindowProc( hWnd, uMsg, wParam, lParam );
 	}
 	}
 }
 
-LRESULT CALLBACK HandleMsgSetup( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam ) noexcept
+LRESULT CALLBACK HandleMsgSetup( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
 	switch ( uMsg )
 	{
@@ -113,7 +113,7 @@ bool RenderWindow::ProcessMessages() noexcept
 		DispatchMessage( &msg );
 	}
 
-	// Check if the window was closed
+	// check if the window was closed
 	if ( msg.message == WM_NULL )
 	{
 		if ( !IsWindow( hWnd ) )
@@ -127,90 +127,101 @@ bool RenderWindow::ProcessMessages() noexcept
 	return true;
 }
 
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
 void RenderWindow::AddToEvent()
 {
-	EventSystem::Instance()->AddClient( EVENTID::WindowSizeChangeEvent, this );
-	EventSystem::Instance()->AddClient( EVENTID::UpdateSettingsEvent, this );
-	EventSystem::Instance()->AddClient( EVENTID::QuitGameEvent, this );
+	EventSystem::Instance()->AddClient(EVENTID::WindowSizeChangeEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::UpdateSettingsEvent, this);
+	EventSystem::Instance()->AddClient(EVENTID::QuitGameEvent, this);
 }
-
 static int width, hight;
-void RenderWindow::HandleEvent( Event* event )
+void RenderWindow::HandleEvent(Event* event)
 {
-	switch ( event->GetEventID() )
+	switch (event->GetEventID())
 	{
 	case EVENTID::QuitGameEvent:
 	{
-		DestroyWindow( hWnd );
-		PostQuitMessage( 0 );
+		DestroyWindow(hWnd);
+		PostQuitMessage(0);
+		
 	}
 	break;
 	case EVENTID::UpdateSettingsEvent:
 	{
-		// Change in window size
-		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>( event->GetData() );
-		for ( auto& setting : a )
+		//full screen
+		//change in window size
+		
+		std::vector<JSON::SettingData> a = *static_cast<std::vector<JSON::SettingData>*>(event->GetData());
+		for (auto& setting : a)
 		{
-			SetIsStopNextFrame( true );
-			if ( setting.Name == "FullScreen" )
-			{
-				// Set Fullscreen
-				WINDOWPLACEMENT g_wpPrev = { sizeof( g_wpPrev ) };
-				DWORD dwStyle = GetWindowLong( hWnd, GWL_STYLE );
-				MONITORINFO mi = { sizeof( mi ) };
-				if ( bool* input = std::get_if<bool>( &setting.Setting ) )
-				{
-					if ( *input )
-					{
-						if ( dwStyle & WS_OVERLAPPEDWINDOW )
-						{
-							if ( GetWindowPlacement( hWnd, &g_wpPrev ) &&
-								GetMonitorInfo( MonitorFromWindow( hWnd,
-									MONITOR_DEFAULTTOPRIMARY ), &mi ) )
-							{
-								SetWindowLong( hWnd, GWL_STYLE,
-									dwStyle & ~WS_OVERLAPPEDWINDOW );
-								SetWindowPos( hWnd, HWND_TOP,
+			SetIsStopNextFrame(true);
+			if (setting.Name == "FullScreen") {
+				//setfullscreen
+				WINDOWPLACEMENT g_wpPrev = { sizeof(g_wpPrev) };
+				DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+					MONITORINFO mi = { sizeof(mi) };
+				if (bool* input = std::get_if<bool>(&setting.Setting)) {
+					if (*input) {
+					
+						if (dwStyle & WS_OVERLAPPEDWINDOW) {
+							
+							if (GetWindowPlacement(hWnd, &g_wpPrev) &&
+								GetMonitorInfo(MonitorFromWindow(hWnd,
+									MONITOR_DEFAULTTOPRIMARY), &mi)) {
+								SetWindowLong(hWnd, GWL_STYLE,
+									dwStyle & ~WS_OVERLAPPEDWINDOW);
+								SetWindowPos(hWnd, HWND_TOP,
 									mi.rcMonitor.left, mi.rcMonitor.top,
 									mi.rcMonitor.right - mi.rcMonitor.left,
 									mi.rcMonitor.bottom - mi.rcMonitor.top,
-									SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
+									SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+								
 							}
 						}
 					}
 					else
 					{
-						GetMonitorInfo( MonitorFromWindow( hWnd,
-							MONITOR_DEFAULTTOPRIMARY ), &mi );
+						GetMonitorInfo(MonitorFromWindow(hWnd,
+							MONITOR_DEFAULTTOPRIMARY), &mi);
 
-						SetWindowLong( hWnd, GWL_STYLE,
-							dwStyle | WS_OVERLAPPEDWINDOW );
-
-						SetWindowPlacement( hWnd, &g_wpPrev );
-						SetWindowPos( hWnd, NULL, ( ( mi.rcMonitor.right - mi.rcMonitor.left ) / 2 ) - width / 2,
-							( ( mi.rcMonitor.bottom - mi.rcMonitor.top ) / 2 ) - hight / 2, width, hight, SWP_SHOWWINDOW | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED );
+						SetWindowLong(hWnd, GWL_STYLE,
+							dwStyle | WS_OVERLAPPEDWINDOW);
+						SetWindowPlacement(hWnd, &g_wpPrev);
+						SetWindowPos(hWnd, NULL, ((mi.rcMonitor.right - mi.rcMonitor.left) / 2) - width / 2,
+							((mi.rcMonitor.bottom - mi.rcMonitor.top) / 2) - hight / 2, width, hight, SWP_SHOWWINDOW |  SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 					}
-
+					
+				
 					POINT pt;
-					pt.x = width / 2;
+					pt.x = width/2;
 					pt.y = 0;
-					ClientToScreen( hWnd, &pt );
-					SetCursorPos( pt.x, pt.y );
-					SetWidthHight( width, hight );
+					ClientToScreen(hWnd, &pt);
+					SetCursorPos(pt.x, pt.y);
+				
+					SetWidthHight(width, hight);
 				}
+				
 			}
-			else if ( setting.Name == "WindowWidth" )
-				width = std::get<int>( setting.Setting );
-			else if ( setting.Name == "WindowHeight" )
-				hight = std::get<int>( setting.Setting );
+			else if (setting.Name == "WindowWidth") {
+				width = std::get<int>(setting.Setting);
+			}
+			else if (setting.Name == "WindowHight") {
+				hight = std::get<int>(setting.Setting);
+			}
 		}
+
 	}
-	break;
-	case EVENTID::WindowSizeChangeEvent:
-		SetIsStopNextFrame( true );
-		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>( event->GetData() );
-		SetWidthHight( _SizeOfScreen.x, _SizeOfScreen.y );
 		break;
+	case EVENTID::WindowSizeChangeEvent:
+		SetIsStopNextFrame(true);
+		DirectX::XMFLOAT2 _SizeOfScreen = *static_cast<DirectX::XMFLOAT2*>(event->GetData());
+	
+		SetWidthHight(_SizeOfScreen.x, _SizeOfScreen.y);
+		
+		break;
+	
 	}
 }
 
@@ -224,8 +235,8 @@ void RenderWindow::RegisterWindowClass() noexcept
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
 	wc.hIcon = LoadIcon( hInstance, (LPCTSTR)IDR_ICON1 );
-	wc.hCursor = hCursorNightNormal;
-	wc.hbrBackground = (HBRUSH)( COLOR_WINDOW + 1 );
+    wc.hCursor = hCursorNightNormal;
+    wc.hbrBackground = (HBRUSH)( COLOR_WINDOW + 1 );
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = windowClass_Wide.c_str();
 	wc.hIconSm = LoadIcon( wc.hInstance, (LPCTSTR)IDR_ICON1 );

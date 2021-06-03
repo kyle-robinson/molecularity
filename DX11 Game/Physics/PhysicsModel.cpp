@@ -10,7 +10,7 @@ PhysicsModel::PhysicsModel( GameObject* transform ) : mTransform( transform )
 	mInvVelocity = false;
 	mCheckGroundCollisions = true;
 	mPosition = mTransform->GetPositionFloat3();
-
+  
 	mMass = 25.0f;
 	mFriction = { 0.0f, 0.0f, 0.0f };
 	mNetForce = { 0.0f, 0.0f, 0.0f };
@@ -33,7 +33,7 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 
 	deltaTime += ( dTimeCur - dTimeStart ) / 1000.0f;
 
-	if ( deltaTime < ( 1.0f / 60.0f ) )
+	if (deltaTime < ( 1.0f / 60.0f ))
 		return;
 
 	mIsHeld = isHeld;
@@ -42,8 +42,9 @@ void PhysicsModel::Update( const float dt, std::shared_ptr<CubeProperties>& prop
 	{
 		if ( !mIsHeld )
 		{
-			if ( useWeight )
+			if (useWeight) {
 				Weight();
+			}
 			Friction( dt );
 			Velocity( dt );
 		}
@@ -84,7 +85,19 @@ void PhysicsModel::Velocity( const float dt )
 	mVelocity.y += mAcceleration.y;
 	mVelocity.z += mAcceleration.z;
 
-	if ( mCheckGroundCollisions && mDoFriction )
+	//// x-axis friction
+	//if ( mVelocity.x > 0.0f ) mVelocity.x -= mFrictionFactor;
+	//else if ( mVelocity.x < 0.0f ) mVelocity.x += mFrictionFactor;
+
+	//// y-axis friction
+	//if ( mVelocity.y > 0.0f ) mVelocity.y -= mFrictionFactor;
+	//else if ( mVelocity.y < 0.0f ) mVelocity.y += mFrictionFactor;
+
+	//// z-axis friction
+	//if ( mVelocity.z > 0.0f ) mVelocity.z -= mFrictionFactor;
+	//else if ( mVelocity.z < 0.0f ) mVelocity.z += mFrictionFactor;
+
+	if ( mCheckGroundCollisions && mDoFriction)
 	{
 		mVelocity.x += mFrictionFactor * -( mVelocity.x );
 		mVelocity.z += mFrictionFactor * -( mVelocity.z );
@@ -112,6 +125,15 @@ void PhysicsModel::Friction( const float dt )
 void PhysicsModel::Drag()
 {
 	mUseLaminar ? LaminarDrag() : TurbulentDrag();
+
+	// This bit is breaking drag so I've temporarily commented it out
+
+	// add to velocity and adjust for negative values
+	//if ( mNetForce.x < 0.0f ) mVelocity.x *= 1.0f + mNetForce.x;
+	//else mVelocity.x *= 1.0f - mNetForce.x;
+
+	//if ( mNetForce.z < 0.0f ) mVelocity.z *= 1.0f + mNetForce.z;
+	//else mVelocity.z *= 1.0f - mNetForce.z;
 }
 
 void PhysicsModel::LaminarDrag()
@@ -176,6 +198,14 @@ void PhysicsModel::AddForce( XMFLOAT3 force ) noexcept
 	mNetForce.x += force.x;
 	mNetForce.y += force.y;
 	mNetForce.z += force.z;
+
+	//std::string dMessage = std::to_string(mNetForce.x);
+	//std::string dMessage2 = std::to_string(mNetForce.z);
+	//char sz[1024] = { 0 };
+	//dMessage = "x: " + dMessage + " z: " + dMessage2 + "\n";
+	//const char* c = dMessage.c_str();
+	//sprintf_s(sz, c);
+	//OutputDebugStringA(sz);
 }
 
 void PhysicsModel::AddForce( XMVECTOR force ) noexcept
@@ -205,7 +235,7 @@ float PhysicsModel::Magnitude( XMFLOAT3 vec ) const noexcept
 		powf( vec.x, 2 ) +
 		powf( vec.y, 2 ) +
 		powf( vec.z, 2 ) )
-		);
+	);
 }
 
 XMFLOAT3 PhysicsModel::Normalization( XMFLOAT3 vec ) const noexcept

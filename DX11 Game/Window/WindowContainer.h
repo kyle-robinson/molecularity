@@ -6,10 +6,10 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
+
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
-
 /// <summary>
 /// Contains a WindowProc which is used to defer window messages to Keyboard.h/Mouse.h for handling.
 /// Initialzes and defers raw mouse input to Mouse.h
@@ -21,6 +21,9 @@ public:
 	LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 	void EnableCursor()noexcept;
 	void DisableCursor()noexcept;
+
+
+
 protected:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;

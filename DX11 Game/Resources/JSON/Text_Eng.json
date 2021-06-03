@@ -25,7 +25,7 @@
     },
     {
       "Name": "Action_Text2",
-      "Text": "This cube does not want anything to do with you..."
+      "Text": "This cube does not want anything to do with you"
     }
   ],
   "EndLevel_Text": [
@@ -52,7 +52,7 @@
     },
     {
       "Name": "Move_Next_Text",
-      "Text": "\nPress ENTER to continue"
+      "Text": "press ENTER to continue"
     }
   ],
   "Movement_Controls": [
@@ -104,7 +104,7 @@
     },
     {
       "Name": "Convert_Tool",
-      "Text": "Convert:\nThis changes the material of the cube.\nThis turns the object into "
+      "Text": "Convert:\nThis Changes the material of the cube.\nThis turns the object into "
     },
     {
       "Name": "Size_Tool",
@@ -112,15 +112,15 @@
     },
     {
       "Name": "Bounce_Tool",
-      "Text": "Bounce:\nThis allows for the cube to bounce."
+      "Text": "Bounce:\nThis allows for the cube to bounce or not."
     },
     {
-      "Name": "Magnetism_Tool",
+      "Name": "Magnatism_Tool",
       "Text": "Magnetism:\nThis pulls the cube to you."
     },
     {
       "Name": "Conductivity_Tool",
-      "Text": "Conductivity:\nThis makes the cube conductive."
+      "Text": "Conductivity:\nThis makes the cube conductive or not."
     }
   ],
   "TOOL_TIPS_Options": [
@@ -146,15 +146,15 @@
     },
     {
       "Name": "Size_3",
-      "Text": "This enlarges the cube."
+      "Text": "This largens the cube."
     },
     {
-      "Name": "Magnetism_1",
+      "Name": "Magnatism_1",
       "Text": "This pulls all the cubes to you."
     },
     {
-      "Name": "Magnetism_2",
-      "Text": "This pulls the cube the tool is aimed at to you."
+      "Name": "Magnatism_2",
+      "Text": "This pulls the cube the tool is aimed at."
     },
     {
       "Name": "Bounce_1",
@@ -290,7 +290,7 @@
       "Text": "Window Size"
     },
     {
-      "Name": "WindowHeight",
+      "Name": "WindowHight",
       "Text": "Window Size"
     },
     {
@@ -383,11 +383,11 @@
     },
     {
       "Name": "SoundEffectsEfOn",
-      "Text": "Sound Effects"
+      "Text": "SoundEffects"
     },
     {
       "Name": "SoundEffectVolume",
-      "Text": "Sound Effect Volume"
+      "Text": "SoundEffect Volume"
     },
     {
       "Name": "HUD_ON",
@@ -395,7 +395,7 @@
     },
     {
       "Name": "Hud_Scale",
-      "Text": "Hud Size"
+      "Text": "Hud size"
     }
 
 
@@ -430,27 +430,27 @@
 
     },
     {
-      "Name": "Lead Programmer",
+      "Name": "Lead programmer",
       "Text": "Kyle ROBINSON"
 
     },
     {
-      "Name": "Engine Programmer",
+      "Name": "Engine programmer",
       "Text": "Daniel WILSON"
 
     },
     {
-      "Name": "Engine Programmer",
+      "Name": "Engine programmer",
       "Text": "Ben SHAW"
 
     },
     {
-      "Name": "Engine Programmer",
+      "Name": "Engine programmer",
       "Text": "Jacob J DEXTER"
 
     },
     {
-      "Name": "Engine Programmer",
+      "Name": "Engine programmer",
       "Text": "Thomas MILLARD"
 
     },
@@ -460,38 +460,38 @@
 
     },
     {
-      "Name": "Sound Programmer",
+      "Name": "Sound",
       "Text": "Ben SHAW"
 
     },
     {
       "Name": "",
-      "Text": "GAME DESIGN"
+      "Text": "Game design"
 
     },
     {
-      "Name": "Game Design",
+      "Name": "Game design",
       "Text": "Jacob J DEXTER"
 
     },
     {
-      "Name": "Game Design",
+      "Name": "Game design",
       "Text": "Kyle ROBINSON"
 
     },
     {
-      "Name": "Game Design",
+      "Name": "Game design",
       "Text": "Daniel WILSON"
 
     },
     {
-      "Name": "Game Design",
+      "Name": "Game design",
       "Text": "Ben SHAW"
 
     },
     {
       "Name": "",
-      "Text": "GRAPHICS"
+      "Text": "Graphics"
 
     },
     {
@@ -501,47 +501,42 @@
     },
     {
       "Name": "",
-      "Text": "USER INTERFACE"
+      "Text": "UI"
 
     },
     {
-      "Name": "UI Programmer",
+      "Name": "UI programmer",
       "Text": "Thomas MILLARD"
 
     },
     {
-      "Name": "UI Art",
+      "Name": "UI art",
       "Text": "Thomas MILLARD"
 
     },
     {
-      "Name": "UI Design",
+      "Name": "UI design",
       "Text": "Thomas MILLARD"
 
     },
     {
       "Name": "",
-      "Text": "PHYSICS"
+      "Text": "Physics"
 
     },
     {
-      "Name": "Physics Programmer",
+      "Name": "Physics",
       "Text": "Jacob J DEXTER"
 
     },
     {
-      "Name": "Physics Programmer",
+      "Name": "Physics",
       "Text": "Ben SHAW"
 
     },
     {
-      "Name": "Physics Programmer",
-      "Text": "Kyle ROBINSON"
-
-    },
-    {
       "Name": "",
-      "Text": "GAME ART"
+      "Text": "Art"
 
     },
     {
@@ -561,25 +556,20 @@
 
     },
     {
-      "Name": "JSON Programming",
+      "Name": "JSON programming",
       "Text": "Thomas MILLARD"
 
     },
     {
       "Name": "",
-      "Text": "HONORABLE MENTIONS"
+      "Text": "Other"
 
     },
 
-
+   
     {
       "Name": "???",
       "Text": "Lorcan B ENGLEDOW"
-
-    },
-    {
-      "Name": "\n\n\n",
-      "Text": "\n\n\n"
 
     },
     {

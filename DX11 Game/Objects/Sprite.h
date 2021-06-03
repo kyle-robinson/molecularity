@@ -19,16 +19,26 @@ public:
 	bool Initialize( ID3D11Device* device, ID3D11DeviceContext* context,
 		float width, float height, std::string spritePath,
 		ConstantBuffer<CB_VS_matrix_2D>& cb_vs_vertexshader_2d );
-	bool Initialize( ID3D11Device* device, ID3D11DeviceContext* context,
+
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* context,
 		float width, float height, Colour spriteColour,
-		ConstantBuffer<CB_VS_matrix_2D>& cb_vs_vertexshader_2d );
+		ConstantBuffer<CB_VS_matrix_2D>& cb_vs_vertexshader_2d);
 
 	void Draw( XMMATRIX orthoMatrix );
 	float GetWidth() const noexcept { return scale.x; }
 	float GetHeight() const noexcept { return scale.y; }
 
-	void UpdateTex( ID3D11Device* device, std::string tex ) { texture->UpdateTexture( device, tex ); }
-	void UpdateTex( ID3D11Device* device, Colour tex ) { texture->UpdateTexture( device, tex ); }
+	void UpdateTex(ID3D11Device* device,std::string tex) {
+		
+		texture->UpdateTexture(device, tex);
+
+	}
+	
+	void UpdateTex(ID3D11Device* device, Colour tex) {
+		
+		texture->UpdateTexture(device, tex);
+	}
+
 private:
 	void UpdateMatrix() override;
 	std::unique_ptr<Texture> texture;
@@ -38,6 +48,7 @@ private:
 	ID3D11DeviceContext* context = nullptr;
 	VertexBuffer<Vertex2D> vertices;
 	IndexBuffer indices;
+
 	Colour colour;
 };
 

@@ -46,7 +46,7 @@ void Cube::Draw( ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, ID3D11ShaderResourc
 
 void Cube::Update( const float deltaTime ) noexcept
 {
-    // Update properties
+    // update properties
     switch ( editableProperties->GetBoxType() )
     {
     case BoxType::Mesh:
@@ -65,13 +65,13 @@ void Cube::Update( const float deltaTime ) noexcept
         editableProperties->SetOutlineColor( { 0.6f, 0.34f, 0.71f } );
         break;
     case BoxType::DissCube:
-        physicsModel->SetMass( 50.0f );
+        physicsModel->SetMass(50.0f);
         SetIsDissCube( true );
-        editableProperties->SetOutlineColor( { 0.2f, 0.59f, 0.85f } );
+        editableProperties->SetOutlineColor({ 0.2f, 0.59f, 0.85f });
         break;
     }
 
-    // Update sizing
+    // update sizing
     switch ( editableProperties->GetBoxSize() )
     {
     case BoxSize::Small:  physicsModel->SetMass( physicsModel->GetMass() + 10.0f ); physicsModel->SetBounciness( 1.1f ); break;
@@ -79,23 +79,25 @@ void Cube::Update( const float deltaTime ) noexcept
     case BoxSize::Large:  physicsModel->SetMass( physicsModel->GetMass() + 50.0f ); physicsModel->SetBounciness( 0.7f ); break;
     }
 
-    // Update bounciness
+    // update bounciness
     switch ( editableProperties->GetBoxBounce() )
     {
     case BoxBounce::Solid: physicsModel->InvVelocity( false ); break;
     case BoxBounce::Bouncy: physicsModel->InvVelocity( true ); break;
     }
 
-    // Magnetic pull
+    //Magnetic pull
     MagneticForce();
 
-    // Update physics
+    // update physics
     physicsModel->Update( deltaTime / 20.0f, editableProperties, isHeld );
 
-    // Update positioning
+    // update positioning
     pos = GetPositionFloat3();
-    if ( heldLastFrame && !isHeld && ( pos.x != prevPos.x || pos.z != prevPos.z ) )
-        physicsModel->AddForce( XMFLOAT3( ( pos.x - prevPos.x ) * 5.0f, 0.0f, ( pos.z - prevPos.z ) * 5.0f ) );
+
+    if (heldLastFrame && !isHeld && (pos.x != prevPos.x || pos.z != prevPos.z)) {
+        physicsModel->AddForce(XMFLOAT3((pos.x - prevPos.x) * 5.0f, 0.0f, (pos.z - prevPos.z) * 5.0f));
+    }
 
     if ( delay == 5 )
         prevPos = pos;
@@ -103,6 +105,7 @@ void Cube::Update( const float deltaTime ) noexcept
         delay = 0;
 
     delay++;
+
     heldLastFrame = isHeld;
 }
 
@@ -121,11 +124,11 @@ bool Cube::CheckCollisionAABB( RenderableGameObject& object, const float dt ) no
 
     // test collision between cube and given object
     if ( ( position.x - GetScaleFloat3().x <= object.GetPositionFloat3().x + object.GetScaleFloat3().x + offset &&  // x collision
-        position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - offset ) &&
-        ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y + offset &&  // y collision
-            position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y - offset ) &&
-        ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + offset &&  // z collision
-            position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - offset )
+           position.x + GetScaleFloat3().x >= object.GetPositionFloat3().x - object.GetScaleFloat3().x - offset ) &&
+         ( position.y - GetScaleFloat3().y <= object.GetPositionFloat3().y + object.GetScaleFloat3().y + offset &&  // y collision
+           position.y + GetScaleFloat3().y >= object.GetPositionFloat3().y - object.GetScaleFloat3().y - offset ) &&
+         ( position.z - GetScaleFloat3().z <= object.GetPositionFloat3().z + object.GetScaleFloat3().z + offset &&  // z collision
+           position.z + GetScaleFloat3().z >= object.GetPositionFloat3().z - object.GetScaleFloat3().z - offset )
         )
     {
         // collision with pressure plate
@@ -154,11 +157,11 @@ void Cube::CheckCollisionAABB( std::shared_ptr<Cube>& object, const float dt ) n
 
     // test collision between cube and given object
     if ( ( position.x - offset <= object->GetPositionFloat3().x + offset && // x collision
-        position.x + offset >= object->GetPositionFloat3().x - offset ) &&
-        ( position.y - offset <= object->GetPositionFloat3().y + offset && // y collision
-            position.y + offset >= object->GetPositionFloat3().y - offset ) &&
-        ( position.z - offset <= object->GetPositionFloat3().z + offset && // z collision
-            position.z + offset >= object->GetPositionFloat3().z - offset )
+           position.x + offset >= object->GetPositionFloat3().x - offset ) &&
+         ( position.y - offset <= object->GetPositionFloat3().y + offset && // y collision
+           position.y + offset >= object->GetPositionFloat3().y - offset ) &&
+         ( position.z - offset <= object->GetPositionFloat3().z + offset && // z collision
+           position.z + offset >= object->GetPositionFloat3().z - offset )
         )
     {
         CollisionResolution( object, dt );
@@ -188,25 +191,22 @@ void Cube::CollisionResolution( std::shared_ptr<Cube>& object, const float dt ) 
 
     physicsModel->AddForce( force2 );
     object->GetPhysicsModel()->AddForce( force );
-
+    
     Sound::Instance()->PlaySoundEffect( "CubeCollision", false, GetPositionFloat3(), 10.0f );
 }
 void Cube::MagneticForce()
 {
-    if ( editableProperties->GetBoxMagneticMove() )
-    {
-        if ( !cubeInRange )
-        {
-            XMFLOAT3 force = physicsModel->Normalization( XMFLOAT3( ( CamPos.x - pos.x ), ( CamPos.y - pos.y ), ( CamPos.z - pos.z ) ) );
-
-            physicsModel->AddForce( XMFLOAT3{ force.x * MagPower,force.y * MagPower,force.z * MagPower } );
-            physicsModel->UseWeight( false );
+    if (editableProperties->GetBoxMagneticMove()) {
+        if (!cubeInRange) {
+            XMFLOAT3 force = physicsModel->Normalization(XMFLOAT3((CamPos.x - pos.x), (CamPos.y - pos.y), (CamPos.z - pos.z)));
+            
+            physicsModel->AddForce(XMFLOAT3{ force.x * MagPower,force.y * MagPower,force.z * MagPower });
+            physicsModel->UseWeight(false);
         }
-        else
-        {
+        else {
             physicsModel->ResetForces();
-            physicsModel->UseWeight( true );
-            editableProperties->SetBoxMagneticMove( false );
+            editableProperties->SetBoxMagneticMove(false);
+            physicsModel->UseWeight(true);
         }
     }
 }

@@ -16,20 +16,20 @@ public:
 	void BindSepia() noexcept { basicEffect = BasicPostProcess::Effect::Sepia; }
 	void UnbindEffect() noexcept { basicEffect = BasicPostProcess::Effect::Copy; }
 private:
-	// Post-processing parameters
+	// post-processing parameters
 	float bloomThreshold;
 	bool bloomBlurHorizontal;
 	float bloomBlurSize;
 	float bloomBlurBrightness;
 	float gaussianMultiplier;
 
-	// Post-processing options
+	// post-processing options
 	bool useBasicPostProcess;
 	BasicPostProcess::Effect basicEffect;
 	ToneMapPostProcess::Operator toneMapOperator;
 	ToneMapPostProcess::TransferFunction toneMapTransferFunction;
 
-	// Post-processing components
+	// post-processing components
 	std::shared_ptr<BasicPostProcess> postProcessBasic;
 	std::shared_ptr<ToneMapPostProcess> postProcessToneMap;
 };

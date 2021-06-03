@@ -3,14 +3,14 @@
 #define RENDERWINDOW_H
 
 #include "ErrorLogger.h"
-#include "EventSystem/EventSystem.h"
+#include "EventSystem\\EventSystem.h"
 class WindowContainer;
 ;
 /// <summary>
 /// Create/intialize the main application window.
 /// Handle the processing of messages.
 /// </summary>
-class RenderWindow :public Listener
+class RenderWindow:public Listener
 {
 public:
 	~RenderWindow() noexcept;
@@ -28,14 +28,13 @@ public:
 	UINT GetWidth() const noexcept { return static_cast<UINT>( width ); };
 	UINT GetHeight() const noexcept { return static_cast<UINT>( height ); };
 
-	void SetWidthHight( UINT Width, UINT Hight ) { width = Width; height = Hight; }
+	void SetWidthHight(UINT Width, UINT Hight) { width = Width; height = Hight; }
 
 	void AddToEvent();
-	void HandleEvent( Event* event );
-
-	// Protecton from reloading errors
+	void HandleEvent(Event* event);
+	//protecton from reloading errors 
 	bool GetIsStopNextFrame() { return IsStopNextFrame; }
-	void SetIsStopNextFrame( bool set ) { IsStopNextFrame = set; }
+	void SetIsStopNextFrame(bool set) { IsStopNextFrame =set; }
 	HCURSOR hCursorNormal = NULL;
 	HCURSOR hCursorNightNormal = NULL;
 	HCURSOR hCursorNightSelect = NULL;

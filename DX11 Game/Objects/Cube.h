@@ -50,10 +50,11 @@ private:
 	bool isDissCube = true;
 
 	int delay;
-	XMFLOAT3 pos;
-	XMFLOAT3 prevPos;
 
-	// Magnetic Data
+	XMFLOAT3 prevPos;
+	XMFLOAT3 pos;
+
+	//for magnetic data
 	XMFLOAT3 CamPos;
 	float MagPower = 5;
 };

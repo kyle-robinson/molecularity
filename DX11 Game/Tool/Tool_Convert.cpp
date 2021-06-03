@@ -7,47 +7,58 @@ Tool_Convert::Tool_Convert()
 	CurrentType = BoxType::Mesh;
 	MaxNumber = 2;
 	MinNumber = 0;
-	ChangeCurrent( 0 );
+	ChangeCurrent(0);
 }
 
 Tool_Convert::~Tool_Convert()
-{ }
-
-void Tool_Convert::ChangeCurrent( int number )
 {
-	if ( number > MaxNumber )
-		number = MinNumber;
-	else if ( number < MinNumber )
-		number = MaxNumber;
-
-	CurrentType = static_cast<BoxType>( number );
 }
 
-void Tool_Convert::ChangeCurrent( std::string name )
-{ }
+void Tool_Convert::ChangeCurrent(int number)
+{
+	
+	if (number > MaxNumber) {
+		number = MinNumber;
+	}
+	else if(number < MinNumber)
+	{
+		number = MaxNumber;
+	}
+	CurrentType = static_cast<BoxType>(number);
+}
+
+void Tool_Convert::ChangeCurrent(std::string name)
+{
+}
+
 
 void Tool_Convert::AddOneToCurrent()
 {
 	Current++;
-
-	if ( Current > MaxNumber )
+	if (Current > MaxNumber) {
 		Current = MinNumber;
-	else if ( Current < 0 )
+	}
+	else if (Current < 0)
+	{
 		Current = MaxNumber;
-
-	CurrentType = static_cast<BoxType>( Current );
+	}
+	CurrentType = static_cast<BoxType>(Current);
 }
 
 void Tool_Convert::MinusOneTOCurrent()
 {
 	Current--;
 
-	if ( Current > MaxNumber )
+	if (Current > MaxNumber) {
 		Current = MinNumber;
-	else if ( Current < MinNumber )
+	}
+	else if (Current < MinNumber)
+	{
 		Current = MaxNumber;
+	}
 
-	CurrentType = static_cast<BoxType>( Current );
+
+	CurrentType = static_cast<BoxType>(Current);
 }
 
 ToolData Tool_Convert::GetToolData()

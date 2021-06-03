@@ -27,15 +27,15 @@ void Camera::SetProjectionValues( float fovDegrees, float aspectRatio, float nea
 
 void Camera::UpdateMatrix()
 {
-	// Update camera target
+	// update camera target
 	XMMATRIX cameraRotation = XMMatrixRotationRollPitchYaw( rotation.x, rotation.y, rotation.z );
 	XMVECTOR camTarget = XMVector3TransformCoord( DEFAULT_FORWARD_VECTOR, cameraRotation );
 	camTarget += posVector;
 
-	// Store camera target
+	// store camera target
 	cameraTarget = { XMVectorGetX( camTarget ), XMVectorGetY( camTarget ), XMVectorGetZ( camTarget ) };
 
-	// Calculate up direction vector based on current rotation
+	// calculate up direction vector based on current rotation
 	XMVECTOR upDir = XMVector3TransformCoord( DEFAULT_UP_VECTOR, cameraRotation );
 	view = XMMatrixLookAtLH( posVector, camTarget, upDir );
 

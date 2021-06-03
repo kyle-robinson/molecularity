@@ -3,10 +3,12 @@
 #define LEVEL2_H
 
 #include "LevelStateMachine.h"
-#include "UI_Manager.h"
-#include "HUD_UI.h"
-#include "Pause.h"
-#include "EndLevelScreen_UI.h"
+
+//ui
+#include<Graphics/UI_Manager.h>
+#include<UI/HUD_UI.h>
+#include<UI/Pause.h>
+#include<UI/EndLevelScreen_UI.h>
 
 /// <summary>
 /// The second level of the game.
@@ -27,10 +29,10 @@ private:
 	// Scene Objects
 	std::unordered_map<std::string, RenderableGameObject> renderables;
 
-	// User Interface
-	std::shared_ptr<HUD_UI> HUD;
-	std::shared_ptr<Pause> PauseUI;
-	std::shared_ptr<EndLevelScreen_UI> EndLevelUI;
+	// UI
+	shared_ptr<HUD_UI> HUD;
+	shared_ptr<Pause> PauseUI;
+	shared_ptr<EndLevelScreen_UI> EndLevelUI;
 };
 
 #endif

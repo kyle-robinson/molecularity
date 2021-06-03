@@ -323,7 +323,7 @@
     <ClCompile Include="UI\Wigets\Image_Widget.cpp" />
     <ClCompile Include="UI\Wigets\Input_Widget.cpp" />
     <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp" />
-    <ClCompile Include="UI\Wigets\Widget.cpp" />
+    <ClCompile Include="UI\Wigets\widget.cpp" />
     <ClCompile Include="Utility\EventSystem\EventSystem.cpp" />
     <ClCompile Include="Utility\JSON_Helper.cpp" />
     <ClCompile Include="Utility\Logging\ErrorLogger.cpp" />
@@ -451,7 +451,7 @@
     <ClInclude Include="UI\Wigets\Image_Widget.h" />
     <ClInclude Include="UI\Wigets\Input_Widget.h" />
     <ClInclude Include="UI\Wigets\PageSlider_Widget.h" />
-    <ClInclude Include="UI\Wigets\Widget.h" />
+    <ClInclude Include="UI\Wigets\widget.h" />
     <ClInclude Include="Utility\EventSystem\Event.h" />
     <ClInclude Include="Utility\EventSystem\EventSystem.h" />
     <ClInclude Include="Utility\EventSystem\Listener.h" />
@@ -555,11 +555,6 @@
     <None Include="Resources\Cursors\NightDiamond\Unavailable.ani" />
     <None Include="Resources\Cursors\NightDiamond\Vertical Resize.ani" />
     <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
-    <None Include="Resources\Fonts\Arial_ms_14.spritefont" />
-    <None Include="Resources\Fonts\OpenSans_12.spritefont" />
-    <None Include="Resources\Fonts\OpenSans_20.spritefont" />
-    <None Include="Resources\Fonts\OpenSans_50.spritefont" />
-    <None Include="Resources\Fonts\OpenSans_Bold_14.spritefont" />
     <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
     <None Include="Resources\JSON\Level1_Objects.json" />
     <None Include="Resources\JSON\Level2_Objects.json" />

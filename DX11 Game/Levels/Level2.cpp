@@ -15,9 +15,9 @@ bool Level2::OnCreate()
 		if ( !ModelData::InitializeModelData( *&graphics->context, *&graphics->device, cb_vs_matrix, renderables ) ) return false;
 
 		// UI
-		HUD = std::make_shared<HUD_UI>();
-		PauseUI = std::make_shared<Pause>();
-		EndLevelUI = std::make_shared<EndLevelScreen_UI>();
+		HUD = make_shared<HUD_UI>();
+		PauseUI = make_shared<Pause>();
+		EndLevelUI = make_shared<EndLevelScreen_UI>();
 	}
 	catch ( COMException& exception )
 	{

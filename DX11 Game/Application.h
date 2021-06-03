@@ -9,11 +9,11 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
-#include "Credits_Level.h"
-#include "MainMenu_Level.h"
+#include"MainMenu_Level.h"
+#include"Credits_Level.h"
 
-#include "UI_Manager.h"
-#include "Tool_Class.h"
+#include"Graphics\\UI_Manager.h"
+#include<Tool_Class.h>
 
 /// <summary>
 /// Calls functions which initialize the window and main graphics components.

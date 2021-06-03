@@ -11,7 +11,7 @@ bool DirectionalLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& 
 		HRESULT hr = cb_ps_directional.Initialize( GetDevice( gfx ), GetContext( gfx ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'DirectionalLight' constant buffer!" );
 
-		if ( !Light::Initialize( "Resources\\Models\\Ball\\scene.gltf", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
+		if ( !Light::Initialize( "Resources\\Models\\Disco\\scene.gltf", GetDevice( gfx ), GetContext( gfx ), cb_vs_matrix ) )
 			return false;
 	}
 	catch ( COMException& exception )

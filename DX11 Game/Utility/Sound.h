@@ -4,9 +4,15 @@
 
 #pragma comment(lib, "irrKlang.lib")
 #include <irrklang/irrKlang.h>
-#include "EventSystem/EventSystem.h"
 
-class Sound : public Listener
+#include <DirectXMath.h>
+#include <d3d11.h>
+#include <vector>
+#include <string>
+#include<EventSystem/EventSystem.h>
+using namespace DirectX;
+
+class Sound: public Listener
 {
 public:
 	void InitialiseMusicTrack( std::string fileName, std::string fileType = ".mp3" );
@@ -24,21 +30,23 @@ public:
 	std::map<std::string, irrklang::ISound*>& GetMusicTracks() { return musicTracks; }
 
 	float& GetMusicVolume() { return musicVolume; } // Gets the volume level for music
-	void SetMusicVolume( float& volume ) { musicVolume = volume; for ( auto music : musicTracks ) { music.second->setVolume( musicVolume ); } } // Sets the volume level for music
+	void SetMusicVolume( float &volume ) { musicVolume = volume; for ( auto music : musicTracks ) { music.second->setVolume( musicVolume ); } } // Sets the volume level for music
 
 	std::string GetCurrentMusicTrack() { return currentMusicTrack; }
 
 	float& GetSoundEffectsVolume() { return soundEffectsVolume; } // Gets the volume level for sound effects
-	void SetSoundEffectsVolume( float& volume ) { soundEffectsVolume = volume; for ( auto sound : soundEffects ) { sound.second->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
+	void SetSoundEffectsVolume( float &volume ) { soundEffectsVolume = volume; for ( auto sound : soundEffects ) { sound.second->setDefaultVolume( soundEffectsVolume ); } } // Sets the volume level for sound effects
 
-	void SetMusicPause( bool isPause ) { for ( auto music : musicTracks ) { music.second->setIsPaused( isPause ); } } // Sets the ispause  for music
+	void SetMusicPause(bool isPause) { for (auto music : musicTracks) { music.second->setIsPaused( isPause ); } } // Sets the ispause  for music
 
-	// Event System
+	//eventsystem
 	void AddtoEvent();
-	void HandleEvent( Event* event );
+	void HandleEvent(Event* event);
 
 	static Sound* Instance();
+
 private:
+
 	Sound();
 	~Sound();
 

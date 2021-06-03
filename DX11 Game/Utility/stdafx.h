@@ -31,9 +31,9 @@
 using namespace DirectX;
 
 // Classes
-#include "Sound.h"
 #include "Timer.h"
 #include "ErrorLogger.h"
 #include "EventSystem/EventSystem.h"
+#include "Sound.h"
 
 #endif

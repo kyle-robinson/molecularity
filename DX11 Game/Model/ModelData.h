@@ -2,6 +2,10 @@
 #ifndef MODELDATA_H
 #define MODELDATA_H
 
+// "Rickenbacker 4001" (https://skfb.ly/HYEN) by Yogensia is licensed under CC Attribution-NonCommercial-ShareAlike (http://creativecommons.org/licenses/by-nc-sa/4.0/).
+// "Headphones" (https://skfb.ly/6ANxo) by Ren is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+// "Zelda - Breath Of The Wild" (https://skfb.ly/6QWNH) by theStoff is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
 #include <map>
 #include <fstream>
 #include <filesystem>
@@ -18,11 +22,11 @@ class ModelData
 public:
     static bool LoadModelData( const std::string& filePath )
     {
-        // Update to other json loading method
+        // update to other json loading method
         drawables = JSON::LoadGameObjects( filePath );
         return true;
     }
-    // Set up game object transformation data
+    // set up game object transformation data
     static bool InitializeModelData( ID3D11DeviceContext* context, ID3D11Device* device,
         ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::unordered_map<std::string, RenderableGameObject>& renderables )
     {

@@ -21,7 +21,7 @@ void TextRenderer::DrawString( const std::wstring& text, XMFLOAT2 position, XMVE
 {
 	spriteBatch->Begin();
 	spriteFont->DrawString( spriteBatch.get(), text.c_str(), position, color, 0.0f,
-		XMFLOAT2( 0.0f, 0.0f ), Scale );
+		XMFLOAT2( 0.0f, 0.0f ), Scale);
 	spriteBatch->End();
 }
 
@@ -55,38 +55,49 @@ void TextRenderer::RenderCameraText( LevelContainer& manager )
 
 void TextRenderer::RenderString( std::string text, XMFLOAT2 position, XMVECTORF32 color )
 {
-	std::wstring String = std::wstring( text.begin(), text.end() );
+	
+	std::wstring String = std::wstring(text.begin(), text.end());
+
 	DrawString( String, position, color );
 }
 
-// Update viewport when screen size changes
+// update viewport when screen size changes
 void TextRenderer::UpdateViewPort( D3D11_VIEWPORT& NewView )
 {
 	spriteBatch->SetViewport( NewView );
 
-	// Scale text
+	//scale text
 	float xScale = 1, yScale = 1;
-	if ( NewView.Width <= 2560 && NewView.Width > 1920 )
+	if (NewView.Width <= 2560 && NewView.Width > 1920) {
 		xScale = 2.0f;
-	else if ( NewView.Width <= 1920 && NewView.Width > 1600 )
+	}
+	else if (NewView.Width <= 1920 && NewView.Width > 1600) {
 		xScale = 1.5f;
-	else if ( NewView.Width <= 1600 && NewView.Width > 1024 )
+	}
+	else if (NewView.Width <= 1600 && NewView.Width > 1024) {
 		xScale = 1.0f;
-	else if ( NewView.Width <= 1024 )
+	}
+	else if (NewView.Width <= 1024) {
 		xScale = 0.9f;
-	else
+	}
+	else {
 		xScale = 1.0f;
+	}
 
-	if ( NewView.Height <= 1440 && NewView.Height > 1080 )
+	if (NewView.Height <= 1440 && NewView.Height > 1080) {
 		yScale = 2.0f;
-	else if ( NewView.Height <= 1080 && NewView.Height > 900 )
+	}
+	else if (NewView.Height <= 1080 && NewView.Height > 900) {
 		yScale = 1.5f;
-	else if ( NewView.Height <= 900 && NewView.Height > 576 )
+	}
+	else if (NewView.Height <= 900 && NewView.Height > 576) {
 		yScale = 1.0f;
-	else if ( NewView.Height <= 576 )
+	}
+	else if (NewView.Height <= 576) {
 		yScale = 0.9f;
-	else
+	}
+	else {
 		yScale = 1.0f;
-
-	SetScale( { xScale,yScale } );
+	}
+	SetScale({ xScale,yScale });
 }
