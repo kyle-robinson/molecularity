@@ -4,7 +4,7 @@
 
 #include "LevelContainer.h"
 
-class LevelStateMachine:public Listener
+class LevelStateMachine :public Listener
 {
 public:
 	LevelStateMachine();
@@ -17,7 +17,7 @@ public:
 	void SwitchTo( uint32_t id );
 
 	void AddToEvent();
-	void HandleEvent(Event* event);
+	void HandleEvent( Event* event );
 
 private:
 	uint32_t insertedLevelID;

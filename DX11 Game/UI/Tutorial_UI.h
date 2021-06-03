@@ -1,10 +1,13 @@
 #pragma once
+#ifndef TUTORIAL_UI_H
+#define TUTORIAL_UI_H
+
 #include "UI.h"
 #include "Timer.h"
-#include<Tool_Class.h>
-using namespace std;
+#include "Tool_Class.h"
 
-enum class TutorialState {
+enum class TutorialState
+{
     GameTut,
     MovementTut,
     ToolTut,
@@ -12,63 +15,53 @@ enum class TutorialState {
     OtherTut
 };
 
-
 /// <summary>
-/// Tutorial UI
+/// User interface for the tutorial part of level 1.
 /// </summary>
-class Tutorial_UI :
-    public UI
+class Tutorial_UI : public UI
 {
 public:
     Tutorial_UI();
-     ~Tutorial_UI();
-     void Inizalize(ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d,std::shared_ptr<Fonts> fonts);
-     void Update(float dt);
-     void BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene);
-     void TextLoad();
-     void HandleEvent(Event* event);
+    ~Tutorial_UI();
 
-     //functions
+    void Initialize( ID3D11Device* device, ID3D11DeviceContext* contex, ConstantBuffer<CB_VS_matrix_2D>* cb_vs_matrix_2d, std::shared_ptr<Fonts> fonts );
+    void Update( float dt );
+    void BeginDraw( VertexShader& vert, PixelShader& pix, XMMATRIX WorldOrthMatrix, ConstantBuffer<CB_PS_scene>* _cb_ps_scene );
+
+    void TextLoad();
+    void HandleEvent( Event* event );
 private:
-    
     void AddtoEvent();
     void RemoveFromEvent();
 
-    
-
-    //Text functions
-    void GenralTutorialText();
+    // Text functions
+    void GeneralTutorialText();
     void MovementTutorialText();
     void ToolTutorialText();
     void OtherTutorialText();
 
-    //move next function
-    void MoveToNextPannle();
+    // Move next function
+    void MoveToNextPanel();
 
-
-    void LoadKeyBinds(std::vector<JSON::SettingData> SettingsData);
-    void SetTextPos(TextToDraw& text);
+    void LoadKeyBinds( std::vector<JSON::SettingData> SettingsData );
+    void SetTextPos( TextToDraw& text );
 private:
-
-    string name = "Tutorial";
-
-
-    bool IsDraw=true;
-    Tool_Class* Mode = nullptr;
-  
     Timer timer;
-
+    bool IsDraw = true;
     ColourBlock TextBackground;
+    Tool_Class* Mode = nullptr;
+    std::string name = "Tutorial";
 
-    TutorialState CurrentState;
     int stateNo;
-    vector<TextToDraw> _TextList;
-    map<string, string> KeyBinds;
-    map<string, string> LoadedTextMap;
+    TutorialState CurrentState;
+    std::vector<TextToDraw> _TextList;
+    std::unordered_map<std::string, std::string> KeyBinds;
+    std::unordered_map<std::string, std::string> LoadedTextMap;
 
+    float xpos;
+    float yPos;
     float textSizeY;
     float textSizeX;
-    float yPos;
-    float xpos;
 };
 
+#endif

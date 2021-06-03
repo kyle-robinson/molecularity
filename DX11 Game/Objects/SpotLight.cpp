@@ -3,6 +3,8 @@
 #include "Tool_Structs.h"
 #include <imgui/imgui.h>
 
+// FREE Low Poly Cyberpunk-Sci fi Handgun Free low-poly 3D model (https://www.cgtrader.com/free-3d-models/military/gun/free-low-poly-cyberpunk-sci-fi-handgun)
+
 SpotLight::SpotLight()
 {
 	EventSystem::Instance()->AddClient( EVENTID::ChangeToolEvent, this );
@@ -13,9 +15,6 @@ SpotLight::~SpotLight()
 	EventSystem::Instance()->RemoveClient( EVENTID::ChangeToolEvent, this );
 }
 
-// "Flashlight" (https://skfb.ly/6QXJG) by Brandon Baldwin is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
-// FREE Low Poly Cyberpunk-Sci fi Handgun Free low-poly 3D model (https://www.cgtrader.com/free-3d-models/military/gun/free-low-poly-cyberpunk-sci-fi-handgun)
-
 bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_matrix )
 {
 	try
@@ -23,7 +22,7 @@ bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_m
 		HRESULT hr = cb_ps_spot.Initialize( GetDevice( gfx ), GetContext( gfx ) );
 		COM_ERROR_IF_FAILED( hr, "Failed to initialize 'SpotLight' constant buffer!" );
 
-		// get model file paths
+		// Get model file paths
 		std::string filePath = "Resources\\Models\\Gun\\Cybergun_";
 		std::vector<std::string> fileNames;
 		fileNames.push_back( "Blue.fbx" );
@@ -32,7 +31,7 @@ bool SpotLight::Initialize( Graphics& gfx, ConstantBuffer<CB_VS_matrix>& cb_vs_m
 		fileNames.push_back( "Yellow.fbx" );
 		fileNames.push_back( "Pink.fbx" );
 
-		// load models
+		// Load models
 		for ( uint32_t i = 0; i < fileNames.size(); i++ )
 		{
 			Model newModel;

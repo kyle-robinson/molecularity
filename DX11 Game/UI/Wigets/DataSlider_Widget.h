@@ -2,11 +2,13 @@
 #ifndef DATASLIDER_WIDGET_H
 #define DATASLIDER_WIDGET_H
 
-#include "widget.h"
+#include "Widget.h"
 
+/// <summary>
+/// Handles the data sliders in the settings menu for precision when modifying values.
+/// </summary>
 template<typename BarTex, typename SliderTex>
-class DataSlider_Widget :
-	public widget
+class DataSlider_Widget : public Widget
 {
 public:
 	DataSlider_Widget() {}
@@ -16,16 +18,15 @@ public:
 	void Draw( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix );
 	void Function( DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, int start, BarTex bar, SliderTex slider, MouseData MData );
 
-	uint32_t getData() { return DataOut; }
-
+	uint32_t GetData() { return DataOut; }
 private:
-	Sprite Bar;
-	BarTex _BarColour;
-	Sprite Slider;
-	SliderTex _SliderColour;
-
 	float PX = 0;
 	uint32_t DataOut;
+
+	Sprite Bar;
+	Sprite Slider;
+	BarTex _BarColour;
+	SliderTex _SliderColour;
 };
 
 template<typename BarTex, typename SliderTex>
@@ -74,20 +75,17 @@ inline void DataSlider_Widget<BarTex, SliderTex>::Function( DirectX::XMFLOAT2 si
 	_Pos = pos;
 	_BarColour = bar;
 	_SliderColour = slider;
-	PX = ( ( float )start / 100 ) * size.x;
+	PX = ( static_cast<float>( start ) / 100.0f ) * size.x;
 
-	if (
-		MData.Pos.x >= pos.x &&
+	if ( MData.Pos.x >= pos.x &&
 		MData.Pos.x <= ( pos.x + size.x + 1 ) &&
 		MData.Pos.y >= pos.y &&
-		MData.Pos.y <= ( pos.y + size.y ) ) {
-		if ( MData.LPress ) {
+		MData.Pos.y <= ( pos.y + size.y ) )
+	{
+		if ( MData.LPress )
 			PX = MData.Pos.x - pos.x;
-
-		}
 	}
 
-	// return data
 	DataOut = ( PX / size.x ) * 100;
 }
 

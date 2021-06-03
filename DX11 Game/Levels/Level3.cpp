@@ -16,9 +16,9 @@ bool Level3::OnCreate()
 		if ( !ModelData::InitializeModelData( *&graphics->context, *&graphics->device, cb_vs_matrix, renderables ) ) return false;
 
 		// User Interface
-		HUD = make_shared<HUD_UI>();
-		PauseUI = make_shared<Pause>();
-		EndLevelUI = make_shared<EndLevelScreen_UI>();
+		HUD = std::make_shared<HUD_UI>();
+		PauseUI = std::make_shared<Pause>();
+		EndLevelUI = std::make_shared<EndLevelScreen_UI>();
 
 		// Circuit Points
 		brokenCircuitPoints.push_back( std::make_pair( XMFLOAT3( -6.0f, 0.0f, 10.0f ), false ) );

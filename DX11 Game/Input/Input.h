@@ -5,8 +5,8 @@
 #include "MousePicking.h"
 #include "WindowContainer.h"
 #include "LevelStateMachine.h"
+#include "UI.h"
 
-#include<UI/UI.h>
 /// <summary>
 /// Handles user input by update keyboard and mouse events.
 /// Contains functions to update game state on successful keyboard/mouse event registers.
@@ -18,9 +18,9 @@ public:
 		CameraController* camera, std::vector<uint32_t> level_IDs );
 	void Update( const float dt );
 
-	//eventsystem
+	// Event System
 	void AddToEvent();
-	void HandleEvent(Event* event);
+	void HandleEvent( Event* event );
 private:
 	void UpdateKeyboard( const float dt );
 	void UpdateMouse( const float dt );
@@ -31,20 +31,18 @@ private:
 	CameraController* cameras;
 	LevelStateMachine* levelSystem;
 	std::vector<uint32_t> level_IDs;
-	
+
 	float delay = 0.0f;
 	bool canHover = true;
 
-
-
-	//ui input
+	// UI Input
 	bool isPaused;
 	unsigned char UIChar;
 	MouseData UiMouseData;
 
-	//key binds 
-	std::unordered_map<string, unsigned char> KeyBinds;
-	std::unordered_map<string, Mouse::MouseEvent::EventType> MouseBinds;
+	// Key Binds 
+	std::unordered_map<std::string, unsigned char> KeyBinds;
+	std::unordered_map<std::string, Mouse::MouseEvent::EventType> MouseBinds;
 
 	bool heldLastFrame[2] = { false };
 };

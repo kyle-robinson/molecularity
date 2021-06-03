@@ -10,15 +10,15 @@ bool Level1::OnCreate()
 {
 	try
 	{
-		// DRAWABLES
+		// Renderables
 		if ( !ModelData::LoadModelData( "Level1_Objects.json" ) ) return false;
 		if ( !ModelData::InitializeModelData( *&graphics->context, *&graphics->device, cb_vs_matrix, renderables ) ) return false;
 
-		// UI
-		HUD = make_shared<HUD_UI>();
-		PauseUI = make_shared<Pause>();
-		TutorialUI = make_shared<Tutorial_UI>();
-		EndLevelUI = make_shared<EndLevelScreen_UI>();
+		// User Interface
+		HUD = std::make_shared<HUD_UI>();
+		PauseUI = std::make_shared<Pause>();
+		TutorialUI = std::make_shared<Tutorial_UI>();
+		EndLevelUI = std::make_shared<EndLevelScreen_UI>();
 	}
 	catch ( COMException& exception )
 	{
@@ -29,22 +29,22 @@ bool Level1::OnCreate()
 }
 
 void Level1::OnSwitch()
-{	
+{
 	// Update Level System
 	levelCompleted = false;
 	CurrentLevel = 1;
-	EventSystem::Instance()->AddEvent(EVENTID::SetCurrentLevelEvent, &CurrentLevel);
-	
+	EventSystem::Instance()->AddEvent( EVENTID::SetCurrentLevelEvent, &CurrentLevel );
+
 	levelName = "Level1";
 	numOfCubes = 1;
 	LevelContainer::UpdateCubes( 0.0f, 0.0f, -4.0f );
 	NextLevel = 2;
-	EventSystem::Instance()->AddEvent(EVENTID::SetNextLevelEvent, &NextLevel);
+	EventSystem::Instance()->AddEvent( EVENTID::SetNextLevelEvent, &NextLevel );
 
-	// Update HUD with tool data
-	EventSystem::Instance()->AddEvent(EVENTID::ToolModeEvent, tool);
+	// Update Tool
+	EventSystem::Instance()->AddEvent( EVENTID::ToolModeEvent, tool );
 
-	// Initialize UI
+	// Update UI System
 	_UiManager->RemoveUI( "MainMenu" );
 	_UiManager->AddUi( HUD, "HUD" );
 	_UiManager->AddUi( PauseUI, "Pause" );
@@ -53,13 +53,11 @@ void Level1::OnSwitch()
 	_UiManager->Initialize( graphics->device.Get(), graphics->context.Get(), &cb_vs_matrix_2d );
 	_UiManager->HideUi( "EndLevel" );
 
-	// Update HUD with tool data
-	EventSystem::Instance()->AddEvent( EVENTID::ToolModeEvent, tool );
-
-	// Initialise Sounds
+	// Update Sound System
 	Sound::Instance()->InitialiseMusicTrack( "TutorialMusic" );
 	Sound::Instance()->InitialiseSoundGroup( "Player" );
 	Sound::Instance()->InitialiseSoundGroup( "Cube" );
+
 	Sound::Instance()->InitialiseSoundEffect( "LevelComplete" );
 	Sound::Instance()->InitialiseSoundEffect( "MenuClick" );
 	Sound::Instance()->InitialiseSoundEffect( "Notification" );
@@ -67,7 +65,7 @@ void Level1::OnSwitch()
 	Sound::Instance()->PlayMusic( "TutorialMusic" );
 	Sound::Instance()->PlaySoundEffect( "Notification" );
 
-	// Initialize Camera Positions
+	// Update Cameras
 	cameras->GetCamera( JSON::CameraType::Default )->SetInitialPosition( 0.0f, 7.0f, -20.0f );
 	cameras->GetCamera( JSON::CameraType::Static )->SetInitialPosition( 16.0f, 10.0f, 26.0f );
 	cameras->GetCamera( JSON::CameraType::Debug )->SetInitialPosition( 0.0f, 7.0f, -15.0f );
@@ -111,7 +109,7 @@ void Level1::Update( const float dt )
 {
 	LevelContainer::Update( dt );
 
-	// adjust pressure plate x-position over time
+	// Adjust pressure plate x-position over time
 	static float offset = 0.1f;
 	if ( renderables["PressurePlate"].GetPositionFloat3().x > 13.0f )
 		offset = -offset;
@@ -119,13 +117,13 @@ void Level1::Update( const float dt )
 		offset = 0.1f;
 	renderables["PressurePlate"].AdjustPosition( offset, 0.0f, 0.0f );
 
-	// camera collisions w room
+	// Camera collisions w room
 	Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), 18.5f );
 
-	// cube collisions
+	// Cube collisions
 	for ( uint32_t i = 0; i < numOfCubes; i++ )
 	{
-		// update collisions w pressure plate
+		// Update collisions w pressure plate
 		if ( cubes[i]->CheckCollisionAABB( renderables["PressurePlate"], dt ) )
 		{
 			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
@@ -136,18 +134,18 @@ void Level1::Update( const float dt )
 			}
 		}
 
-		// update collisions w other cubes
+		// Update collisions w other cubes
 		for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
-				cubes[i]->CheckCollisionAABB( cubes[j], dt );
+			cubes[i]->CheckCollisionAABB( cubes[j], dt );
 
-		// update collisions w room
+		// Update collisions w room
 		Collisions::CheckCollisionLevel1( cubes[i], 15.0f );
 	}
 
-	// set rotation of security camera
+	// Set rotation of security camera
 	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), renderables["SecurityCamera"] );
 	renderables["SecurityCamera"].SetRotation( 0.0f, rotation, 0.0f );
 
-	// update cubes/multi-tool position
+	// Update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
 }

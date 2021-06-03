@@ -1,110 +1,104 @@
 #pragma once
-#include "widget.h"
+#ifndef INPUT_WIDGET_H
+#define INPUT_WIDGET_H
+
+#include "Widget.h"
+
+/// <summary>
+/// Handles text and key components native to each menu widget.
+/// </summary>
 template<typename background>
-class Input_Widget :
-    public widget
+class Input_Widget : public Widget
 {
 public:
-    Input_Widget();
-    ~Input_Widget();
+	Input_Widget();
+	~Input_Widget();
 
-    bool INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d);
-    void Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender);
+	bool INITSprite( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d );
+	void Draw( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender );
 
+	void Function( DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, background colour, XMVECTORF32 textColour, unsigned char key, MouseData MData );
+	void SetCurrentText( std::string text ) { CurrentText = text; }
+	std::string GetCurrentText() { return CurrentText; }
+	unsigned char GetKey() { return _Key; }
 
-
-    void Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, background colour, XMVECTORF32 textColour, unsigned char key, MouseData MData);
-    void setCurrentText(string text) { CurrentText = text; }
-    string getCurrentText() {
-        return CurrentText;
-    }
-	unsigned char getKey() {
-		return _Key;
-	}
-
-	void SetKey(unsigned char key);
+	void SetKey( unsigned char key );
 private:
-    Sprite Background;
-    background BackgoundColour;
+	Sprite Background;
+	background BackgoundColour;
 	unsigned char _Key;
-    string CurrentText;
-    XMVECTORF32 TextColour;
-    bool Selcted = false;
-
+	std::string CurrentText;
+	XMVECTORF32 TextColour;
+	bool Selcted = false;
 };
+
+#endif
 
 template<typename background>
 Input_Widget<background>::Input_Widget()
-{
-}
+{ }
 
 template<typename background>
 Input_Widget<background>::~Input_Widget()
-{
-}
+{ }
 
 template<typename background>
-bool Input_Widget<background>::INITSprite(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d)
+bool Input_Widget<background>::INITSprite( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d )
 {
 	Selcted = false;
-	Background.Initialize(Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d);
+	Background.Initialize( Device, Contex, _Size.x, _Size.y, "", cb_vs_matrix_2d );
 	return true;
 }
 
 template<typename background>
-void Input_Widget<background>::Draw(ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender)
+void Input_Widget<background>::Draw( ID3D11DeviceContext* Contex, ID3D11Device* Device, ConstantBuffer<CB_PS_scene>& cb_ps_scene, ConstantBuffer<CB_VS_matrix_2D>& cb_vs_matrix_2d, XMMATRIX WorldOrthoMatrix, TextRenderer* textrender )
 {
-	Background.UpdateTex(Device, BackgoundColour);
-	Background.SetInitialPosition(_Pos.x, _Pos.y, 0);
-	Background.SetScale(_Size.x, _Size.y);
+	Background.UpdateTex( Device, BackgoundColour );
+	Background.SetInitialPosition( _Pos.x, _Pos.y, 0 );
+	Background.SetScale( _Size.x, _Size.y );
 
 	cb_ps_scene.data.alphaFactor = _AlphaFactor;
 	cb_ps_scene.data.useTexture = false;
 
-	if (!cb_ps_scene.ApplyChanges()) return;
-	Contex->PSSetConstantBuffers(1u, 1u, cb_ps_scene.GetAddressOf());
-	Background.Draw(WorldOrthoMatrix);
-	XMVECTOR textsize = textrender->GetSpriteFont()->MeasureString(CurrentText.c_str());
-	XMFLOAT2 textpos = { _Pos.x + (_Size.x / 2) - (DirectX::XMVectorGetX(textsize) * textrender->GetScale().x) / 2 ,_Pos.y + (_Size.y / 2) - (DirectX::XMVectorGetY(textsize) * textrender->GetScale().y) / 2 };
-	textrender->RenderString(CurrentText, textpos, TextColour);
+	if ( !cb_ps_scene.ApplyChanges() ) return;
+	Contex->PSSetConstantBuffers( 1u, 1u, cb_ps_scene.GetAddressOf() );
+	Background.Draw( WorldOrthoMatrix );
+	XMVECTOR textsize = textrender->GetSpriteFont()->MeasureString( CurrentText.c_str() );
+	XMFLOAT2 textpos = { _Pos.x + ( _Size.x / 2 ) - ( DirectX::XMVectorGetX( textsize ) * textrender->GetScale().x ) / 2 ,_Pos.y + ( _Size.y / 2 ) - ( DirectX::XMVectorGetY( textsize ) * textrender->GetScale().y ) / 2 };
+	textrender->RenderString( CurrentText, textpos, TextColour );
 }
 
 template<typename background>
-void Input_Widget<background>::Function(DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, background colour, XMVECTORF32 textColour, unsigned char key, MouseData MData)
+void Input_Widget<background>::Function( DirectX::XMFLOAT2 size, DirectX::XMFLOAT2 pos, background colour, XMVECTORF32 textColour, unsigned char key, MouseData MData )
 {
 	_Size = size;
 	_Pos = pos;
 	BackgoundColour = colour;
 	TextColour = textColour;
 
-	
-	
-	//get if user hit
-	if (
-		MData.Pos.x >= pos.x &&
-		MData.Pos.x <= (pos.x + size.x) &&
+	// Get if user hit
+	if ( MData.Pos.x >= pos.x &&
+		MData.Pos.x <= ( pos.x + size.x ) &&
 		MData.Pos.y >= pos.y &&
-		MData.Pos.y <= (pos.y + size.y)) {
-		if (MData.LPress) {
+		MData.Pos.y <= ( pos.y + size.y ) )
+	{
+		if ( MData.LPress )
+		{
 			Selcted = true;
 			CurrentText = "";
 		}
-
 	}
 
-	//get text to display
-	if (Selcted) {
-	
-		SetKey(key);
-	}
+	// Get text to display
+	if ( Selcted )
+		SetKey( key );
 }
 
 template<typename background>
-inline void Input_Widget<background>::SetKey(unsigned char key)
+inline void Input_Widget<background>::SetKey( unsigned char key )
 {
-	switch (key)
+	switch ( key )
 	{
-	//other keys
 	case VK_RETURN:
 		CurrentText = "Return";
 		Selcted = false;
@@ -127,12 +121,14 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		Selcted = false;
 		_Key = key;
 		break;
-		//alt
+		
+	// Alt
 	case VK_MENU:
 		CurrentText = "alt";
 		Selcted = false;
 		_Key = key;
 		break;
+
 	case VK_PAUSE:
 		CurrentText = "Pause";
 		Selcted = false;
@@ -158,18 +154,20 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		Selcted = false;
 		_Key = key;
 		break;
-		//page up
+
+	// Page Up
 	case VK_PRIOR:
 		CurrentText = "page Up";
 		Selcted = false;
 		_Key = key;
 		break;
-		//page down
+	// Page Down
 	case VK_NEXT:
 		CurrentText = "page Down";
 		Selcted = false;
 		_Key = key;
 		break;
+
 	case VK_END:
 		CurrentText = "End";
 		Selcted = false;
@@ -210,7 +208,7 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		Selcted = false;
 		_Key = key;
 		break;
-	//arrow keys
+		//arrow keys
 	case VK_UP:
 		CurrentText = "Up Arrow";
 		Selcted = false;
@@ -233,7 +231,7 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		break;
 
 
-	//F keys
+	// Function Keys
 	case VK_F1:
 		CurrentText = "F1";
 		Selcted = false;
@@ -294,8 +292,8 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		Selcted = false;
 		_Key = key;
 		break;
-	
-	//numpad
+
+	// Numpad
 	case VK_NUMLOCK:
 		CurrentText = "Numlock";
 		Selcted = false;
@@ -351,9 +349,8 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		Selcted = false;
 		_Key = key;
 		break;
-	
-	
-	//math keys
+
+	// Math Keys
 	case VK_MULTIPLY:
 		CurrentText = "*";
 		Selcted = false;
@@ -385,20 +382,20 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		_Key = key;
 		break;
 
-	//number key codes
-	//Braket left
+	// Bracket left
 	case 219:
 		CurrentText = "[";
 		Selcted = false;
 		_Key = key;
 		break;
-	//Braket right
+	// Bracket Right
 	case 221:
 		CurrentText = "]";
 		Selcted = false;
 		_Key = key;
 		break;
-	
+
+	// Number Key Codes
 	case 222:
 		CurrentText = "#";
 		Selcted = false;
@@ -444,9 +441,10 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		_Key = key;
 		break;
 
-	//all other keys
+	// All other keys
 	default:
-		if (key != 0) {
+		if ( key != 0 )
+		{
 			CurrentText = key;
 			Selcted = false;
 			_Key = key;
@@ -454,5 +452,3 @@ inline void Input_Widget<background>::SetKey(unsigned char key)
 		break;
 	}
 }
-
-

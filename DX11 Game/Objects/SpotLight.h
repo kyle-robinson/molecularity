@@ -5,6 +5,7 @@
 class Camera;
 #include "Light.h"
 #include "GraphicsResource.h"
+#include "EventSystem/Listener.h"
 
 /// <summary>
 /// Creates a simple spot light.

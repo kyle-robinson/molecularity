@@ -15,8 +15,8 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 
-#include <Tool_Class.h>
-#include <ModelData.h>
+#include "Tool_Class.h"
+#include "ModelData.h"
 
 class Fog;
 class ImGuiManager;
@@ -64,7 +64,7 @@ public:
   
 protected:
 	void RenderFrameEarly();
-	void ShowEndLeveLScreen();
+	void ShowEndLevelScreen();
 	bool levelCompleted = false;
 
 	// Objects
@@ -88,7 +88,7 @@ protected:
 	//UI
 	UI_Manager* _UiManager;
 	
-	//Next level data
+	// Next level data
 	std::string levelName;
 	UINT32 NextLevel;
 	UINT32 CurrentLevel;

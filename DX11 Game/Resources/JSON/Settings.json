@@ -4,7 +4,7 @@
     {
       "Vsync": true,
       "WindowWidth": 1600,
-      "WindowHight": 900,
+      "WindowHeight": 900,
       "FullScreen": false,
       "Language": "Eng"
     }

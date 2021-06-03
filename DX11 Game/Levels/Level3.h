@@ -30,9 +30,9 @@ private:
 	bool doorIsOpen = false;
 
 	// User Interface
-	shared_ptr<HUD_UI> HUD;
-	shared_ptr<Pause> PauseUI;
-	shared_ptr<EndLevelScreen_UI> EndLevelUI;
+	std::shared_ptr<HUD_UI> HUD;
+	std::shared_ptr<Pause> PauseUI;
+	std::shared_ptr<EndLevelScreen_UI> EndLevelUI;
 };
 
 #endif

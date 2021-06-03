@@ -1,9 +1,9 @@
 #pragma once
-#include <vector>
-#include <iostream>
-
 #ifndef IMGUIMANAGER_H
 #define IMGUIMANAGER_H
+
+#include <vector>
+#include <iostream>
 
 class Graphics;
 

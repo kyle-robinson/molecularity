@@ -207,7 +207,7 @@
     <ClCompile Include="Utility\TextLoader.cpp">
       <Filter>Source\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Wigets\widget.cpp">
+    <ClCompile Include="UI\Wigets\Widget.cpp">
       <Filter>Source\Graphics\User Interface\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="UI\Wigets\PageSlider_Widget.cpp">
@@ -530,7 +530,7 @@
     <ClInclude Include="UI\UI.h">
       <Filter>Headers\Graphics\User Interface</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Wigets\widget.h">
+    <ClInclude Include="UI\Wigets\Widget.h">
       <Filter>Headers\Graphics\User Interface\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="UI\WidgetIncludes.h">
@@ -740,6 +740,21 @@
     </None>
     <None Include="Resources\JSON\Level2_Objects.json">
       <Filter>Resources\JSON</Filter>
+    </None>
+    <None Include="Resources\Fonts\Arial_ms_14.spritefont">
+      <Filter>Resources\Fonts</Filter>
+    </None>
+    <None Include="Resources\Fonts\OpenSans_12.spritefont">
+      <Filter>Resources\Fonts</Filter>
+    </None>
+    <None Include="Resources\Fonts\OpenSans_20.spritefont">
+      <Filter>Resources\Fonts</Filter>
+    </None>
+    <None Include="Resources\Fonts\OpenSans_50.spritefont">
+      <Filter>Resources\Fonts</Filter>
+    </None>
+    <None Include="Resources\Fonts\OpenSans_Bold_14.spritefont">
+      <Filter>Resources\Fonts</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
