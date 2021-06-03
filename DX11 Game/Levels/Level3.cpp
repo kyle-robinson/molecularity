@@ -191,3 +191,9 @@ void Level3::Update( const float dt )
 	// Update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
 }
+
+void Level3::CleanUp()
+{
+	renderables.clear();
+	cubes.clear();
+}

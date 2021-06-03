@@ -20,6 +20,7 @@ public:
 	void OnSwitch() override;
 	void Render() override;
 	void Update( const float dt ) override;
+	void CleanUp() override;
 private:
 	void RenderFrame() override;
 	LevelStateMachine& levelStateMachine;
