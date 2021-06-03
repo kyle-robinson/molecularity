@@ -4,6 +4,7 @@
 #include "Collisions.h"
 #include "Rasterizer.h"
 #include "PostProcessing.h"
+#include "ModelData.h"
 
 Level3::Level3( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) {}
 
@@ -12,23 +13,8 @@ bool Level3::OnCreate()
 	try
 	{
 		// DRAWABLES
-		if ( !room.Initialize( "Resources\\Models\\Levels\\Level3-V1.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-		room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-		room.SetInitialPosition( 0.5f, 0.0f, -17.5f );
-		room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
-
-		if ( !door.Initialize( "Resources\\Models\\Levels\\Door.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-		door.SetInitialScale( 0.005f, 0.005f, 0.005f );
-		door.SetInitialPosition( 0.5f, 0.0f, -17.5f );
-		door.SetInitialRotation( 0.0f, XM_PI, 0.0f );
-
-		if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-		pressurePlate.SetInitialPosition( 0.0f, 0.0f, 57.0f );
-		pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
-
-		if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-		securityCamera.SetInitialScale( 2.0f, 2.0f, 2.0f );
-		securityCamera.SetInitialPosition( 0.0f, 10.0f, 67.5f );
+		if ( !ModelData::LoadModelData( "Level3_Objects.json" ) ) return false;
+		if ( !ModelData::InitializeModelData( *&graphics->context, *&graphics->device, cb_vs_matrix, renderables ) ) return false;
 
 		// UI
 		HUD = make_shared<HUD_UI>();
@@ -38,9 +24,6 @@ bool Level3::OnCreate()
 		// CIRCUIT POINTS
 		brokenCircuitPoints.push_back( std::make_pair( XMFLOAT3( -6.0f, 0.0f, 10.0f ), false ) );
 		brokenCircuitPoints.push_back( std::make_pair( XMFLOAT3( 7.5f, 0.0f, 34.5f ), false ) );
-
-		// POST-PROCESSING
-		//postProcessing->BindMonochrome();
 	}
 	catch ( COMException& exception )
 	{
@@ -108,14 +91,15 @@ void Level3::RenderFrame()
 
 	// draw w/ back-face culling
 	graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
-	room.Draw();
+	renderables["Room"].Draw();
 	graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 
 	// draw with back-face culling
 	if ( renderDoor )
-		door.Draw();
-	pressurePlate.Draw();
-	securityCamera.Draw();
+		renderables["Door"].Draw();
+
+	renderables["PressurePlate"].Draw();
+	renderables["SecurityCamera"].Draw();
 
 	// render the cubes
 	LevelContainer::RenderFrame();
@@ -167,7 +151,7 @@ void Level3::Update( const float dt )
 		}
 
 		// update collisions w pressure plate
-		if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
+		if ( cubes[i]->CheckCollisionAABB( renderables["PressurePlate"], dt ) )
 		{
 			// check if the pressure plate is powered
 			bool hasPower = true;
@@ -200,8 +184,8 @@ void Level3::Update( const float dt )
 		renderDoor = false;
 
 	// set rotation of security camera
-	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
-	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
+	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), renderables["SecurityCamera"] );
+	renderables["SecurityCamera"].SetRotation( 0.0f, rotation, 0.0f );
 
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );

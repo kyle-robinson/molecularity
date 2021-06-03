@@ -556,7 +556,9 @@
     <None Include="Resources\Cursors\NightDiamond\Vertical Resize.ani" />
     <None Include="Resources\Cursors\NightDiamond\Working In Background.ani" />
     <None Include="Resources\Fonts\open_sans_ms_16.spritefont" />
-    <None Include="Resources\JSON\Objects.json" />
+    <None Include="Resources\JSON\Level1_Objects.json" />
+    <None Include="Resources\JSON\Level2_Objects.json" />
+    <None Include="Resources\JSON\Level3_Objects.json" />
     <None Include="Resources\JSON\Settings.json" />
     <None Include="Resources\JSON\Text_Eng.json" />
     <None Include="Resources\JSON\Text_Fr.json" />

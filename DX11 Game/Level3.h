@@ -27,13 +27,9 @@ private:
 	LevelStateMachine& levelStateMachine;
 
 	// Scene Objects
-	RenderableGameObject room;
-	RenderableGameObject door;
-	RenderableGameObject pressurePlate;
-	RenderableGameObject securityCamera;
-
-	bool renderDoor = true;
+	std::unordered_map<std::string, RenderableGameObject> renderables;
 	std::vector<std::pair<XMFLOAT3, bool>> brokenCircuitPoints;
+	bool renderDoor = true;
 
 	// UI
 	shared_ptr<HUD_UI> HUD;

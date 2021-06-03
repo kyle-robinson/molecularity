@@ -119,7 +119,7 @@ std::vector<JSON::ModelData> JSON::LoadGameObjects( const std::string& fileName 
 
 	// Check if data was loaded 
 	if ( data.size() == 0 )
-		ErrorLogger::Log( "Error:: Failed to parse JSON file data!" );
+		ErrorLogger::Log( "Failed to parse JSON file data!" );
 	
 	return data;
 }
@@ -262,7 +262,6 @@ std::vector<JSON::SettingData> JSON::LoadSettings()
 
 	return Settings;
 }
-
 
 //get data as string
 std::vector<std::string> JSON::LoadFileData( const std::string& fileName )

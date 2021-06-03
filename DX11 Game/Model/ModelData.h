@@ -28,7 +28,7 @@ public:
     }
     // set up game object transformation data
     static bool InitializeModelData( ID3D11DeviceContext* context, ID3D11Device* device,
-        ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::map<std::string, RenderableGameObject>& renderables )
+        ConstantBuffer<CB_VS_matrix>& cb_vs_matrix, std::unordered_map<std::string, RenderableGameObject>& renderables )
     {
         for ( uint32_t i = 0; i < drawables.size(); i++ )
         {

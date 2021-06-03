@@ -3,6 +3,7 @@
 #include "Billboard.h"
 #include "Collisions.h"
 #include "Rasterizer.h"
+#include "ModelData.h"
 
 Level1::Level1( LevelStateMachine& stateMachine ) : levelStateMachine( stateMachine ) { }
 
@@ -11,30 +12,14 @@ bool Level1::OnCreate()
 	try
 	{
 		// DRAWABLES
-		{
-			// models
-			if ( !room.Initialize( "Resources\\Models\\Levels\\Level1-Final-Corners-Fixed.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			room.SetInitialScale( 0.005f, 0.005f, 0.005f );
-			room.SetInitialPosition( 70.5f, 0.0f, 4.0f );
-			room.SetInitialRotation( 0.0f, XM_PI, 0.0f );
-
-			if ( !pressurePlate.Initialize( "Resources\\Models\\PressurePlate.fbx", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			pressurePlate.SetInitialPosition( 0.0f, 0.0f, 24.5f );
-			pressurePlate.SetInitialScale( 0.025f, 0.025f, 0.025f );
-
-			// security camera
-			if ( !securityCamera.Initialize( "Resources\\Models\\Camera\\scene.gltf", graphics->device.Get(), graphics->context.Get(), cb_vs_matrix ) ) return false;
-			securityCamera.SetInitialScale( 2.0f, 2.0f, 2.0f );
-			securityCamera.SetInitialPosition( 17.0f, 10.0f, 27.5f );
-		}
+		if ( !ModelData::LoadModelData( "Level1_Objects.json" ) ) return false;
+		if ( !ModelData::InitializeModelData( *&graphics->context, *&graphics->device, cb_vs_matrix, renderables ) ) return false;
 
 		// UI
-		{
-			HUD = make_shared<HUD_UI>();
-			PauseUI = make_shared<Pause>();
-			TutorialUI = make_shared<Tutorial_UI>();
-			EndLevelUI = make_shared<EndLevelScreen_UI>();
-		}
+		HUD = make_shared<HUD_UI>();
+		PauseUI = make_shared<Pause>();
+		TutorialUI = make_shared<Tutorial_UI>();
+		EndLevelUI = make_shared<EndLevelScreen_UI>();
 	}
 	catch ( COMException& exception )
 	{
@@ -110,20 +95,17 @@ void Level1::RenderFrame()
 	// render ligths/skysphere
 	LevelContainer::RenderFrameEarly();
 
-	// DRAWABLES
-	{
-		// draw w/ back-face culling
-		graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
-		room.Draw();
-		graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
+	// draw w/ back-face culling
+	graphics->GetRasterizer( "Skybox" )->Bind( *graphics );
+	renderables["Room"].Draw();
+	graphics->GetRasterizer( graphics->rasterizerSolid ? "Solid" : "Wireframe" )->Bind( *graphics );
 
-		// draw with back-face culling
-		pressurePlate.Draw();
-		securityCamera.Draw();
+	// draw with back-face culling
+	renderables["PressurePlate"].Draw();
+	renderables["SecurityCamera"].Draw();
 
-		// render the cubes
-		LevelContainer::RenderFrame();
-	}
+	// render the cubes
+	LevelContainer::RenderFrame();
 }
 
 void Level1::Update( const float dt )
@@ -132,43 +114,40 @@ void Level1::Update( const float dt )
 
 	// adjust pressure plate x-position over time
 	static float offset = 0.1f;
-	if ( pressurePlate.GetPositionFloat3().x > 13.0f )
+	if ( renderables["PressurePlate"].GetPositionFloat3().x > 13.0f )
 		offset = -offset;
-	else if ( pressurePlate.GetPositionFloat3().x < -13.0f )
+	else if ( renderables["PressurePlate"].GetPositionFloat3().x < -13.0f )
 		offset = 0.1f;
-	pressurePlate.AdjustPosition( offset, 0.0f, 0.0f );
+	renderables["PressurePlate"].AdjustPosition( offset, 0.0f, 0.0f );
 
-	// COLLISIONS
+	// camera collisions w room
+	Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), 18.5f );
+
+	// cube collisions
+	for ( uint32_t i = 0; i < numOfCubes; i++ )
 	{
-		// camera collisions w room
-		Collisions::CheckCollisionLevel1( cameras->GetCamera( JSON::CameraType::Default ), 18.5f );
-
-		// cube collisions
-		for ( uint32_t i = 0; i < numOfCubes; i++ )
+		// update collisions w pressure plate
+		if ( cubes[i]->CheckCollisionAABB( renderables["PressurePlate"], dt ) )
 		{
-			// update collisions w pressure plate
-			if ( cubes[i]->CheckCollisionAABB( pressurePlate, dt ) )
+			cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
+			if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
 			{
-				cubes[i]->AdjustPosition( offset, 0.0f, 0.0f );
-				if ( cubes[i]->GetPhysicsModel()->GetMass() > 100.0f && !levelCompleted )
-				{
-					levelCompleted = true;
-					Sound::Instance()->PlaySoundEffect( "LevelComplete" );
-				}
+				levelCompleted = true;
+				Sound::Instance()->PlaySoundEffect( "LevelComplete" );
 			}
-
-			// update collisions w other cubes
-			for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
-					cubes[i]->CheckCollisionAABB( cubes[j], dt );
-
-			// update collisions w room
-			Collisions::CheckCollisionLevel1( cubes[i], 15.0f );
 		}
+
+		// update collisions w other cubes
+		for ( uint32_t j = 0; j < numOfCubes; j++ ) if ( i != j )
+				cubes[i]->CheckCollisionAABB( cubes[j], dt );
+
+		// update collisions w room
+		Collisions::CheckCollisionLevel1( cubes[i], 15.0f );
 	}
 
 	// set rotation of security camera
-	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), securityCamera );
-	securityCamera.SetRotation( 0.0f, rotation, 0.0f );
+	float rotation = Billboard::BillboardModel( cameras->GetCamera( cameras->GetCurrentCamera() ), renderables["SecurityCamera"] );
+	renderables["SecurityCamera"].SetRotation( 0.0f, rotation, 0.0f );
 
 	// update cubes/multi-tool position
 	LevelContainer::LateUpdate( dt );
