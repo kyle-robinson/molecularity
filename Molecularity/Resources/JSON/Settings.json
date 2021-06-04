@@ -1,0 +1,49 @@
+{
+  "Description": "The Settings File",
+  "General": [
+    {
+      "Vsync": true,
+      "WindowWidth": 1600,
+      "WindowHeight": 900,
+      "FullScreen": false,
+      "Language": "Eng"
+    }
+  ],
+  "Controls": [
+    {
+      "Forward": "W",
+      "Back": "S",
+      "Left": "A",
+      "Right": "D",
+      "Jump": " ",
+      "Crouch": "\u0011",
+      "Action": "E",
+      "Change_Gun_State_Up": "!",
+      "Change_Gun_State_Down": "\"",
+      "Gun_State_One": "1",
+      "Gun_State_Two": "2",
+      "Gun_State_Three": "3",
+      "Gun_State_Four": "4",
+      "Gun_State_Five": "5",
+      "Gun_State_Six": "6",
+      "Pause": "\u001B"
+    }
+  ],
+  "Sound": [
+    {
+      "MasterSoundOn": true,
+      "MasterSoundVolume": 42,
+      "MusicOn": true,
+      "MusicVolume": 72,
+      "SoundEffectsEfOn": true,
+      "SoundEffectVolume": 58
+    }
+  ],
+  "Graphics": [
+    {
+      "HUD_ON": true,
+      "Hud_Scale": 37
+    }
+  ],
+  "Version": 1.5
+}

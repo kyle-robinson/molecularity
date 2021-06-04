@@ -1,0 +1,26 @@
+{
+  "GameObjects": [
+    {
+      "Name": "Room",
+      "FileName": "..\\Models\\Levels\\Level1.fbx",
+      "Scale": [ 0.005, 0.005, 0.005 ],
+      "Position": [ 70.5, 0.0, 4.0 ],
+      "Rotation": [ 0.0, 3.14159, 0.0 ]
+    },
+    {
+      "Name": "PressurePlate",
+      "FileName": "..\\Models\\PressurePlate.fbx",
+      "Scale": [ 0.025, 0.025, 0.025 ],
+      "Position": [ 0.5, 0.0, 24.5 ],
+      "Rotation": [ 0.0, 0.0, 0.0 ]
+    },
+    {
+      "Name": "SecurityCamera",
+      "FileName": "..\\Models\\Camera\\scene.gltf",
+      "Scale": [ 2.0, 2.0, 2.0 ],
+      "Position": [ 17.0, 10.0, 27.5 ],
+      "Rotation": [ 0.0, 0.0, 0.0 ]
+    }
+  ],
+  "version": "1.1"
+}
