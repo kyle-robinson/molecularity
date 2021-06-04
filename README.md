@@ -1,5 +1,5 @@
 # Molecularity
-A physics-based game where you must change the properties of objects, using the different modes of the provided multi-tool to solve puzzles and progress.
+A physics-based puzzle game where you must change the properties of objects, using the different modes of the provided multi-tool to solve puzzles and progress.
 
 *- Click image to view on Vimeo -*
 <a href="https://vimeo.com/558943103" target="_blank">
