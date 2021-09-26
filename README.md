@@ -2,7 +2,6 @@
 A physics-based puzzle game created entirely in C++ and DirectX 11, where you must change the properties of objects, using the different modes of the provided multi-tool to solve puzzles and progress.
 
 <img src="https://i.imgur.com/mgL90O0.jpg" alt="Molecularity Level 2 Thumbnail" border="10" />
-&nbsp;
 
 https://user-images.githubusercontent.com/39779606/134823397-310b1b61-f9cf-4d6c-b59a-3bcc790c73f3.mp4
 
