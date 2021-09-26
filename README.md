@@ -3,6 +3,11 @@ A physics-based puzzle game created entirely in C++ and DirectX 11, where you mu
 
 *- Click <a href="https://vimeo.com/558943103" target="_blank">here</a> to view on Vimeo -*
 
+<a href="https://vimeo.com/558943103" target="_blank">
+        <img src="https://i.imgur.com/mgL90O0.jpg" alt="Molecularity Level 2 Thumbnail" border="10" />
+</a>
+&nbsp;
+
 https://user-images.githubusercontent.com/39779606/134823397-310b1b61-f9cf-4d6c-b59a-3bcc790c73f3.mp4
 
 ## List of Features
