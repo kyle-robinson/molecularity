@@ -45,7 +45,7 @@ void Settings_Menu_UI::Initialize(ID3D11Device* device, ID3D11DeviceContext* con
 void Settings_Menu_UI::Update(float dt)
 {
 	if (_isSettings) {
-	
+
 		PauseTextTitles.clear();
 		PauseTextPG.clear();
 
@@ -60,13 +60,13 @@ void Settings_Menu_UI::Update(float dt)
 		}
 		//Bakground
 		SettingsBackground.Function("Settings\\settingsBack.dds", { _SizeOfScreen.x ,_SizeOfScreen.y+10 }, { 0,0 });
-		
+
 		PageSlider();
 		TabButtons();
 		TabContent();
 		Accept();
 
-	
+
 		//Headding text
 		TextToDraw TextToDraw;
 		TextToDraw._Colour = Colors::Black;
@@ -91,11 +91,11 @@ void Settings_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX 
 		for (UINT i = 0; i < SettingSliderCount; i++) {
 			SettingsSliders[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix);
 		}
-		
 
-		
+
+
 		for (int i = SettingsDropCount-1; i >= 0; i--) {
-			
+
 			SettingsDropdowns[i].Draw(_Contex.Get(), _Device.Get(), *_cb_ps_scene, *_cb_vs_matrix_2d, WorldOrthMatrix, FontsList->GetFont("OpenSans_12").get(),vert ,pix);
 			Shaders::BindShaders(_Contex.Get(), vert, pix);
 		}
@@ -110,7 +110,7 @@ void Settings_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX 
 			FontsList->GetFont("OpenSans_50")->RenderString(PauseTextTitles[i]._Text, PauseTextTitles[i]._Position, PauseTextTitles[i]._Colour);
 		}
 
-		
+
 
 		for (UINT i = 0; i < PauseTextPG.size(); i++)
 		{
@@ -118,7 +118,7 @@ void Settings_Menu_UI::BeginDraw(VertexShader& vert, PixelShader& pix, XMMATRIX 
 		}
 
 
-		
+
 	}
 }
 
@@ -133,7 +133,7 @@ void Settings_Menu_UI::TextLoad()
 		text.Text = setText[i].Text;
 		i++;
 	}
-	
+
 }
 
 void Settings_Menu_UI::HandleEvent(Event* event)
@@ -144,7 +144,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 	case EVENTID::GameSettingsEvent:
 	{
 		_isSettings = true;
-		
+
 	}
 	break;
 	case EVENTID::UIKeyInput:
@@ -160,7 +160,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 	case EVENTID::WindowSizeChangeEvent:
 	{
 		_SizeOfScreen = *static_cast<XMFLOAT2*>( event->GetData() );
-	
+
 		SettingsScrollBar.SetPageSize(_SizeOfScreen.y);
 		_MouseData.LPress = false;
 		LoadFlag = true;
@@ -174,7 +174,7 @@ void Settings_Menu_UI::HandleEvent(Event* event)
 void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 {
 	TextToDraw TextToDraw;
-	
+
 
 	if (currentY >= boxPos.y &&
 		currentY <= (boxPos.y + boxSize.y))
@@ -222,7 +222,7 @@ void Settings_Menu_UI::CreateSettings(JSON::SettingData& settingData)
 				a = "true";
 			}
 			SettingsDropdowns[SettingsDropCount].Function(vector<string>{"true", "false"}, { static_cast<float>(_SizeOfScreen.x * 0.15625),static_cast<float>(_SizeOfScreen.y * 0.05) }, { static_cast<float>(_SizeOfScreen.x * 0.39),currentY }, ButtonBackDrop, ButtonTexDrop, DirectX::Colors::White, a, _MouseData);
-			
+
 			if (SettingsDropdowns[SettingsDropCount].getSelected() == "false") {
 				settingData.Setting = false;
 			}
@@ -263,7 +263,7 @@ void Settings_Menu_UI::RemoveFromEvent()
 
 void Settings_Menu_UI::PageSlider()
 {
-	
+
 	SettingsScrollBar.Function({ 30, static_cast<float>(_SizeOfScreen.y * 0.60) }, { _SizeOfScreen.x - 30 ,static_cast<float>(_SizeOfScreen.y * 0.30) }, 0, Colour{ 0,0,0 }, Colour{ 0,0,0 }, _MouseData);
 	currentY = (static_cast<float>(_SizeOfScreen.y * 0.37)) - SettingsScrollBar.getPagePos();
 	if (currentPY != SettingsScrollBar.getPY()) {
@@ -272,7 +272,7 @@ void Settings_Menu_UI::PageSlider()
 	}
 
 
-	//box for colision 
+	//box for colision
 	boxPos = { 0,static_cast<float>(_SizeOfScreen.y * 0.30) };
 	boxSize = { _SizeOfScreen.x, static_cast<float>(_SizeOfScreen.y * 0.60) };
 }
@@ -343,7 +343,7 @@ void Settings_Menu_UI::TabContent()
 		TextToDraw._Text = LoadedTextMap["Button_1"];
 		PauseTextTitles.push_back(TextToDraw);
 
-		
+
 		for (auto& setting : _SettingsData)
 		{
 			if (setting.Type == JSON::SettingType::GeneralType)
@@ -473,7 +473,7 @@ void Settings_Menu_UI::Accept()
 
 		//Notify relvent areas that settings has changed
 		EventSystem::Instance()->AddEvent(EVENTID::UpdateSettingsEvent, &_SettingsData);
-		
+
 
 		_isSettings = false;
 		CurrentTab = GenralTab;
@@ -488,7 +488,7 @@ void Settings_Menu_UI::Accept()
 void Settings_Menu_UI::ControlsCreate(JSON::SettingData& settingData)
 {
 	TextToDraw TextToDraw;
-	
+
 
 
 	TextToDraw._Colour = Colors::Black;
@@ -514,7 +514,7 @@ void Settings_Menu_UI::WindowSizeCreate(JSON::SettingData& settingData)
 {
 	TextToDraw TextToDraw;
 	TextToDraw._Colour = Colors::Black;
-	
+
 	if (settingData.Name == "WindowWidth") {
 
 		if (int* input = std::get_if<int>(&settingData.Setting)) {
