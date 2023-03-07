@@ -5,6 +5,8 @@
 [![MSBuild-Release](https://github.com/kyle-robinson/molecularity/actions/workflows/msbuild-release.yml/badge.svg)](https://github.com/kyle-robinson/ray-tracer/actions/workflows/msbuild-release.yml)
 &nbsp;
 [![CodeQL](https://github.com/kyle-robinson/molecularity/actions/workflows/codeql.yml/badge.svg)](https://github.com/kyle-robinson/ray-tracer/actions/workflows/codeql.yml)
+&nbsp;
+<img src="https://img.shields.io/static/v1?label=University&message=Year 2&color=49a1e5&style=flat&logo=nintendogamecube&logoColor=CCCCCC" />
 
 A physics-based puzzle game created entirely in C++ and DirectX 11, where you must change the properties of objects, using the different modes of the provided multi-tool to solve puzzles and progress.
 
