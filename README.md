@@ -35,6 +35,7 @@ The application relies on the following libraries and APIs to function.
 * DirectX 11
 * ImGui
 * Assimp
+* irrklang
 * nlohmann json
 
 ### Installing
